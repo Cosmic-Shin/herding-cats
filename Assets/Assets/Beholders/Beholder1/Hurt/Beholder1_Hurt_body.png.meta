@@ -1,0 +1,850 @@
+fileFormatVersion: 2
+guid: d38e5b9dc90a9ec489808e2f4bb059a2
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8032745734198497091
+    second: Beholder1_Hurt_body_0
+  - first:
+      213: -3669157493586470584
+    second: Beholder1_Hurt_body_1
+  - first:
+      213: 828156553091050633
+    second: Beholder1_Hurt_body_2
+  - first:
+      213: 6563760274079074962
+    second: Beholder1_Hurt_body_3
+  - first:
+      213: 3489110027511567754
+    second: Beholder1_Hurt_body_4
+  - first:
+      213: 6925078184242765607
+    second: Beholder1_Hurt_body_5
+  - first:
+      213: -5072490836792774801
+    second: Beholder1_Hurt_body_6
+  - first:
+      213: -8703619119834208246
+    second: Beholder1_Hurt_body_7
+  - first:
+      213: 4988142707313031503
+    second: Beholder1_Hurt_body_8
+  - first:
+      213: 1424855808910242583
+    second: Beholder1_Hurt_body_9
+  - first:
+      213: -8770776524577267990
+    second: Beholder1_Hurt_body_10
+  - first:
+      213: 7028025654823447790
+    second: Beholder1_Hurt_body_11
+  - first:
+      213: -1257361637425582673
+    second: Beholder1_Hurt_body_12
+  - first:
+      213: -717082097783253063
+    second: Beholder1_Hurt_body_13
+  - first:
+      213: 7678870142807926170
+    second: Beholder1_Hurt_body_14
+  - first:
+      213: -3294405332359240283
+    second: Beholder1_Hurt_body_15
+  - first:
+      213: -5843711469064535723
+    second: Beholder1_Hurt_body_16
+  - first:
+      213: 7424624332503427968
+    second: Beholder1_Hurt_body_17
+  - first:
+      213: 6371195751345059915
+    second: Beholder1_Hurt_body_18
+  - first:
+      213: -4711495347541917043
+    second: Beholder1_Hurt_body_19
+  - first:
+      213: -6364684519669564136
+    second: Beholder1_Hurt_body_20
+  - first:
+      213: -133056180406283047
+    second: Beholder1_Hurt_body_21
+  - first:
+      213: 4575782739370908722
+    second: Beholder1_Hurt_body_22
+  - first:
+      213: 632501342930575202
+    second: Beholder1_Hurt_body_23
+  - first:
+      213: -6550337477835917371
+    second: Beholder1_Hurt_body_r0_c0
+  - first:
+      213: 7161729304516037986
+    second: Beholder1_Hurt_body_r0_c1
+  - first:
+      213: 5097814823143309849
+    second: Beholder1_Hurt_body_r0_c2
+  - first:
+      213: -1674608746923457190
+    second: Beholder1_Hurt_body_r0_c3
+  - first:
+      213: 7039484076002509450
+    second: Beholder1_Hurt_body_r0_c4
+  - first:
+      213: -1907828188079264016
+    second: Beholder1_Hurt_body_r0_c5
+  - first:
+      213: -510671117227750547
+    second: Beholder1_Hurt_body_r1_c0
+  - first:
+      213: 159902025571910638
+    second: Beholder1_Hurt_body_r1_c1
+  - first:
+      213: 5002957718279035982
+    second: Beholder1_Hurt_body_r1_c2
+  - first:
+      213: -5082395166071539849
+    second: Beholder1_Hurt_body_r1_c3
+  - first:
+      213: -9132430292593525385
+    second: Beholder1_Hurt_body_r1_c4
+  - first:
+      213: -5648299805006292572
+    second: Beholder1_Hurt_body_r1_c5
+  - first:
+      213: -828886423879538544
+    second: Beholder1_Hurt_body_r2_c0
+  - first:
+      213: 2963254431274491795
+    second: Beholder1_Hurt_body_r2_c1
+  - first:
+      213: -3679941930644768929
+    second: Beholder1_Hurt_body_r2_c2
+  - first:
+      213: -6212911621069122507
+    second: Beholder1_Hurt_body_r2_c3
+  - first:
+      213: -366759664341845781
+    second: Beholder1_Hurt_body_r2_c4
+  - first:
+      213: -1345526454306159671
+    second: Beholder1_Hurt_body_r2_c5
+  - first:
+      213: 6855105802479822813
+    second: Beholder1_Hurt_body_r3_c0
+  - first:
+      213: 7660300246370338928
+    second: Beholder1_Hurt_body_r3_c1
+  - first:
+      213: -2058138396256333135
+    second: Beholder1_Hurt_body_r3_c2
+  - first:
+      213: 1732495557279704973
+    second: Beholder1_Hurt_body_r3_c3
+  - first:
+      213: 9221765162008376946
+    second: Beholder1_Hurt_body_r3_c4
+  - first:
+      213: 6902207107827258798
+    second: Beholder1_Hurt_body_r3_c5
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 20
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r0_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c779a2e4c68815a0800000000000000
+      internalID: -6550337477835917371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r0_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26d0f25abd2936360800000000000000
+      internalID: 7161729304516037986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r0_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9128d2082931fb640800000000000000
+      internalID: 5097814823143309849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r0_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a558dd5973892c8e0800000000000000
+      internalID: -1674608746923457190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r0_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a820628687541b160800000000000000
+      internalID: 7039484076002509450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r0_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0feee0dfe580685e0800000000000000
+      internalID: -1907828188079264016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r1_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6b8694135bb9e8f0800000000000000
+      internalID: -510671117227750547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r1_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee344198b06183200800000000000000
+      internalID: 159902025571910638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r1_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4c1258b9831e6540800000000000000
+      internalID: 5002957718279035982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r1_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 777b42e2684b779b0800000000000000
+      internalID: -5082395166071539849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r1_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77d32f9d807134180800000000000000
+      internalID: -9132430292593525385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r1_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a911b9d0453d91b0800000000000000
+      internalID: -5648299805006292572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r2_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 098248960343f74f0800000000000000
+      internalID: -828886423879538544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r2_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39fd73b84389f1920800000000000000
+      internalID: 2963254431274491795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r2_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f577addaf483eecc0800000000000000
+      internalID: -3679941930644768929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r2_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 534574d4ccd47c9a0800000000000000
+      internalID: -6212911621069122507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r2_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be876f8470209eaf0800000000000000
+      internalID: -366759664341845781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r2_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c3c03791dab35de0800000000000000
+      internalID: -1345526454306159671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r3_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd7678e486a322f50800000000000000
+      internalID: 6855105802479822813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r3_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 078cdb1fc7ade4a60800000000000000
+      internalID: 7660300246370338928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r3_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b29c8878060073e0800000000000000
+      internalID: -2058138396256333135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r3_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d87699ab78f0b0810800000000000000
+      internalID: 1732495557279704973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r3_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 276f49b4e8a4aff70800000000000000
+      internalID: 9221765162008376946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Hurt_body_r3_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea5583c8bc099cf50800000000000000
+      internalID: 6902207107827258798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Beholder1_Hurt_body_0: 8032745734198497091
+      Beholder1_Hurt_body_1: -3669157493586470584
+      Beholder1_Hurt_body_10: -8770776524577267990
+      Beholder1_Hurt_body_11: 7028025654823447790
+      Beholder1_Hurt_body_12: -1257361637425582673
+      Beholder1_Hurt_body_13: -717082097783253063
+      Beholder1_Hurt_body_14: 7678870142807926170
+      Beholder1_Hurt_body_15: -3294405332359240283
+      Beholder1_Hurt_body_16: -5843711469064535723
+      Beholder1_Hurt_body_17: 7424624332503427968
+      Beholder1_Hurt_body_18: 6371195751345059915
+      Beholder1_Hurt_body_19: -4711495347541917043
+      Beholder1_Hurt_body_2: 828156553091050633
+      Beholder1_Hurt_body_20: -6364684519669564136
+      Beholder1_Hurt_body_21: -133056180406283047
+      Beholder1_Hurt_body_22: 4575782739370908722
+      Beholder1_Hurt_body_23: 632501342930575202
+      Beholder1_Hurt_body_3: 6563760274079074962
+      Beholder1_Hurt_body_4: 3489110027511567754
+      Beholder1_Hurt_body_5: 6925078184242765607
+      Beholder1_Hurt_body_6: -5072490836792774801
+      Beholder1_Hurt_body_7: -8703619119834208246
+      Beholder1_Hurt_body_8: 4988142707313031503
+      Beholder1_Hurt_body_9: 1424855808910242583
+      Beholder1_Hurt_body_r0_c0: -6550337477835917371
+      Beholder1_Hurt_body_r0_c1: 7161729304516037986
+      Beholder1_Hurt_body_r0_c2: 5097814823143309849
+      Beholder1_Hurt_body_r0_c3: -1674608746923457190
+      Beholder1_Hurt_body_r0_c4: 7039484076002509450
+      Beholder1_Hurt_body_r0_c5: -1907828188079264016
+      Beholder1_Hurt_body_r1_c0: -510671117227750547
+      Beholder1_Hurt_body_r1_c1: 159902025571910638
+      Beholder1_Hurt_body_r1_c2: 5002957718279035982
+      Beholder1_Hurt_body_r1_c3: -5082395166071539849
+      Beholder1_Hurt_body_r1_c4: -9132430292593525385
+      Beholder1_Hurt_body_r1_c5: -5648299805006292572
+      Beholder1_Hurt_body_r2_c0: -828886423879538544
+      Beholder1_Hurt_body_r2_c1: 2963254431274491795
+      Beholder1_Hurt_body_r2_c2: -3679941930644768929
+      Beholder1_Hurt_body_r2_c3: -6212911621069122507
+      Beholder1_Hurt_body_r2_c4: -366759664341845781
+      Beholder1_Hurt_body_r2_c5: -1345526454306159671
+      Beholder1_Hurt_body_r3_c0: 6855105802479822813
+      Beholder1_Hurt_body_r3_c1: 7660300246370338928
+      Beholder1_Hurt_body_r3_c2: -2058138396256333135
+      Beholder1_Hurt_body_r3_c3: 1732495557279704973
+      Beholder1_Hurt_body_r3_c4: 9221765162008376946
+      Beholder1_Hurt_body_r3_c5: 6902207107827258798
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,616 @@
+fileFormatVersion: 2
+guid: 971ec5d89856d674ebb0df189ef2c503
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2960854902720338602
+    second: CatSlimeDie2_0
+  - first:
+      213: 8493589023325851606
+    second: CatSlimeDie2_1
+  - first:
+      213: 8381466614731640072
+    second: CatSlimeDie2_2
+  - first:
+      213: 5976905775449514258
+    second: CatSlimeDie2_3
+  - first:
+      213: 7046006985826221866
+    second: CatSlimeDie2_4
+  - first:
+      213: -7966780366827005306
+    second: CatSlimeDie2_5
+  - first:
+      213: 8298273009510946588
+    second: CatSlimeDie2_6
+  - first:
+      213: -8846173305102355332
+    second: CatSlimeDie2_7
+  - first:
+      213: -511887341009894691
+    second: CatSlimeDie2_8
+  - first:
+      213: 2289936575115147429
+    second: CatSlimeDie2_9
+  - first:
+      213: -3500551124795641315
+    second: CatSlimeDie2_10
+  - first:
+      213: -660855324274625634
+    second: CatSlimeDie2_11
+  - first:
+      213: -2666996374877972476
+    second: CatSlimeDie2_12
+  - first:
+      213: 7935783596039818563
+    second: CatSlimeDie2_13
+  - first:
+      213: -6777257355072786266
+    second: CatSlimeDie2_14
+  - first:
+      213: 4765553304582650655
+    second: CatSlimeDie2_15
+  - first:
+      213: -937182174060354365
+    second: CatSlimeDie2_16
+  - first:
+      213: -1129653959340247226
+    second: CatSlimeDie2_17
+  - first:
+      213: 1513887821842479258
+    second: CatSlimeDie2_18
+  - first:
+      213: -7721575708720860133
+    second: CatSlimeDie2_19
+  - first:
+      213: 8411091784512414289
+    second: CatSlimeDie2_20
+  - first:
+      213: -1747103999290189466
+    second: CatSlimeDie2_21
+  - first:
+      213: 7617176305202393193
+    second: CatSlimeDie2_22
+  - first:
+      213: -128823976282490778
+    second: CatSlimeDie2_23
+  - first:
+      213: -5168465121370807981
+    second: CatSlimeDie2_24
+  - first:
+      213: -3129139535176429914
+    second: CatSlimeDie2_25
+  - first:
+      213: 1192402165325282143
+    second: CatSlimeDie2_26
+  - first:
+      213: 4819978022043842649
+    second: CatSlimeDie2_27
+  - first:
+      213: 2655942284331257594
+    second: CatSlimeDie2_28
+  - first:
+      213: -5388291859724538446
+    second: CatSlimeDie2_29
+  - first:
+      213: -1347948163050995320
+    second: CatSlimeDie2_30
+  - first:
+      213: -3479322983083536113
+    second: CatSlimeDie2_31
+  - first:
+      213: -2220829607284245794
+    second: CatSlimeDie2_32
+  - first:
+      213: -4854420262103634422
+    second: CatSlimeDie2_33
+  - first:
+      213: -1396986258015182942
+    second: CatSlimeDie2_34
+  - first:
+      213: -5864259710473176109
+    second: CatSlimeDie2_35
+  - first:
+      213: -2492202598106064458
+    second: CatSlimeDie2_36
+  - first:
+      213: -8473144959876668533
+    second: CatSlimeDie2_37
+  - first:
+      213: 5603926262999468581
+    second: CatSlimeDie2_38
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 48
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: CatSlimeDie2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aaa9e14c8d1171920800000000000000
+      internalID: 2960854902720338602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeDie2_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6df8e7b373a4fd570800000000000000
+      internalID: 8493589023325851606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeDie2_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80d00ebaa73f05470800000000000000
+      internalID: 8381466614731640072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeDie2_3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21126a1c22c32f250800000000000000
+      internalID: 5976905775449514258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeDie2_4
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2fb713b50278c160800000000000000
+      internalID: 7046006985826221866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeDie2_5
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68a58b7577f407190800000000000000
+      internalID: -7966780366827005306
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeDie2_6
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c179c150653692370800000000000000
+      internalID: 8298273009510946588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeDie2_7
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c74b4df7f341c3580800000000000000
+      internalID: -8846173305102355332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeDie2_8
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd2061aec2965e8f0800000000000000
+      internalID: -511887341009894691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeDie2_9
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a8b9e5be2d77cf10800000000000000
+      internalID: 2289936575115147429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeDie2_10
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1236787c4b8b6fc0800000000000000
+      internalID: -3500551124795641315
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeDie2_11
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e937fac759b24d6f0800000000000000
+      internalID: -660855324274625634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeDie2_12
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 408d42a6dececfad0800000000000000
+      internalID: -2666996374877972476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeDie2_13
+      rect:
+        serializedVersion: 2
+        x: 416
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34d43509221912e60800000000000000
+      internalID: 7935783596039818563
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeDie2_14
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a0bb7fc75852f1a0800000000000000
+      internalID: -6777257355072786266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      CatSlimeDie2_0: 2960854902720338602
+      CatSlimeDie2_1: 8493589023325851606
+      CatSlimeDie2_10: -3500551124795641315
+      CatSlimeDie2_11: -660855324274625634
+      CatSlimeDie2_12: -2666996374877972476
+      CatSlimeDie2_13: 7935783596039818563
+      CatSlimeDie2_14: -6777257355072786266
+      CatSlimeDie2_15: 4765553304582650655
+      CatSlimeDie2_16: -937182174060354365
+      CatSlimeDie2_17: -1129653959340247226
+      CatSlimeDie2_18: 1513887821842479258
+      CatSlimeDie2_19: -7721575708720860133
+      CatSlimeDie2_2: 8381466614731640072
+      CatSlimeDie2_20: 8411091784512414289
+      CatSlimeDie2_21: -1747103999290189466
+      CatSlimeDie2_22: 7617176305202393193
+      CatSlimeDie2_23: -128823976282490778
+      CatSlimeDie2_24: -5168465121370807981
+      CatSlimeDie2_25: -3129139535176429914
+      CatSlimeDie2_26: 1192402165325282143
+      CatSlimeDie2_27: 4819978022043842649
+      CatSlimeDie2_28: 2655942284331257594
+      CatSlimeDie2_29: -5388291859724538446
+      CatSlimeDie2_3: 5976905775449514258
+      CatSlimeDie2_30: -1347948163050995320
+      CatSlimeDie2_31: -3479322983083536113
+      CatSlimeDie2_32: -2220829607284245794
+      CatSlimeDie2_33: -4854420262103634422
+      CatSlimeDie2_34: -1396986258015182942
+      CatSlimeDie2_35: -5864259710473176109
+      CatSlimeDie2_36: -2492202598106064458
+      CatSlimeDie2_37: -8473144959876668533
+      CatSlimeDie2_38: 5603926262999468581
+      CatSlimeDie2_4: 7046006985826221866
+      CatSlimeDie2_5: -7966780366827005306
+      CatSlimeDie2_6: 8298273009510946588
+      CatSlimeDie2_7: -8846173305102355332
+      CatSlimeDie2_8: -511887341009894691
+      CatSlimeDie2_9: 2289936575115147429
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

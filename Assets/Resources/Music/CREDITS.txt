@@ -1,0 +1,9 @@
+All music by Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0 License
+http://creativecommons.org/licenses/by/4.0/
+
+menu.mp3    - "Itty Bitty 8 Bit"
+run.mp3     - "Pixelland"
+late.mp3    - "Pixel Peeker Polka - faster"
+boss.mp3    - "Volatile Reaction"
+endless.mp3 - "Exit the Premises"

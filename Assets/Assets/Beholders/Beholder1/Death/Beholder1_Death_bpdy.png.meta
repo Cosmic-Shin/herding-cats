@@ -1,0 +1,1210 @@
+fileFormatVersion: 2
+guid: a99a131db25d61e478eb721dc3ebe16c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5444509262600695934
+    second: Beholder1_Death_bpdy_0
+  - first:
+      213: 6300082913419219652
+    second: Beholder1_Death_bpdy_1
+  - first:
+      213: 3297557725839585125
+    second: Beholder1_Death_bpdy_2
+  - first:
+      213: 5542269012629851537
+    second: Beholder1_Death_bpdy_3
+  - first:
+      213: -6909962547183140090
+    second: Beholder1_Death_bpdy_4
+  - first:
+      213: 2985172407201341243
+    second: Beholder1_Death_bpdy_5
+  - first:
+      213: -6266981165155240848
+    second: Beholder1_Death_bpdy_6
+  - first:
+      213: -1136597028894739400
+    second: Beholder1_Death_bpdy_7
+  - first:
+      213: 2964763159560917655
+    second: Beholder1_Death_bpdy_8
+  - first:
+      213: 9027646595599171820
+    second: Beholder1_Death_bpdy_9
+  - first:
+      213: 6961853682893102843
+    second: Beholder1_Death_bpdy_10
+  - first:
+      213: -6065372939459805812
+    second: Beholder1_Death_bpdy_11
+  - first:
+      213: -2313910019914151489
+    second: Beholder1_Death_bpdy_12
+  - first:
+      213: -5746336820094787519
+    second: Beholder1_Death_bpdy_13
+  - first:
+      213: -4132836095395205922
+    second: Beholder1_Death_bpdy_14
+  - first:
+      213: -6813659517389415854
+    second: Beholder1_Death_bpdy_15
+  - first:
+      213: 8426384004231847134
+    second: Beholder1_Death_bpdy_16
+  - first:
+      213: 8344861544875688251
+    second: Beholder1_Death_bpdy_17
+  - first:
+      213: 6212008366213185543
+    second: Beholder1_Death_bpdy_18
+  - first:
+      213: 8733691925126169210
+    second: Beholder1_Death_bpdy_19
+  - first:
+      213: -6246469234569422571
+    second: Beholder1_Death_bpdy_20
+  - first:
+      213: -4274563342289046454
+    second: Beholder1_Death_bpdy_21
+  - first:
+      213: -389815298167760494
+    second: Beholder1_Death_bpdy_22
+  - first:
+      213: 5605146267562329105
+    second: Beholder1_Death_bpdy_23
+  - first:
+      213: -2691653016679138165
+    second: Beholder1_Death_bpdy_24
+  - first:
+      213: 6937915845898027486
+    second: Beholder1_Death_bpdy_25
+  - first:
+      213: 4432360371239417937
+    second: Beholder1_Death_bpdy_26
+  - first:
+      213: -941135700438433720
+    second: Beholder1_Death_bpdy_27
+  - first:
+      213: -5393520976359450613
+    second: Beholder1_Death_bpdy_28
+  - first:
+      213: 710477975739585238
+    second: Beholder1_Death_bpdy_29
+  - first:
+      213: 5240255966250599915
+    second: Beholder1_Death_bpdy_30
+  - first:
+      213: -7052568712067523332
+    second: Beholder1_Death_bpdy_31
+  - first:
+      213: -4693814668093374592
+    second: Beholder1_Death_bpdy_32
+  - first:
+      213: -4794220681257951437
+    second: Beholder1_Death_bpdy_33
+  - first:
+      213: 1816213730543983942
+    second: Beholder1_Death_bpdy_34
+  - first:
+      213: 3192268335924938810
+    second: Beholder1_Death_bpdy_35
+  - first:
+      213: -48030715041687354
+    second: Beholder1_Death_bpdy_r0_c0
+  - first:
+      213: 202952723078767179
+    second: Beholder1_Death_bpdy_r0_c1
+  - first:
+      213: 2040458948124018071
+    second: Beholder1_Death_bpdy_r0_c2
+  - first:
+      213: -7589527648003055437
+    second: Beholder1_Death_bpdy_r0_c3
+  - first:
+      213: 2760105142409649493
+    second: Beholder1_Death_bpdy_r0_c4
+  - first:
+      213: 3789064539381450680
+    second: Beholder1_Death_bpdy_r0_c5
+  - first:
+      213: -8742512515373872536
+    second: Beholder1_Death_bpdy_r0_c6
+  - first:
+      213: -4157342736149569897
+    second: Beholder1_Death_bpdy_r0_c7
+  - first:
+      213: -640267953032185903
+    second: Beholder1_Death_bpdy_r0_c8
+  - first:
+      213: 1656829601928784609
+    second: Beholder1_Death_bpdy_r1_c0
+  - first:
+      213: -6396151433357851669
+    second: Beholder1_Death_bpdy_r1_c1
+  - first:
+      213: 4555352291574941647
+    second: Beholder1_Death_bpdy_r1_c2
+  - first:
+      213: 8870498240972215127
+    second: Beholder1_Death_bpdy_r1_c3
+  - first:
+      213: -6256079746308419903
+    second: Beholder1_Death_bpdy_r1_c4
+  - first:
+      213: 8807140220244204427
+    second: Beholder1_Death_bpdy_r1_c5
+  - first:
+      213: -5017049107126825884
+    second: Beholder1_Death_bpdy_r1_c6
+  - first:
+      213: 5843934621568935052
+    second: Beholder1_Death_bpdy_r1_c7
+  - first:
+      213: -579745853460660353
+    second: Beholder1_Death_bpdy_r1_c8
+  - first:
+      213: -5113561097798802611
+    second: Beholder1_Death_bpdy_r2_c0
+  - first:
+      213: -1923058128133917649
+    second: Beholder1_Death_bpdy_r2_c1
+  - first:
+      213: -8881902068689047420
+    second: Beholder1_Death_bpdy_r2_c2
+  - first:
+      213: -7704806903503626699
+    second: Beholder1_Death_bpdy_r2_c3
+  - first:
+      213: -2040830931631130505
+    second: Beholder1_Death_bpdy_r2_c4
+  - first:
+      213: 6778204662364449276
+    second: Beholder1_Death_bpdy_r2_c5
+  - first:
+      213: 901502228035502502
+    second: Beholder1_Death_bpdy_r2_c6
+  - first:
+      213: 6938197005726353970
+    second: Beholder1_Death_bpdy_r2_c7
+  - first:
+      213: -288982177216205244
+    second: Beholder1_Death_bpdy_r2_c8
+  - first:
+      213: -8962394923755138767
+    second: Beholder1_Death_bpdy_r3_c0
+  - first:
+      213: 6914730748710366156
+    second: Beholder1_Death_bpdy_r3_c1
+  - first:
+      213: 6997052852410096761
+    second: Beholder1_Death_bpdy_r3_c2
+  - first:
+      213: -8205550296875470403
+    second: Beholder1_Death_bpdy_r3_c3
+  - first:
+      213: -5995075186005769033
+    second: Beholder1_Death_bpdy_r3_c4
+  - first:
+      213: 8917079548831618245
+    second: Beholder1_Death_bpdy_r3_c5
+  - first:
+      213: -72152788535331496
+    second: Beholder1_Death_bpdy_r3_c6
+  - first:
+      213: -9070883705766181543
+    second: Beholder1_Death_bpdy_r3_c7
+  - first:
+      213: 3045350056751637452
+    second: Beholder1_Death_bpdy_r3_c8
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 20
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r0_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c8d1a3b15c555ff0800000000000000
+      internalID: -48030715041687354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r0_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b42ee452d6801d200800000000000000
+      internalID: 202952723078767179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r0_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79503bd3a9a215c10800000000000000
+      internalID: 2040458948124018071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r0_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b0a5cfa0d49ca690800000000000000
+      internalID: -7589527648003055437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r0_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55d5e0cd00ddd4620800000000000000
+      internalID: 2760105142409649493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r0_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b74cdc8f16759430800000000000000
+      internalID: 3789064539381450680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r0_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86acbb4ef2b5ca680800000000000000
+      internalID: -8742512515373872536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r0_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79e114adec62e46c0800000000000000
+      internalID: -4157342736149569897
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r0_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d7337260bf4d17f0800000000000000
+      internalID: -640267953032185903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r1_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ea2154aebd3ef610800000000000000
+      internalID: 1656829601928784609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r1_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be3891dd82e4c37a0800000000000000
+      internalID: -6396151433357851669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r1_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc7061e16ccd73f30800000000000000
+      internalID: 4555352291574941647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r1_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75350e9f6275a1b70800000000000000
+      internalID: 8870498240972215127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r1_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ce45caed90fd29a0800000000000000
+      internalID: -6256079746308419903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r1_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8b16ba3e5f393a70800000000000000
+      internalID: 8807140220244204427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r1_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46cc3052b6cdf5ab0800000000000000
+      internalID: -5017049107126825884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r1_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8429396393d91150800000000000000
+      internalID: 5843934621568935052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r1_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7fb878c73454f7f0800000000000000
+      internalID: -579745853460660353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r2_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d43227c364bf809b0800000000000000
+      internalID: -5113561097798802611
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r2_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f24762e32dcef45e0800000000000000
+      internalID: -1923058128133917649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r2_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4807bf970252db480800000000000000
+      internalID: -8881902068689047420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r2_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53e50bd61f6031590800000000000000
+      internalID: -7704806903503626699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r2_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7783f7994138da3e0800000000000000
+      internalID: -2040830931631130505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r2_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf9212b5a35011e50800000000000000
+      internalID: 6778204662364449276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r2_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a187420087c28c00800000000000000
+      internalID: 901502228035502502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r2_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23a8ff3aa6d694060800000000000000
+      internalID: 6938197005726353970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r2_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44eeb9cad345dfbf0800000000000000
+      internalID: -288982177216205244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r3_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1319fc83d4d2f9380800000000000000
+      internalID: -8962394923755138767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r3_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ccb2a5aeafe06ff50800000000000000
+      internalID: 6914730748710366156
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r3_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97c998e4f768a1160800000000000000
+      internalID: 6997052852410096761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r3_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db1f228da77002e80800000000000000
+      internalID: -8205550296875470403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r3_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b40e50b1e63dcca0800000000000000
+      internalID: -5995075186005769033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r3_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c4520eda94dfbb70800000000000000
+      internalID: 8917079548831618245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r3_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8553ccdcb69affef0800000000000000
+      internalID: -72152788535331496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r3_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9558de6445fbd1280800000000000000
+      internalID: -9070883705766181543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Beholder1_Death_bpdy_r3_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc3a56dddb1434a20800000000000000
+      internalID: 3045350056751637452
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Beholder1_Death_bpdy_0: 5444509262600695934
+      Beholder1_Death_bpdy_1: 6300082913419219652
+      Beholder1_Death_bpdy_10: 6961853682893102843
+      Beholder1_Death_bpdy_11: -6065372939459805812
+      Beholder1_Death_bpdy_12: -2313910019914151489
+      Beholder1_Death_bpdy_13: -5746336820094787519
+      Beholder1_Death_bpdy_14: -4132836095395205922
+      Beholder1_Death_bpdy_15: -6813659517389415854
+      Beholder1_Death_bpdy_16: 8426384004231847134
+      Beholder1_Death_bpdy_17: 8344861544875688251
+      Beholder1_Death_bpdy_18: 6212008366213185543
+      Beholder1_Death_bpdy_19: 8733691925126169210
+      Beholder1_Death_bpdy_2: 3297557725839585125
+      Beholder1_Death_bpdy_20: -6246469234569422571
+      Beholder1_Death_bpdy_21: -4274563342289046454
+      Beholder1_Death_bpdy_22: -389815298167760494
+      Beholder1_Death_bpdy_23: 5605146267562329105
+      Beholder1_Death_bpdy_24: -2691653016679138165
+      Beholder1_Death_bpdy_25: 6937915845898027486
+      Beholder1_Death_bpdy_26: 4432360371239417937
+      Beholder1_Death_bpdy_27: -941135700438433720
+      Beholder1_Death_bpdy_28: -5393520976359450613
+      Beholder1_Death_bpdy_29: 710477975739585238
+      Beholder1_Death_bpdy_3: 5542269012629851537
+      Beholder1_Death_bpdy_30: 5240255966250599915
+      Beholder1_Death_bpdy_31: -7052568712067523332
+      Beholder1_Death_bpdy_32: -4693814668093374592
+      Beholder1_Death_bpdy_33: -4794220681257951437
+      Beholder1_Death_bpdy_34: 1816213730543983942
+      Beholder1_Death_bpdy_35: 3192268335924938810
+      Beholder1_Death_bpdy_4: -6909962547183140090
+      Beholder1_Death_bpdy_5: 2985172407201341243
+      Beholder1_Death_bpdy_6: -6266981165155240848
+      Beholder1_Death_bpdy_7: -1136597028894739400
+      Beholder1_Death_bpdy_8: 2964763159560917655
+      Beholder1_Death_bpdy_9: 9027646595599171820
+      Beholder1_Death_bpdy_r0_c0: -48030715041687354
+      Beholder1_Death_bpdy_r0_c1: 202952723078767179
+      Beholder1_Death_bpdy_r0_c2: 2040458948124018071
+      Beholder1_Death_bpdy_r0_c3: -7589527648003055437
+      Beholder1_Death_bpdy_r0_c4: 2760105142409649493
+      Beholder1_Death_bpdy_r0_c5: 3789064539381450680
+      Beholder1_Death_bpdy_r0_c6: -8742512515373872536
+      Beholder1_Death_bpdy_r0_c7: -4157342736149569897
+      Beholder1_Death_bpdy_r0_c8: -640267953032185903
+      Beholder1_Death_bpdy_r1_c0: 1656829601928784609
+      Beholder1_Death_bpdy_r1_c1: -6396151433357851669
+      Beholder1_Death_bpdy_r1_c2: 4555352291574941647
+      Beholder1_Death_bpdy_r1_c3: 8870498240972215127
+      Beholder1_Death_bpdy_r1_c4: -6256079746308419903
+      Beholder1_Death_bpdy_r1_c5: 8807140220244204427
+      Beholder1_Death_bpdy_r1_c6: -5017049107126825884
+      Beholder1_Death_bpdy_r1_c7: 5843934621568935052
+      Beholder1_Death_bpdy_r1_c8: -579745853460660353
+      Beholder1_Death_bpdy_r2_c0: -5113561097798802611
+      Beholder1_Death_bpdy_r2_c1: -1923058128133917649
+      Beholder1_Death_bpdy_r2_c2: -8881902068689047420
+      Beholder1_Death_bpdy_r2_c3: -7704806903503626699
+      Beholder1_Death_bpdy_r2_c4: -2040830931631130505
+      Beholder1_Death_bpdy_r2_c5: 6778204662364449276
+      Beholder1_Death_bpdy_r2_c6: 901502228035502502
+      Beholder1_Death_bpdy_r2_c7: 6938197005726353970
+      Beholder1_Death_bpdy_r2_c8: -288982177216205244
+      Beholder1_Death_bpdy_r3_c0: -8962394923755138767
+      Beholder1_Death_bpdy_r3_c1: 6914730748710366156
+      Beholder1_Death_bpdy_r3_c2: 6997052852410096761
+      Beholder1_Death_bpdy_r3_c3: -8205550296875470403
+      Beholder1_Death_bpdy_r3_c4: -5995075186005769033
+      Beholder1_Death_bpdy_r3_c5: 8917079548831618245
+      Beholder1_Death_bpdy_r3_c6: -72152788535331496
+      Beholder1_Death_bpdy_r3_c7: -9070883705766181543
+      Beholder1_Death_bpdy_r3_c8: 3045350056751637452
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

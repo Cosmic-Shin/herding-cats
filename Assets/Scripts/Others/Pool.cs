@@ -1,0 +1,90 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public interface IPoolable
+{
+    void OnSpawn();
+}
+
+public static class Pool
+{
+    private static readonly Dictionary<GameObject, Stack<GameObject>> free = new Dictionary<GameObject, Stack<GameObject>>();
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void Init()
+    {
+        free.Clear();
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private static void OnSceneLoaded(Scene scene, LoadSceneMode mode) => free.Clear();
+
+    public static GameObject Spawn(GameObject prefab, Vector3 position, Quaternion rotation)
+    {
+        GameObject go = null;
+        if (free.TryGetValue(prefab, out Stack<GameObject> stack))
+        {
+            while (stack.Count > 0 && go == null) go = stack.Pop();
+        }
+
+        if (go != null)
+        {
+            go.transform.SetPositionAndRotation(position, rotation);
+            go.SetActive(true);
+        }
+        else
+        {
+            go = Object.Instantiate(prefab, position, rotation);
+            go.AddComponent<Pooled>().Init(prefab);
+        }
+
+        go.GetComponent<Pooled>().NotifySpawn();
+        return go;
+    }
+
+    public static void Despawn(GameObject go)
+    {
+        if (go == null) return;
+        if (!go.TryGetComponent(out Pooled pooled))
+        {
+            Object.Destroy(go);
+            return;
+        }
+        if (!go.activeSelf) return;
+
+        go.SetActive(false);
+        if (!free.TryGetValue(pooled.Prefab, out Stack<GameObject> stack))
+        {
+            stack = new Stack<GameObject>();
+            free[pooled.Prefab] = stack;
+        }
+        stack.Push(go);
+    }
+
+    public static void Prewarm(GameObject prefab, int count)
+    {
+        if (prefab == null) return;
+        var spawned = new List<GameObject>(count);
+        for (int i = 0; i < count; i++) spawned.Add(Spawn(prefab, new Vector3(9999f, 9999f), Quaternion.identity));
+        foreach (GameObject go in spawned) Despawn(go);
+    }
+}
+
+public class Pooled : MonoBehaviour
+{
+    public GameObject Prefab { get; private set; }
+    private IPoolable[] poolables;
+
+    public void Init(GameObject prefab)
+    {
+        Prefab = prefab;
+        poolables = GetComponentsInChildren<IPoolable>(true);
+    }
+
+    public void NotifySpawn()
+    {
+        foreach (IPoolable p in poolables) p.OnSpawn();
+    }
+}

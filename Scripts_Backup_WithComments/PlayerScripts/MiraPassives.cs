@@ -1,0 +1,247 @@
+using UnityEngine;
+
+// Mira's built-in character passives (always on; upgraded to Lv 4 from level-ups and chests, no slot used):
+//   Blade Dancer - when cats get close, she slashes everything in an arc in front of her and shoves it back
+//   Weak Spot    - hits on slowed or stunned enemies always crit (read by Weapon.Hit and Bomb.Blast)
+//   Bubble Shield - a shield that fully blocks one hit, then recharges after a cooldown
+[RequireComponent(typeof(PlayerStats))]
+public class MiraPassives : MonoBehaviour
+{
+    public static MiraPassives Instance { get; private set; }
+
+    [Header("Blade Dancer")]
+    public float slashCooldown = 3f;        // shortened by Haste
+    public float slashTriggerRange = 1.8f;  // a cat this close starts a slash
+    public float slashRange = 2.4f;
+    public float slashArc = 140f;           // degrees
+    public float slashDamage = 1.5f;        // x attack damage
+    public float slashPush = 9f;
+
+    [Header("Weak Spot")]
+    public bool weakSpot = true;
+
+    [Header("Bubble Shield")]
+    public float shieldCooldown = 20f;      // seconds to regrow after it pops
+
+    private PlayerStats stats;
+    private PlayerAnimator anim;
+    private PlayerUltimate ult;
+    private float slashTimer;
+    private float shieldTimer;              // 0 = shield is up
+    private SpriteRenderer shieldFill, shieldEdge, slashFx;
+    private float slashFxTime = -1f;
+    private static readonly System.Collections.Generic.List<Collider2D> hits = new System.Collections.Generic.List<Collider2D>(64);
+
+    public bool ShieldUp => shieldTimer <= 0f;
+    public void RechargeShield() => shieldTimer = 0f; // admin tool
+
+    // ---------- upgrades (HoloCure character skills: offered on level-up and in chests, no slot used) ----------
+
+    public const int MaxPassiveLevel = 4;
+
+    public class Passive
+    {
+        public string id, name;
+        public string[] levels; // what Lv 2, 3, 4 do (Lv 1 is the starting kit)
+    }
+
+    public static readonly Passive[] All =
+    {
+        new Passive { id = "blade", name = "Blade Dancer", levels = new[] {
+            "Slash every 2.5s for 200% damage",
+            "Wider slash (200°) with 25% more reach",
+            "Slash every 1.8s for 300% damage, and behind you too" } },
+        new Passive { id = "weakspot", name = "Weak Spot", levels = new[] {
+            "Crits on slowed or stunned cats deal +25% more",
+            "+50% more, and Blade Dancer slows what it hits",
+            "+80% more" } },
+        new Passive { id = "shield", name = "Bubble Shield", levels = new[] {
+            "Recharges in 15s",
+            "Recharges in 11s; popping it shoves cats away",
+            "Recharges in 8s; the pop blasts for 300% damage" } },
+    };
+
+    private readonly System.Collections.Generic.Dictionary<string, int> passiveLevels =
+        new System.Collections.Generic.Dictionary<string, int> { { "blade", 1 }, { "weakspot", 1 }, { "shield", 1 } };
+    private float weakSpotBonus = 1f;
+    private bool backSlash, slashSlows;
+    private float baseSlashRange;
+
+    public static Passive FindPassive(string id) => System.Array.Find(All, p => p.id == id);
+    public int LevelOf(string id) => passiveLevels.TryGetValue(id, out int l) ? l : 0;
+
+    public System.Collections.Generic.List<Passive> Offerable() =>
+        new System.Collections.Generic.List<Passive>(System.Array.FindAll(All, p => LevelOf(p.id) < MaxPassiveLevel));
+
+    public void LevelUp(string id)
+    {
+        int level = passiveLevels[id] = Mathf.Min(MaxPassiveLevel, LevelOf(id) + 1);
+        switch (id)
+        {
+            case "blade":
+                slashCooldown = level >= 4 ? 1.8f : level >= 2 ? 2.5f : 3f;
+                slashDamage = level >= 4 ? 3f : level >= 2 ? 2f : 1.5f;
+                slashArc = level >= 3 ? 200f : 140f;
+                slashRange = baseSlashRange * (level >= 3 ? 1.25f : 1f);
+                backSlash = level >= 4;
+                break;
+            case "weakspot":
+                weakSpotBonus = new[] { 1f, 1.25f, 1.5f, 1.8f }[level - 1];
+                slashSlows = level >= 3;
+                break;
+            case "shield":
+                shieldCooldown = new[] { 20f, 15f, 11f, 8f }[level - 1];
+                break;
+        }
+    }
+
+    // Weak Spot upgrades: extra multiplier on crits against slowed/stunned enemies (1 = none).
+    public static float CritBonus(EnemyHealth enemy) => AutoCrit(enemy) ? Instance.weakSpotBonus : 1f;
+
+    private void Awake()
+    {
+        Instance = this;
+        stats = GetComponent<PlayerStats>();
+        anim = GetComponent<PlayerAnimator>();
+        ult = GetComponent<PlayerUltimate>();
+        shieldFill = MakeFx("Shield", Shapes.Circle, 6);
+        shieldEdge = MakeFx("ShieldEdge", Shapes.Ring, 7);
+        slashFx = MakeFx("Slash", Shapes.Crescent, 30);
+        slashFx.gameObject.SetActive(false);
+        baseSlashRange = slashRange;
+    }
+
+    private SpriteRenderer MakeFx(string name, Sprite sprite, int order)
+    {
+        var go = new GameObject(name);
+        go.transform.SetParent(transform, false);
+        var sr = go.AddComponent<SpriteRenderer>();
+        Lighting.Glow(sr);
+        sr.sprite = sprite;
+        sr.sortingOrder = order;
+        return sr;
+    }
+
+    public static bool AutoCrit(EnemyHealth enemy) => Instance != null && Instance.weakSpot && enemy.IsImpaired;
+
+    // PlayerHealth asks first on every hit; true = the shield ate it.
+    public bool TryBlock()
+    {
+        if (!ShieldUp || !enabled) return false;
+        shieldTimer = shieldCooldown;
+        DamagePopup.SpawnText((Vector2)transform.position + Vector2.up * 0.6f, "BLOCKED!", new Color(0.55f, 0.85f, 1f), 4.5f);
+        int shield = LevelOf("shield");
+        if (shield >= 3) // the bubble bursts outward: shoves cats away (Lv 4: and blasts them)
+        {
+            Vector2 pos = transform.position;
+            DamageStats.Source = "Bubble Shield";
+            foreach (Collider2D c in Bomb.OverlapEnemies(pos, 2.8f * stats.areaMultiplier, hits))
+            {
+                if (shield >= 4 && c.TryGetComponent(out EnemyHealth e) && !e.IsDead) e.TakeDamage(stats.AttackDamage * 3f, pos, false);
+                if (c.TryGetComponent(out IEnemyBrain brain)) brain.Knockback(((Vector2)c.transform.position - pos).normalized * 12f);
+            }
+            ExplosionFx.Ring(pos, 2.8f * stats.areaMultiplier, new Color(0.6f, 0.9f, 1f), 0.3f);
+        }
+        ExplosionFx.Spawn(transform.position, 1.2f, new Color(0.55f, 0.85f, 1f));
+        CameraFollow.Shake(0.08f, 0.1f);
+        return true;
+    }
+
+    private void Update()
+    {
+        UpdateShield();
+        UpdateSlashFx();
+
+        slashTimer -= Time.deltaTime;
+        if (slashTimer > 0f) return;
+
+        Transform near = NearestCat(slashTriggerRange);
+        if (near == null) return;
+        Vector2 dir = ((Vector2)near.position - (Vector2)transform.position).normalized;
+        if (backSlash) Slash(-dir); // Lv 4: behind too (first, so the effect shown is the front slash)
+        Slash(dir);
+        slashTimer = slashCooldown / Mathf.Max(0.1f, stats.attackSpeedMultiplier);
+    }
+
+    private void UpdateShield()
+    {
+        bool wasDown = shieldTimer > 0f;
+        if (wasDown) shieldTimer -= Time.deltaTime;
+        if (wasDown && ShieldUp)
+        {
+            DamagePopup.SpawnText((Vector2)transform.position + Vector2.up * 0.6f, "SHIELD UP", new Color(0.55f, 0.85f, 1f), 3.5f);
+            Sfx.Play(Sfx.Id.Ready, 0.4f, 1.2f);
+        }
+
+        // up: a pulsing bubble; recharging: a faint ring that fills back in
+        float k = ShieldUp ? 1f : 1f - shieldTimer / shieldCooldown;
+        float pulse = ShieldUp ? 1f + 0.04f * Mathf.Sin(Time.time * 4f) : 1f;
+        shieldEdge.transform.localScale = shieldFill.transform.localScale = Vector3.one * 1.9f * pulse;
+        shieldEdge.color = new Color(0.55f, 0.85f, 1f, ShieldUp ? 0.7f : 0.2f * k);
+        shieldFill.color = new Color(0.55f, 0.85f, 1f, ShieldUp ? 0.12f : 0f);
+    }
+
+    private Transform NearestCat(float range)
+    {
+        Transform best = null;
+        float bestDist = float.MaxValue;
+        foreach (Collider2D c in Bomb.OverlapEnemies(transform.position, range, hits))
+        {
+            float d = (c.transform.position - transform.position).sqrMagnitude;
+            if (d < bestDist) { bestDist = d; best = c.transform; }
+        }
+        return best;
+    }
+
+    private void Slash(Vector2 dir)
+    {
+        Vector2 pos = transform.position;
+        float damage = stats.AttackDamage * slashDamage * (ult != null ? ult.DamageMultiplier : 1f);
+        float range = slashRange * stats.areaMultiplier;
+
+        DamageStats.Source = "Blade Dancer";
+        foreach (Collider2D c in Bomb.OverlapEnemies(pos, range, hits))
+        {
+            Vector2 to = (Vector2)c.transform.position - pos;
+            if (Vector2.Angle(dir, to) > slashArc / 2f) continue;
+            if (c.TryGetComponent(out EnemyHealth e) && !e.IsDead)
+            {
+                bool crit = Random.value < stats.critChance || AutoCrit(e);
+                e.TakeDamage(damage * (crit ? stats.critDamage * CritBonus(e) : 1f) * Random.Range(0.9f, 1.1f), pos, crit);
+            }
+            if (c.TryGetComponent(out IEnemyBrain brain))
+            {
+                brain.Knockback(to.normalized * slashPush);
+                if (slashSlows) brain.Slow(0.5f, 1.5f); // Weak Spot Lv 3: sets up the next crits
+            }
+        }
+
+        if (anim != null)
+        {
+            anim.PlayThrow(dir); // Mira's "throw" clips are her slash
+            anim.Squash(new Vector2(1.2f, 0.85f), 0.15f);
+        }
+        slashFx.transform.localPosition = dir * range * 0.45f;
+        slashFx.transform.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 211f); // crescent's bulge points at 211 deg
+        slashFx.transform.localScale = Vector3.one * range * 1.1f;
+        slashFx.gameObject.SetActive(true);
+        slashFxTime = 0f;
+        CameraFollow.Shake(0.04f, 0.06f);
+    }
+
+    private void UpdateSlashFx()
+    {
+        if (slashFxTime < 0f) return;
+        slashFxTime += Time.deltaTime;
+        float k = slashFxTime / 0.18f;
+        slashFx.color = new Color(1f, 1f, 1f, 0.85f * (1f - k));
+        if (k >= 1f) { slashFxTime = -1f; slashFx.gameObject.SetActive(false); }
+    }
+
+    private void OnDisable()
+    {
+        if (shieldEdge != null) shieldEdge.gameObject.SetActive(false);
+        if (shieldFill != null) shieldFill.gameObject.SetActive(false);
+        if (slashFx != null) slashFx.gameObject.SetActive(false);
+    }
+}

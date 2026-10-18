@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &6196779564912229249
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1812583949067707437, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: m_Color.b
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1812583949067707437, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: m_Color.r
+      value: 0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4349052301668551313, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: m_Name
+      value: ToxicSpitter
+      objectReference: {fileID: 0}
+    - target: {fileID: 6182774168877209951, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 7.8940296
+      objectReference: {fileID: 0}
+    - target: {fileID: 6182774168877209951, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.7610302
+      objectReference: {fileID: 0}
+    - target: {fileID: 6182774168877209951, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6182774168877209951, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6182774168877209951, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6182774168877209951, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6182774168877209951, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6182774168877209951, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6182774168877209951, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6182774168877209951, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7731279936762206870, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: behavior
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7731279936762206870, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: moveSpeed
+      value: 1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7731279936762206870, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: shootRange
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7731279936762206870, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: sleepChance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7731279936762206870, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: spitPuddles
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7731279936762206870, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: shootCooldown
+      value: 3.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7731279936762206870, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: projectileDamage
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8578363722354340003, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: xpValue
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8578363722354340003, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}
+      propertyPath: maxHealth
+      value: 30
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 581bea6a70e37ae4f85f8d5904ee9a81, type: 3}

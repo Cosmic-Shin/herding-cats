@@ -1,0 +1,504 @@
+fileFormatVersion: 2
+guid: 0edd9ed0ed1f63b4b8e12df00769d1f0
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1715476892087779854
+    second: CatSlimeAttack_0
+  - first:
+      213: -7295836949236121470
+    second: CatSlimeAttack_1
+  - first:
+      213: 5539263981522907528
+    second: CatSlimeAttack_2
+  - first:
+      213: -1615789997513470153
+    second: CatSlimeAttack_3
+  - first:
+      213: -8365608635948976646
+    second: CatSlimeAttack_4
+  - first:
+      213: 2255178353931124372
+    second: CatSlimeAttack_5
+  - first:
+      213: -5928484739016972071
+    second: CatSlimeAttack_6
+  - first:
+      213: -8433738075940351771
+    second: CatSlimeAttack_7
+  - first:
+      213: -5744616752427193884
+    second: CatSlimeAttack_8
+  - first:
+      213: 8748883970896212971
+    second: CatSlimeAttack_9
+  - first:
+      213: -511847282878387680
+    second: CatSlimeAttack_10
+  - first:
+      213: 7855696659814717830
+    second: CatSlimeAttack_11
+  - first:
+      213: -6949874287270227550
+    second: CatSlimeAttack_12
+  - first:
+      213: 1102469279058634933
+    second: CatSlimeAttack_13
+  - first:
+      213: -1288918654618605613
+    second: CatSlimeAttack_14
+  - first:
+      213: -2579531302825385360
+    second: CatSlimeAttack_15
+  - first:
+      213: -8149849107491694124
+    second: CatSlimeAttack_16
+  - first:
+      213: 8293062114594481404
+    second: CatSlimeAttack_17
+  - first:
+      213: -7307090215516685197
+    second: CatSlimeAttack_18
+  - first:
+      213: -300048544125869967
+    second: CatSlimeAttack_19
+  - first:
+      213: 3049566110523671033
+    second: CatSlimeAttack_20
+  - first:
+      213: 7494860084451908031
+    second: CatSlimeAttack_21
+  - first:
+      213: 6898008612946867677
+    second: CatSlimeAttack_w0
+  - first:
+      213: -2399157320898372383
+    second: CatSlimeAttack_w1
+  - first:
+      213: 9189621464772480841
+    second: CatSlimeAttack_w2
+  - first:
+      213: -6808813863022142600
+    second: CatSlimeAttack_w3
+  - first:
+      213: 7136388143754634408
+    second: CatSlimeAttack_w4
+  - first:
+      213: -7731643176988842617
+    second: CatSlimeAttack_w5
+  - first:
+      213: 1140950323841987788
+    second: CatSlimeAttack_w6
+  - first:
+      213: 5734623019525730904
+    second: CatSlimeAttack_w7
+  - first:
+      213: -8576111869348407056
+    second: CatSlimeAttack_w8
+  - first:
+      213: -2321548278492106831
+    second: CatSlimeAttack_w9
+  - first:
+      213: -7016108494994525441
+    second: CatSlimeAttack_w10
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 48
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: CatSlimeAttack_w0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 32
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd578484946aabf50800000000000000
+      internalID: 6898008612946867677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeAttack_w1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 32
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ec139fb02b74bed0800000000000000
+      internalID: -2399157320898372383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeAttack_w2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 32
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94f81149808188f70800000000000000
+      internalID: 9189621464772480841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeAttack_w3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 32
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87b5fc0cddb3281a0800000000000000
+      internalID: -6808813863022142600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeAttack_w4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 64
+        height: 32
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a4edcfd43b890360800000000000000
+      internalID: 7136388143754634408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeAttack_w5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 64
+        height: 32
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 785e1899e7fa3b490800000000000000
+      internalID: -7731643176988842617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeAttack_w6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 64
+        height: 32
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc4f7f6464875df00800000000000000
+      internalID: 1140950323841987788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeAttack_w7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 0
+        width: 64
+        height: 32
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 852fb9fb049759f40800000000000000
+      internalID: 5734623019525730904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeAttack_w8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 64
+        height: 32
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f81a7961b78bf880800000000000000
+      internalID: -8576111869348407056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeAttack_w9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 0
+        width: 64
+        height: 32
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bfee8b042438cfd0800000000000000
+      internalID: -2321548278492106831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CatSlimeAttack_w10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 0
+        width: 64
+        height: 32
+      alignment: 9
+      pivot: {x: 0.25, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff2304a2f76c1ae90800000000000000
+      internalID: -7016108494994525441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      CatSlimeAttack_0: 1715476892087779854
+      CatSlimeAttack_1: -7295836949236121470
+      CatSlimeAttack_10: -511847282878387680
+      CatSlimeAttack_11: 7855696659814717830
+      CatSlimeAttack_12: -6949874287270227550
+      CatSlimeAttack_13: 1102469279058634933
+      CatSlimeAttack_14: -1288918654618605613
+      CatSlimeAttack_15: -2579531302825385360
+      CatSlimeAttack_16: -8149849107491694124
+      CatSlimeAttack_17: 8293062114594481404
+      CatSlimeAttack_18: -7307090215516685197
+      CatSlimeAttack_19: -300048544125869967
+      CatSlimeAttack_2: 5539263981522907528
+      CatSlimeAttack_20: 3049566110523671033
+      CatSlimeAttack_21: 7494860084451908031
+      CatSlimeAttack_3: -1615789997513470153
+      CatSlimeAttack_4: -8365608635948976646
+      CatSlimeAttack_5: 2255178353931124372
+      CatSlimeAttack_6: -5928484739016972071
+      CatSlimeAttack_7: -8433738075940351771
+      CatSlimeAttack_8: -5744616752427193884
+      CatSlimeAttack_9: 8748883970896212971
+      CatSlimeAttack_w0: 6898008612946867677
+      CatSlimeAttack_w1: -2399157320898372383
+      CatSlimeAttack_w10: -7016108494994525441
+      CatSlimeAttack_w2: 9189621464772480841
+      CatSlimeAttack_w3: -6808813863022142600
+      CatSlimeAttack_w4: 7136388143754634408
+      CatSlimeAttack_w5: -7731643176988842617
+      CatSlimeAttack_w6: 1140950323841987788
+      CatSlimeAttack_w7: 5734623019525730904
+      CatSlimeAttack_w8: -8576111869348407056
+      CatSlimeAttack_w9: -2321548278492106831
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

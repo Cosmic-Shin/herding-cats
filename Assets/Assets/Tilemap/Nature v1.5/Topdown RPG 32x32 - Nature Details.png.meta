@@ -1,0 +1,1040 @@
+fileFormatVersion: 2
+guid: 4425fec93bf4c1745a48a44ff227d090
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2211383451596361632
+    second: Topdown RPG 32x32 - Nature Details_0
+  - first:
+      213: -2943063925856753503
+    second: Topdown RPG 32x32 - Nature Details_1
+  - first:
+      213: 1161269066516477199
+    second: Topdown RPG 32x32 - Nature Details_2
+  - first:
+      213: 4949277093563699199
+    second: Topdown RPG 32x32 - Nature Details_3
+  - first:
+      213: -8959528947583902723
+    second: Topdown RPG 32x32 - Nature Details_4
+  - first:
+      213: -6010294373661818205
+    second: Topdown RPG 32x32 - Nature Details_5
+  - first:
+      213: -6104547033840177794
+    second: Topdown RPG 32x32 - Nature Details_6
+  - first:
+      213: -2615980976971760461
+    second: Topdown RPG 32x32 - Nature Details_7
+  - first:
+      213: -8744046089417022099
+    second: Topdown RPG 32x32 - Nature Details_8
+  - first:
+      213: -7094855865292719067
+    second: Topdown RPG 32x32 - Nature Details_9
+  - first:
+      213: -7545175406123822805
+    second: Topdown RPG 32x32 - Nature Details_10
+  - first:
+      213: 6484669531331737022
+    second: Topdown RPG 32x32 - Nature Details_11
+  - first:
+      213: -3547293527749563146
+    second: Topdown RPG 32x32 - Nature Details_12
+  - first:
+      213: 6670849844472479495
+    second: Topdown RPG 32x32 - Nature Details_13
+  - first:
+      213: -2760840765638838162
+    second: Topdown RPG 32x32 - Nature Details_14
+  - first:
+      213: 3959344269427715691
+    second: Topdown RPG 32x32 - Nature Details_15
+  - first:
+      213: -8794621885184305868
+    second: Topdown RPG 32x32 - Nature Details_16
+  - first:
+      213: 7228786964101880093
+    second: Topdown RPG 32x32 - Nature Details_17
+  - first:
+      213: 5772212555584749068
+    second: Topdown RPG 32x32 - Nature Details_18
+  - first:
+      213: -5670429725094841176
+    second: Topdown RPG 32x32 - Nature Details_19
+  - first:
+      213: -8562527832672037739
+    second: Topdown RPG 32x32 - Nature Details_20
+  - first:
+      213: -1187376923926373287
+    second: Topdown RPG 32x32 - Nature Details_21
+  - first:
+      213: -403043422324696806
+    second: Topdown RPG 32x32 - Nature Details_22
+  - first:
+      213: 7761818530587873011
+    second: Topdown RPG 32x32 - Nature Details_23
+  - first:
+      213: -2375067456594608878
+    second: Topdown RPG 32x32 - Nature Details_24
+  - first:
+      213: -9148920295910559316
+    second: Topdown RPG 32x32 - Nature Details_25
+  - first:
+      213: -8079742296318192888
+    second: Topdown RPG 32x32 - Nature Details_26
+  - first:
+      213: -3134866963106086867
+    second: Topdown RPG 32x32 - Nature Details_27
+  - first:
+      213: -5356099187044246206
+    second: Topdown RPG 32x32 - Nature Details_28
+  - first:
+      213: -4586276771534913751
+    second: Topdown RPG 32x32 - Nature Details_29
+  - first:
+      213: -3179903650757833460
+    second: Topdown RPG 32x32 - Nature Details_30
+  - first:
+      213: -8855332124909765194
+    second: Topdown RPG 32x32 - Nature Details_31
+  - first:
+      213: -7151365515663955572
+    second: Topdown RPG 32x32 - Nature Details_32
+  - first:
+      213: 5643656252467275680
+    second: Topdown RPG 32x32 - Nature Details_33
+  - first:
+      213: -6763414383795495382
+    second: Topdown RPG 32x32 - Nature Details_34
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_0
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 98
+        width: 15
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0af0496688960be10800000000000000
+      internalID: 2211383451596361632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_1
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 96
+        width: 18
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a8aa04d3f22827d0800000000000000
+      internalID: -2943063925856753503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_2
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 100
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f053d563018ad1010800000000000000
+      internalID: 1161269066516477199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_3
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 98
+        width: 10
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fff87d05b4d5fa440800000000000000
+      internalID: 4949277093563699199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_4
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 96
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dfb9e6c44eb59a380800000000000000
+      internalID: -8959528947583902723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_5
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 99
+        width: 9
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a2cb5e6c15279ca0800000000000000
+      internalID: -6010294373661818205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_6
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 98
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7daa45e0da484ba0800000000000000
+      internalID: -6104547033840177794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_7
+      rect:
+        serializedVersion: 2
+        x: 237
+        y: 8
+        width: 137
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3bc3b68592b22bbd0800000000000000
+      internalID: -2615980976971760461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_8
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 68
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d65a7acd868e6a680800000000000000
+      internalID: -8744046089417022099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_9
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 65
+        width: 16
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52c71a04e220a8d90800000000000000
+      internalID: -7094855865292719067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_10
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 69
+        width: 14
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b21d9f5b1f62a4790800000000000000
+      internalID: -7545175406123822805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_11
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 67
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb5b3dcd49c2ef950800000000000000
+      internalID: 6484669531331737022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_12
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 69
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6fce174b45b75cec0800000000000000
+      internalID: -3547293527749563146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_13
+      rect:
+        serializedVersion: 2
+        x: 173
+        y: 70
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70f70c1079e939c50800000000000000
+      internalID: 6670849844472479495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_14
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 67
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e68fda283f58fa9d0800000000000000
+      internalID: -2760840765638838162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_15
+      rect:
+        serializedVersion: 2
+        x: 237
+        y: 67
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6ea7b2b2aa62f630800000000000000
+      internalID: 3959344269427715691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_16
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 40
+        width: 17
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43596b7cdf933f580800000000000000
+      internalID: -8794621885184305868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_17
+      rect:
+        serializedVersion: 2
+        x: 42
+        y: 41
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d195440b17fc15460800000000000000
+      internalID: 7228786964101880093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_18
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 43
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0ebdaf9cb40b1050800000000000000
+      internalID: 5772212555584749068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_19
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 43
+        width: 14
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a4f7ef45369e41b0800000000000000
+      internalID: -5670429725094841176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_20
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 43
+        width: 14
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 594103a6d4acb2980800000000000000
+      internalID: -8562527832672037739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_21
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 44
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95c5fda8af6958fe0800000000000000
+      internalID: -1187376923926373287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_22
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 43
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a19574f842a186af0800000000000000
+      internalID: -403043422324696806
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_23
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 40
+        width: 19
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fe0cb664d487bb60800000000000000
+      internalID: 7761818530587873011
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_24
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 43
+        width: 14
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21d761c5bb01a0fd0800000000000000
+      internalID: -2375067456594608878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_25
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 14
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca1b3e3c671880180800000000000000
+      internalID: -9148920295910559316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_26
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 8
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8035147903dfedf80800000000000000
+      internalID: -8079742296318192888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_27
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 15
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2044f53b17be74d0800000000000000
+      internalID: -3134866963106086867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_28
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 9
+        width: 14
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24d187eca205ba5b0800000000000000
+      internalID: -5356099187044246206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_29
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 11
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92f390f43954a50c0800000000000000
+      internalID: -4586276771534913751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_30
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 13
+        width: 17
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0d8c9c3a76bed3d0800000000000000
+      internalID: -3179903650757833460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_31
+      rect:
+        serializedVersion: 2
+        x: 139
+        y: 15
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6bdf5a6995a8b1580800000000000000
+      internalID: -8855332124909765194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_32
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 12
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c892fdbf3fe31cc90800000000000000
+      internalID: -7151365515663955572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_33
+      rect:
+        serializedVersion: 2
+        x: 207
+        y: 12
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a769b2d57b425e40800000000000000
+      internalID: 5643656252467275680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Topdown RPG 32x32 - Nature Details_34
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 13
+        width: 13
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2e1a19b3768322a0800000000000000
+      internalID: -6763414383795495382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Topdown RPG 32x32 - Nature Details_0: 2211383451596361632
+      Topdown RPG 32x32 - Nature Details_1: -2943063925856753503
+      Topdown RPG 32x32 - Nature Details_10: -7545175406123822805
+      Topdown RPG 32x32 - Nature Details_11: 6484669531331737022
+      Topdown RPG 32x32 - Nature Details_12: -3547293527749563146
+      Topdown RPG 32x32 - Nature Details_13: 6670849844472479495
+      Topdown RPG 32x32 - Nature Details_14: -2760840765638838162
+      Topdown RPG 32x32 - Nature Details_15: 3959344269427715691
+      Topdown RPG 32x32 - Nature Details_16: -8794621885184305868
+      Topdown RPG 32x32 - Nature Details_17: 7228786964101880093
+      Topdown RPG 32x32 - Nature Details_18: 5772212555584749068
+      Topdown RPG 32x32 - Nature Details_19: -5670429725094841176
+      Topdown RPG 32x32 - Nature Details_2: 1161269066516477199
+      Topdown RPG 32x32 - Nature Details_20: -8562527832672037739
+      Topdown RPG 32x32 - Nature Details_21: -1187376923926373287
+      Topdown RPG 32x32 - Nature Details_22: -403043422324696806
+      Topdown RPG 32x32 - Nature Details_23: 7761818530587873011
+      Topdown RPG 32x32 - Nature Details_24: -2375067456594608878
+      Topdown RPG 32x32 - Nature Details_25: -9148920295910559316
+      Topdown RPG 32x32 - Nature Details_26: -8079742296318192888
+      Topdown RPG 32x32 - Nature Details_27: -3134866963106086867
+      Topdown RPG 32x32 - Nature Details_28: -5356099187044246206
+      Topdown RPG 32x32 - Nature Details_29: -4586276771534913751
+      Topdown RPG 32x32 - Nature Details_3: 4949277093563699199
+      Topdown RPG 32x32 - Nature Details_30: -3179903650757833460
+      Topdown RPG 32x32 - Nature Details_31: -8855332124909765194
+      Topdown RPG 32x32 - Nature Details_32: -7151365515663955572
+      Topdown RPG 32x32 - Nature Details_33: 5643656252467275680
+      Topdown RPG 32x32 - Nature Details_34: -6763414383795495382
+      Topdown RPG 32x32 - Nature Details_4: -8959528947583902723
+      Topdown RPG 32x32 - Nature Details_5: -6010294373661818205
+      Topdown RPG 32x32 - Nature Details_6: -6104547033840177794
+      Topdown RPG 32x32 - Nature Details_7: -2615980976971760461
+      Topdown RPG 32x32 - Nature Details_8: -8744046089417022099
+      Topdown RPG 32x32 - Nature Details_9: -7094855865292719067
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
