@@ -44,7 +44,8 @@ public class Crate : MonoBehaviour
         else if (r < 0.65f) Pickup.Spawn(Pickup.Kind.Magnet, pos);
         else if (r < 0.8f) Pickup.Spawn(Pickup.Kind.Speed, pos);
         else if (r < 0.92f) Pickup.Spawn(Pickup.Kind.Bomb, pos);
-        else Pickup.Spawn(Pickup.Kind.HoloBox, pos);
+        else if (Pickup.HoloBoxCount < EnemyHealth.MaxRandomChests) Pickup.Spawn(Pickup.Kind.HoloBox, pos);
+        else Burger.Spawn(pos);
 
         Destroy(gameObject);
     }

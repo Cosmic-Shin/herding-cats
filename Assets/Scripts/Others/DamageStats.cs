@@ -23,6 +23,9 @@ public static class DamageStats
         totals[key] = v + amount;
     }
 
+    public static float Total => totals.Values.Sum();
+    public static List<KeyValuePair<string, float>> Top(int n) => totals.OrderByDescending(kv => kv.Value).Take(n).ToList();
+
     public static string Report()
     {
         if (totals.Count == 0) return "";
@@ -33,5 +36,5 @@ public static class DamageStats
         return sb.ToString();
     }
 
-    private static string Short(float v) => v >= 1e6f ? $"{v / 1e6f:0.0}M" : v >= 1e4f ? $"{v / 1e3f:0.0}K" : Mathf.RoundToInt(v).ToString();
+    public static string Short(float v) => v >= 1e6f ? $"{v / 1e6f:0.0}M" : v >= 1e4f ? $"{v / 1e3f:0.0}K" : Mathf.RoundToInt(v).ToString();
 }

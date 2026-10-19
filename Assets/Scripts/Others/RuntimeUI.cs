@@ -99,6 +99,9 @@ public static class RuntimeUI
 
     public static TextMeshProUGUI Outline(TextMeshProUGUI t, float width = 0.2f)
     {
+        // Mobile SDF shader only draws outlines with OUTLINE_ON; dilate so thin pixel strokes survive (matches "PixelFont Outline.mat").
+        t.fontMaterial.EnableKeyword("OUTLINE_ON");
+        t.fontMaterial.SetFloat(ShaderUtilities.ID_FaceDilate, 0.1f);
         t.outlineWidth = width;
         t.outlineColor = new Color32(10, 8, 24, 255);
         return t;

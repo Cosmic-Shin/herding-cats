@@ -11,7 +11,9 @@ public class Pickup : MonoBehaviour
     public static float AnvilChanceMultiplier = 1f;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetStatics() => AnvilChanceMultiplier = 1f;
+    private static void ResetStatics() { AnvilChanceMultiplier = 1f; HoloBoxCount = 0; }
+    public static int HoloBoxCount { get; private set; }
+    private void OnDestroy() { if (kind == Kind.HoloBox) HoloBoxCount--; }
     private static readonly List<Collider2D> hits = new List<Collider2D>(256);
 
     private Kind kind;
@@ -30,6 +32,7 @@ public class Pickup : MonoBehaviour
         go.transform.position = pos;
         var p = go.AddComponent<Pickup>();
         p.kind = kind;
+        if (kind == Kind.HoloBox) HoloBoxCount++;
         p.sr = go.AddComponent<SpriteRenderer>();
         p.sr.sprite = UiIcons.Icon(kind switch
         {

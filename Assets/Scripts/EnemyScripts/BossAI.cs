@@ -12,7 +12,9 @@ public class BossAI : MonoBehaviour, IEnemyBrain
             Mathf.Abs(d.x) > Mathf.Abs(d.y) ? (d.x < 0f ? left : right) : (d.y < 0f ? down : up);
     }
 
-    private enum State { Walk, Zap, Charge, Recover, Dead }
+    private enum State { Walk, Zap, Charge, Recover, Dead, Special }
+
+    [System.Flags] public enum Special { None = 0, Spiral = 1, Summon = 2, Laser = 4 }
 
     public string bossName = "Beholder";
     public Dir4 idle, walk, run, attack, hurt, death;
@@ -50,6 +52,11 @@ public class BossAI : MonoBehaviour, IEnemyBrain
     public float ringSpeed = 5f;
     public float ringDamage = 15f;
 
+    [Header("Signature attacks (set per boss by BossTimeline; several = picks one at random)")]
+    public Special specials;
+    public float specialCooldown = 8f;
+    public int summonCount = 10;
+
     [Header("Enrage (below this HP fraction: faster attacks, extra ring wave; 0 = off)")]
     [Range(0f, 1f)] public float enrageBelow = 0f;
     public float enrageSpeedup = 1.4f;
@@ -76,6 +83,13 @@ public class BossAI : MonoBehaviour, IEnemyBrain
     private bool enraged;
     private Vector2 playerVel, lastPlayerPos;
     private float slowAmount, slowTimer;
+
+    private float specialTimer = 4f;
+    private Special current;
+    private float spiralAngle, spiralTimer;
+    private bool summoned;
+    private float laserFrom, laserSweep;
+    private SpriteRenderer[] beams;
 
     private Dir4 clip;
     private float clipFps;
@@ -107,6 +121,156 @@ public class BossAI : MonoBehaviour, IEnemyBrain
         SetState(State.Walk);
     }
 
+    // Late-game bosses: faster, attack more often, more projectiles/strikes, harder hits, enraged sooner.
+    public void Empower(float power)
+    {
+        if (power <= 1f) return;
+        float pace = Mathf.Sqrt(power);
+        moveSpeed *= pace;
+        chargeSpeed *= pace;
+        zapCooldown /= power;
+        chargeCooldown /= power;
+        zapStrikes = Mathf.RoundToInt(zapStrikes * power);
+        chargeRepeats += Mathf.FloorToInt(power - 1f);
+        ringBullets = Mathf.RoundToInt(ringBullets * pace);
+        ringWaves += Mathf.FloorToInt(power - 1f);
+        contactDamage *= power;
+        zapDamage *= power;
+        ringDamage *= power;
+        enrageBelow = Mathf.Max(enrageBelow, 0.75f);
+        knockbackDecay *= power * 2f;
+        specialCooldown /= pace;
+        summonCount = Mathf.RoundToInt(summonCount * power);
+    }
+
+    private const float SpiralTime = 3f, SummonWindup = 0.9f, LaserWindup = 1f, LaserTime = 2.4f, LaserLength = 14f, LaserWidth = 0.7f;
+
+    private void StartSpecial()
+    {
+        var options = new System.Collections.Generic.List<Special>();
+        foreach (Special s in new[] { Special.Spiral, Special.Summon, Special.Laser })
+            if ((specials & s) != 0) options.Add(s);
+        current = options[Random.Range(0, options.Count)];
+        SetState(State.Special);
+        Play(attack, zapFps, true);
+
+        if (current == Special.Spiral) { spiralAngle = Random.Range(0f, 360f); spiralTimer = 0f; }
+        else if (current == Special.Summon)
+        {
+            summoned = false;
+            ExplosionFx.Ring(rb.position, 4f, new Color(0.5f, 0.75f, 1f), SummonWindup);
+            DamagePopup.SpawnText(rb.position + Vector2.up * 1.5f, "RISE, MY CATS!", new Color(0.6f, 0.8f, 1f), 6f);
+        }
+        else
+        {
+            Vector2 d = (Vector2)player.position - rb.position;
+            laserSweep = (Random.value < 0.5f ? 1f : -1f) * 140f;
+            laserFrom = Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg - laserSweep * 0.5f;
+            foreach (float a in LaserAngles(laserFrom))
+            {
+                Vector2 dir = new Vector2(Mathf.Cos(a * Mathf.Deg2Rad), Mathf.Sin(a * Mathf.Deg2Rad));
+                AoeWarning.SpawnLine(rb.position, dir, LaserLength, LaserWidth, LaserWindup);
+            }
+        }
+    }
+
+    // Enraged: a second beam pointing the opposite way.
+    private float[] LaserAngles(float a) => enraged ? new[] { a, a + 180f } : new[] { a };
+
+    private bool UpdateSpecial()
+    {
+        if (current == Special.Spiral)
+        {
+            if ((spiralTimer -= Time.fixedDeltaTime) <= 0f)
+            {
+                spiralTimer = 0.09f;
+                int arms = enraged ? 5 : 4;
+                for (int i = 0; i < arms; i++)
+                {
+                    float a = (spiralAngle + i * 360f / arms) * Mathf.Deg2Rad;
+                    EnemyProjectile.Spawn(rb.position, new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * ringSpeed * 0.8f, ringDamage, playerHealth, 0.4f, new Color(1f, 0.4f, 0.35f));
+                }
+                spiralAngle += 13f;
+            }
+            return stateTime < SpiralTime;
+        }
+
+        if (current == Special.Summon)
+        {
+            if (!summoned && stateTime >= SummonWindup)
+            {
+                summoned = true;
+                EnemySpawner spawner = FindFirstObjectByType<EnemySpawner>();
+                if (spawner != null) spawner.SpawnAround(rb.position, summonCount, 2.5f);
+                ExplosionFx.Spawn(rb.position, 3f, new Color(0.5f, 0.75f, 1f));
+                CameraFollow.Shake(0.15f, 0.2f);
+            }
+            return stateTime < SummonWindup + 0.4f;
+        }
+
+        if (beams == null) beams = new[] { MakeBeam(), MakeBeam() };
+        float t = stateTime - LaserWindup;
+        bool firing = t >= 0f && t < LaserTime;
+        float[] angles = LaserAngles(laserFrom + laserSweep * Mathf.Clamp01(t / LaserTime));
+        for (int i = 0; i < beams.Length; i++)
+        {
+            bool on = firing && i < angles.Length;
+            if (beams[i].gameObject.activeSelf != on) beams[i].gameObject.SetActive(on);
+            if (!on) continue;
+            // Flares wide on ignition, thins out over the last moment.
+            float env = t < 0.08f ? Mathf.Lerp(2f, 1f, t / 0.08f) : Mathf.Clamp01((LaserTime - t) / 0.15f);
+            float flicker = 0.85f + 0.15f * Mathf.Sin(Time.time * 40f + i);
+            beams[i].transform.position = rb.position;
+            beams[i].transform.rotation = Quaternion.Euler(0f, 0f, angles[i]);
+            beams[i].transform.localScale = new Vector3(LaserLength, LaserWidth * flicker * env, 1f);
+
+            Vector2 dir = beams[i].transform.right;
+            if (Random.value < 0.6f) Juice.Sparks(rb.position + dir * Random.Range(1f, LaserLength), new Color(0.95f, 0.7f, 1f), 1, 2.5f, 0.12f);
+            Vector2 rel = (Vector2)player.position - rb.position;
+            float along = Vector2.Dot(rel, dir);
+            if (along > 0f && along < LaserLength && Mathf.Abs(Vector2.Dot(rel, Vector2.Perpendicular(dir))) < LaserWidth * 0.5f + 0.3f
+                && damageTimer <= 0f && playerHealth != null)
+            {
+                playerHealth.TakeDamage(zapDamage);
+                damageTimer = 0.5f;
+            }
+        }
+        if (firing) CameraFollow.Shake(0.04f, 0.05f);
+        return t < LaserTime;
+    }
+
+    private static readonly Color BeamColor = new Color(0.8f, 0.4f, 1f, 0.55f);
+
+    // Same look as the player's LaserWeapon: soft glowing outer beam + bright thin core.
+    private SpriteRenderer MakeBeam()
+    {
+        var sr = new GameObject("BossLaser").AddComponent<SpriteRenderer>();
+        sr.transform.SetParent(transform.parent, true);
+        sr.sprite = Shapes.Square;
+        sr.color = BeamColor;
+        sr.sortingOrder = 60;
+        Lighting.Glow(sr);
+        var core = new GameObject("Core").AddComponent<SpriteRenderer>();
+        core.transform.SetParent(sr.transform, false);
+        core.transform.localScale = new Vector3(1f, 0.35f, 1f);
+        core.sprite = Shapes.Square;
+        core.color = new Color(1f, 0.92f, 1f);
+        core.sortingOrder = 61;
+        Lighting.Glow(core);
+        sr.gameObject.SetActive(false);
+        return sr;
+    }
+
+    private void HideBeams()
+    {
+        if (beams != null) foreach (SpriteRenderer b in beams) if (b != null) b.gameObject.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        if (beams != null) foreach (SpriteRenderer b in beams) if (b != null) Destroy(b.gameObject);
+    }
+
     public bool IsImpaired => slowTimer > 0f;
 
     public void Slow(float amount, float seconds)
@@ -124,6 +288,7 @@ public class BossAI : MonoBehaviour, IEnemyBrain
     public void Die()
     {
         SetState(State.Dead);
+        HideBeams();
         rb.simulated = false;
         CameraFollow.Shake(0.25f, 0.4f);
         ExplosionFx.Spawn(transform.position, 2.5f);
@@ -223,6 +388,7 @@ public class BossAI : MonoBehaviour, IEnemyBrain
         float pace = enraged ? enrageSpeedup : 1f;
         zapTimer -= dt * pace;
         chargeTimer -= dt * pace;
+        specialTimer -= dt * pace;
 
         Vector2 toPlayer = (Vector2)player.position - rb.position;
         float dist = toPlayer.magnitude;
@@ -241,7 +407,8 @@ public class BossAI : MonoBehaviour, IEnemyBrain
             case State.Walk:
                 facing = dir;
                 velocity = dir * moveSpeed * (enraged ? 1.25f : 1f);
-                if (zapTimer <= 0f && dist < zapRange) SetState(State.Zap);
+                if (specials != Special.None && specialTimer <= 0f && dist < 10f) StartSpecial();
+                else if (zapTimer <= 0f && dist < zapRange) SetState(State.Zap);
                 else if (chargeTimer <= 0f && dist > 3f) { chargesLeft = chargeRepeats; SetState(State.Charge); }
                 break;
 
@@ -276,6 +443,16 @@ public class BossAI : MonoBehaviour, IEnemyBrain
                     FireRing();
                     if (--chargesLeft > 0) SetState(State.Charge);
                     else { chargeTimer = chargeCooldown; SetState(State.Recover); }
+                }
+                break;
+
+            case State.Special:
+                facing = dir;
+                if (!UpdateSpecial())
+                {
+                    HideBeams();
+                    specialTimer = specialCooldown;
+                    SetState(State.Recover);
                 }
                 break;
 

@@ -49,9 +49,19 @@ public class EnemySpawner : MonoBehaviour
     public float eliteHealth = 8f;
     public int eliteXpMultiplier = 6;
 
+    [Header("Surge: extra scaling from this time on, so a maxed build can't just stand still")]
+    public float surgeStart = 540f;
+    public float surgeHealthQuadratic = 0.1f;
+    public float surgeDamagePerMinute = 0.15f;
+    public float surgeSpeedPerMinute = 0.05f;
+    public float endlessSpeedPerMinute = 0.12f;
+    public float maxSpeedScale = 2.2f;
+    private float SurgeMinutes => Mathf.Max(0f, (runTime - surgeStart) / 60f);
+
     public static float DamageScale { get; private set; } = 1f;
+    public static float SpeedScale { get; private set; } = 1f;
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetStatics() => DamageScale = 1f;
+    private static void ResetStatics() => DamageScale = SpeedScale = 1f;
 
     [Header("Endless (HoloCure 30-min style): when the final boss (BossTimeline, 20:00) dies, every enemy vanishes and only minibosses come")]
     public float endlessWaveInterval = 2.2f;
@@ -68,7 +78,7 @@ public class EnemySpawner : MonoBehaviour
     public float RunTime => runTime;
     public float EndlessMinutes => Endless ? (runTime - endlessStart) / 60f : 0f;
 
-    private void Awake() => Endless = false;
+    private void Awake() { Endless = false; SpeedScale = 1f; }
 
     public void StartEndless()
     {
@@ -114,21 +124,58 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    [Header("Endless milestones: every N minutes a boss returns and a new twist kicks in")]
+    public float milestoneMinutes = 5f;
+    private int milestone;
+    private float endlessWaveRate = 1f, endlessDamageMul = 1f, endlessHealthMul = 1f, endlessEliteChance;
+
+    private void CheckMilestone()
+    {
+        int reached = Mathf.FloorToInt(EndlessMinutes / milestoneMinutes);
+        if (reached <= milestone) return;
+        milestone = reached;
+
+        string twist;
+        switch (milestone)
+        {
+            case 1: endlessEliteChance = 0.25f; twist = "big cats can now be elite"; break;
+            case 2: endlessWaveRate = 2f; twist = "waves come twice as fast"; break;
+            case 3: endlessDamageMul = 2f; twist = "cats hit twice as hard"; break;
+            default: endlessHealthMul *= 2f; endlessDamageMul *= 1.25f; twist = "everything grows stronger"; break;
+        }
+
+        int seconds = Mathf.RoundToInt(milestone * milestoneMinutes * 60f);
+        BossTimeline timeline = FindFirstObjectByType<BossTimeline>();
+        if (timeline != null)
+        {
+            timeline.Announce($"ENDLESS {seconds / 60}:{seconds % 60:00}", twist + " + a boss returns");
+            timeline.SpawnEndlessBoss(milestone);
+        }
+        Juice.Flash(new Color(1f, 0.3f, 0.3f, 0.4f), 0.5f);
+        CameraFollow.Shake(0.25f, 0.4f);
+    }
+
     private void UpdateEndless()
     {
+        CheckMilestone();
         if (miniBosses.Count == 0 || (endlessTimer -= Time.deltaTime) > 0f) return;
         float minutes = EndlessMinutes;
-        endlessTimer = Mathf.Max(endlessMinWaveInterval, endlessWaveInterval - minutes * 0.25f);
+        endlessTimer = Mathf.Max(endlessMinWaveInterval, endlessWaveInterval - minutes * 0.25f) / endlessWaveRate;
 
         int ring = Mathf.Min(endlessRingMax, endlessRingStart + Mathf.FloorToInt(minutes * endlessRingPerMinute));
         ring = Mathf.Min(ring, endlessMaxAlive - EnemyAI.AliveCount);
         float turn = Random.Range(0f, 360f);
-        float health = endlessHealthStart + minutes * endlessHealthPerMinute;
+        float health = (endlessHealthStart + minutes * endlessHealthPerMinute) * endlessHealthMul;
         for (int i = 0; i < ring; i++)
         {
             float angle = (turn + i * 360f / ring + Random.Range(-6f, 6f)) * Mathf.Deg2Rad;
             Vector2 at = (Vector2)player.position + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * Random.Range(minSpawnRadius, maxSpawnRadius);
-            SpawnMiniBoss(miniBosses[Random.Range(0, miniBosses.Count)], at, health, unstoppable: true);
+            GameObject cat = SpawnMiniBoss(miniBosses[Random.Range(0, miniBosses.Count)], at, health, unstoppable: true);
+            if (cat != null && Random.value < endlessEliteChance && cat.TryGetComponent(out EnemyHealth h) && cat.TryGetComponent(out EnemyAI ai))
+            {
+                h.MakeElite(2f, 2);
+                ai.MakeElite();
+            }
         }
     }
 
@@ -211,7 +258,8 @@ public class EnemySpawner : MonoBehaviour
 
         runTime += Time.deltaTime;
         difficultyTimer += Time.deltaTime;
-        DamageScale = (1f + runTime / 60f * damageGrowthPerMinute) * difficulty;
+        DamageScale = (1f + runTime / 60f * damageGrowthPerMinute) * difficulty * (1f + SurgeMinutes * surgeDamagePerMinute) * endlessDamageMul;
+        SpeedScale = Mathf.Min(maxSpeedScale, 1f + SurgeMinutes * surgeSpeedPerMinute + EndlessMinutes * endlessSpeedPerMinute);
 
         if ((crateTimer -= Time.deltaTime) <= 0f)
         {
@@ -222,7 +270,7 @@ public class EnemySpawner : MonoBehaviour
         if (Endless) { UpdateEndless(); return; }
 
         float lateBoost = LateBoost;
-        int cap = maxEnemies + Mathf.RoundToInt(lateMaxEnemiesBonus * (lateBoost - 1f) / Mathf.Max(0.01f, lateSpawnMaxBoost - 1f));
+        int cap = AliveCap;
 
         if (difficultyTimer >= difficultyRampInterval)
         {
@@ -266,9 +314,9 @@ public class EnemySpawner : MonoBehaviour
 
     public void SpawnMiniBoss(MiniBoss m) => SpawnMiniBoss(m, GetSpawnPositionAroundPlayer(), 1f, false);
 
-    public void SpawnMiniBoss(MiniBoss m, Vector2 at, float extraHealth, bool unstoppable)
+    public GameObject SpawnMiniBoss(MiniBoss m, Vector2 at, float extraHealth, bool unstoppable)
     {
-        if (m.prefab == null || player == null) return;
+        if (m.prefab == null || player == null) return null;
         GameObject boss = Instantiate(m.prefab, at, Quaternion.identity);
         boss.transform.localScale *= m.scale;
         if (boss.TryGetComponent(out EnemyAI ai))
@@ -282,6 +330,7 @@ public class EnemySpawner : MonoBehaviour
             health.ScaleHealth(m.healthMultiplier * HealthMultiplier * extraHealth);
             health.xpValue = Mathf.RoundToInt(health.xpValue * m.healthMultiplier);
         }
+        return boss;
     }
 
     public void SpawnSwarm(GameObject prefab = null)
@@ -394,6 +443,25 @@ public class EnemySpawner : MonoBehaviour
 
     public void SpawnNow(GameObject prefab) => SpawnEnemy(prefab);
 
+    // Boss summon: a ring of awake cats around a point.
+    public void SpawnAround(Vector2 center, int count, float radius)
+    {
+        count = Mathf.Min(count, AliveCap - EnemyAI.AliveCount);
+        GameObject prefab = RandomUnlockedPrefab();
+        if (prefab == null || count <= 0) return;
+        for (int i = 0; i < count; i++)
+        {
+            float a = i * Mathf.PI * 2f / count;
+            GameObject cat = Pool.Spawn(prefab, center + new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * radius, Quaternion.identity);
+            Juice.CatPuff(cat.transform.position, new Color(0.6f, 0.8f, 1f));
+            if (cat.TryGetComponent(out EnemyHealth health)) health.ScaleHealth(HealthMultiplier);
+            if (cat.TryGetComponent(out EnemyAI ai)) ai.WakeUp();
+        }
+    }
+
+    private int AliveCap => Endless ? endlessMaxAlive
+        : maxEnemies + Mathf.RoundToInt(lateMaxEnemiesBonus * (LateBoost - 1f) / Mathf.Max(0.01f, lateSpawnMaxBoost - 1f));
+
     public void Advance(float seconds)
     {
         runTime += seconds;
@@ -401,7 +469,8 @@ public class EnemySpawner : MonoBehaviour
             difficultyMultiplier *= difficultyMultiplierStep;
     }
 
-    public float HealthMultiplier => (1f + runTime / 60f * healthGrowthPerMinute + (runTime / 60f) * (runTime / 60f) * healthGrowthQuadratic) * difficulty;
+    public float HealthMultiplier => (1f + runTime / 60f * healthGrowthPerMinute + (runTime / 60f) * (runTime / 60f) * healthGrowthQuadratic) * difficulty
+                                    * (1f + SurgeMinutes * SurgeMinutes * surgeHealthQuadratic);
 
     private void SpawnEnemy(GameObject prefab)
     {

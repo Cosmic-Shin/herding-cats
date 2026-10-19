@@ -209,12 +209,13 @@ public class EnemyHealth : MonoBehaviour, IPoolable
         }
     }
 
-    private const float EliteChestChance = 0.12f;
+    private const float EliteChestChance = 0.04f;
+    public const int MaxRandomChests = 3;
 
     private void EliteDeath()
     {
         EliteKills++;
-        if (Random.value < EliteChestChance) Pickup.Spawn(Pickup.Kind.HoloBox, (Vector2)transform.position + Vector2.left * 0.6f);
+        if (Pickup.HoloBoxCount < MaxRandomChests && Random.value < EliteChestChance) Pickup.Spawn(Pickup.Kind.HoloBox, (Vector2)transform.position + Vector2.left * 0.6f);
         if (!(ai is EnemyAI cat)) return;
         if (cat.Mod == EnemyAI.EliteMod.Volatile)
             DelayedBlast.Spawn(transform.position, 2.2f, 0.8f, cat.contactDamage * 2f);

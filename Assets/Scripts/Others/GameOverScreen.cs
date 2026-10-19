@@ -70,10 +70,7 @@ public class GameOverScreen : MonoBehaviour
         RuntimeUI.Outline(RuntimeUI.Text(panel, $"<color=#FFE08A>SCORE  {entry.score:N0}</color>\n<size=60%>{place}</size>", 34, Color.white,
                                          new Vector2(0, 178), new Vector2(560, 80)));
         TextMeshProUGUI summary = RuntimeUI.Text(panel, Summary(), 22, Color.white, new Vector2(-235, -20), new Vector2(480, 300), TextAlignmentOptions.TopLeft);
-        TextMeshProUGUI damage = RuntimeUI.Text(panel, DamageStats.Report().TrimStart(), 22, Color.white, new Vector2(250, -20), new Vector2(440, 300), TextAlignmentOptions.TopLeft);
-        damage.enableAutoSizing = true;
-        damage.fontSizeMin = 12;
-        damage.fontSizeMax = 22;
+        DamageChart(panel, new Vector2(250, -20), new Vector2(440, 320), hud != null ? hud.RunTime : 0f);
         summary.enableAutoSizing = true;
         summary.fontSizeMin = 12;
         summary.fontSizeMax = 22;
@@ -81,6 +78,71 @@ public class GameOverScreen : MonoBehaviour
         Button restart = RuntimeUI.Button(panel, "Restart", new Vector2(-100, -245), new Vector2(180, 56), Restart);
         RuntimeUI.Button(panel, "Main Menu", new Vector2(100, -245), new Vector2(180, 56), MainMenu.BackToMenu);
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(restart.gameObject);
+    }
+
+    // One row per damage source: name, total · share · DPS, and a bar sized against the top source.
+    private static void DamageChart(Transform parent, Vector2 pos, Vector2 size, float seconds)
+    {
+        var box = new GameObject("DamageChart", typeof(RectTransform)).GetComponent<RectTransform>();
+        box.SetParent(parent, false);
+        box.anchoredPosition = pos;
+        box.sizeDelta = size;
+
+        var rows = DamageStats.Top(10);
+        float total = Mathf.Max(1f, DamageStats.Total);
+        TextMeshProUGUI Label(string text, float x0, float x1, float y0, float y1, TextAlignmentOptions align)
+        {
+            TextMeshProUGUI t = RuntimeUI.Text(box, text, 18, Color.white, Vector2.zero, Vector2.zero, align);
+            t.rectTransform.anchorMin = new Vector2(x0, y0);
+            t.rectTransform.anchorMax = new Vector2(x1, y1);
+            t.rectTransform.offsetMin = t.rectTransform.offsetMax = Vector2.zero;
+            t.enableAutoSizing = true;
+            t.fontSizeMin = 10;
+            t.fontSizeMax = 20;
+            return t;
+        }
+
+        float rowH = 1f / (rows.Count + 1);
+        Label($"<b><color=#FFE08A>Damage Dealt</color></b>  <color=#9AA3C0>{DamageStats.Short(total)} total</color>", 0f, 1f, 1f - rowH, 1f, TextAlignmentOptions.Left);
+        if (rows.Count == 0) { Label("<color=#5A6280>no damage dealt</color>", 0f, 1f, 1f - 2f * rowH, 1f - rowH, TextAlignmentOptions.Left); return; }
+
+        float best = rows[0].Value;
+        for (int i = 0; i < rows.Count; i++)
+        {
+            string name = rows[i].Key;
+            float value = rows[i].Value;
+            float top = 1f - (i + 1) * rowH, bottom = top - rowH;
+            string dps = seconds > 1f ? $"  {DamageStats.Short(value / seconds)}/s" : "";
+            const float x0 = 0.08f; // icon column
+            Sprite icon = SourceIcon(name);
+            if (icon != null)
+            {
+                Image img = RuntimeUI.Box(box, "Icon", new Vector2(0f, bottom + rowH * 0.05f), new Vector2(x0 - 0.01f, top - rowH * 0.05f), Color.white);
+                img.sprite = icon;
+                img.preserveAspect = true;
+            }
+            Label(name, x0, 0.55f, bottom + rowH * 0.42f, top, TextAlignmentOptions.BottomLeft);
+            Label($"{DamageStats.Short(value)}  <color=#9AA3C0>{value / total:P0}{dps}</color>", 0.4f, 1f, bottom + rowH * 0.42f, top, TextAlignmentOptions.BottomRight);
+            RuntimeUI.Box(box, "Track", new Vector2(x0, bottom + rowH * 0.1f), new Vector2(1f, bottom + rowH * 0.38f), new Color(1f, 1f, 1f, 0.08f));
+            RuntimeUI.Box(box, "Bar", new Vector2(x0, bottom + rowH * 0.1f), new Vector2(x0 + (1f - x0) * Mathf.Max(0.01f, value / best), bottom + rowH * 0.38f), BarColor(name));
+        }
+    }
+
+    // Damage is recorded by display name; map it back to a weapon id for the icon.
+    private static Sprite SourceIcon(string source)
+    {
+        if (source == DamageStats.Bombs || source == "Bomb Pickup") return UiIcons.Icon("bomb");
+        PlayerWeapons.Def d = System.Array.Find(PlayerWeapons.All, w => w.name == source) ?? System.Array.Find(PlayerWeapons.CollabDefs, w => w.name == source);
+        return d != null ? UiIcons.Icon(d.id) : null;
+    }
+
+    private static Color BarColor(string source)
+    {
+        Color c = DamagePopup.SourceColor(source);
+        if (c != Color.white) return c;
+        int hash = 0;
+        foreach (char ch in source) hash = hash * 31 + ch;
+        return Color.HSVToRGB(Mathf.Abs(hash % 360) / 360f, 0.5f, 1f);
     }
 
     private string Summary()

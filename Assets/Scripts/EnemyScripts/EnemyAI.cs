@@ -259,7 +259,9 @@ public class EnemyAI : MonoBehaviour, IEnemyBrain, IPoolable
         if (!initialized)
         {
             baseScale = transform.localScale;
+            bool wasElite = elite;
             OnSpawn();
+            if (wasElite) MakeElite();
             if (health != null && health.xpGemCount > 1) anim.SetAura(AuraColor);
         }
     }
@@ -534,7 +536,7 @@ public class EnemyAI : MonoBehaviour, IEnemyBrain, IPoolable
                 {
                     anim.Play(anim.walk, 8f, true);
                     Vector2 move = steer != null ? steer(dir) : dir;
-                    velocity = move * moveSpeed * speedMul * (boostTimer > 0f ? wakeSpeedMultiplier : 1f);
+                    velocity = move * moveSpeed * speedMul * EnemySpawner.SpeedScale * (boostTimer > 0f ? wakeSpeedMultiplier : 1f);
                 }
                 break;
 

@@ -45,7 +45,7 @@ public class DamagePopup : MonoBehaviour
     }
 
     private static readonly Dictionary<string, Color> sourceColors = new Dictionary<string, Color>();
-    private static Color SourceColor(string source)
+    public static Color SourceColor(string source)
     {
         if (string.IsNullOrEmpty(source)) return Color.white;
         if (sourceColors.TryGetValue(source, out Color c)) return c;

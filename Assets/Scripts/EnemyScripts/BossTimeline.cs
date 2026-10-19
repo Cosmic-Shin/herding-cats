@@ -11,6 +11,10 @@ public class BossTimeline : MonoBehaviour
         public GameObject prefab;
         public float healthMultiplier = 1f;
         public float scale = 1f;
+        [Tooltip("1 = prefab as-is. Higher = faster, more attacks, more damage (BossAI.Empower).")]
+        public float power = 1f;
+        public BossAI.Special specials;
+        public Color tint = Color.white;
         public string titleOverride;
         public bool unlocksSupers;
         [System.NonSerialized] public bool warned, spawned;
@@ -86,6 +90,26 @@ public class BossTimeline : MonoBehaviour
 
     public void Advance(float seconds) => runTime += seconds;
     public void AdminSpawn(BossEvent e) => Spawn(e);
+
+    // Endless milestone: the final boss returns, tougher each time, with every signature attack.
+    public void SpawnEndlessBoss(int milestone)
+    {
+        BossEvent last = null;
+        foreach (BossEvent e in events) if (last == null || e.time > last.time) last = e;
+        if (last == null) return;
+        Spawn(new BossEvent
+        {
+            prefab = last.prefab,
+            scale = last.scale,
+            healthMultiplier = last.healthMultiplier * (1f + milestone),
+            power = last.power + 0.5f * milestone,
+            specials = BossAI.Special.Spiral | BossAI.Special.Summon | BossAI.Special.Laser,
+            tint = Color.Lerp(last.tint, new Color(1f, 0.3f, 0.3f), Mathf.Min(1f, milestone * 0.3f)),
+            titleOverride = $"{DisplayName(last)} Reborn {ToRoman(milestone)}",
+        });
+    }
+
+    private static string ToRoman(int n) => n switch { 1 => "I", 2 => "II", 3 => "III", 4 => "IV", 5 => "V", _ => n.ToString() };
     public bool BossFight => bossBar != null && bossBar.activeSelf;
     public void AdminDropCompanion(Vector2 at)
     {
@@ -148,12 +172,15 @@ public class BossTimeline : MonoBehaviour
         if (boss.TryGetComponent(out BossAI ai))
         {
             ai.contactRange *= e.scale;
+            ai.Empower(e.power);
+            ai.specials = e.specials;
             if (!string.IsNullOrEmpty(e.titleOverride)) ai.bossName = e.titleOverride;
         }
         if (boss.TryGetComponent(out EnemyHealth health))
         {
             health.ScaleHealth(e.healthMultiplier);
-            health.xpValue = Mathf.RoundToInt(health.xpValue * e.healthMultiplier);
+            if (e.tint != Color.white && e.tint.a > 0f) health.Tint(e.tint);
+            health.xpValue = Mathf.RoundToInt(health.xpValue * Mathf.Sqrt(e.healthMultiplier));
             health.xpGemCount = Mathf.RoundToInt(health.xpGemCount * Mathf.Sqrt(e.healthMultiplier));
             alive.Add(health);
             if (IsFinal(e)) finalBoss = health;
@@ -167,6 +194,7 @@ public class BossTimeline : MonoBehaviour
         if (warningText == null) return;
         warningText.text = $"{title}\n<size=45%>{subtitle.ToUpper()}</size>";
         warningText.gameObject.SetActive(true);
+        RuntimeUI.Outline(warningText, 0.22f); // set here, not Awake: TMP resets it during its own init
         warningTimer = warningLead + 1f;
         Sfx.Play(Sfx.Id.Alert, 0.8f);
     }

@@ -3730,7 +3730,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -125}
+  m_AnchoredPosition: {x: 0, y: -165}
   m_SizeDelta: {x: 760, y: 36}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1178962214
@@ -5745,22 +5745,29 @@ MonoBehaviour:
   healthGrowthQuadratic: 0.05
   damageGrowthPerMinute: 0.18
   lateSpawnStart: 480
-  lateSpawnRampSeconds: 300
-  lateSpawnMaxBoost: 3
-  lateMaxEnemiesBonus: 100
+  lateSpawnRampSeconds: 150
+  lateSpawnMaxBoost: 5
+  lateMaxEnemiesBonus: 200
   eliteStartTime: 120
   eliteChancePerMinute: 0.012
   eliteChanceMax: 0.1
   eliteHealth: 8
   eliteXpMultiplier: 6
-  endlessWaveInterval: 2.2
-  endlessMinWaveInterval: 0.9
-  endlessRingStart: 14
-  endlessRingPerMinute: 4
-  endlessRingMax: 36
-  endlessMaxAlive: 160
+  surgeStart: 540
+  surgeHealthQuadratic: 0.1
+  surgeDamagePerMinute: 0.15
+  surgeSpeedPerMinute: 0.05
+  endlessSpeedPerMinute: 0.12
+  maxSpeedScale: 2.2
+  endlessWaveInterval: 1.5
+  endlessMinWaveInterval: 0.5
+  endlessRingStart: 24
+  endlessRingPerMinute: 8
+  endlessRingMax: 60
+  endlessMaxAlive: 260
   endlessHealthStart: 1
-  endlessHealthPerMinute: 0.4
+  endlessHealthPerMinute: 1.2
+  milestoneMinutes: 5
   miniBosses:
   - time: 90
     prefab: {fileID: 7021229169610180587, guid: 6c74dc7a8beb3ef4695c812700923964, type: 3}
@@ -5832,30 +5839,45 @@ MonoBehaviour:
     prefab: {fileID: 3860112310048987578, guid: 2412cfc99aa3843408dfd5e844e71422, type: 3}
     healthMultiplier: 1
     scale: 1
+    power: 1
+    specials: 0
+    tint: {r: 1, g: 1, b: 1, a: 1}
     titleOverride: 
     unlocksSupers: 0
   - time: 300
     prefab: {fileID: 1744959488472555063, guid: 29b11cb732b0e1c4f820152e1c7e9739, type: 3}
     healthMultiplier: 1
     scale: 1.25
+    power: 1
+    specials: 0
+    tint: {r: 1, g: 1, b: 1, a: 1}
     titleOverride: 
     unlocksSupers: 0
   - time: 600
     prefab: {fileID: 7467151537998725492, guid: ae719ea81b40e32468fb61abd82891a8, type: 3}
-    healthMultiplier: 1
+    healthMultiplier: 12
     scale: 1.5
-    titleOverride: 
+    power: 1.6
+    specials: 1
+    tint: {r: 1, g: 0.72, b: 0.72, a: 1}
+    titleOverride: Crimson Beholder
     unlocksSupers: 0
   - time: 900
     prefab: {fileID: 7467151537998725492, guid: ae719ea81b40e32468fb61abd82891a8, type: 3}
-    healthMultiplier: 2
+    healthMultiplier: 35
     scale: 1.7
+    power: 2
+    specials: 2
+    tint: {r: 0.7, g: 0.82, b: 1, a: 1}
     titleOverride: Elder Beholder
     unlocksSupers: 1
   - time: 1200
     prefab: {fileID: 7467151537998725492, guid: ae719ea81b40e32468fb61abd82891a8, type: 3}
-    healthMultiplier: 4
+    healthMultiplier: 90
     scale: 2
+    power: 2.5
+    specials: 7
+    tint: {r: 0.85, g: 0.6, b: 1, a: 1}
     titleOverride: Ancient Tyrant
     unlocksSupers: 0
   warningLead: 3
