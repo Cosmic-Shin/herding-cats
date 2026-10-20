@@ -37,7 +37,8 @@ public class CameraFollow : MonoBehaviour
 
     public static void Shake(float amount, float duration)
     {
-        if (instance == null || !Settings.ScreenShake) return;
+        if (instance == null || Settings.ShakeScale <= 0f) return;
+        amount *= Settings.ShakeScale;
         instance.shakeAmount = Mathf.Max(instance.shakeAmount, amount);
         instance.shakeTimer = Mathf.Max(instance.shakeTimer, duration);
     }

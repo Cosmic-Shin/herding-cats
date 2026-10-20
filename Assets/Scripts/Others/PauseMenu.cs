@@ -17,6 +17,7 @@ public class PauseMenu : MonoBehaviour
     private LevelUpUIController levelUp;
     private float timeScaleBefore = 1f;
     private RectTransform chart;
+    private Button[] column;
 
     public bool IsPaused { get; private set; }
 
@@ -69,6 +70,8 @@ public class PauseMenu : MonoBehaviour
         chart.anchorMax = new Vector2(1f, 0.5f);
         chart.offsetMin = new Vector2(36f, 24f);
         chart.offsetMax = new Vector2(-36f, -8f);
+        // Left from the buttons jumps to the HUD gear slots (hover/select shows details).
+        foreach (Button b in column) { Navigation n = b.navigation; n.selectOnLeft = hud != null ? hud.FirstGearSlot : null; b.navigation = n; }
         panel.SetActive(true);
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(resumeButton.gameObject);
     }
@@ -81,7 +84,7 @@ public class PauseMenu : MonoBehaviour
         settings.onClick.AddListener(() => Settings.Open(settings.gameObject));
 
         const float top = 200f, step = 100f;
-        Button[] column = { resumeButton, restartButton, combos, settings, quitButton };
+        column = new[] { resumeButton, restartButton, combos, settings, quitButton };
         float x = ((RectTransform)quitButton.transform).anchoredPosition.x;
         for (int i = 0; i < column.Length; i++)
         {

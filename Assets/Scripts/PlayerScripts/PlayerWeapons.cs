@@ -191,7 +191,21 @@ public class PlayerWeapons : MonoBehaviour
             owned[def.id] = weapon;
             order.Add(def.id);
         }
+        int before = weapon.Level;
         weapon.SetLevel(weapon.Level + 1);
+        if (before < Weapon.MaxLevel && weapon.Level == Weapon.MaxLevel) MaxBurst(def.name);
+    }
+
+    private void MaxBurst(string name)
+    {
+        Vector2 at = transform.position;
+        Color gold = new Color(1f, 0.82f, 0.3f);
+        DamagePopup.SpawnText(at + Vector2.up * 1.3f, name.ToUpper() + "\nMAX!", gold, 6f);
+        ExplosionFx.Ring(at, 5f, gold, 0.5f);
+        Juice.SparksDir(at, Vector2.up, 25f, gold, 20, 11f, 0.18f);
+        Lighting.Flash(at, 7f, gold, 0.6f);
+        CameraFollow.ZoomPunch(0.25f);
+        Sfx.Play(Sfx.Id.Fanfare, 0.55f, 1.15f);
     }
 
     public void Merge(string a, string b, Def collab)

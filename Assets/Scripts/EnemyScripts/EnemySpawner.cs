@@ -84,7 +84,12 @@ public class EnemySpawner : MonoBehaviour
     public float RunTime => runTime;
     public float EndlessMinutes => Endless ? (runTime - endlessStart) / 60f : 0f;
 
-    private void Awake() { Endless = false; SpeedScale = 1f; }
+    private void Awake()
+    {
+        Endless = false;
+        SpeedScale = 1f;
+        gameObject.AddComponent<WorldEvents>(); // golden hour, meteor showers, shrines
+    }
 
     public void StartEndless()
     {

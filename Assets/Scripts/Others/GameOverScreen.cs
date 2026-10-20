@@ -67,17 +67,69 @@ public class GameOverScreen : MonoBehaviour
 
         RuntimeUI.Title(panel, "GAME OVER", 64f, new Vector2(0, 250), 900f);
         string place = rank > 0 ? $"<color=#7CFF9A>Rank #{rank} on the leaderboard!</color>" : "<color=#9AA3C0>Not in the top 50 this time</color>";
-        RuntimeUI.Outline(RuntimeUI.Text(panel, $"<color=#FFE08A>SCORE  {entry.score:N0}</color>\n<size=60%>{place}</size>", 34, Color.white,
-                                         new Vector2(0, 178), new Vector2(560, 80)));
+        TextMeshProUGUI score = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 34, Color.white, new Vector2(0, 178), new Vector2(560, 80)));
         TextMeshProUGUI summary = RuntimeUI.Text(panel, Summary(), 22, Color.white, new Vector2(-235, -20), new Vector2(480, 300), TextAlignmentOptions.TopLeft);
-        DamageChart(panel, new Vector2(250, -20), new Vector2(440, 320), hud != null ? hud.RunTime : 0f);
+        RectTransform chart = DamageChart(panel, new Vector2(250, -20), new Vector2(440, 320), hud != null ? hud.RunTime : 0f);
         summary.enableAutoSizing = true;
         summary.fontSizeMin = 12;
         summary.fontSizeMax = 22;
 
         Button restart = RuntimeUI.Button(panel, "Restart", new Vector2(-100, -245), new Vector2(180, 56), Restart);
-        RuntimeUI.Button(panel, "Main Menu", new Vector2(100, -245), new Vector2(180, 56), MainMenu.BackToMenu);
-        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(restart.gameObject);
+        Button menu = RuntimeUI.Button(panel, "Main Menu", new Vector2(100, -245), new Vector2(180, 56), MainMenu.BackToMenu);
+        StartCoroutine(Reveal(dim, panel, score, entry.score, place, new Component[] { summary, chart }, new[] { restart, menu }));
+    }
+
+    private static CanvasGroup Group(Component c)
+    {
+        CanvasGroup g = c.gameObject.AddComponent<CanvasGroup>();
+        g.alpha = 0f;
+        return g;
+    }
+
+    // Staged reveal (unscaled time, the game is stopped): dim, panel drops in, score counts up, details fade in, buttons last.
+    private IEnumerator Reveal(Image dim, RectTransform panel, TextMeshProUGUI score, int finalScore, string place, Component[] details, Button[] buttons)
+    {
+        CanvasGroup[] detailGroups = System.Array.ConvertAll(details, Group);
+        CanvasGroup[] buttonGroups = System.Array.ConvertAll(buttons, b => Group(b));
+        foreach (CanvasGroup g in buttonGroups) g.interactable = false;
+        Color dimColor = dim.color;
+        Vector2 home = panel.anchoredPosition;
+
+        for (float t = 0f; t < 0.5f; t += Time.unscaledDeltaTime)
+        {
+            float k = t / 0.5f, back = k - 1f;
+            dim.color = new Color(dimColor.r, dimColor.g, dimColor.b, dimColor.a * Mathf.Min(1f, k * 2f));
+            panel.anchoredPosition = home + Vector2.up * 700f * (1f - (back * back * (3.2f * back + 2.2f) + 1f)); // overshoot ease
+            yield return null;
+        }
+        dim.color = dimColor;
+        panel.anchoredPosition = home;
+
+        int shown = -1;
+        for (float t = 0f; t < 1f; t += Time.unscaledDeltaTime)
+        {
+            int value = Mathf.RoundToInt(finalScore * (1f - Mathf.Pow(1f - t, 3f)));
+            if (value != shown) { shown = value; score.text = $"<color=#FFE08A>SCORE  {value:N0}</color>"; }
+            if (Time.frameCount % 3 == 0) Sfx.Play(Sfx.Id.Tick, 0.25f, 1f + t);
+            yield return null;
+        }
+        score.text = $"<color=#FFE08A>SCORE  {finalScore:N0}</color>\n<size=60%>{place}</size>";
+        Sfx.Play(Sfx.Id.Ready, 0.6f);
+        for (float t = 0f; t < 0.25f; t += Time.unscaledDeltaTime)
+        {
+            score.transform.localScale = Vector3.one * (1f + 0.25f * Mathf.Sin(t / 0.25f * Mathf.PI));
+            yield return null;
+        }
+        score.transform.localScale = Vector3.one;
+
+        for (float t = 0f; t < 0.35f; t += Time.unscaledDeltaTime)
+        {
+            foreach (CanvasGroup g in detailGroups) g.alpha = t / 0.35f;
+            yield return null;
+        }
+        foreach (CanvasGroup g in detailGroups) g.alpha = 1f;
+        foreach (CanvasGroup g in buttonGroups) { g.alpha = 1f; g.interactable = true; }
+        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(buttons[0].gameObject);
     }
 
     // One row per damage source: name, total · share · DPS, and a bar sized against the top source.

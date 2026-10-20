@@ -41,9 +41,15 @@ public class Lighting : MonoBehaviour
         if (!on && instance.flashes != null) foreach (Light2D l in instance.flashes) l.enabled = false;
     }
 
+    [Tooltip("Ambient light multiplier reached at 15:00")]
+    [Range(0.5f, 1f)] public float duskDim = 0.8f;
+    private EnemySpawner spawner;
+
     private void Start()
     {
         cam = GetComponent<Camera>();
+        spawner = FindFirstObjectByType<EnemySpawner>();
+        gameObject.AddComponent<Ambience>();
         foreach (Light2D l in FindObjectsByType<Light2D>(FindObjectsSortMode.None))
             if (l.lightType == Light2D.LightType.Global) global = l;
         if (global != null)
@@ -118,6 +124,9 @@ public class Lighting : MonoBehaviour
             if (flashTime[i] <= 0f) flashes[i].enabled = false;
             else flashes[i].intensity = flashPeak[i] * flashTime[i] / flashLength[i];
         }
+
+        // Dusk: the world dims a little over the first 15 minutes (fireflies come out, see Ambience).
+        if (global != null && spawner != null) global.intensity = Mathf.Lerp(ambient, ambient * duskDim, spawner.RunTime / 900f);
 
         if (!EnemySpawner.Endless) return;
         float k = Time.deltaTime * 0.6f;

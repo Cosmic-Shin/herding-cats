@@ -36,6 +36,8 @@ public class EnemyAI : MonoBehaviour, IEnemyBrain, IPoolable
     public float projectileDamage = 8f;
     public int fireFrame = 3;
     public int hairballSplit = 0;
+    [Tooltip("Fires fast fishbone needles and shows a scope glint before shooting")]
+    public bool sniper;
     public float kiteRange = 0f;
     public bool spitPuddles;
     public float attackFps = 20f;
@@ -233,6 +235,8 @@ public class EnemyAI : MonoBehaviour, IEnemyBrain, IPoolable
     private float armorTimer;
     private Vector2 lookDir = Vector2.down;
     private Transform shield;
+    private float shieldHit;
+    public void ShieldHit() => shieldHit = 1f; // knocked back a bit, then settles
     private bool slamWarned, slammed;
 
     public bool IsArmored => armorTimer > 0f;
@@ -371,13 +375,64 @@ public class EnemyAI : MonoBehaviour, IEnemyBrain, IPoolable
         return to.sqrMagnitude > 0.36f && Vector2.Angle(lookDir, to) < 60f;
     }
 
+    // ---- Tells: small always-on cues so special cats stand out in a crowd ----
+    private float tellTimer;
+    private bool glinted;
+
+    public Transform Overlay(Sprite sprite, Vector2 offset, float scale)
+    {
+        var s = new GameObject("Tell").AddComponent<SpriteRenderer>();
+        s.transform.SetParent(transform, false);
+        s.transform.localPosition = offset;
+        s.transform.localScale = Vector3.one * scale;
+        s.sprite = sprite;
+        s.sortingOrder = sr.sortingOrder + 1;
+        return s.transform;
+    }
+
+    private void UpdateTells()
+    {
+        Vector2 at = transform.position;
+        if (sniper && state == State.Shooting)
+        {
+            // Scope glint a beat before the shot.
+            if (!glinted && !fired && anim.Frame >= fireFrame - 1)
+            {
+                glinted = true;
+                Vector2 eye = at + lookDir * 0.3f + Vector2.up * 0.1f;
+                ExplosionFx.Ring(eye, 0.35f, Color.white, 0.15f);
+                Juice.Sparks(eye, Color.white, 4, 2.5f, 0.12f);
+                Sfx.Play(Sfx.Id.Tick, 0.25f, 1.6f);
+            }
+            return;
+        }
+        glinted = false;
+        if ((tellTimer -= Time.deltaTime) > 0f) return;
+
+        if (spitPuddles)
+        {
+            tellTimer = 0.35f; // toxic drool
+            Juice.SparksDir(at + new Vector2(Random.Range(-0.15f, 0.15f), -0.15f), Vector2.down, 25f, new Color(0.5f, 0.95f, 0.3f, 0.8f), 1, 1.2f, 0.1f);
+        }
+        else if (chargeLine)
+        {
+            tellTimer = state == State.Leaping ? 0.06f : 0.45f; // snorting steam, a burst while winding up
+            Juice.SparksDir(at + Vector2.up * 0.35f, Vector2.up, 50f, new Color(0.9f, 0.9f, 0.95f, 0.6f), state == State.Leaping ? 2 : 1, 1.5f, 0.16f);
+        }
+        else if (sniper)
+        {
+            tellTimer = 1.2f; // red scope twinkle
+            Juice.Sparks(at + lookDir * 0.3f + Vector2.up * 0.1f, new Color(1f, 0.3f, 0.3f), 1, 0.4f, 0.1f);
+        }
+        else tellTimer = 999f;
+    }
+
     private Transform MakeShield()
     {
         var go = new GameObject("Shield");
         go.transform.SetParent(transform, false);
         var s = go.AddComponent<SpriteRenderer>();
-        s.sprite = Shapes.Square;
-        s.color = new Color(0.75f, 0.85f, 1f);
+        s.sprite = Shapes.RiotShield;
         s.sortingOrder = sr.sortingOrder + 1;
         return go.transform;
     }
@@ -430,13 +485,15 @@ public class EnemyAI : MonoBehaviour, IEnemyBrain, IPoolable
     private void Update()
     {
         if (damageTimer > 0) damageTimer -= Time.deltaTime;
+        if (state != State.Dead && state != State.Sleeping && state != State.Spawning) UpdateTells();
 
         if (shield != null)
         {
             Vector2 across = Vector2.Perpendicular(lookDir);
-            shield.localPosition = lookDir * 0.42f - across * 0.36f;
+            shieldHit = Mathf.Max(0f, shieldHit - Time.deltaTime * 6f);
+            shield.localPosition = lookDir * (0.45f - 0.08f * shieldHit);
             shield.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(across.y, across.x) * Mathf.Rad2Deg);
-            shield.localScale = new Vector3(0.72f, 0.13f, 1f);
+            shield.localScale = Vector3.one * (1f + 0.3f * shieldHit);
             shield.gameObject.SetActive(state != State.Dead);
         }
 
@@ -563,6 +620,7 @@ public class EnemyAI : MonoBehaviour, IEnemyBrain, IPoolable
                     fired = true;
                     Vector2 mouth = rb.position + dir * 0.3f;
                     if (hairballSplit > 0) EnemyProjectile.SpawnHairball(mouth, playerTransform.position, 0.9f, projectileDamage * 1.5f, hairballSplit, projectileDamage, playerHealth);
+                    else if (sniper) EnemyProjectile.SpawnNeedle(mouth, dir * projectileSpeed, projectileDamage, playerHealth);
                     else if (spitPuddles) EnemyProjectile.SpawnToxic(mouth, dir * projectileSpeed, projectileDamage, playerHealth);
                     else EnemyProjectile.Spawn(mouth, dir * projectileSpeed, projectileDamage, playerHealth);
                 }

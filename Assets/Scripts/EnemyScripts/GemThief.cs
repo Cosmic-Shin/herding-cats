@@ -20,12 +20,16 @@ public class GemThief : MonoBehaviour, IPoolable
         ai = GetComponent<EnemyAI>();
         health = GetComponent<EnemyHealth>();
         ai.steer = Steer;
+        sack = ai.Overlay(Shapes.Sack, new Vector2(-0.28f, 0.05f), 0.5f);
     }
+
+    private Transform sack;
 
     public void OnSpawn()
     {
         target = null;
         stolen = 0;
+        if (sack != null) sack.gameObject.SetActive(true);
     }
 
     private Vector2 Steer(Vector2 toPlayer)
@@ -39,6 +43,11 @@ public class GemThief : MonoBehaviour, IPoolable
 
     private void Update()
     {
+        if (sack != null)
+        {
+            sack.gameObject.SetActive(!health.IsDead);
+            sack.localScale = Vector3.one * Mathf.Min(0.95f, 0.5f + stolen * 0.03f); // the sack fills up
+        }
         if (health.IsDead) return;
         XPCollectorManager gems = XPCollectorManager.Instance;
         if (gems != null && (retarget -= Time.deltaTime) <= 0f)

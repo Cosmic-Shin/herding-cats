@@ -53,6 +53,7 @@ public class MineWeapon : Weapon
             if (armed && !beeped)
             {
                 beeped = true;
+                Sfx.Play(Sfx.Id.Tick, 0.2f, 0.8f);
                 ExplosionFx.Ring(mine.Position, TriggerRadius, new Color(1f, 0.35f, 0.3f, 0.7f), 0.3f);
             }
             mine.Renderer.color = !armed ? new Color(0.55f, 0.55f, 0.55f) : (Mathf.Repeat(mine.age * 2f, 1f) > 0.5f ? new Color(1f, 0.45f, 0.45f) : Color.white);

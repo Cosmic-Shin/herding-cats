@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
@@ -99,6 +100,7 @@ public class HUD : MonoBehaviour
         special.badge.text = "F";
         special.badge.color = Color.white;
         ultText = Label(root, "", 24, Color.white, new Vector2(Margin + SlotSize + 12, row3 - 6), new Vector2(360, 56), TextAlignmentOptions.TopLeft);
+        BuildTips(root, row3 - SlotSize - 16);
 
         timerText = Label(root, "00:00", 60, Color.white, Vector2.zero, new Vector2(320, 70), TextAlignmentOptions.Center, anchor: new Vector2(0.5f, 1f));
         ((RectTransform)timerText.transform).anchoredPosition = new Vector2(0, -16);
@@ -167,6 +169,7 @@ public class HUD : MonoBehaviour
         UiIcons.Apply(iconId, s.icon, s.badge);
         s.level.text = level;
         s.frame.sprite = gold ? UiIcons.BoxGold : UiIcons.Slot;
+        if (s.frame.TryGetComponent(out Button b)) b.interactable = true;
         s.frame.color = Color.white;
     }
 
@@ -177,6 +180,7 @@ public class HUD : MonoBehaviour
         s.level.text = "";
         s.frame.sprite = UiIcons.Slot;
         s.frame.color = new Color(1f, 1f, 1f, 0.45f);
+        if (s.frame.TryGetComponent(out Button b)) b.interactable = false;
     }
 
     private static string LevelTag(int level, int max) => level >= max ? "<color=#FFD24A>MAX</color>" : level.ToString();
@@ -206,6 +210,7 @@ public class HUD : MonoBehaviour
         UpdateWeapons();
         GlowCombinable();
         PulseHud();
+        if (tipFor != null && !Paused) HideTip(tipFor);
     }
 
     private void PulseHud()
@@ -370,5 +375,108 @@ public class HUD : MonoBehaviour
             slots[i].frame.sprite = UiIcons.BoxGold;
             slots[i].frame.color = Color.Lerp(Color.white, ComboGlow, pulse);
         }
+    }
+
+    // ---- Pause tooltips: hover (or gamepad-select) a weapon/skill slot for its details ----
+    private RectTransform tipBox;
+    private TextMeshProUGUI tipText;
+    private SlotTip tipFor;
+    private PauseMenu pause;
+    private bool Paused => pause != null && pause.IsPaused && !Settings.IsOpen && !ComboBook.IsOpen;
+
+    private class SlotTip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
+    {
+        public HUD hud;
+        public System.Func<string> text;
+        public void OnPointerEnter(PointerEventData _) => hud.ShowTip(this);
+        public void OnSelect(BaseEventData _) => hud.ShowTip(this);
+        public void OnPointerExit(PointerEventData _) => hud.HideTip(this);
+        public void OnDeselect(BaseEventData _) => hud.HideTip(this);
+    }
+
+    private void BuildTips(RectTransform root, float top)
+    {
+        pause = FindFirstObjectByType<PauseMenu>();
+        tipBox = Place(RuntimeUI.Frame(root, "Tooltip", Vector2.zero, Vector2.zero, gold: true).rectTransform, new Vector2(0, 1), new Vector2(Margin, top), new Vector2(380, 100));
+        tipText = RuntimeUI.Text(tipBox, "", 24, Color.white, Vector2.zero, Vector2.zero, TextAlignmentOptions.TopLeft);
+        var rt = tipText.rectTransform;
+        rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
+        rt.offsetMin = new Vector2(14, 12); rt.offsetMax = new Vector2(-14, -12);
+        tipText.raycastTarget = false;
+        tipBox.GetComponent<Image>().raycastTarget = false;
+        tipBox.gameObject.SetActive(false);
+
+        for (int i = 0; i < PlayerWeapons.MaxWeapons; i++) { int k = i; AddTip(weaponSlots[i], () => weapons != null && k < weapons.OwnedInOrder.Count ? WeaponTip(weapons.OwnedInOrder[k]) : ""); }
+        for (int i = 0; i < skillSlots.Length; i++) { int k = i; AddTip(skillSlots[i], () => skills != null && k < skills.OwnedInOrder.Count ? SkillTip(skills.OwnedInOrder[k]) : ""); }
+    }
+
+    internal Selectable FirstGearSlot { get { Button b = weaponSlots[0].frame.GetComponent<Button>(); return b != null && b.interactable ? b : null; } }
+
+    private void AddTip(Slot s, System.Func<string> text)
+    {
+        s.frame.gameObject.AddComponent<Button>().transition = Selectable.Transition.None; // makes it gamepad-selectable
+        SlotTip tip = s.frame.gameObject.AddComponent<SlotTip>();
+        tip.hud = this;
+        tip.text = text;
+    }
+
+    private void ShowTip(SlotTip from)
+    {
+        if (!Paused) return;
+        string text = from.text();
+        if (string.IsNullOrEmpty(text)) { HideTip(tipFor); return; }
+        tipFor = from;
+        tipText.text = text;
+        tipBox.gameObject.SetActive(true);
+        tipBox.SetParent(tipBox.GetComponentInParent<Canvas>().transform, true);
+        tipBox.SetAsLastSibling(); // above the pause panel, which shares this canvas
+        tipText.ForceMeshUpdate();
+        tipBox.sizeDelta = new Vector2(tipBox.sizeDelta.x, tipText.preferredHeight + 26f);
+    }
+
+    private void HideTip(SlotTip from)
+    {
+        if (from == null || from != tipFor) return;
+        tipFor = null;
+        tipBox.gameObject.SetActive(false);
+    }
+
+    private static string Tip(string name, string tag, string body, string next, string source)
+    {
+        var sb = new System.Text.StringBuilder($"<size=115%><b><color=#FFE08A>{name}</color></b></size>  <color=#9AA3C0>{tag}</color>\n<color=#C9D2F0>{body}</color>");
+        if (next != null) sb.Append($"\n\n<color=#7FD6FF>Next:</color> <color=#C9D2F0>{next}</color>");
+        float dmg = source != null ? DamageStats.Of(source) : 0f;
+        if (dmg > 0f) sb.Append($"\n\n<color=#9AA3C0>Damage dealt</color>  {DamageStats.Short(dmg)}");
+        return sb.ToString();
+    }
+
+    private string WeaponTip(string id)
+    {
+        Weapon w = weapons.Get(id);
+        string enhance = w != null && w.Enhance > 0 ? $"  <color=#FFD24A>+{w.Enhance}</color>" : "";
+        PlayerCollabs.Def combo = PlayerCollabs.Find(id);
+        if (combo != null)
+        {
+            PlayerWeapons.Def d = PlayerWeapons.Find(id);
+            string tag = combo.kind == PlayerCollabs.Kind.Super ? "<color=#FF7AD9>SUPER</color>" : "<color=#FFD24A>COMBO</color>";
+            return Tip(combo.name, tag + enhance, combo.text, null, d != null ? d.name : combo.name);
+        }
+        PlayerWeapons.Def def = PlayerWeapons.Find(id);
+        if (def == null || def.levels == null) return "";
+        int level = weapons.LevelOf(id);
+        string lv = level >= def.levels.Length ? "<color=#FFD24A>MAX</color>" : $"Lv {level}/{def.levels.Length}";
+        string body = level > 1 ? $"{def.levels[0]}\n<color=#FFD24A>Latest:</color> {def.levels[level - 1]}" : def.levels[0];
+        return Tip(def.name, lv + enhance, body, level < def.levels.Length ? def.levels[level] : null, def.name);
+    }
+
+    private string SkillTip(string id)
+    {
+        PlayerSkills.Skill s = PlayerSkills.Find(id);
+        if (s == null) return "";
+        int level = skills.LevelOf(id);
+        string lv = level >= s.levels.Length ? "<color=#FFD24A>MAX</color>" : $"Lv {level}/{s.levels.Length}";
+        // Each level line after the first is an upgrade; show everything earned so far.
+        string body = string.Join("\n", s.levels, 0, Mathf.Clamp(level, 1, s.levels.Length));
+        return Tip(s.name, lv, body, level < s.levels.Length ? s.levels[level] : null, null);
     }
 }

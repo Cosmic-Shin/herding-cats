@@ -124,9 +124,13 @@ public class EnemyHealth : MonoBehaviour, IPoolable
         if (ai is EnemyAI shielded && shielded.Blocks(sourcePos))
         {
             amount *= 0.2f;
+            shielded.ShieldHit();
+            Vector2 face = Vector2.MoveTowards(transform.position, sourcePos, 0.5f);
+            Juice.SparksDir(face, sourcePos - (Vector2)transform.position, 50f, new Color(1f, 0.92f, 0.6f), 4, 6f, 0.1f);
             if (Time.time >= nextBlockPopup)
             {
                 nextBlockPopup = Time.time + 0.5f;
+                Sfx.Play(Sfx.Id.Clang, 0.25f, 1.4f);
                 DamagePopup.SpawnText(transform.position + Vector3.up * 0.3f, "BLOCK", new Color(0.75f, 0.85f, 1f), 3f);
             }
         }
@@ -251,6 +255,7 @@ public class EnemyHealth : MonoBehaviour, IPoolable
             Sfx.Play(Sfx.Id.Boom, 1f, 0.6f);
             Juice.HitStop(0.2f);
             Juice.Flash(new Color(1f, 0.95f, 0.8f, 0.6f), 0.4f);
+            Juice.Ghost(sr, 2.5f, 1.6f);
         }
         else
         {
@@ -273,6 +278,15 @@ public class EnemyHealth : MonoBehaviour, IPoolable
                 ExplosionFx.Ring(transform.position, 4f, new Color(1f, 0.9f, 0.6f), 0.5f);
                 Juice.Sparks(transform.position, new Color(1f, 0.85f, 0.3f), 16, 10f, 0.2f);
                 CameraFollow.Shake(0.25f, 0.3f);
+            }
+            // Notable cats (elites, minibosses, specials) leave a ghost; specials burst in their own colour.
+            SpriteFx.CatSkin skin = anim != null ? anim.skin : SpriteFx.CatSkin.None;
+            if (IsElite || xpGemCount > 1 || skin != SpriteFx.CatSkin.None) Juice.Ghost(sr, xpGemCount > 1 ? 1.8f : 1.1f, xpGemCount > 1 ? 1.3f : 0.9f);
+            if (skin != SpriteFx.CatSkin.None)
+            {
+                Color c = SpriteFx.SkinColor(skin);
+                Juice.Sparks(transform.position, c, 10, 7f, 0.14f);
+                ExplosionFx.Ring(transform.position, 1.3f, c, 0.25f);
             }
             Juice.CatPuff(transform.position, new Color(1f, 0.93f, 0.82f));
             if (anim != null) anim.Flash(0.12f);

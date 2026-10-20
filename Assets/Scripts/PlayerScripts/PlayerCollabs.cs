@@ -225,7 +225,8 @@ public class PlayerCollabs : MonoBehaviour
         Lighting.Flash(at, 12f, SuperWeapon.SuperPink, 1f);
         CameraFollow.Shake(0.25f, 0.4f);
         CameraFollow.ZoomPunch(0.6f);
-        Sfx.Play(Sfx.Id.LevelUp, 1f, 0.8f);
+        Juice.SparksDir(at, Vector2.up, 30f, Color.white, 24, 14f, 0.2f);
+        Sfx.Play(Sfx.Id.Fanfare, 0.8f, 0.9f);
     }
 
     private bool Ready(Def d)
@@ -362,7 +363,8 @@ public class PlayerCollabs : MonoBehaviour
         Lighting.Flash(at, 9f, gold, 0.8f);
         CameraFollow.Shake(0.15f, 0.3f);
         CameraFollow.ZoomPunch(0.35f);
-        Sfx.Play(Sfx.Id.LevelUp, 0.8f, 1.1f);
+        Juice.SparksDir(at, Vector2.up, 25f, Color.white, 16, 12f, 0.18f);
+        Sfx.Play(Sfx.Id.Fanfare, 0.7f);
     }
 
     public static void BurningDeath(Vector2 pos)

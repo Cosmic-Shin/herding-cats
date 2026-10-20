@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class MenuCats : MonoBehaviour
 {
@@ -14,7 +16,7 @@ public class MenuCats : MonoBehaviour
         public EnemyAnimator clips;
         public Mode mode;
         public Sprite[] frames;
-        public float fps, frameTime, modeTimer, hopPhase;
+        public float fps, frameTime, modeTimer, hopPhase, zTimer;
         public Vector2 pos, target;
     }
 
@@ -90,6 +92,7 @@ public class MenuCats : MonoBehaviour
     {
         if (cats == null) return;
         float dt = Mathf.Min(Time.unscaledDeltaTime, 0.05f);
+        PetOnClick();
         foreach (Cat c in cats)
         {
             c.frameTime += dt;
@@ -121,8 +124,31 @@ public class MenuCats : MonoBehaviour
                 float dx = c.target.x - c.pos.x;
                 if (Mathf.Abs(dx) > 0.05f) c.sr.flipX = dx < 0f;
             }
-            c.sr.sprite = c.frames[(int)(c.frameTime * c.fps) % c.frames.Length];
+            c.sr.sprite = SpriteFx.Outlined(SpriteFx.Skinned(c.frames[(int)(c.frameTime * c.fps) % c.frames.Length], c.clips.skin));
+            if (c.mode == Mode.Sleep && (c.zTimer -= dt) <= 0f)
+            {
+                c.zTimer = Random.Range(1.6f, 2.6f);
+                DamagePopup.SpawnText((Vector2)c.sr.transform.position + new Vector2(0.2f, 0.3f), "z", new Color(0.7f, 0.85f, 1f), 2.5f);
+            }
             c.sr.transform.localPosition = new Vector3(c.pos.x, c.pos.y + lift, 0f);
+        }
+    }
+
+    private static readonly string[] PetLines = { "mrrp!", "purr~", "nya!", "mew!" };
+
+    // Click a menu cat: it hops and meows.
+    private void PetOnClick()
+    {
+        if (cats == null || !MainMenu.IsOpen || Mouse.current == null || !Mouse.current.leftButton.wasPressedThisFrame || Camera.main == null) return;
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+        Vector2 at = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        foreach (Cat c in cats)
+        {
+            if (((Vector2)c.sr.transform.position - at).sqrMagnitude > 0.5f) continue;
+            Pick(c, Mode.Hop);
+            DamagePopup.SpawnText((Vector2)c.sr.transform.position + Vector2.up * 0.5f, PetLines[Random.Range(0, PetLines.Length)], new Color(1f, 0.6f, 0.85f), 3f);
+            Sfx.Play(Sfx.Id.Meow, 0.5f, Random.Range(0.95f, 1.2f));
+            return;
         }
     }
 }

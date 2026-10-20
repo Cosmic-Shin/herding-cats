@@ -10,6 +10,8 @@ public class DamagePopup : MonoBehaviour
     private Vector3 velocity;
     private float t;
     private float pop;
+    private Color color;
+    private bool crit;
 
     private const int MaxDamageNumbers = 40;
     private static int activeDamageNumbers;
@@ -38,10 +40,18 @@ public class DamagePopup : MonoBehaviour
         if (!Settings.DamageNumbers) return;
         if (!crit && activeDamageNumbers >= MaxDamageNumbers) return;
         activeDamageNumbers++;
-        float size = (crit ? 5f : 3.5f) * Mathf.Clamp(0.85f + Mathf.Log10(Mathf.Max(1f, amount)) * 0.2f, 0.85f, 1.6f);
-        DamagePopup popup = SpawnText(pos, Mathf.RoundToInt(amount).ToString(), crit ? new Color(1f, 0.85f, 0.2f) : SourceColor(DamageStats.Source), size);
+        float size = (crit ? 5.2f : 4.2f) * Mathf.Clamp(0.85f + Mathf.Log10(Mathf.Max(1f, amount)) * 0.2f, 0.85f, 1.6f);
+        string number = Mathf.RoundToInt(amount).ToString();
+        DamagePopup popup = SpawnText(pos, crit ? number + "!" : number, crit ? new Color(1f, 0.85f, 0.2f) : SourceColor(DamageStats.Source), size);
         popup.countsTowardCap = true;
-        if (crit) popup.pop = 2.2f;
+        if (!crit) return;
+        popup.crit = true;
+        popup.pop = 1.9f;
+        popup.velocity.y += 1.2f;
+        popup.color = Color.white; // the gradient carries the colour
+        popup.text.enableVertexGradient = true; // gold on top, hot orange-red underneath
+        popup.text.colorGradient = new VertexGradient(new Color(1f, 0.97f, 0.55f), new Color(1f, 0.97f, 0.55f), new Color(1f, 0.4f, 0.15f), new Color(1f, 0.4f, 0.15f));
+        Juice.Sparks(pos + Vector2.up * 0.4f, new Color(1f, 0.85f, 0.3f), 3, 4f, 0.09f);
     }
 
     private static readonly Dictionary<string, Color> sourceColors = new Dictionary<string, Color>();
@@ -67,10 +77,12 @@ public class DamagePopup : MonoBehaviour
         popup.transform.position = pos + new Vector2(Random.Range(-0.2f, 0.2f), 0.4f);
         popup.text.text = message;
         popup.text.fontSize = size;
-        popup.text.color = color;
-        popup.text.alpha = 1f;
-        popup.velocity = new Vector3(Random.Range(-0.5f, 0.5f), 3f, 0f);
-        popup.pop = 1.6f;
+        popup.text.enableVertexGradient = false;
+        popup.color = color;
+        popup.text.color = Color.white; // flashes white, then settles to its colour
+        popup.crit = false;
+        popup.velocity = new Vector3(Random.Range(-1.1f, 1.1f), 3.4f, 0f);
+        popup.pop = 1.4f;
         popup.t = 0f;
         popup.countsTowardCap = false;
         return popup;
@@ -115,12 +127,31 @@ public class DamagePopup : MonoBehaviour
 
     private void Update()
     {
-        t += Time.deltaTime / Duration;
-        transform.position += velocity * Time.deltaTime;
-        velocity.y -= 8f * Time.deltaTime;
-        text.alpha = 1f - t * t;
-        float scale = Mathf.Lerp(pop, 1f, Mathf.Clamp01(t / 0.2f)) * (t > 0.7f ? Mathf.Lerp(1f, 0.6f, (t - 0.7f) / 0.3f) : 1f);
+        float dt = MainMenu.IsOpen ? Time.unscaledDeltaTime : Time.deltaTime; // the menu runs with the clock stopped
+        t += dt / Duration;
+        transform.position += velocity * dt;
+        velocity.y -= 9f * dt;
+        velocity.x *= 1f - 2f * dt;
+
+        text.color = t < 0.08f ? Color.white : color;
+        text.alpha = t < 0.6f ? 1f : 1f - Mathf.Pow((t - 0.6f) / 0.4f, 2f);
+
+        // Springs in from small with an overshoot, holds, then shrinks away.
+        float grow = Mathf.Clamp01(t / 0.18f);
+        float scale = Mathf.LerpUnclamped(0.3f, 1f, BackOut(grow)) * Mathf.Lerp(pop, 1f, grow)
+                    * (t > 0.7f ? Mathf.Lerp(1f, 0.6f, (t - 0.7f) / 0.3f) : 1f);
         transform.localScale = Vector3.one * scale;
+
+        float tilt = -velocity.x * 5f;
+        if (crit && t < 0.25f) tilt += Mathf.Sin(t * 120f) * 9f * (1f - t / 0.25f); // crits shudder
+        transform.rotation = Quaternion.Euler(0f, 0f, tilt);
         if (t >= 1f) Release();
+    }
+
+    private static float BackOut(float x)
+    {
+        const float s = 2.2f;
+        x -= 1f;
+        return x * x * ((s + 1f) * x + s) + 1f;
     }
 }

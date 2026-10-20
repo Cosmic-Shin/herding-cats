@@ -140,9 +140,15 @@ public class LevelUpUIController : MonoBehaviour
         ExplosionFx.Ring(at, 3f, new Color(1f, 0.92f, 0.5f), 0.4f);
         ExplosionFx.Spawn(at, 1.2f, new Color(1f, 0.95f, 0.7f), order: 9);
         Juice.Sparks(at, new Color(1f, 0.85f, 0.3f), 18, 8f, 0.18f);
+        Juice.SparksDir(at, Vector2.up, 12f, new Color(1f, 0.95f, 0.6f), 16, 12f, 0.16f); // light pillar
+        Lighting.Flash(at, 6f, new Color(1f, 0.85f, 0.4f), 0.5f);
+        CameraFollow.ZoomPunch(0.2f);
+        Sfx.Play(Sfx.Id.Sparkle, 0.6f);
         DamagePopup.SpawnText(at + Vector2.up * 1f, "LEVEL UP!", new Color(1f, 0.88f, 0.35f), 7f);
         Juice.SlowMo(0.2f, 0.4f);
-        yield return new WaitForSecondsRealtime(0.35f);
+        yield return new WaitForSecondsRealtime(0.15f);
+        ExplosionFx.Ring(stats.transform.position, 5f, new Color(1f, 1f, 1f, 0.8f), 0.35f);
+        yield return new WaitForSecondsRealtime(0.2f);
         while (RewardMenu.IsOpen) yield return null; // holo box / anvil owns the pause; open after it
         celebrating = false;
         if (stats.currentHealth > 0f && !GameOverScreen.IsShowing && !isPanelOpen) OpenPanel(stats.level);

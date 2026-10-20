@@ -7,9 +7,10 @@ using UnityEngine.UI;
 
 public class Settings : MonoBehaviour
 {
-    public static bool PostProcessing = true, Lights = true, LowParticles, DamageNumbers = true, ScreenShake = true, VSync = true, Fullscreen = true;
+    public static bool PostProcessing = true, Lights = true, LowParticles, DamageNumbers = true, VSync = true, Fullscreen = true;
     public static int FpsCap = 3, Volume = 5, MusicVolume = 6;
-    public static int Flashes = 2;
+    public static int Flashes = 2, Shake = 2;
+    public static float ShakeScale => Shake == 2 ? 1f : Shake == 1 ? 0.4f : 0f;
     public static float FlashScale => Flashes == 2 ? 1f : Flashes == 1 ? 0.4f : 0f;
     private static readonly string[] FlashNames = { "Off", "Reduced", "Full" };
 
@@ -28,7 +29,7 @@ public class Settings : MonoBehaviour
         Lights = B("set_lights", true);
         LowParticles = B("set_lowParticles", false);
         DamageNumbers = B("set_damageNumbers", true);
-        ScreenShake = B("set_shake", true);
+        Shake = Mathf.Clamp(PlayerPrefs.GetInt("set_shake_level", B("set_shake", true) ? 2 : 0), 0, 2);
         VSync = B("set_vsync", true);
         Fullscreen = B("set_fullscreen", Screen.fullScreen);
         FpsCap = Mathf.Clamp(PlayerPrefs.GetInt("set_fps", 3), 0, FpsCaps.Length - 1);
@@ -45,7 +46,7 @@ public class Settings : MonoBehaviour
         B("set_lights", Lights);
         B("set_lowParticles", LowParticles);
         B("set_damageNumbers", DamageNumbers);
-        B("set_shake", ScreenShake);
+        PlayerPrefs.SetInt("set_shake_level", Shake);
         B("set_vsync", VSync);
         B("set_fullscreen", Fullscreen);
         PlayerPrefs.SetInt("set_fps", FpsCap);
@@ -115,7 +116,7 @@ public class Settings : MonoBehaviour
         options.Add(new Option { label = "Dynamic lights", value = () => OnOff(Lights), step = _ => Lights = !Lights });
         options.Add(new Option { label = "Particles", value = () => LowParticles ? "Low" : "High", step = _ => LowParticles = !LowParticles });
         options.Add(new Option { label = "Damage numbers", value = () => OnOff(DamageNumbers), step = _ => DamageNumbers = !DamageNumbers });
-        options.Add(new Option { label = "Screen shake", value = () => OnOff(ScreenShake), step = _ => ScreenShake = !ScreenShake });
+        options.Add(new Option { label = "Screen shake", value = () => FlashNames[Shake], step = d => Shake = Wrap(Shake + d, 3) });
         options.Add(new Option { label = "Screen flashes", value = () => FlashNames[Flashes], step = d => Flashes = Wrap(Flashes + d, 3) });
         options.Add(new Option { label = "FPS limit", value = () => FpsNames[FpsCap], step = d => FpsCap = Wrap(FpsCap + d, FpsCaps.Length) });
         options.Add(new Option { label = "VSync", value = () => OnOff(VSync), step = _ => VSync = !VSync });
