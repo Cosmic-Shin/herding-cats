@@ -45,6 +45,13 @@ public class ExplosionFx : MonoBehaviour
     public static void Ring(Vector2 pos, float radius, Color color, float duration = 0.35f) =>
         Layer(pos, radius * 2f, Shapes.Ring, color, duration, 0.9f, 51);
 
+    // Crosses popping up at random spots inside a heal circle.
+    public static void Crosses(Vector2 pos, float radius, Color color, int count, float duration = 0.6f)
+    {
+        for (int i = 0; i < count; i++)
+            Layer(pos + Random.insideUnitCircle * radius * 0.85f, Random.Range(0.35f, 0.55f), Shapes.Plus, color, duration * Random.Range(0.8f, 1.2f), 0.9f, 52);
+    }
+
     private static void Layer(Vector2 pos, float size, Sprite sprite, Color? tint, float duration, float alpha, int order)
     {
         ExplosionFx fx = Get();

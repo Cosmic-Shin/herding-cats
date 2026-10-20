@@ -4511,7 +4511,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerUltimate
   cooldown: 60
-  firstChargeTime: 30
+  firstChargeTime: 60
   duration: 10
   damageMultiplier: 1.6
   radiusMultiplier: 1.5
@@ -5735,7 +5735,7 @@ MonoBehaviour:
     special: 1
   minSpawnRadius: 11
   maxSpawnRadius: 13
-  difficulty: 0.85
+  difficulty: 0.61
   difficultyRampInterval: 30
   difficultyMultiplierStep: 0.93
   minSpawnInterval: 0.15
@@ -5744,7 +5744,7 @@ MonoBehaviour:
   healthGrowthPerMinute: 0.4
   healthGrowthQuadratic: 0.05
   damageGrowthPerMinute: 0.18
-  lateSpawnStart: 480
+  lateSpawnStart: 0
   lateSpawnRampSeconds: 150
   lateSpawnMaxBoost: 5
   lateMaxEnemiesBonus: 200
@@ -5753,7 +5753,7 @@ MonoBehaviour:
   eliteChanceMax: 0.1
   eliteHealth: 8
   eliteXpMultiplier: 6
-  surgeStart: 540
+  surgeStart: 30
   surgeHealthQuadratic: 0.1
   surgeDamagePerMinute: 0.15
   surgeSpeedPerMinute: 0.05
@@ -5844,6 +5844,7 @@ MonoBehaviour:
     tint: {r: 1, g: 1, b: 1, a: 1}
     titleOverride: 
     unlocksSupers: 0
+    startsLateGame: 0
   - time: 300
     prefab: {fileID: 1744959488472555063, guid: 29b11cb732b0e1c4f820152e1c7e9739, type: 3}
     healthMultiplier: 1
@@ -5853,6 +5854,7 @@ MonoBehaviour:
     tint: {r: 1, g: 1, b: 1, a: 1}
     titleOverride: 
     unlocksSupers: 0
+    startsLateGame: 0
   - time: 600
     prefab: {fileID: 7467151537998725492, guid: ae719ea81b40e32468fb61abd82891a8, type: 3}
     healthMultiplier: 12
@@ -5862,6 +5864,7 @@ MonoBehaviour:
     tint: {r: 1, g: 0.72, b: 0.72, a: 1}
     titleOverride: Crimson Beholder
     unlocksSupers: 0
+    startsLateGame: 1
   - time: 900
     prefab: {fileID: 7467151537998725492, guid: ae719ea81b40e32468fb61abd82891a8, type: 3}
     healthMultiplier: 35
@@ -5871,6 +5874,7 @@ MonoBehaviour:
     tint: {r: 0.7, g: 0.82, b: 1, a: 1}
     titleOverride: Elder Beholder
     unlocksSupers: 1
+    startsLateGame: 0
   - time: 1200
     prefab: {fileID: 7467151537998725492, guid: ae719ea81b40e32468fb61abd82891a8, type: 3}
     healthMultiplier: 90
@@ -5880,8 +5884,10 @@ MonoBehaviour:
     tint: {r: 0.85, g: 0.6, b: 1, a: 1}
     titleOverride: Ancient Tyrant
     unlocksSupers: 0
+    startsLateGame: 0
   warningLead: 3
   spawnDistance: 11
+  bossHealth: 0.72
   companionCat: {fileID: 7379834125354533024, guid: f7b955d1e1e673c49928ec87a61b1ae7, type: 3}
   warningText: {fileID: 1203662809}
   bossBar: {fileID: 1178962212}

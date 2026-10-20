@@ -16,6 +16,7 @@ public class PauseMenu : MonoBehaviour
     private PlayerStats stats;
     private LevelUpUIController levelUp;
     private float timeScaleBefore = 1f;
+    private RectTransform chart;
 
     public bool IsPaused { get; private set; }
 
@@ -58,7 +59,16 @@ public class PauseMenu : MonoBehaviour
         Juice.CancelHitStop();
         timeScaleBefore = Time.timeScale > 0f ? Time.timeScale : 1f;
         Time.timeScale = 0f;
-        statsText.text = BuildStats(stats) + DamageStats.Report();
+        // Build stats on top, damage chart below.
+        statsText.text = BuildStats(stats);
+        statsText.rectTransform.anchorMin = new Vector2(0f, 0.5f);
+        if (chart != null) Destroy(chart.gameObject);
+        HUD hud = FindFirstObjectByType<HUD>();
+        chart = GameOverScreen.DamageChart(statsText.rectTransform.parent, Vector2.zero, Vector2.zero, hud != null ? hud.RunTime : 0f);
+        chart.anchorMin = Vector2.zero;
+        chart.anchorMax = new Vector2(1f, 0.5f);
+        chart.offsetMin = new Vector2(36f, 24f);
+        chart.offsetMax = new Vector2(-36f, -8f);
         panel.SetActive(true);
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(resumeButton.gameObject);
     }

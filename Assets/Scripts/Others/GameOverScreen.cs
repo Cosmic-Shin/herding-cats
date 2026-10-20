@@ -81,7 +81,7 @@ public class GameOverScreen : MonoBehaviour
     }
 
     // One row per damage source: name, total · share · DPS, and a bar sized against the top source.
-    private static void DamageChart(Transform parent, Vector2 pos, Vector2 size, float seconds)
+    public static RectTransform DamageChart(Transform parent, Vector2 pos, Vector2 size, float seconds)
     {
         var box = new GameObject("DamageChart", typeof(RectTransform)).GetComponent<RectTransform>();
         box.SetParent(parent, false);
@@ -102,9 +102,9 @@ public class GameOverScreen : MonoBehaviour
             return t;
         }
 
-        float rowH = 1f / (rows.Count + 1);
+        float rowH = 1f / Mathf.Max(rows.Count + 1, 6); // min slots so a short list doesn't stretch into giant rows
         Label($"<b><color=#FFE08A>Damage Dealt</color></b>  <color=#9AA3C0>{DamageStats.Short(total)} total</color>", 0f, 1f, 1f - rowH, 1f, TextAlignmentOptions.Left);
-        if (rows.Count == 0) { Label("<color=#5A6280>no damage dealt</color>", 0f, 1f, 1f - 2f * rowH, 1f - rowH, TextAlignmentOptions.Left); return; }
+        if (rows.Count == 0) { Label("<color=#5A6280>no damage dealt</color>", 0f, 1f, 1f - 2f * rowH, 1f - rowH, TextAlignmentOptions.Left); return box; }
 
         float best = rows[0].Value;
         for (int i = 0; i < rows.Count; i++)
@@ -126,6 +126,7 @@ public class GameOverScreen : MonoBehaviour
             RuntimeUI.Box(box, "Track", new Vector2(x0, bottom + rowH * 0.1f), new Vector2(1f, bottom + rowH * 0.38f), new Color(1f, 1f, 1f, 0.08f));
             RuntimeUI.Box(box, "Bar", new Vector2(x0, bottom + rowH * 0.1f), new Vector2(x0 + (1f - x0) * Mathf.Max(0.01f, value / best), bottom + rowH * 0.38f), BarColor(name));
         }
+        return box;
     }
 
     // Damage is recorded by display name; map it back to a weapon id for the icon.

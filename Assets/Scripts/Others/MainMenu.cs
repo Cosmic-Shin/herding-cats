@@ -47,8 +47,19 @@ public class MainMenu : MonoBehaviour
 
     private RectTransform title;
 
+    private void OnDestroy() => Leaderboard.Changed -= OnBoardChanged;
+
+    // Online scores can land while the board is open; redraw in place.
+    private void OnBoardChanged()
+    {
+        if (boardPage == null || !boardPage.activeSelf) return;
+        entries = Leaderboard.Load();
+        SetPage(page);
+    }
+
     private void Awake()
     {
+        Leaderboard.Changed += OnBoardChanged;
         if (Started) return;
         IsOpen = true;
         Time.timeScale = 0f;

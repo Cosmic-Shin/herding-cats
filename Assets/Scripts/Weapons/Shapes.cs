@@ -2,7 +2,9 @@ using UnityEngine;
 
 public static class Shapes
 {
-    private static Sprite square, star, ring, crescent;
+    private static Sprite square, star, ring, crescent, plus;
+
+    public static Sprite Plus => plus != null ? plus : plus = Make(7, (x, y, n) => (x >= 2 && x <= 4) || (y >= 2 && y <= 4));
 
     public static Sprite Circle => ExplosionFx.GetCircle();
 

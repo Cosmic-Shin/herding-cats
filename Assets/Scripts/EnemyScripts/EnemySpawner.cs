@@ -24,7 +24,7 @@ public class EnemySpawner : MonoBehaviour
     public float maxSpawnRadius = 13f;
 
     [Header("Overall difficulty: x enemy HP and x enemy damage (1 = original tuning)")]
-    [Range(0.5f, 1.5f)] public float difficulty = 0.85f;
+    [Range(0.5f, 1.5f)] public float difficulty = 0.61f;
 
     [Header("Difficulty Scaling")]
     public float difficultyRampInterval = 30f;
@@ -37,7 +37,8 @@ public class EnemySpawner : MonoBehaviour
     [Header("Late-game pressure (on top of the above)")]
     public float healthGrowthQuadratic = 0.05f;
     public float damageGrowthPerMinute = 0.18f;
-    public float lateSpawnStart = 480f;
+    [Tooltip("Seconds after StartLateGame (the 10-min boss kill)")]
+    public float lateSpawnStart = 0f;
     public float lateSpawnRampSeconds = 300f;
     public float lateSpawnMaxBoost = 3f;
     public int lateMaxEnemiesBonus = 100;
@@ -49,14 +50,19 @@ public class EnemySpawner : MonoBehaviour
     public float eliteHealth = 8f;
     public int eliteXpMultiplier = 6;
 
-    [Header("Surge: extra scaling from this time on, so a maxed build can't just stand still")]
-    public float surgeStart = 540f;
+    [Header("Surge: extra scaling so a maxed build can't just stand still")]
+    [Tooltip("Seconds after StartLateGame (the 10-min boss kill)")]
+    public float surgeStart = 30f;
     public float surgeHealthQuadratic = 0.1f;
     public float surgeDamagePerMinute = 0.15f;
     public float surgeSpeedPerMinute = 0.05f;
     public float endlessSpeedPerMinute = 0.12f;
     public float maxSpeedScale = 2.2f;
-    private float SurgeMinutes => Mathf.Max(0f, (runTime - surgeStart) / 60f);
+    private float SurgeMinutes => Mathf.Max(0f, (runTime - lateFrom - surgeStart) / 60f);
+
+    // Late spawn boost and surge stay off until this is called (BossTimeline, on the late-game boss kill).
+    private float lateFrom = float.PositiveInfinity;
+    public void StartLateGame() => lateFrom = Mathf.Min(lateFrom, runTime);
 
     public static float DamageScale { get; private set; } = 1f;
     public static float SpeedScale { get; private set; } = 1f;
@@ -85,6 +91,7 @@ public class EnemySpawner : MonoBehaviour
         if (Endless) return;
         Endless = true;
         endlessStart = runTime;
+        StartLateGame(); // in case the late-game boss was never killed
         endlessTimer = 2.5f;
         StartCoroutine(EndlessShockwave());
         BossTimeline timeline = FindFirstObjectByType<BossTimeline>();
@@ -179,7 +186,7 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    private float LateBoost => 1f + Mathf.Clamp(runTime - lateSpawnStart, 0f, lateSpawnRampSeconds * (lateSpawnMaxBoost - 1f)) / lateSpawnRampSeconds;
+    private float LateBoost => 1f + Mathf.Clamp(runTime - lateFrom - lateSpawnStart, 0f, lateSpawnRampSeconds * (lateSpawnMaxBoost - 1f)) / lateSpawnRampSeconds;
 
     [System.Serializable]
     public class MiniBoss

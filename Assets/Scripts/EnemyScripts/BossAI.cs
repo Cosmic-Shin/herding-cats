@@ -143,7 +143,7 @@ public class BossAI : MonoBehaviour, IEnemyBrain
         summonCount = Mathf.RoundToInt(summonCount * power);
     }
 
-    private const float SpiralTime = 3f, SummonWindup = 0.9f, LaserWindup = 1f, LaserTime = 2.4f, LaserLength = 14f, LaserWidth = 0.7f;
+    private const float SpiralWindup = 0.7f, SpiralTime = 3f, SummonWindup = 0.9f, LaserWindup = 1f, LaserTime = 2.4f, LaserLength = 14f, LaserWidth = 0.7f;
 
     private void StartSpecial()
     {
@@ -154,7 +154,13 @@ public class BossAI : MonoBehaviour, IEnemyBrain
         SetState(State.Special);
         Play(attack, zapFps, true);
 
-        if (current == Special.Spiral) { spiralAngle = Random.Range(0f, 360f); spiralTimer = 0f; }
+        if (current == Special.Spiral)
+        {
+            spiralAngle = Random.Range(0f, 360f);
+            spiralTimer = 0f;
+            ExplosionFx.Ring(rb.position, 3f, new Color(1f, 0.4f, 0.35f), SpiralWindup);
+            DamagePopup.SpawnText(rb.position + Vector2.up * 1.5f, "BULLET STORM!", new Color(1f, 0.5f, 0.45f), 6f);
+        }
         else if (current == Special.Summon)
         {
             summoned = false;
@@ -181,6 +187,7 @@ public class BossAI : MonoBehaviour, IEnemyBrain
     {
         if (current == Special.Spiral)
         {
+            if (stateTime < SpiralWindup) return true;
             if ((spiralTimer -= Time.fixedDeltaTime) <= 0f)
             {
                 spiralTimer = 0.09f;
@@ -192,7 +199,7 @@ public class BossAI : MonoBehaviour, IEnemyBrain
                 }
                 spiralAngle += 13f;
             }
-            return stateTime < SpiralTime;
+            return stateTime < SpiralWindup + SpiralTime;
         }
 
         if (current == Special.Summon)

@@ -87,6 +87,8 @@ public class LevelUpUIController : MonoBehaviour
     private readonly HashSet<string> banned = new HashSet<string>();
     private Button rerollButton, eliminateButton, skipButton, combosButton;
     public bool IsOpen => isPanelOpen;
+    // True from the level-up flash until the last queued pick is made.
+    public bool Busy => isPanelOpen || celebrating || pendingLevelUps > 0;
     private bool inputReady;
     private bool isGamePaused;
     private float timeScaleBeforePause = 1f;
@@ -141,6 +143,7 @@ public class LevelUpUIController : MonoBehaviour
         DamagePopup.SpawnText(at + Vector2.up * 1f, "LEVEL UP!", new Color(1f, 0.88f, 0.35f), 7f);
         Juice.SlowMo(0.2f, 0.4f);
         yield return new WaitForSecondsRealtime(0.35f);
+        while (RewardMenu.IsOpen) yield return null; // holo box / anvil owns the pause; open after it
         celebrating = false;
         if (stats.currentHealth > 0f && !GameOverScreen.IsShowing && !isPanelOpen) OpenPanel(stats.level);
     }
