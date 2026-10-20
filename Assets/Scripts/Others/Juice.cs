@@ -112,6 +112,7 @@ public class Juice : MonoBehaviour
     private static void Emit(Vector2 pos, float speed, float size, float life, Color color, Vector2? dir = null)
     {
         if (Settings.LowParticles && Random.value < 0.5f) return;
+        color.a *= Settings.EffectAlpha;
         var p = new ParticleSystem.EmitParams
         {
             position = pos, applyShapeToPosition = true,

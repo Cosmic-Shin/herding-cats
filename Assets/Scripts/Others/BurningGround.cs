@@ -95,8 +95,8 @@ public class BurningGround : MonoBehaviour
         sr.sprite = LavaArt.Get(lavaVariant, (int)(lavaTime * (palette == LavaArt.LavaPal ? 9f : 5f)), radius, palette);
         float grow = Mathf.Clamp01(age / 0.15f);
         transform.localScale = Vector3.one * scale * Mathf.Lerp(0.55f, 1f, 1f - (1f - grow) * (1f - grow)) * Mathf.Lerp(0.7f, 1f, fade);
-        sr.color = glue ? new Color(1f, 1f, 1f, 0.9f * fade)
-                        : new Color(1f, Mathf.Lerp(0.55f, 1f, fade), Mathf.Lerp(0.5f, 1f, fade), 0.92f * fade);
+        sr.color = glue ? new Color(1f, 1f, 1f, 0.9f * fade * Settings.EffectAlpha)
+                        : new Color(1f, Mathf.Lerp(0.55f, 1f, fade), Mathf.Lerp(0.5f, 1f, fade), 0.92f * fade * Settings.EffectAlpha);
         if (glue || Settings.LowParticles || Random.value > Time.deltaTime * (2f + radius * 2f)) return;
         Vector2 at = (Vector2)transform.position + Random.insideUnitCircle * radius * 0.8f;
         Juice.SparksDir(at, Vector2.up, 25f, Random.value < 0.5f ? new Color(1f, 0.6f, 0.15f) : new Color(1f, 0.85f, 0.35f), 1, 1.2f, 0.08f);
@@ -112,7 +112,7 @@ public class BurningGround : MonoBehaviour
         else
         {
             float flicker = 0.8f + 0.2f * Mathf.Sin(Time.time * 25f + transform.position.x);
-            sr.color = new Color(baseColor.r, baseColor.g * flicker, baseColor.b, 0.35f * flicker * fade);
+            sr.color = new Color(baseColor.r, baseColor.g * flicker, baseColor.b, 0.35f * flicker * fade * Settings.EffectAlpha);
         }
 
         if (pull > 0f)

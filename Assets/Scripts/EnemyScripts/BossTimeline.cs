@@ -119,7 +119,7 @@ public class BossTimeline : MonoBehaviour
     }
 
     private static string ToRoman(int n) => n switch { 1 => "I", 2 => "II", 3 => "III", 4 => "IV", 5 => "V", _ => n.ToString() };
-    public bool BossFight => bossBar != null && bossBar.activeSelf;
+    public bool BossFight => alive.Count > 0;
     public void AdminDropCompanion(Vector2 at)
     {
         if (companionCat == null) return;
@@ -222,7 +222,7 @@ public class BossTimeline : MonoBehaviour
     {
         if (bossBar == null) return;
 
-        bool show = alive.Count > 0;
+        bool show = alive.Count > 0 && Time.timeScale > 0f; // hide behind pause / level-up titles
         if (bossBar.activeSelf != show) bossBar.SetActive(show);
         if (!show) return;
 

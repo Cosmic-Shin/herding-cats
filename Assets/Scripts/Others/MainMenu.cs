@@ -26,7 +26,7 @@ public class MainMenu : MonoBehaviour
     private const int RowsPerPage = 10, Pages = Leaderboard.Size / RowsPerPage, BuildIcons = PlayerWeapons.MaxWeapons + PlayerSkills.MaxSkills;
     private static readonly Color Gold = new Color(1f, 0.85f, 0.3f), Faint = new Color(0.6f, 0.64f, 0.75f);
 
-    private GameObject root, mainPage, boardPage, achPage;
+    private GameObject root, mainPage, boardPage, achPage, creditsPage;
     private TextMeshProUGUI achText, backLabel;
     private RectTransform boardTitle;
     private System.Action boardBack;
@@ -86,7 +86,7 @@ public class MainMenu : MonoBehaviour
         Keyboard kb = Keyboard.current;
         bool back = (kb != null && kb.escapeKey.wasPressedThisFrame) || GamepadUI.Back;
         if (Settings.IsOpen) { if (back) Settings.Close(); return; }
-        if (achPage != null && achPage.activeSelf) { if (back) ShowMain(); return; }
+        if ((achPage != null && achPage.activeSelf) || (creditsPage != null && creditsPage.activeSelf)) { if (back) ShowMain(); return; }
         if (!boardPage.activeSelf) return;
         if (back) boardBack();
         else if ((kb != null && kb.leftArrowKey.wasPressedThisFrame) || GamepadUI.Pressed(g => g.leftShoulder)) SetPage(page - 1);
@@ -121,6 +121,7 @@ public class MainMenu : MonoBehaviour
         BuildMain(canvas.transform);
         BuildBoard(canvas.transform);
         BuildAchievements(canvas.transform);
+        BuildCredits(canvas.transform);
         ShowMain();
     }
 
@@ -128,7 +129,9 @@ public class MainMenu : MonoBehaviour
     {
         mainPage = Page(parent, "Main");
         title = BuildTitle(mainPage.transform, "HERDING CATS", 128f, TitleY);
-        RuntimeUI.Outline(RuntimeUI.Text(mainPage.transform, "Music by Kevin MacLeod (incompetech.com)  -  CC BY 4.0", 16, Faint, new Vector2(0, -350), new Vector2(900, 24)));
+        RectTransform version = RuntimeUI.Outline(RuntimeUI.Text(mainPage.transform, "v" + Application.version, 16, Faint, Vector2.zero, new Vector2(160, 24), TextAlignmentOptions.MidlineRight)).rectTransform;
+        version.anchorMin = version.anchorMax = version.pivot = new Vector2(1f, 0f);
+        version.anchoredPosition = new Vector2(-14f, 8f);
 
         Transform list = mainPage.transform;
         nameLabel = RuntimeUI.Outline(RuntimeUI.Text(list, "NAME:", 30, ItemColor, new Vector2(-110, -5), new Vector2(160, 44), TextAlignmentOptions.MidlineRight));
@@ -136,11 +139,12 @@ public class MainMenu : MonoBehaviour
         nameHint = RuntimeUI.Outline(RuntimeUI.Text(list, "", 16, new Color(1f, 0.45f, 0.4f), new Vector2(0, -35), new Vector2(480, 22)));
 
         startButton = TextButton(list, "Start", -80, TryStart);
-        TextButton(list, "Leaderboard", -132, ShowBoard);
-        TextButton(list, "Achievements", -184, ShowAchievements);
+        TextButton(list, "Leaderboard", -126, ShowBoard);
+        TextButton(list, "Achievements", -172, ShowAchievements);
         Button settings = null;
-        settings = TextButton(list, "Settings", -236, () => Settings.Open(settings.gameObject));
-        TextButton(list, "Quit", -288, Quit);
+        settings = TextButton(list, "Settings", -218, () => Settings.Open(settings.gameObject));
+        TextButton(list, "Credits", -264, ShowCredits);
+        TextButton(list, "Quit", -310, Quit);
 
         nameField.text = PlayerName != "" ? PlayerName : PlayerPrefs.GetString("playerName", "");
         Validate();
@@ -291,6 +295,7 @@ public class MainMenu : MonoBehaviour
         mainPage.SetActive(true);
         boardPage.SetActive(false);
         achPage.SetActive(false);
+        creditsPage.SetActive(false);
         Select(nameField.gameObject);
         nameField.ActivateInputField();
     }
@@ -450,6 +455,43 @@ public class MainMenu : MonoBehaviour
         mainPage.SetActive(false);
         achPage.SetActive(true);
         Select(achBack.gameObject);
+    }
+
+    private Button creditsBack;
+
+    // Keep in sync with CREDITS.md.
+    private const string CreditsText =
+        "<color=#FFE08A><b>Music</b></color>\n" +
+        "Kevin MacLeod (incompetech.com)\n" +
+        "Licensed under Creative Commons: By Attribution 4.0\n" +
+        "<color=#9AA3C0>Itty Bitty 8 Bit, Pixelland, Pixel Peeker Polka,\nVolatile Reaction, Exit the Premises</color>\n\n" +
+        "<color=#FFE08A><b>Art</b></color>\n" +
+        "Cats  -  Slime Cat Mega Pack by ToffeeCraft  <color=#9AA3C0>(toffeecraft.itch.io)</color>\n" +
+        "Beholder bosses  -  CraftPix.net\n" +
+        "Map tiles, trees and rocks  -  Topdown RPG 32x32 Nature by Mixel\n\n" +
+        "<color=#FFE08A><b>Font</b></color>\n" +
+        "Perfect DOS VGA 437 by Zeh Fernando\n\n" +
+        "<color=#9AA3C0>Special cat outfits, icons and effects made for Herding Cats.</color>";
+
+    private void BuildCredits(Transform parent)
+    {
+        creditsPage = Page(parent, "Credits");
+        RectTransform panel = Container(creditsPage.transform, new Vector2(1200, 680));
+        BuildTitle(panel, "CREDITS", 60f, 292f);
+        Backdrop(panel, Vector2.zero, new Vector2(1180, 540), 0.78f);
+        TextMeshProUGUI text = RuntimeUI.Outline(RuntimeUI.Text(panel, CreditsText, 22, Color.white, Vector2.zero, new Vector2(1100, 500), TextAlignmentOptions.Center));
+        text.enableAutoSizing = true;
+        text.fontSizeMin = 14;
+        text.fontSizeMax = 24;
+        creditsBack = TextButton(panel, "Back", -292, ShowMain, 0, 28);
+        creditsPage.SetActive(false);
+    }
+
+    private void ShowCredits()
+    {
+        mainPage.SetActive(false);
+        creditsPage.SetActive(true);
+        Select(creditsBack.gameObject);
     }
 
     private static GameObject Page(Transform parent, string name)

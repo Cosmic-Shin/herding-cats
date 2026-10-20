@@ -9,10 +9,12 @@ public class Settings : MonoBehaviour
 {
     public static bool PostProcessing = true, Lights = true, LowParticles, DamageNumbers = true, VSync = true, Fullscreen = true;
     public static int FpsCap = 3, Volume = 5, MusicVolume = 6;
-    public static int Flashes = 2, Shake = 2;
+    public static int Flashes = 2, Shake = 2, Effects = 3;
     public static float ShakeScale => Shake == 2 ? 1f : Shake == 1 ? 0.4f : 0f;
     public static float FlashScale => Flashes == 2 ? 1f : Flashes == 1 ? 0.4f : 0f;
     private static readonly string[] FlashNames = { "Off", "Reduced", "Full" };
+    private static readonly float[] EffectAlphas = { 0.35f, 0.55f, 0.75f, 1f };
+    public static float EffectAlpha => EffectAlphas[Effects];
 
     private static readonly int[] FpsCaps = { 30, 60, 120, -1 };
     private static readonly string[] FpsNames = { "30", "60", "120", "Unlimited" };
@@ -36,6 +38,7 @@ public class Settings : MonoBehaviour
         Volume = Mathf.Clamp(PlayerPrefs.GetInt("set_volume", 5), 0, 10);
         MusicVolume = Mathf.Clamp(PlayerPrefs.GetInt("set_music", 6), 0, 10);
         Flashes = Mathf.Clamp(PlayerPrefs.GetInt("set_flashes", 2), 0, 2);
+        Effects = Mathf.Clamp(PlayerPrefs.GetInt("set_effects", 3), 0, EffectAlphas.Length - 1);
         Apply();
     }
 
@@ -53,6 +56,7 @@ public class Settings : MonoBehaviour
         PlayerPrefs.SetInt("set_volume", Volume);
         PlayerPrefs.SetInt("set_music", MusicVolume);
         PlayerPrefs.SetInt("set_flashes", Flashes);
+        PlayerPrefs.SetInt("set_effects", Effects);
         PlayerPrefs.Save();
     }
 
@@ -115,6 +119,7 @@ public class Settings : MonoBehaviour
         options.Add(new Option { label = "Bloom & vignette", value = () => OnOff(PostProcessing), step = _ => PostProcessing = !PostProcessing });
         options.Add(new Option { label = "Dynamic lights", value = () => OnOff(Lights), step = _ => Lights = !Lights });
         options.Add(new Option { label = "Particles", value = () => LowParticles ? "Low" : "High", step = _ => LowParticles = !LowParticles });
+        options.Add(new Option { label = "Effect opacity", value = () => $"{Mathf.RoundToInt(EffectAlpha * 100)}%", step = d => Effects = Mathf.Clamp(Effects + d, 0, EffectAlphas.Length - 1) });
         options.Add(new Option { label = "Damage numbers", value = () => OnOff(DamageNumbers), step = _ => DamageNumbers = !DamageNumbers });
         options.Add(new Option { label = "Screen shake", value = () => FlashNames[Shake], step = d => Shake = Wrap(Shake + d, 3) });
         options.Add(new Option { label = "Screen flashes", value = () => FlashNames[Flashes], step = d => Flashes = Wrap(Flashes + d, 3) });

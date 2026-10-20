@@ -18,10 +18,9 @@ All music by **Kevin MacLeod** (incompetech.com), licensed under
 ## Art
 | Asset | Folder | Author | License / notes |
 |---|---|---|---|
-| Topdown RPG 32x32 – Nature v1.5 (ground, trees, rocks, bushes, water) | `Assets/Assets/Tilemap` | **Mixel** | Free for game projects; attribution appreciated. No redistribution of the raw assets. |
-| Cat sprites (black, blue, white) | `Assets/Assets/Cats/{black,blue,white}` | **TODO: author?** | **TODO: license / link** |
-| Cat sprites (brown "Cat Slime", demon, rainbow – with GIFT folders) | `Assets/Assets/Cats/{brown,demon,rainbow}` | **TODO: author?** | **TODO: license / link** |
-| Beholder bosses (1–3) | `Assets/Assets/Beholders` | **TODO: author?** | **TODO: license / link** |
+| Topdown RPG 32x32 – Nature v1.5 (ground, trees, rocks, bushes, water) | `Assets/Assets/Tilemap` | **Mixel** (© 2025) | Free for personal and commercial video games; attribution appreciated. No redistribution/resale, no asset packs, no NFTs or AI training. Full terms in `Assets/Assets/Tilemap/LICENSE.txt`. |
+| Slime Cat Mega Pack (all cats: black, blue, white, brown, demon, rainbow) | `Assets/Assets/Cats` | **ToffeeCraft** | https://toffeecraft.itch.io/slime-cat-mega-pack |
+| Beholder bosses (1–3) | `Assets/Assets/Beholders` | **CraftPix.net** | https://craftpix.net/file-licenses/ |
 | Player character (Mira / Character sheets) | `Assets/Assets/New Character`, `Assets/Assets/Character` | **TODO: author? (or ours)** | **TODO** |
 
 The special enemies (Shield, Sniper, Toxic, Charger, Splitter, Kamikaze, Gem Thief, Healer, Mama)

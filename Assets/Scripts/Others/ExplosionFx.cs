@@ -97,7 +97,7 @@ public class ExplosionFx : MonoBehaviour
         float s = Mathf.Lerp(0.3f, 1f, 1f - (1f - t) * (1f - t)) * size;
         transform.localScale = new Vector3(s, s, 1f);
         Color c = tint ?? new Color(1f, Mathf.Lerp(0.75f, 0.3f, t), Mathf.Lerp(0.2f, 0.05f, t));
-        sr.color = new Color(c.r, c.g, c.b, alpha * (1f - t));
+        sr.color = new Color(c.r, c.g, c.b, alpha * (1f - t) * Settings.EffectAlpha);
         if (t >= 1f) Release();
     }
 
