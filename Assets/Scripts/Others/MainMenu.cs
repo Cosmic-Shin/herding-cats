@@ -251,7 +251,7 @@ public class MainMenu : MonoBehaviour
     {
         foreach (Canvas c in FindObjectsByType<Canvas>(FindObjectsSortMode.None))
         {
-            if (!c.isRootCanvas || !c.enabled || c.gameObject == root || c.GetComponentInParent<Settings>() != null) continue;
+            if (!c.isRootCanvas || !c.enabled || c.gameObject == root || c.GetComponentInParent<Settings>() != null || c.GetComponentInParent<ClickFx>() != null) continue;
             c.enabled = false;
             hiddenUi.Add(c);
         }
