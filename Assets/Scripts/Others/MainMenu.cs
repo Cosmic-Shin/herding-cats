@@ -85,7 +85,7 @@ public class MainMenu : MonoBehaviour
 
         Keyboard kb = Keyboard.current;
         bool back = (kb != null && kb.escapeKey.wasPressedThisFrame) || GamepadUI.Back;
-        if (Settings.IsOpen) { if (back) Settings.Close(); return; }
+        if (Settings.IsOpen) { if (back && !Settings.Busy) Settings.Back(); return; }
         if ((achPage != null && achPage.activeSelf) || (creditsPage != null && creditsPage.activeSelf)) { if (back) ShowMain(); return; }
         if (!boardPage.activeSelf) return;
         if (back) boardBack();
@@ -210,14 +210,16 @@ public class MainMenu : MonoBehaviour
 
     private void Validate()
     {
-        bool ok = TypedName.Length > 0;
+        bool blocked = NameFilter.IsBlocked(TypedName) || TypedName.IndexOfAny(new[] { '<', '>' }) >= 0;
+        bool ok = TypedName.Length > 0 && !blocked;
         SetEnabled(startButton, ok);
-        nameHint.text = ok ? "" : "A name is required to start";
+        nameHint.text = ok ? "" : blocked ? "Please pick a different name" : "A name is required to start";
     }
 
     private void TryStart()
     {
-        if (TypedName.Length == 0) { Validate(); return; }
+        Validate();
+        if (!startButton.interactable) return;
         PlayerName = TypedName;
         PlayerPrefs.SetString("playerName", PlayerName);
         PlayerPrefs.Save();
@@ -398,7 +400,7 @@ public class MainMenu : MonoBehaviour
             row.bg.color = rank == LastRank ? new Color(1f, 0.85f, 0.3f, 0.18f) : i % 2 == 0 ? new Color(1f, 1f, 1f, 0.06f) : Color.clear;
             row.shine.gameObject.SetActive(rank == LastRank && e != null);
 
-            row.name.text = e != null ? e.name : "<color=#5A6280>---</color>";
+            row.name.text = e != null ? NameFilter.Clean(e.name) : "<color=#5A6280>---</color>";
             row.score.text = e != null ? e.score.ToString("N0") : "";
             row.time.text = e != null ? $"{(e.endless ? "<color=#FF7AD9>" : "")}{e.seconds / 60:00}:{e.seconds % 60:00}" : "";
             row.level.text = e != null ? e.level.ToString() : "";
@@ -471,7 +473,7 @@ public class MainMenu : MonoBehaviour
         "Map tiles, trees and rocks  -  Topdown RPG 32x32 Nature by Mixel\n\n" +
         "<color=#FFE08A><b>Font</b></color>\n" +
         "Perfect DOS VGA 437 by Zeh Fernando\n\n" +
-        "<color=#9AA3C0>Special cat outfits, icons and effects made for Herding Cats.</color>";
+        "<color=#9AA3C0>Mira, special cat outfits, icons and effects made for Herding Cats.</color>";
 
     private void BuildCredits(Transform parent)
     {

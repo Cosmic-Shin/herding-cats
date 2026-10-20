@@ -67,7 +67,7 @@ public class ComboBook : MonoBehaviour
         string unlock = collabs.SuperUnlocked ? "<color=#7CFF9A>unlocked</color>" : "<color=#FF7AD9>locked until the 15:00 boss is defeated</color>";
         RuntimeUI.Text(box, supersTab
                            ? $"Fuse two finished combos into one super. Only 1 per run, {unlock}."
-                           : $"Max both pieces, then press C to combine.  <color=#FFD24A>{collabs.Remaining}</color> of {PlayerCollabs.MaxCollabs} combos left this run.",
+                           : $"Max both pieces, then press {Keybinds.Label(Keybinds.Action.Combine)} to combine.  <color=#FFD24A>{collabs.Remaining}</color> of {PlayerCollabs.MaxCollabs} combos left this run.",
                        14, new Color(0.75f, 0.8f, 0.95f), new Vector2(0, top - 54), new Vector2(size.x - 40, 22));
 
         Button combosTab = RuntimeUI.Button(box, "Combos", new Vector2(-size.x / 2f + 100, top - 30), new Vector2(160, 40), () => SwitchTab(collabs, false));
@@ -126,7 +126,7 @@ public class ComboBook : MonoBehaviour
         string tag = status switch
         {
             PlayerCollabs.Status.Done => "<color=#7CFF9A>DONE</color>",
-            PlayerCollabs.Status.Ready => "<color=#FFD24A>READY! [C]</color>",
+            PlayerCollabs.Status.Ready => $"<color=#FFD24A>READY! [{Keybinds.Label(Keybinds.Action.Combine)}]</color>",
             PlayerCollabs.Status.Locked => "<color=#FF7AD9>15:00 boss</color>",
             PlayerCollabs.Status.Blocked when super => "<color=#FF7A7A>" + (collabs.SuperTaken != null ? "super used" : "combo blocked") + "</color>",
             PlayerCollabs.Status.Blocked => "<color=#FF7A7A>" + (collabs.Remaining <= 0 ? "no slots" : "piece used") + "</color>",

@@ -1,8 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 using UnityEngine.UI;
 
 public class Settings : MonoBehaviour
@@ -152,10 +155,126 @@ public class Settings : MonoBehaviour
             if (firstArrow == null) firstArrow = left;
         }
 
+        RuntimeUI.Button(panel, "Controls", new Vector2(-200, -top + 38), new Vector2(200, 48), ShowControls);
         RuntimeUI.Button(panel, "Back", new Vector2(0, -top + 38), new Vector2(180, 48), Close);
         RuntimeUI.Text(panel, "Esc to close", 16, new Color(0.6f, 0.64f, 0.75f), new Vector2(230, -top + 38), new Vector2(140, 30));
         Refresh();
-        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(firstArrow.gameObject);
+        mainPanel = panel;
+        mainFocus = firstArrow.gameObject;
+        BuildControls(dim.transform);
+        Select(mainFocus);
+    }
+
+    // ---- Controls page: click an action, then press the new key. ----
+
+    private RectTransform mainPanel, controlsPanel;
+    private GameObject mainFocus;
+    private Button[] keyButtons;
+    private int listening = -1, busyFrame = -1;
+
+    // True while waiting for a key (or on the frame one was taken), so menus don't also treat that key as "back".
+    public static bool Busy => instance != null && (instance.listening >= 0 || instance.busyFrame == Time.frameCount);
+
+    // Esc / gamepad back: cancel a rebind, then leave Controls, then close.
+    public static void Back()
+    {
+        if (instance == null) return;
+        if (instance.listening >= 0) instance.StopListening();
+        else if (instance.controlsPanel.gameObject.activeSelf) instance.ShowMainPage();
+        else Close();
+    }
+
+    private void BuildControls(Transform parent)
+    {
+        int n = Keybinds.Names.Length;
+        const float rowH = 52f;
+        controlsPanel = RuntimeUI.Frame(parent, "Controls", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f)).rectTransform;
+        float height = 200f + n * rowH;
+        controlsPanel.sizeDelta = new Vector2(640, height);
+        float top = height / 2f;
+
+        RuntimeUI.Title(controlsPanel, "CONTROLS", 48f, new Vector2(0, top - 40), 600f);
+        keyButtons = new Button[n];
+        for (int i = 0; i < n; i++)
+        {
+            int action = i;
+            float y = top - 100f - i * rowH;
+            RuntimeUI.Outline(RuntimeUI.Text(controlsPanel, Keybinds.Names[i], 22, new Color(0.8f, 0.84f, 0.95f), new Vector2(-130, y), new Vector2(300, rowH), TextAlignmentOptions.MidlineLeft));
+            keyButtons[i] = RuntimeUI.Button(controlsPanel, "", new Vector2(160, y), new Vector2(240, 44), () => Listen(action));
+        }
+        RuntimeUI.Text(controlsPanel, "Arrow keys always move.  Esc always pauses.", 16, new Color(0.6f, 0.64f, 0.75f), new Vector2(0, -top + 88), new Vector2(600, 24));
+        RuntimeUI.Button(controlsPanel, "Reset", new Vector2(-110, -top + 38), new Vector2(180, 48), () => { Keybinds.ResetAll(); RefreshKeys(); });
+        RuntimeUI.Button(controlsPanel, "Back", new Vector2(110, -top + 38), new Vector2(180, 48), ShowMainPage);
+        RefreshKeys();
+        controlsPanel.gameObject.SetActive(false);
+    }
+
+    private void ShowControls()
+    {
+        mainPanel.gameObject.SetActive(false);
+        controlsPanel.gameObject.SetActive(true);
+        Select(keyButtons[0].gameObject);
+    }
+
+    private void ShowMainPage()
+    {
+        controlsPanel.gameObject.SetActive(false);
+        mainPanel.gameObject.SetActive(true);
+        Select(mainFocus);
+    }
+
+    private void Listen(int action)
+    {
+        if (listening >= 0) return;
+        listening = action;
+        SetKeyLabel(action, "<color=#FFE08A>Press a key...</color>");
+        Select(null); // so the key we're waiting for can't also "click" a button
+    }
+
+    private void Update()
+    {
+        Keyboard kb = Keyboard.current;
+        if (listening < 0 || kb == null) return;
+        if (kb.escapeKey.wasPressedThisFrame) { StopListening(); return; }
+        foreach (KeyControl k in kb.allKeys)
+        {
+            if (k == null || !k.wasPressedThisFrame || k.keyCode == Key.Escape) continue;
+            Keybinds.Set((Keybinds.Action)listening, k.keyCode);
+            StopListening();
+            return;
+        }
+    }
+
+    private void StopListening()
+    {
+        int action = listening;
+        listening = -1;
+        busyFrame = Time.frameCount;
+        RefreshKeys();
+        StartCoroutine(SelectNextFrame(keyButtons[action].gameObject));
+    }
+
+    private IEnumerator SelectNextFrame(GameObject go)
+    {
+        yield return null;
+        Select(go);
+    }
+
+    private void RefreshKeys()
+    {
+        for (int i = 0; i < keyButtons.Length; i++) SetKeyLabel(i, Keybinds.Label((Keybinds.Action)i));
+    }
+
+    private void SetKeyLabel(int i, string text)
+    {
+        TextMeshProUGUI t = keyButtons[i].GetComponentInChildren<TextMeshProUGUI>();
+        t.text = text;
+        t.fontSize = 22;
+    }
+
+    private static void Select(GameObject go)
+    {
+        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(go);
     }
 
     private void Change(Option o, int direction)

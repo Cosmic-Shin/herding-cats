@@ -18,6 +18,7 @@ public class PauseMenu : MonoBehaviour
     private float timeScaleBefore = 1f;
     private RectTransform chart;
     private Button[] column;
+    private TextMeshProUGUI hintText;
 
     public bool IsPaused { get; private set; }
 
@@ -45,15 +46,21 @@ public class PauseMenu : MonoBehaviour
 
     private void Update()
     {
-        bool toggle = (Keyboard.current != null && (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.pKey.wasPressedThisFrame))
+        bool toggle = (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) || Keybinds.Pressed(Keybinds.Action.Pause)
                       || (Gamepad.current != null && Gamepad.current.startButton.wasPressedThisFrame);
         if (!toggle && GamepadUI.Back && (IsPaused || Settings.IsOpen || ComboBook.IsOpen)) toggle = true;
         if (!toggle) return;
 
-        if (Settings.IsOpen) { Settings.Close(); return; }
+        if (Settings.IsOpen) { if (!Settings.Busy) Settings.Back(); return; }
         if (ComboBook.IsOpen) { ComboBook.Close(); return; }
         if (IsPaused) Resume();
         else if (CanPause()) Pause();
+    }
+
+    // Alt-tab / clicking away opens the pause menu, so returning players aren't hit before they're ready.
+    private void OnApplicationFocus(bool focused)
+    {
+        if (!focused && !IsPaused && !Settings.IsOpen && !ComboBook.IsOpen && CanPause()) Pause();
     }
 
     private bool CanPause() => !MainMenu.IsOpen &&
@@ -78,6 +85,7 @@ public class PauseMenu : MonoBehaviour
         chart.offsetMax = new Vector2(-36f, -8f);
         // Left from the buttons jumps to the HUD gear slots (hover/select shows details).
         foreach (Button b in column) { Navigation n = b.navigation; n.selectOnLeft = hud != null ? hud.FirstGearSlot : null; b.navigation = n; }
+        if (hintText != null) hintText.text = $"Esc / {Keybinds.Label(Keybinds.Action.Pause)} to resume";
         panel.SetActive(true);
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(resumeButton.gameObject);
     }
@@ -100,6 +108,7 @@ public class PauseMenu : MonoBehaviour
         }
         Transform hint = quitButton.transform.parent.Find("Hint");
         if (hint != null) ((RectTransform)hint).anchoredPosition = new Vector2(x, top - column.Length * step + 30f);
+        if (hint != null) hintText = hint.GetComponentInChildren<TextMeshProUGUI>();
 
         for (int i = 0; i < column.Length; i++)
         {

@@ -59,7 +59,7 @@ public class PlayerUltimate : MonoBehaviour
     }
 
     private static bool Pressed() =>
-        (Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame) ||
+        Keybinds.Pressed(Keybinds.Action.Special) ||
         (Gamepad.current != null && Gamepad.current.buttonNorth.wasPressedThisFrame);
 
     private void Activate()

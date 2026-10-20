@@ -20,6 +20,7 @@ public class HUD : MonoBehaviour
 
     private RectTransform hpFill, xpFill, hpChunk, playerPanel;
     private Image hpFillImage, xpFillImage, ultFill, specialFrame;
+    private TextMeshProUGUI specialBadge;
     private static readonly Color XpColor = new Color(0.3f, 0.7f, 1f);
     private Vector2 panelPos;
     private float lastHp = 1f, chunkHp = 1f, chunkDelay, panelShake;
@@ -97,7 +98,8 @@ public class HUD : MonoBehaviour
         ultFill.fillOrigin = (int)Image.Origin360.Top;
         ultFill.enabled = true;
         special.badge.gameObject.SetActive(true);
-        special.badge.text = "F";
+        specialBadge = special.badge;
+        specialBadge.text = Keybinds.Label(Keybinds.Action.Special);
         special.badge.color = Color.white;
         ultText = Label(root, "", 24, Color.white, new Vector2(Margin + SlotSize + 12, row3 - 6), new Vector2(360, 56), TextAlignmentOptions.TopLeft);
         BuildTips(root, row3 - SlotSize - 16);
@@ -188,6 +190,7 @@ public class HUD : MonoBehaviour
     private void Update()
     {
         if (stats == null || hpFill == null) return;
+        if (Settings.IsOpen) specialBadge.text = Keybinds.Label(Keybinds.Action.Special); // may be rebound
 
         if (stats.currentHealth > 0f) runTime += Time.deltaTime;
 
