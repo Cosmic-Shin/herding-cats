@@ -6,6 +6,7 @@ public class ThunderStarWeapon : ShurikenWeapon
     private const float StrikeRadius = 1.3f;
 
     protected override Color StarTint => new Color(1f, 0.95f, 0.55f);
+    protected override Sprite StarSprite => Shapes.Projectile("Icons/thunderstar");
 
     protected override void OnStarHit(Vector2 at)
     {

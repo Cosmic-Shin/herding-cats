@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-// A little paw stamp, ring and sparkles wherever the mouse clicks. Runs on unscaled time so it works in paused menus.
+// Paw stamp, ring and sparkles on mouse click. Runs on unscaled time so it works in paused menus.
 public class ClickFx : MonoBehaviour
 {
     private static readonly Color Pink = new Color(1f, 0.55f, 0.68f);

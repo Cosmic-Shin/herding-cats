@@ -302,6 +302,36 @@ public class BossAI : MonoBehaviour, IEnemyBrain
         Destroy(gameObject, death.down.Length / 10f + 0.4f);
     }
 
+    private static Sprite[] strikeFrames;
+
+    // Zap impact animation, taken from the Beholder pack's attack sheet.
+    // Uniform 64px grid (4 rows x 12 frames); the top row's frames 3-11 hold the effect.
+    private static Sprite[] StrikeFrames
+    {
+        get
+        {
+            if (strikeFrames != null) return strikeFrames;
+            var tex = Resources.Load<Texture2D>("Fx/beholder_strike");
+            if (tex == null) return strikeFrames = new Sprite[0];
+            tex.filterMode = FilterMode.Point;
+            strikeFrames = new Sprite[9];
+            for (int i = 0; i < strikeFrames.Length; i++)
+                strikeFrames[i] = Sprite.Create(tex, new Rect((i + 3) * 64, tex.height - 64, 64, 64), new Vector2(0.5f, 0.5f), 64f);
+            return strikeFrames;
+        }
+    }
+
+    private static void Strike(Vector2 at, float radius)
+    {
+        Sprite[] frames = StrikeFrames;
+        Lighting.Flash(at, radius * 3f, new Color(1f, 0.6f, 0.3f), 0.25f);
+        if (frames.Length == 0) { ExplosionFx.Spawn(at, radius); return; }
+        const float Fps = 18f;
+        Shot s = Shot.Spawn(frames[0], Color.white, radius * 3.8f, at, 50);
+        s.life = frames.Length / Fps;
+        s.onUpdate = shot => shot.Renderer.sprite = frames[Mathf.Min(frames.Length - 1, (int)(shot.age * Fps))];
+    }
+
     private void SetState(State next)
     {
         state = next;
@@ -427,7 +457,7 @@ public class BossAI : MonoBehaviour, IEnemyBrain
                     bool hit = false;
                     foreach (Vector2 t in zapTargets)
                     {
-                        ExplosionFx.Spawn(t, zapRadius);
+                        Strike(t, zapRadius);
                         hit |= Vector2.Distance(player.position, t) <= zapRadius;
                     }
                     CameraFollow.Shake(0.12f, 0.15f);

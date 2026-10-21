@@ -27,13 +27,13 @@ public class ArmageddonWeapon : SuperWeapon
         for (int i = 0; i < spots.Length; i++)
         {
             Vector2 spot = spots[i];
-            Shot m = Shot.Spawn(Shapes.Art("Icons/missiles"), Color.white, 0.7f, spot + new Vector2(-2.5f, 9f), 57);
+            Shot m = Shot.Spawn(Shapes.Projectile("Icons/armageddon"), Color.white, 0.9f, spot + new Vector2(-2.5f, 9f), 57);
             m.life = warn + i * 0.07f;
             m.velocity = (spot - m.Position) / m.life;
             m.trail = new Color(1f, 0.6f, 0.25f, 0.9f);
             m.trailSize = 0.22f;
             m.onUpdate = MissileWeapon.Exhaust;
-            m.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(m.velocity.y, m.velocity.x) * Mathf.Rad2Deg - 90f);
+            m.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(m.velocity.y, m.velocity.x) * Mathf.Rad2Deg - 45f);
             m.onExpire = shot =>
             {
                 Explode(spot, radius, damage);

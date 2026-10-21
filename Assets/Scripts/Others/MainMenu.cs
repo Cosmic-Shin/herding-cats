@@ -77,7 +77,7 @@ public class MainMenu : MonoBehaviour
         if (mainPage != null && mainPage.activeSelf && !Settings.IsOpen && nameField.isFocused &&
             (GamepadUI.Move().sqrMagnitude > 0.25f || GamepadUI.Pressed(g => g.buttonSouth)))
         {
-            if (TypedName == "") nameField.text = "Player";
+            if (TypedName == "") nameField.text = "Cat" + Random.Range(1000, 10000); // can't type on a pad; unique-ish so pad players don't share one leaderboard row
             nameField.DeactivateInputField();
             Select(startButton.gameObject);
             return;

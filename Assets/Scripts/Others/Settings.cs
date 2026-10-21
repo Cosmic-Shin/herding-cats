@@ -157,7 +157,7 @@ public class Settings : MonoBehaviour
 
         RuntimeUI.Button(panel, "Controls", new Vector2(-200, -top + 38), new Vector2(200, 48), ShowControls);
         RuntimeUI.Button(panel, "Back", new Vector2(0, -top + 38), new Vector2(180, 48), Close);
-        RuntimeUI.Text(panel, "Esc to close", 16, new Color(0.6f, 0.64f, 0.75f), new Vector2(230, -top + 38), new Vector2(140, 30));
+        RuntimeUI.Text(panel, "Esc / B to close", 16, new Color(0.6f, 0.64f, 0.75f), new Vector2(215, -top + 38), new Vector2(190, 30));
         Refresh();
         mainPanel = panel;
         mainFocus = firstArrow.gameObject;
@@ -189,7 +189,7 @@ public class Settings : MonoBehaviour
         int n = Keybinds.Names.Length;
         const float rowH = 52f;
         controlsPanel = RuntimeUI.Frame(parent, "Controls", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f)).rectTransform;
-        float height = 200f + n * rowH;
+        float height = 230f + n * rowH;
         controlsPanel.sizeDelta = new Vector2(640, height);
         float top = height / 2f;
 
@@ -202,6 +202,7 @@ public class Settings : MonoBehaviour
             RuntimeUI.Outline(RuntimeUI.Text(controlsPanel, Keybinds.Names[i], 22, new Color(0.8f, 0.84f, 0.95f), new Vector2(-130, y), new Vector2(300, rowH), TextAlignmentOptions.MidlineLeft));
             keyButtons[i] = RuntimeUI.Button(controlsPanel, "", new Vector2(160, y), new Vector2(240, 44), () => Listen(action));
         }
+        RuntimeUI.Text(controlsPanel, "Pad: stick move  A dash  Y special  View combine  Start pause", 16, new Color(0.8f, 0.84f, 0.95f), new Vector2(0, -top + 116), new Vector2(620, 24));
         RuntimeUI.Text(controlsPanel, "Arrow keys always move.  Esc always pauses.", 16, new Color(0.6f, 0.64f, 0.75f), new Vector2(0, -top + 88), new Vector2(600, 24));
         RuntimeUI.Button(controlsPanel, "Reset", new Vector2(-110, -top + 38), new Vector2(180, 48), () => { Keybinds.ResetAll(); RefreshKeys(); });
         RuntimeUI.Button(controlsPanel, "Back", new Vector2(110, -top + 38), new Vector2(180, 48), ShowMainPage);

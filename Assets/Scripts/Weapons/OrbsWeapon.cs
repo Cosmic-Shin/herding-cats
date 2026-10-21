@@ -21,8 +21,8 @@ public class OrbsWeapon : Weapon
             var go = new GameObject("Orb");
             var sr = go.AddComponent<SpriteRenderer>();
             Lighting.Glow(sr);
-            sr.sprite = Shapes.Circle;
-            sr.color = new Color(0.85f, 0.97f, 1f);
+            sr.sprite = Shapes.Orb;
+            sr.color = new Color(0.6f, 0.92f, 1f);
             sr.sortingOrder = 15;
             go.transform.localScale = Vector3.one * 0.5f;
             var glow = new GameObject("Glow").AddComponent<SpriteRenderer>();
@@ -69,7 +69,7 @@ public class OrbsWeapon : Weapon
             if (ghostTick && orbs[i].TryGetComponent(out SpriteRenderer sr) && sr.enabled)
             {
                 Color c = sr.color;
-                AfterImage.Spawn(sr, new Color(c.r * 0.7f, c.g * 0.9f, c.b, 0.35f));
+                AfterImage.Spawn(sr, new Color(c.r, c.g, c.b, 0.35f));
             }
 
             foreach (Collider2D c in EnemiesNear(p, OrbHitRadius))

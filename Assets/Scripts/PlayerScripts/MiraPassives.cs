@@ -176,7 +176,7 @@ public class MiraPassives : MonoBehaviour
 
         float k = ShieldUp ? 1f : 1f - shieldTimer / shieldCooldown;
         shieldPop = Mathf.Max(0f, shieldPop - Time.deltaTime * 3f);
-        // Up: wobbly, slowly colour-shifting bubble that springs in when it reforms. Down: a faint ring fills in.
+        // Shield up: wobble + slow hue shift, pops in when it comes back. Shield down: ring fills as it recharges.
         float wob = 0.035f * Mathf.Sin(Time.time * 5f);
         float spring = 1f + 0.35f * shieldPop * Mathf.Sin(shieldPop * Mathf.PI * 3f);
         shieldFill.transform.localScale = new Vector3(1f + wob, 1f - wob, 1f) * 2f * spring;

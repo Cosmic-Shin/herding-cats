@@ -19,6 +19,10 @@ public static class Keybinds
 
     public static Key Get(Action a) => keys[(int)a];
 
+    // What to show in on-screen prompts: the controller button when a pad is plugged in, else the key.
+    private static readonly string[] PadLabels = { "Up", "Down", "Left", "Right", "A", "Y", "View", "Start" };
+    public static string Prompt(Action a) => GamepadUI.Connected ? PadLabels[(int)a] : Label(a);
+
     // Assigning a key that another action uses swaps the two, so nothing ends up unbound.
     public static void Set(Action a, Key key)
     {

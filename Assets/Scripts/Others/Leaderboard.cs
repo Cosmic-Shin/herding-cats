@@ -46,7 +46,30 @@ public static class Leaderboard
     public static int Score(float seconds, int level) => (int)seconds * 10 + EnemyHealth.KillScore + level * 100;
 
     // The shared online board when we have it, otherwise this PC's local file.
-    public static List<Entry> Load() => Online != null ? new List<Entry>(Online) : LoadLocal();
+    public static List<Entry> Load()
+    {
+        if (Online != null) return new List<Entry>(Online);
+        List<Entry> local = LoadLocal();
+        local.Sort((a, b) => b.score.CompareTo(a.score));
+        KeepBestPerName(local);
+        return local;
+    }
+
+    // One row per player name (their best). The same person on two PCs or installs gets two online
+    // accounts, and the local file keeps every run, so without this a name shows up more than once.
+    // Expects the list sorted best-first.
+    // 1-based rank of this name's best score on the board shown in menus, 0 if not on it.
+    public static int RankOf(string name)
+    {
+        string key = (name ?? "").Trim().ToLowerInvariant();
+        return Load().FindIndex(e => (e.name ?? "").Trim().ToLowerInvariant() == key) + 1;
+    }
+
+    private static void KeepBestPerName(List<Entry> list)
+    {
+        var seen = new HashSet<string>();
+        list.RemoveAll(e => !seen.Add((e.name ?? "").Trim().ToLowerInvariant()));
+    }
 
     private static List<Entry> LoadLocal()
     {
@@ -76,10 +99,12 @@ public static class Leaderboard
         return Insert(Online, entry);
     }
 
-    // Sorts, trims to Size, and returns the entry's 1-based rank (0 if it fell off).
+    // Sorts, keeps one row per name, trims to Size, and returns the entry's 1-based rank
+    // (0 if it fell off, or if that name already has a better score).
     private static int Insert(List<Entry> list, Entry entry)
     {
         list.Sort((a, b) => b.score.CompareTo(a.score));
+        KeepBestPerName(list);
         int rank = list.IndexOf(entry) + 1;
         if (list.Count > Size) list.RemoveRange(Size, list.Count - Size);
         return rank <= Size ? rank : 0;
@@ -127,6 +152,7 @@ public static class Leaderboard
                 e.device = r.PlayerId == me ? DeviceId : r.PlayerId; // keeps IsMine working
                 list.Add(e);
             }
+            KeepBestPerName(list); // server order is already best-first
             Online = list;
             Changed?.Invoke();
         }

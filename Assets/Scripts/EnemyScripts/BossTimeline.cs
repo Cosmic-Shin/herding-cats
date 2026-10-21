@@ -135,7 +135,7 @@ public class BossTimeline : MonoBehaviour
             if (!superKeys[i].IsDead) continue;
             superKeys.RemoveAt(i);
             PlayerCollabs.UnlockSupers();
-            Announce("SUPER COMBINES", "unlocked: fuse two combos with C");
+            Announce("SUPER COMBINES", $"unlocked: fuse two combos with {Keybinds.Prompt(Keybinds.Action.Combine)}");
         }
     }
 

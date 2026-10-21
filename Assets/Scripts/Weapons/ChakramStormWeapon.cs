@@ -25,7 +25,7 @@ public class ChakramStormWeapon : Weapon
     private void Throw(Vector2 dir)
     {
         float size = Area(Size);
-        Shot s = Shot.Spawn(Shapes.Crescent, new Color(1f, 0.85f, 0.45f), 0.6f * size, Pos);
+        Shot s = Shot.Spawn(Shapes.Projectile("Icons/chakram"), Color.white, 0.45f * size, Pos);
         s.trail = new Color(1f, 0.85f, 0.45f, 0.6f);
         s.velocity = dir * Speed;
         s.life = 8f;

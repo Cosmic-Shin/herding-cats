@@ -24,6 +24,11 @@ public class GamepadUI : MonoBehaviour
         return js != null ? js.stick.ReadValue() : Vector2.zero;
     }
 
+    private static bool AnyButton(Gamepad g) =>
+        g.buttonSouth.wasPressedThisFrame || g.buttonEast.wasPressedThisFrame || g.buttonWest.wasPressedThisFrame ||
+        g.buttonNorth.wasPressedThisFrame || g.startButton.wasPressedThisFrame || g.selectButton.wasPressedThisFrame ||
+        g.leftShoulder.wasPressedThisFrame || g.rightShoulder.wasPressedThisFrame;
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Create()
     {
@@ -32,10 +37,36 @@ public class GamepadUI : MonoBehaviour
         go.AddComponent<GamepadUI>();
     }
 
+    // Controller rumble. Strongest request wins until it runs out; stops on its own.
+    private static float rumbleUntil, rumbleLow, rumbleHigh;
+    public static void Rumble(float low, float high, float seconds)
+    {
+        if (Gamepad.current == null) return;
+        if (Time.unscaledTime < rumbleUntil && low + high < rumbleLow + rumbleHigh) return;
+        rumbleLow = low;
+        rumbleHigh = high;
+        rumbleUntil = Time.unscaledTime + seconds;
+        Gamepad.current.SetMotorSpeeds(low, high);
+    }
+
+    private void OnApplicationFocus(bool focus) { if (!focus && Gamepad.current != null) Gamepad.current.ResetHaptics(); }
+    private void OnDestroy() { if (Gamepad.current != null) Gamepad.current.ResetHaptics(); }
+
     private GameObject lastSelected;
 
     private void Update()
     {
+        if (rumbleUntil > 0f && Time.unscaledTime >= rumbleUntil)
+        {
+            rumbleUntil = 0f;
+            if (Gamepad.current != null) Gamepad.current.ResetHaptics();
+        }
+
+        // Hide the mouse cursor while playing on a pad; any mouse movement brings it back.
+        Gamepad pad = Gamepad.current;
+        if (pad != null && Cursor.visible && (Move().sqrMagnitude > 0.04f || AnyButton(pad))) Cursor.visible = false;
+        else if (!Cursor.visible && Mouse.current != null && Mouse.current.delta.ReadValue().sqrMagnitude > 4f) Cursor.visible = true;
+
         EventSystem es = EventSystem.current;
         if (es == null) return;
         GameObject sel = es.currentSelectedGameObject;

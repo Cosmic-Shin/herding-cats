@@ -24,7 +24,7 @@ public class PhoenixRangWeapon : Weapon
     private void Throw(Vector2 dir)
     {
         float size = Area(Size);
-        Shot s = Shot.Spawn(Shapes.Art("Icons/boomerang"), new Color(1f, 0.75f, 0.45f), 0.55f * size, Pos);
+        Shot s = Shot.Spawn(Shapes.Projectile("Icons/phoenix", 1), Color.white, 0.55f * size, Pos);
         s.velocity = dir * Speed;
         s.life = 4f;
         s.hitRadius = 0.35f * size;

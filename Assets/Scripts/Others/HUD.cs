@@ -32,6 +32,7 @@ public class HUD : MonoBehaviour
     private readonly float[] levelPop = new float[PlayerWeapons.MaxWeapons];
     private float ultPing;
     private TextMeshProUGUI hpText, levelText, timerText, killText, ultText, scoreText;
+    private LevelUpUIController levelUp;
     private Slot[] weaponSlots, skillSlots;
 
     private float runTime;
@@ -99,7 +100,7 @@ public class HUD : MonoBehaviour
         ultFill.enabled = true;
         special.badge.gameObject.SetActive(true);
         specialBadge = special.badge;
-        specialBadge.text = Keybinds.Label(Keybinds.Action.Special);
+        specialBadge.text = Keybinds.Prompt(Keybinds.Action.Special);
         special.badge.color = Color.white;
         ultText = Label(root, "", 24, Color.white, new Vector2(Margin + SlotSize + 12, row3 - 6), new Vector2(360, 56), TextAlignmentOptions.TopLeft);
         BuildTips(root, row3 - SlotSize - 16);
@@ -190,7 +191,8 @@ public class HUD : MonoBehaviour
     private void Update()
     {
         if (stats == null || hpFill == null) return;
-        if (Settings.IsOpen) specialBadge.text = Keybinds.Label(Keybinds.Action.Special); // may be rebound
+        string special = Keybinds.Prompt(Keybinds.Action.Special); // may be rebound, or a pad plugged in
+        if (specialBadge.text != special) specialBadge.text = special;
 
         if (stats.currentHealth > 0f) runTime += Time.deltaTime;
 
@@ -206,6 +208,9 @@ public class HUD : MonoBehaviour
         timerText.text = $"{seconds / 60:00}:{seconds % 60:00}";
         killText.text = $"DEFEATED  <color=#FFD24A>{EnemyHealth.Kills:N0}</color>";
         scoreText.text = $"SCORE  <color=#FFE08A>{Leaderboard.Score(runTime, stats.level):N0}</color>";
+        // The level-up title sits where the timer and score are, so hide them while it's open.
+        if (levelUp == null) levelUp = FindAnyObjectByType<LevelUpUIController>();
+        timerText.enabled = scoreText.enabled = levelUp == null || !levelUp.IsOpen;
 
         UpdateUltimate();
         RefreshCombinable();

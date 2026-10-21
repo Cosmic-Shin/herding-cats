@@ -66,7 +66,10 @@ public class GameOverScreen : MonoBehaviour
         panel.sizeDelta = new Vector2(1040, 600);
 
         RuntimeUI.Title(panel, "GAME OVER", 64f, new Vector2(0, 250), 900f);
-        string place = rank > 0 ? $"<color=#7CFF9A>Rank #{rank} on the leaderboard!</color>" : "<color=#9AA3C0>Not in the top 50 this time</color>";
+        int best = rank > 0 ? 0 : Leaderboard.RankOf(entry.name);
+        string place = rank > 0 ? $"<color=#7CFF9A>Rank #{rank} on the leaderboard!</color>"
+                     : best > 0 ? $"<color=#9AA3C0>Not a new best. You're still #{best}</color>"
+                     : "<color=#9AA3C0>Not in the top 50 this time</color>";
         TextMeshProUGUI score = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 34, Color.white, new Vector2(0, 178), new Vector2(560, 80)));
         TextMeshProUGUI summary = RuntimeUI.Text(panel, Summary(), 22, Color.white, new Vector2(-235, -20), new Vector2(480, 300), TextAlignmentOptions.TopLeft);
         RectTransform chart = DamageChart(panel, new Vector2(250, -20), new Vector2(440, 320), hud != null ? hud.RunTime : 0f);

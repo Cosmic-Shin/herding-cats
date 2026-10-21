@@ -17,14 +17,17 @@ public class FrostfireEclipseWeapon : SuperWeapon
         if (Ready(5f)) StartCoroutine(Eclipse());
     }
 
+    // The eclipse hangs just above Mira's head; the beams fan out from it.
+    private Vector2 Center => Pos + Vector2.up * 1.4f;
+
     private IEnumerator Eclipse()
     {
         iced.Clear();
         burned.Clear();
         Sfx.Play(Sfx.Id.Zap, 0.8f, 0.6f);
-        Lighting.Flash(Pos, 6f, Color.white, 0.4f);
-        Fx(Shapes.Ring, Ice, 1f, Pos, 0.4f, Area(8f), 44);
-        Fx(Shapes.Ring, Fire, 1f, Pos, 0.5f, Area(10f), 44);
+        Lighting.Flash(Center, 6f, Color.white, 0.4f);
+        Fx(Shapes.Ring, Ice, 1f, Center, 0.4f, Area(8f), 44);
+        Fx(Shapes.Ring, Fire, 1f, Center, 0.5f, Area(10f), 44);
 
         var beams = new Shot[PerSide * 2 * 2];
         var gens = new int[beams.Length];
@@ -32,16 +35,32 @@ public class FrostfireEclipseWeapon : SuperWeapon
         {
             bool ice = i < PerSide * 2, core = i % 2 == 1;
             Color c = ice ? Ice : Fire;
-            beams[i] = Shot.Spawn(Shapes.Square, core ? Color.Lerp(c, Color.white, 0.7f) : new Color(c.r, c.g, c.b, 0.4f), 1f, Pos, core ? 46 : 45);
+            beams[i] = Shot.Spawn(Shapes.Square, core ? Color.Lerp(c, Color.white, 0.7f) : new Color(c.r, c.g, c.b, 0.4f), 1f, Center, core ? 46 : 45);
             beams[i].life = 10f;
             gens[i] = beams[i].Generation;
         }
+
+        // The eclipse itself: the fire/ice orb spinning over a pulsing white corona.
+        Shot corona = Shot.Spawn(Shapes.Circle, new Color(1f, 0.95f, 0.85f, 0.35f), 1f, Center, 47);
+        corona.life = 10f;
+        int coronaGen = corona.Generation;
+        Shot orb = Shot.Spawn(Shapes.Projectile("Icons/frostfire", 1), Color.white, 1f, Center, 48);
+        orb.life = 10f;
+        orb.spin = 240f;
+        int orbGen = orb.Generation;
 
         float length = Area(9f), damage = Dmg(14f), shock = Dmg(70f);
         float start = Random.Range(0f, 90f), tick = 0f;
         for (float t = 0f; t < Duration; t += Time.deltaTime)
         {
             float env = Mathf.Clamp01(t / 0.1f) * Mathf.Clamp01((Duration - t) / 0.2f);
+            float orbSize = Area(1.5f) * Mathf.Clamp01(t / 0.15f) * Mathf.Clamp01((Duration - t) / 0.2f);
+            if (orb.IsSame(orbGen)) { orb.transform.position = Center; orb.transform.localScale = Vector3.one * orbSize; }
+            if (corona.IsSame(coronaGen))
+            {
+                corona.transform.position = Center;
+                corona.transform.localScale = Vector3.one * orbSize * (1.9f + 0.25f * Mathf.Sin(t * 18f));
+            }
             bool hit = (tick -= Time.deltaTime) <= 0f;
             if (hit) tick = 0.1f;
             for (int b = 0; b < PerSide * 2; b++)
@@ -53,15 +72,17 @@ public class FrostfireEclipseWeapon : SuperWeapon
                 {
                     Shot beam = beams[b * 2 + layer];
                     if (!beam.IsSame(gens[b * 2 + layer])) continue;
-                    beam.transform.SetPositionAndRotation(Pos, Quaternion.Euler(0f, 0f, angle));
+                    beam.transform.SetPositionAndRotation(Center, Quaternion.Euler(0f, 0f, angle));
                     beam.transform.localScale = new Vector3(length, (layer == 1 ? 0.18f : 0.6f) * env, 1f);
                 }
-                if (Random.value < 0.3f) Juice.Sparks(Pos + dir * Random.Range(1f, length), ice ? Ice : Fire, 1, 1.5f, 0.12f);
-                if (hit) HitLine(Pos, dir, length, 0.5f, damage, e => Mark(e, ice, shock));
+                if (Random.value < 0.3f) Juice.Sparks(Center + dir * Random.Range(1f, length), ice ? Ice : Fire, 1, 1.5f, 0.12f);
+                if (hit) HitLine(Center, dir, length, 0.5f, damage, e => Mark(e, ice, shock));
             }
             yield return null;
         }
         for (int i = 0; i < beams.Length; i++) if (beams[i].IsSame(gens[i])) beams[i].Release();
+        if (orb.IsSame(orbGen)) orb.Release();
+        if (corona.IsSame(coronaGen)) corona.Release();
     }
 
     private void Mark(EnemyHealth e, bool ice, float shock)

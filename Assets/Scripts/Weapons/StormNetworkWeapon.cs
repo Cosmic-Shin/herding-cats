@@ -68,7 +68,7 @@ public class StormNetworkWeapon : SuperWeapon
 
     private void Missile(Vector2 from, Vector2 dir)
     {
-        Shot s = Shot.Spawn(Shapes.Art("Icons/missiles"), Color.white, 0.55f, from);
+        Shot s = Shot.Spawn(Shapes.Art("Icons/missiles"), Arc, 0.55f, from);
         s.velocity = dir * 6f;
         s.life = 3f;
         s.hitRadius = 0.35f;

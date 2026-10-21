@@ -60,13 +60,13 @@ public class DamagePopup : MonoBehaviour
         if (string.IsNullOrEmpty(source)) return Color.white;
         if (sourceColors.TryGetValue(source, out Color c)) return c;
         bool Has(params string[] words) => System.Array.Exists(words, w => source.Contains(w));
-        c = Has("Molotov", "Tar", "Firebomb") ? new Color(1f, 0.6f, 0.25f)
-          : Has("Frost", "Glacier") ? new Color(0.6f, 0.9f, 1f)
-          : Has("Lightning", "Thunder", "Tesla") ? new Color(1f, 0.95f, 0.45f)
+        c = Has("Molotov", "Tar", "Firebomb", "Fire", "Hot", "Spicy", "Spin Cycle") ? new Color(1f, 0.6f, 0.25f)
+          : Has("Frost", "Glacier", "Cold", "Snow", "Brain Freeze") ? new Color(0.6f, 0.9f, 1f)
+          : Has("Lightning", "Thunder", "Static", "Hiss", "Cat-egory") ? new Color(1f, 0.95f, 0.45f)
           : Has("Glue", "Sticky") ? new Color(0.55f, 1f, 0.45f)
           : Has("Laser") ? new Color(1f, 0.55f, 0.65f)
-          : Has("Black Hole", "Event Horizon", "Gravity") ? new Color(0.8f, 0.6f, 1f)
-          : Has("Aura") ? new Color(0.85f, 0.78f, 1f)
+          : Has("Black Hole", "Litter Box", "Yarn") ? new Color(0.8f, 0.6f, 1f)
+          : Has("Aura", "Kneading", "Purr", "Halo") ? new Color(0.85f, 0.78f, 1f)
           : Color.white;
         return sourceColors[source] = c;
     }
@@ -136,7 +136,7 @@ public class DamagePopup : MonoBehaviour
         text.color = t < 0.08f ? Color.white : color;
         text.alpha = t < 0.6f ? 1f : 1f - Mathf.Pow((t - 0.6f) / 0.4f, 2f);
 
-        // Springs in from small with an overshoot, holds, then shrinks away.
+        // Scale: pop in with overshoot, hold, shrink out.
         float grow = Mathf.Clamp01(t / 0.18f);
         float scale = Mathf.LerpUnclamped(0.3f, 1f, BackOut(grow)) * Mathf.Lerp(pop, 1f, grow)
                     * (t > 0.7f ? Mathf.Lerp(1f, 0.6f, (t - 0.7f) / 0.3f) : 1f);

@@ -150,7 +150,7 @@ public class XPGem : MonoBehaviour, IPoolable
         float distance = Vector2.Distance(transform.position, playerTransform.position);
         if (!isBeingCollected)
         {
-            // Idle flop: a little wiggle and a soft pulse.
+            // Idle: small wiggle and pulse.
             float t = Time.time * 5f + phase;
             transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Sin(t) * 14f);
             if (sr != null) sr.flipY = false;

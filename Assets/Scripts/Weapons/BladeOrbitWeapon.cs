@@ -18,7 +18,7 @@ public class BladeOrbitWeapon : OrbsWeapon
         {
             var sr = orb.GetComponent<SpriteRenderer>();
             sr.sprite = Shapes.Art("Icons/shuriken");
-            sr.color = Color.white;
+            sr.color = new Color(0.6f, 0.85f, 1f);
             orb.localScale = Vector3.one * 0.75f;
             Transform glow = orb.Find("Glow");
             if (glow != null) glow.gameObject.SetActive(false);
@@ -49,7 +49,7 @@ public class BladeOrbitWeapon : OrbsWeapon
 
     private void Fling(Vector2 from, Vector2 dir)
     {
-        Shot s = Shot.Spawn(Shapes.Art("Icons/shuriken"), Color.white, 0.75f, from);
+        Shot s = Shot.Spawn(Shapes.Art("Icons/shuriken"), new Color(0.6f, 0.85f, 1f), 0.75f, from);
         s.velocity = dir * Speed;
         s.life = 1.5f;
         s.hitRadius = 0.45f;

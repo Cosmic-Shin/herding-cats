@@ -53,6 +53,7 @@ public class PlayerHealth : MonoBehaviour
         if (Random.value < stats.dodgeChance)
         {
             DamagePopup.SpawnText(transform.position, "DODGE", new Color(0.6f, 0.9f, 1f), 3.5f);
+            if (spriteRenderer != null) AfterImage.Spawn(spriteRenderer, new Color(0.6f, 0.9f, 1f, 0.6f));
             Sfx.Play(Sfx.Id.Swish, 0.6f, 1.3f);
             return;
         }
@@ -60,6 +61,7 @@ public class PlayerHealth : MonoBehaviour
         if (MiraPassives.Instance != null && MiraPassives.Instance.TryBlock())
         {
             StartCoroutine(ShieldGrace());
+            GamepadUI.Rumble(0.1f, 0.4f, 0.1f);
             Sfx.Play(Sfx.Id.Shatter, 0.7f, 1.4f);
             Juice.HitStop(0.05f);
             return;
@@ -87,6 +89,7 @@ public class PlayerHealth : MonoBehaviour
             Juice.Sparks(at, new Color(1f, 0.3f, 0.3f), 8, 6f, 0.13f);
             ExplosionFx.Ring(at, 0.9f, new Color(1f, 0.35f, 0.35f), 0.2f);
             DamagePopup.SpawnText(at + Vector2.up * 0.8f, "-" + Mathf.CeilToInt(amount), new Color(1f, 0.3f, 0.3f), 4.2f);
+            GamepadUI.Rumble(0.35f, 0.6f, 0.18f);
             CameraFollow.Shake(0.12f, 0.15f);
             if (TryGetComponent(out PlayerAnimator anim)) anim.Squash(new Vector2(0.8f, 1.2f), 0.15f);
             StartCoroutine(InvincibilityFrames());
@@ -137,6 +140,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isDead) return;
         isDead = true;
+        GamepadUI.Rumble(0.8f, 0.8f, 0.6f);
 
         StopAllCoroutines();
 
@@ -150,7 +154,7 @@ public class PlayerHealth : MonoBehaviour
         StartCoroutine(DeathFx());
     }
 
-    // Burst, then Mira tips over and greys out while her ghost floats up. Unscaled time: the game slows to a stop here.
+    // Death animation (unscaled time, since the game slows to a stop): burst, fall over, grey out, ghost rises.
     private IEnumerator DeathFx()
     {
         Vector2 at = transform.position;

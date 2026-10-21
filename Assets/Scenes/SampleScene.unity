@@ -2033,6 +2033,7 @@ MonoBehaviour:
   playerLightIntensity: 0.4
   playerLightColor: {r: 1, g: 0.88, b: 0.7, a: 1}
   maxFlashLights: 12
+  duskDim: 0.8
 --- !u!1 &524052682
 GameObject:
   m_ObjectHideFlags: 0
@@ -5799,6 +5800,12 @@ MonoBehaviour:
   swarmSizeGrowthPerMinute: 2
   swarmSizeMax: 30
   swarmSpeed: 4
+  mousePrefab: {fileID: 4081946323999815819, guid: 6332adabaf7adcb499296f8b05e67665, type: 3}
+  firstMousePackTime: 20
+  mousePackInterval: 15
+  mousePackSizeStart: 10
+  mousePackGrowthPerMinute: 2
+  mousePackSizeMax: 30
   crateInterval: 25
   maxCrates: 4
   crateHealth: 15

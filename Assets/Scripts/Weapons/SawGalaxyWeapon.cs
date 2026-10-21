@@ -55,7 +55,7 @@ public class SawGalaxyWeapon : SuperWeapon
 
     private void Make(int i)
     {
-        Shot s = Shot.Spawn(Shapes.Art("Icons/shuriken"), Color.Lerp(Violet, Color.white, (i % SawsPerArm) / (float)SawsPerArm * 0.35f), 0.6f, Pos, 24);
+        Shot s = Shot.Spawn(Shapes.Projectile("Icons/sawgalaxy"), Color.white, 0.6f, Pos, 24);
         s.life = float.MaxValue;
         s.spin = 1500f;
         s.hitRadius = 0.45f;

@@ -26,13 +26,20 @@ public class Lighting : MonoBehaviour
         if (instance != null) instance.StartFlash(pos, radius, color, duration);
     }
 
+    // A temporary colour wash over the whole scene (e.g. Golden Hour). Null = normal daylight. Endless mode overrides it.
+    public static Color? Mood;
+
     private Light2D global, playerLight;
     private Camera cam;
     private Color daySky;
     private Light2D[] flashes;
     private float[] flashTime, flashLength, flashPeak;
 
-    private void Awake() => instance = this;
+    private void Awake()
+    {
+        instance = this;
+        Mood = null;
+    }
 
     public static void SetDynamic(bool on)
     {
@@ -128,7 +135,11 @@ public class Lighting : MonoBehaviour
         // Dusk: the world dims a little over the first 15 minutes (fireflies come out, see Ambience).
         if (global != null && spawner != null) global.intensity = Mathf.Lerp(ambient, ambient * duskDim, spawner.RunTime / 900f);
 
-        if (!EnemySpawner.Endless) return;
+        if (!EnemySpawner.Endless)
+        {
+            if (global != null) global.color = Color.Lerp(global.color, Mood ?? ambientColor, Time.deltaTime * 2f);
+            return;
+        }
         float k = Time.deltaTime * 0.6f;
         if (global != null) global.color = Color.Lerp(global.color, endlessColor, k);
         if (cam != null) cam.backgroundColor = Color.Lerp(cam.backgroundColor, endlessSky, k);

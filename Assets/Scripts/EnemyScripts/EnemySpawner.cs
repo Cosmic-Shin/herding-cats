@@ -153,7 +153,7 @@ public class EnemySpawner : MonoBehaviour
             case 1: endlessEliteChance = 0.25f; twist = "big cats can now be elite"; break;
             case 2: endlessWaveRate = 2f; twist = "waves come twice as fast"; break;
             case 3: endlessDamageMul = 2f; twist = "cats hit twice as hard"; break;
-            default: endlessHealthMul *= 2f; endlessDamageMul *= 1.25f; twist = "everything grows stronger"; break;
+            default: endlessHealthMul *= 2f; endlessDamageMul *= 1.25f; twist = "the cats got tougher. again"; break;
         }
 
         int seconds = Mathf.RoundToInt(milestone * milestoneMinutes * 60f);
@@ -215,6 +215,15 @@ public class EnemySpawner : MonoBehaviour
     public float swarmSpeed = 4f;
     private float swarmTimer;
 
+    [Header("Mouse packs (a scurry of tiny, fast, fragile mice that rush you together)")]
+    public GameObject mousePrefab;
+    public float firstMousePackTime = 20f;
+    public float mousePackInterval = 15f;
+    public int mousePackSizeStart = 10;
+    public float mousePackGrowthPerMinute = 2f;
+    public int mousePackSizeMax = 30;
+    private float mouseTimer;
+
     [Header("Crates (break for burgers, pickups, rarely a chest)")]
     public float crateInterval = 25f;
     public int maxCrates = 4;
@@ -253,6 +262,7 @@ public class EnemySpawner : MonoBehaviour
     private void Prewarm()
     {
         foreach (var wave in enemyWaves) Pool.Prewarm(wave.enemyPrefab, wave.special ? 6 : 40);
+        if (mousePrefab != null) Pool.Prewarm(mousePrefab, mousePackSizeMax);
 
         if (player != null && player.TryGetComponent(out PlayerAutoAttack attack)) Pool.Prewarm(attack.bombPrefab, 40);
         if (enemyWaves.Count > 0 && enemyWaves[0].enemyPrefab != null &&
@@ -317,6 +327,12 @@ public class EnemySpawner : MonoBehaviour
             SpawnSwarm();
         }
 
+        if (mousePrefab != null && runTime >= firstMousePackTime && (mouseTimer -= Time.deltaTime) <= 0f)
+        {
+            mouseTimer = mousePackInterval;
+            SpawnMousePack();
+        }
+
         if (runTime >= firstEventTime && (eventTimer -= Time.deltaTime) <= 0f)
         {
             eventTimer = eventInterval;
@@ -367,6 +383,18 @@ public class EnemySpawner : MonoBehaviour
             GameObject cat = Pool.Spawn(prefab, pos, Quaternion.identity);
             if (cat.TryGetComponent(out EnemyHealth health)) health.ScaleHealth(HealthMultiplier);
             if (cat.TryGetComponent(out EnemyAI ai)) ai.Swarm(dir, swarmSpeed);
+        }
+    }
+
+    public void SpawnMousePack()
+    {
+        if (player == null || mousePrefab == null) return;
+        int count = Mathf.Min(mousePackSizeMax, mousePackSizeStart + Mathf.FloorToInt(runTime / 60f * mousePackGrowthPerMinute), AliveCap - EnemyAI.AliveCount);
+        Vector2 center = GetSpawnPositionAroundPlayer();
+        for (int i = 0; i < count; i++)
+        {
+            GameObject mouse = Pool.Spawn(mousePrefab, center + Random.insideUnitCircle * 1.2f, Quaternion.identity);
+            if (mouse.TryGetComponent(out EnemyHealth health)) health.ScaleHealth(HealthMultiplier);
         }
     }
 

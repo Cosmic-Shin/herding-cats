@@ -1,0 +1,1950 @@
+fileFormatVersion: 2
+guid: be126bc067c707647b455040bac24555
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1234083968886043983
+    second: beholder_strike_0
+  - first:
+      213: -3134815386937399284
+    second: beholder_strike_1
+  - first:
+      213: 8165212822935848534
+    second: beholder_strike_2
+  - first:
+      213: 1327196431019446007
+    second: beholder_strike_3
+  - first:
+      213: 42487762963271303
+    second: beholder_strike_4
+  - first:
+      213: 2271089028926003310
+    second: beholder_strike_5
+  - first:
+      213: 247221060710107741
+    second: beholder_strike_6
+  - first:
+      213: 8831985950927136460
+    second: beholder_strike_7
+  - first:
+      213: 1807360680329978046
+    second: beholder_strike_8
+  - first:
+      213: -6301062172431036001
+    second: beholder_strike_9
+  - first:
+      213: 6289378305666543796
+    second: beholder_strike_10
+  - first:
+      213: -911020088730034040
+    second: beholder_strike_11
+  - first:
+      213: -4738714097432547026
+    second: beholder_strike_12
+  - first:
+      213: 5469440225919331537
+    second: beholder_strike_13
+  - first:
+      213: -709162909908385647
+    second: beholder_strike_14
+  - first:
+      213: 2892564608828541691
+    second: beholder_strike_15
+  - first:
+      213: -6892670064624168087
+    second: beholder_strike_16
+  - first:
+      213: 6075636280674239712
+    second: beholder_strike_17
+  - first:
+      213: 8016963411561216459
+    second: beholder_strike_18
+  - first:
+      213: 8527761871445117503
+    second: beholder_strike_19
+  - first:
+      213: -5842658769977508981
+    second: beholder_strike_20
+  - first:
+      213: -4778382692185923371
+    second: beholder_strike_21
+  - first:
+      213: -8472606288027216555
+    second: beholder_strike_22
+  - first:
+      213: 2070877316769853709
+    second: beholder_strike_23
+  - first:
+      213: -7130663853700329040
+    second: beholder_strike_24
+  - first:
+      213: -3171931602889035713
+    second: beholder_strike_25
+  - first:
+      213: 8910928355643913302
+    second: beholder_strike_26
+  - first:
+      213: 6342334301483062051
+    second: beholder_strike_27
+  - first:
+      213: -3924588109751935300
+    second: beholder_strike_28
+  - first:
+      213: -1163607884697101975
+    second: beholder_strike_29
+  - first:
+      213: 5196678343159107824
+    second: beholder_strike_30
+  - first:
+      213: -2507992640112839421
+    second: beholder_strike_31
+  - first:
+      213: 2565162413838209068
+    second: beholder_strike_32
+  - first:
+      213: -8599990107754456955
+    second: beholder_strike_33
+  - first:
+      213: -7043810189178648729
+    second: beholder_strike_34
+  - first:
+      213: 5288490225264168476
+    second: beholder_strike_35
+  - first:
+      213: 4867652437143468602
+    second: beholder_strike_36
+  - first:
+      213: -1022105140752799405
+    second: beholder_strike_37
+  - first:
+      213: -7345882968638667836
+    second: beholder_strike_38
+  - first:
+      213: -3242895846324028652
+    second: beholder_strike_39
+  - first:
+      213: -7419516590610777691
+    second: beholder_strike_40
+  - first:
+      213: 3610066119216403497
+    second: beholder_strike_41
+  - first:
+      213: -9171322519741874156
+    second: beholder_strike_42
+  - first:
+      213: 3762966037231660554
+    second: beholder_strike_43
+  - first:
+      213: -7500834081320974866
+    second: beholder_strike_44
+  - first:
+      213: 5760302614105302671
+    second: beholder_strike_45
+  - first:
+      213: 6966161316917639994
+    second: beholder_strike_46
+  - first:
+      213: -7014987474369107401
+    second: beholder_strike_47
+  - first:
+      213: 1215599941511227037
+    second: beholder_strike_48
+  - first:
+      213: -2131975066888540107
+    second: beholder_strike_49
+  - first:
+      213: 3803080663775908158
+    second: beholder_strike_50
+  - first:
+      213: 3646374349317486068
+    second: beholder_strike_51
+  - first:
+      213: -2686133809258894482
+    second: beholder_strike_52
+  - first:
+      213: 951627880466272185
+    second: beholder_strike_53
+  - first:
+      213: -302141615453954975
+    second: beholder_strike_54
+  - first:
+      213: -374290967641276074
+    second: beholder_strike_55
+  - first:
+      213: -11733702215875824
+    second: beholder_strike_56
+  - first:
+      213: -8772787725975030639
+    second: beholder_strike_57
+  - first:
+      213: -3098011621189534443
+    second: beholder_strike_58
+  - first:
+      213: 3951074255333092231
+    second: beholder_strike_59
+  - first:
+      213: -3213294342163676033
+    second: beholder_strike_60
+  - first:
+      213: -5821403242612752352
+    second: beholder_strike_61
+  - first:
+      213: 8359579768596647944
+    second: beholder_strike_62
+  - first:
+      213: 5951507380672858680
+    second: beholder_strike_63
+  - first:
+      213: 8532246956107883623
+    second: beholder_strike_64
+  - first:
+      213: -8189876917510844421
+    second: beholder_strike_65
+  - first:
+      213: -7142281340796077258
+    second: beholder_strike_66
+  - first:
+      213: 670146073565704242
+    second: beholder_strike_67
+  - first:
+      213: 5819188616916105664
+    second: beholder_strike_68
+  - first:
+      213: 4868093934319111244
+    second: beholder_strike_69
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: beholder_strike_0
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 200
+        width: 8
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ba0b833b27afdee0800000000000000
+      internalID: -1234083968886043983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_1
+      rect:
+        serializedVersion: 2
+        x: 278
+        y: 199
+        width: 18
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c08ea29b306ee74d0800000000000000
+      internalID: -3134815386937399284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_2
+      rect:
+        serializedVersion: 2
+        x: 338
+        y: 198
+        width: 25
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6564e822dc9a05170800000000000000
+      internalID: 8165212822935848534
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_3
+      rect:
+        serializedVersion: 2
+        x: 342
+        y: 212
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fe841a4f162b6210800000000000000
+      internalID: 1327196431019446007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_4
+      rect:
+        serializedVersion: 2
+        x: 355
+        y: 211
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78e0ab23562f69000800000000000000
+      internalID: 42487762963271303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_5
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 162
+        width: 27
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e68db666077848f10800000000000000
+      internalID: 2271089028926003310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_6
+      rect:
+        serializedVersion: 2
+        x: 466
+        y: 193
+        width: 25
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5a0f90be3e4e6300800000000000000
+      internalID: 247221060710107741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_7
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 192
+        width: 27
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc6a042bd64819a70800000000000000
+      internalID: 8831985950927136460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_8
+      rect:
+        serializedVersion: 2
+        x: 592
+        y: 194
+        width: 28
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb0a31486f8051910800000000000000
+      internalID: 1807360680329978046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_9
+      rect:
+        serializedVersion: 2
+        x: 596
+        y: 193
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f91d890b6512e88a0800000000000000
+      internalID: -6301062172431036001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_10
+      rect:
+        serializedVersion: 2
+        x: 601
+        y: 199
+        width: 21
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b07d471f3c584750800000000000000
+      internalID: 6289378305666543796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_11
+      rect:
+        serializedVersion: 2
+        x: 656
+        y: 198
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 880600c5e086b53f0800000000000000
+      internalID: -911020088730034040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_12
+      rect:
+        serializedVersion: 2
+        x: 657
+        y: 208
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e21b56a92a4bc3eb0800000000000000
+      internalID: -4738714097432547026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_13
+      rect:
+        serializedVersion: 2
+        x: 660
+        y: 192
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1dc672a38ea57eb40800000000000000
+      internalID: 5469440225919331537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_14
+      rect:
+        serializedVersion: 2
+        x: 664
+        y: 208
+        width: 10
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 190470b371c8826f0800000000000000
+      internalID: -709162909908385647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_15
+      rect:
+        serializedVersion: 2
+        x: 666
+        y: 197
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfa871faf24742820800000000000000
+      internalID: 2892564608828541691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_16
+      rect:
+        serializedVersion: 2
+        x: 667
+        y: 216
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9639b1c58115850a0800000000000000
+      internalID: -6892670064624168087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_17
+      rect:
+        serializedVersion: 2
+        x: 669
+        y: 201
+        width: 12
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e44016d10ff05450800000000000000
+      internalID: 6075636280674239712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_18
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 0
+        width: 93
+        height: 228
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc9f8634fb9f14f60800000000000000
+      internalID: 8016963411561216459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_19
+      rect:
+        serializedVersion: 2
+        x: 203
+        y: 71
+        width: 23
+        height: 78
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3a4b947d32b85670800000000000000
+      internalID: 8527761871445117503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_20
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 70
+        width: 23
+        height: 79
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8b7bafedc4baeea0800000000000000
+      internalID: -5842658769977508981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_21
+      rect:
+        serializedVersion: 2
+        x: 343
+        y: 134
+        width: 20
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d022672246cfadb0800000000000000
+      internalID: -4778382692185923371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_22
+      rect:
+        serializedVersion: 2
+        x: 408
+        y: 132
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 555956888714b6a80800000000000000
+      internalID: -8472606288027216555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_23
+      rect:
+        serializedVersion: 2
+        x: 470
+        y: 129
+        width: 25
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d013b7792fb3dbc10800000000000000
+      internalID: 2070877316769853709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_24
+      rect:
+        serializedVersion: 2
+        x: 532
+        y: 128
+        width: 27
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b15973410bca0d90800000000000000
+      internalID: -7130663853700329040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_25
+      rect:
+        serializedVersion: 2
+        x: 534
+        y: 145
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f30b6f543090bf3d0800000000000000
+      internalID: -3171931602889035713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_26
+      rect:
+        serializedVersion: 2
+        x: 595
+        y: 135
+        width: 19
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6547c19902af9ab70800000000000000
+      internalID: 8910928355643913302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_27
+      rect:
+        serializedVersion: 2
+        x: 597
+        y: 130
+        width: 28
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3235caea17f740850800000000000000
+      internalID: 6342334301483062051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_28
+      rect:
+        serializedVersion: 2
+        x: 658
+        y: 129
+        width: 12
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbe938458ef0989c0800000000000000
+      internalID: -3924588109751935300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_29
+      rect:
+        serializedVersion: 2
+        x: 671
+        y: 144
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96919ce3bc80adfe0800000000000000
+      internalID: -1163607884697101975
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_30
+      rect:
+        serializedVersion: 2
+        x: 680
+        y: 134
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f0d6ff7b6f4e1840800000000000000
+      internalID: 5196678343159107824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_31
+      rect:
+        serializedVersion: 2
+        x: 681
+        y: 144
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 305b7c25bf1d13dd0800000000000000
+      internalID: -2507992640112839421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_32
+      rect:
+        serializedVersion: 2
+        x: 611
+        y: 129
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c209204ef99499320800000000000000
+      internalID: 2565162413838209068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_33
+      rect:
+        serializedVersion: 2
+        x: 664
+        y: 137
+        width: 12
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5881c6bcf82b6a880800000000000000
+      internalID: -8599990107754456955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_34
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 133
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 767cab0e3fb5f3e90800000000000000
+      internalID: -7043810189178648729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_35
+      rect:
+        serializedVersion: 2
+        x: 677
+        y: 128
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1e0ffa17dd746940800000000000000
+      internalID: 5288490225264168476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_36
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 70
+        width: 14
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3a30060a106d8340800000000000000
+      internalID: 4867652437143468602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_37
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 81
+        width: 12
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35924523ac0c0d1f0800000000000000
+      internalID: -1022105140752799405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_38
+      rect:
+        serializedVersion: 2
+        x: 390
+        y: 68
+        width: 29
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c343b43c5e2e0a90800000000000000
+      internalID: -7345882968638667836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_39
+      rect:
+        serializedVersion: 2
+        x: 452
+        y: 65
+        width: 25
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41b344cc86beef2d0800000000000000
+      internalID: -3242895846324028652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_40
+      rect:
+        serializedVersion: 2
+        x: 514
+        y: 64
+        width: 27
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a9f68b98f4980990800000000000000
+      internalID: -7419516590610777691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_41
+      rect:
+        serializedVersion: 2
+        x: 577
+        y: 71
+        width: 21
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 924119b2208891230800000000000000
+      internalID: 3610066119216403497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_42
+      rect:
+        serializedVersion: 2
+        x: 579
+        y: 66
+        width: 28
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 410ce3292cae8b080800000000000000
+      internalID: -9171322519741874156
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_43
+      rect:
+        serializedVersion: 2
+        x: 644
+        y: 88
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0e6d0f7cadb83430800000000000000
+      internalID: 3762966037231660554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_44
+      rect:
+        serializedVersion: 2
+        x: 653
+        y: 80
+        width: 10
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee548b7e42fa7e790800000000000000
+      internalID: -7500834081320974866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_45
+      rect:
+        serializedVersion: 2
+        x: 663
+        y: 80
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f86208845b4b0ff40800000000000000
+      internalID: 5760302614105302671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_46
+      rect:
+        serializedVersion: 2
+        x: 593
+        y: 65
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3b71f63fc6cca060800000000000000
+      internalID: 6966161316917639994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_47
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 65
+        width: 12
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73a2a6e1f02c5ae90800000000000000
+      internalID: -7014987474369107401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_48
+      rect:
+        serializedVersion: 2
+        x: 646
+        y: 73
+        width: 12
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9623cec4bdaed010800000000000000
+      internalID: 1215599941511227037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_49
+      rect:
+        serializedVersion: 2
+        x: 654
+        y: 69
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5307e1ce8f3b962e0800000000000000
+      internalID: -2131975066888540107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_50
+      rect:
+        serializedVersion: 2
+        x: 662
+        y: 70
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e311580d6b147c430800000000000000
+      internalID: 3803080663775908158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_51
+      rect:
+        serializedVersion: 2
+        x: 659
+        y: 64
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f53a21c6268a9230800000000000000
+      internalID: 3646374349317486068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_52
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 7
+        width: 14
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6be4ff388fe8bad0800000000000000
+      internalID: -2686133809258894482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_53
+      rect:
+        serializedVersion: 2
+        x: 289
+        y: 6
+        width: 21
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9bfcc8de38cd43d00800000000000000
+      internalID: 951627880466272185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_54
+      rect:
+        serializedVersion: 2
+        x: 349
+        y: 17
+        width: 12
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16c11033dc39ecbf0800000000000000
+      internalID: -302141615453954975
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_55
+      rect:
+        serializedVersion: 2
+        x: 361
+        y: 6
+        width: 14
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 651ca1719504ecaf0800000000000000
+      internalID: -374290967641276074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_56
+      rect:
+        serializedVersion: 2
+        x: 414
+        y: 4
+        width: 29
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 013c58f824056dff0800000000000000
+      internalID: -11733702215875824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_57
+      rect:
+        serializedVersion: 2
+        x: 484
+        y: 1
+        width: 25
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 194f95f1b0cc04680800000000000000
+      internalID: -8772787725975030639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_58
+      rect:
+        serializedVersion: 2
+        x: 548
+        y: 0
+        width: 27
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51d37f038d6a105d0800000000000000
+      internalID: -3098011621189534443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_59
+      rect:
+        serializedVersion: 2
+        x: 610
+        y: 2
+        width: 28
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78be15ef91905d630800000000000000
+      internalID: 3951074255333092231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_60
+      rect:
+        serializedVersion: 2
+        x: 619
+        y: 7
+        width: 21
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f74cf8012d51863d0800000000000000
+      internalID: -3213294342163676033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_61
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 16
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02082cd0898363fa0800000000000000
+      internalID: -5821403242612752352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_62
+      rect:
+        serializedVersion: 2
+        x: 682
+        y: 16
+        width: 10
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 800deb23281330470800000000000000
+      internalID: 8359579768596647944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_63
+      rect:
+        serializedVersion: 2
+        x: 685
+        y: 24
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83a0f172e60089250800000000000000
+      internalID: 5951507380672858680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_64
+      rect:
+        serializedVersion: 2
+        x: 614
+        y: 1
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 764e7ba9661a86670800000000000000
+      internalID: 8532246956107883623
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_65
+      rect:
+        serializedVersion: 2
+        x: 674
+        y: 6
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bff4899d556b75e80800000000000000
+      internalID: -8189876917510844421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_66
+      rect:
+        serializedVersion: 2
+        x: 684
+        y: 5
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63bf2f346f481ec90800000000000000
+      internalID: -7142281340796077258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_67
+      rect:
+        serializedVersion: 2
+        x: 687
+        y: 9
+        width: 12
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 230b186ad46dc4900800000000000000
+      internalID: 670146073565704242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_68
+      rect:
+        serializedVersion: 2
+        x: 697
+        y: 7
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c9f7483739e1c050800000000000000
+      internalID: 5819188616916105664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: beholder_strike_69
+      rect:
+        serializedVersion: 2
+        x: 678
+        y: 0
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4c035814a1fe8340800000000000000
+      internalID: 4868093934319111244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      beholder_strike_0: -1234083968886043983
+      beholder_strike_1: -3134815386937399284
+      beholder_strike_10: 6289378305666543796
+      beholder_strike_11: -911020088730034040
+      beholder_strike_12: -4738714097432547026
+      beholder_strike_13: 5469440225919331537
+      beholder_strike_14: -709162909908385647
+      beholder_strike_15: 2892564608828541691
+      beholder_strike_16: -6892670064624168087
+      beholder_strike_17: 6075636280674239712
+      beholder_strike_18: 8016963411561216459
+      beholder_strike_19: 8527761871445117503
+      beholder_strike_2: 8165212822935848534
+      beholder_strike_20: -5842658769977508981
+      beholder_strike_21: -4778382692185923371
+      beholder_strike_22: -8472606288027216555
+      beholder_strike_23: 2070877316769853709
+      beholder_strike_24: -7130663853700329040
+      beholder_strike_25: -3171931602889035713
+      beholder_strike_26: 8910928355643913302
+      beholder_strike_27: 6342334301483062051
+      beholder_strike_28: -3924588109751935300
+      beholder_strike_29: -1163607884697101975
+      beholder_strike_3: 1327196431019446007
+      beholder_strike_30: 5196678343159107824
+      beholder_strike_31: -2507992640112839421
+      beholder_strike_32: 2565162413838209068
+      beholder_strike_33: -8599990107754456955
+      beholder_strike_34: -7043810189178648729
+      beholder_strike_35: 5288490225264168476
+      beholder_strike_36: 4867652437143468602
+      beholder_strike_37: -1022105140752799405
+      beholder_strike_38: -7345882968638667836
+      beholder_strike_39: -3242895846324028652
+      beholder_strike_4: 42487762963271303
+      beholder_strike_40: -7419516590610777691
+      beholder_strike_41: 3610066119216403497
+      beholder_strike_42: -9171322519741874156
+      beholder_strike_43: 3762966037231660554
+      beholder_strike_44: -7500834081320974866
+      beholder_strike_45: 5760302614105302671
+      beholder_strike_46: 6966161316917639994
+      beholder_strike_47: -7014987474369107401
+      beholder_strike_48: 1215599941511227037
+      beholder_strike_49: -2131975066888540107
+      beholder_strike_5: 2271089028926003310
+      beholder_strike_50: 3803080663775908158
+      beholder_strike_51: 3646374349317486068
+      beholder_strike_52: -2686133809258894482
+      beholder_strike_53: 951627880466272185
+      beholder_strike_54: -302141615453954975
+      beholder_strike_55: -374290967641276074
+      beholder_strike_56: -11733702215875824
+      beholder_strike_57: -8772787725975030639
+      beholder_strike_58: -3098011621189534443
+      beholder_strike_59: 3951074255333092231
+      beholder_strike_6: 247221060710107741
+      beholder_strike_60: -3213294342163676033
+      beholder_strike_61: -5821403242612752352
+      beholder_strike_62: 8359579768596647944
+      beholder_strike_63: 5951507380672858680
+      beholder_strike_64: 8532246956107883623
+      beholder_strike_65: -8189876917510844421
+      beholder_strike_66: -7142281340796077258
+      beholder_strike_67: 670146073565704242
+      beholder_strike_68: 5819188616916105664
+      beholder_strike_69: 4868093934319111244
+      beholder_strike_7: 8831985950927136460
+      beholder_strike_8: 1807360680329978046
+      beholder_strike_9: -6301062172431036001
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

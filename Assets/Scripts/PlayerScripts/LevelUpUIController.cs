@@ -237,12 +237,12 @@ public class LevelUpUIController : MonoBehaviour
 
         upgradePool = new List<UpgradeDefinition>
         {
-            new UpgradeDefinition { id = "attack15", description = "Upgrade player's attack by 15%", upgradeType = UpgradeType.AttackDamagePercent, amount = 0.15f },
-            new UpgradeDefinition { id = "health20", description = "Upgrade player's health by 20", upgradeType = UpgradeType.MaxHealth, amount = 20f },
-            new UpgradeDefinition { id = "attackSpeed20", description = "Upgrade player's attack speed by 20%", upgradeType = UpgradeType.AttackSpeedPercent, amount = 0.20f },
-            new UpgradeDefinition { id = "moveSpeed10", description = "Upgrade player's movement speed by 10%", upgradeType = UpgradeType.MoveSpeedPercent, amount = 0.10f },
+            new UpgradeDefinition { id = "attack15", description = "+15% attack damage", upgradeType = UpgradeType.AttackDamagePercent, amount = 0.15f },
+            new UpgradeDefinition { id = "health20", description = "+20 max HP", upgradeType = UpgradeType.MaxHealth, amount = 20f },
+            new UpgradeDefinition { id = "attackSpeed20", description = "+20% attack speed", upgradeType = UpgradeType.AttackSpeedPercent, amount = 0.20f },
+            new UpgradeDefinition { id = "moveSpeed10", description = "+10% movement speed", upgradeType = UpgradeType.MoveSpeedPercent, amount = 0.10f },
             new UpgradeDefinition { id = "projectile1", description = "+1 bomb per throw", upgradeType = UpgradeType.ProjectileCount, amount = 1f },
-            new UpgradeDefinition { id = "heal20", description = "Heal player by 20", upgradeType = UpgradeType.Heal, amount = 20f },
+            new UpgradeDefinition { id = "heal20", description = "Heal 20 HP", upgradeType = UpgradeType.Heal, amount = 20f },
             new UpgradeDefinition { id = "area15", description = "Explosion radius +15%", upgradeType = UpgradeType.AreaPercent, amount = 0.15f },
             new UpgradeDefinition { id = "crit5", description = "Crit chance +5%", upgradeType = UpgradeType.CritChance, amount = 0.05f },
         };

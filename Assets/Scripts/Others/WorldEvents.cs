@@ -58,19 +58,22 @@ public class WorldEvents : MonoBehaviour
         Juice.Flash(new Color(1f, 0.85f, 0.4f, 0.3f), 0.5f);
         Sfx.Play(Sfx.Id.Fanfare, 0.5f, 1.2f);
         stats.expMultiplier *= 2f;
+        Lighting.Mood = new Color(1f, 0.92f, 0.72f);
         for (float t = 0f; t < 30f; t += 0.25f)
         {
-            Juice.Sparks((Vector2)player.position + Random.insideUnitCircle * 2.5f, Gold, 1, 0.6f, 0.12f);
+            for (int i = 0; i < 3; i++)
+                Juice.SparksDir((Vector2)player.position + Random.insideUnitCircle * 3.5f, Vector2.up, 25f, Gold, 1, 0.8f, 0.12f);
             yield return new WaitForSeconds(0.25f);
         }
         stats.expMultiplier /= 2f;
+        Lighting.Mood = null;
         DamagePopup.SpawnText((Vector2)player.position + Vector2.up * 1.2f, "golden hour over", Gold, 4f);
     }
 
     // ---- Meteor Shower: marked meteors rain around you for 12s; they only hurt cats ----
     private IEnumerator MeteorShower()
     {
-        Announce("METEOR SHOWER", "the sky is falling on the cats", new Color(1f, 0.5f, 0.25f));
+        Announce("METEOR SHOWER", "rocks from the sky. cats only, relax", new Color(1f, 0.5f, 0.25f));
         Sfx.Play(Sfx.Id.Alert, 0.6f, 0.8f);
         for (float t = 0f; t < 12f; t += 0.35f)
         {
@@ -85,12 +88,13 @@ public class WorldEvents : MonoBehaviour
         const float fall = 0.9f, radius = 1.4f;
         AoeWarning.Spawn(at, radius, fall);
         var rock = new GameObject("Meteor").AddComponent<SpriteRenderer>();
-        rock.sprite = Shapes.Circle;
-        rock.color = new Color(1f, 0.55f, 0.2f);
+        rock.sprite = Shapes.Projectile("Icons/armageddon");
         rock.sortingOrder = 60;
-        rock.transform.localScale = Vector3.one * 0.45f;
+        rock.transform.localScale = Vector3.one * 0.9f;
         Lighting.Glow(rock);
         Vector2 from = at + new Vector2(-3f, 7f);
+        Vector2 fallDir = at - from;
+        rock.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(fallDir.y, fallDir.x) * Mathf.Rad2Deg - 45f);
         for (float t = 0f; t < fall; t += Time.deltaTime)
         {
             rock.transform.position = Vector2.Lerp(from, at, t / fall);
