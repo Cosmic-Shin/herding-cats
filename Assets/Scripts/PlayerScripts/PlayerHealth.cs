@@ -53,6 +53,7 @@ public class PlayerHealth : MonoBehaviour
         if (Random.value < stats.dodgeChance)
         {
             DamagePopup.SpawnText(transform.position, "DODGE", new Color(0.6f, 0.9f, 1f), 3.5f);
+            if (spriteRenderer != null) AfterImage.Spawn(spriteRenderer, new Color(0.6f, 0.9f, 1f, 0.6f));
             Sfx.Play(Sfx.Id.Swish, 0.6f, 1.3f);
             return;
         }
@@ -60,6 +61,7 @@ public class PlayerHealth : MonoBehaviour
         if (MiraPassives.Instance != null && MiraPassives.Instance.TryBlock())
         {
             StartCoroutine(ShieldGrace());
+            GamepadUI.Rumble(0.1f, 0.4f, 0.1f);
             Sfx.Play(Sfx.Id.Shatter, 0.7f, 1.4f);
             Juice.HitStop(0.05f);
             return;
@@ -83,6 +85,11 @@ public class PlayerHealth : MonoBehaviour
             if (skills != null) skills.OnPlayerHit();
             Juice.HitStop(0.08f);
             Juice.Flash(new Color(1f, 0.15f, 0.15f, 0.25f), 0.25f);
+            Vector2 at = transform.position;
+            Juice.Sparks(at, new Color(1f, 0.3f, 0.3f), 8, 6f, 0.13f);
+            ExplosionFx.Ring(at, 0.9f, new Color(1f, 0.35f, 0.35f), 0.2f);
+            DamagePopup.SpawnText(at + Vector2.up * 0.8f, "-" + Mathf.CeilToInt(amount), new Color(1f, 0.3f, 0.3f), 4.2f);
+            GamepadUI.Rumble(0.35f, 0.6f, 0.18f);
             CameraFollow.Shake(0.12f, 0.15f);
             if (TryGetComponent(out PlayerAnimator anim)) anim.Squash(new Vector2(0.8f, 1.2f), 0.15f);
             StartCoroutine(InvincibilityFrames());
@@ -133,6 +140,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isDead) return;
         isDead = true;
+        GamepadUI.Rumble(0.8f, 0.8f, 0.6f);
 
         StopAllCoroutines();
 
@@ -143,6 +151,30 @@ public class PlayerHealth : MonoBehaviour
         foreach (Weapon weapon in GetComponents<Weapon>()) weapon.enabled = false;
         if (TryGetComponent(out MiraPassives passives)) passives.enabled = false;
 
-        Debug.Log("Player died!");
+        StartCoroutine(DeathFx());
+    }
+
+    // Death animation (unscaled time, since the game slows to a stop): burst, fall over, grey out, ghost rises.
+    private IEnumerator DeathFx()
+    {
+        Vector2 at = transform.position;
+        Juice.Sparks(at, new Color(0.45f, 0.95f, 0.9f), 24, 9f, 0.16f);
+        Juice.Sparks(at, Color.white, 10, 5f, 0.12f);
+        ExplosionFx.Ring(at, 2.5f, new Color(1f, 0.4f, 0.4f), 0.5f);
+        Lighting.Flash(at, 6f, new Color(1f, 0.4f, 0.4f), 0.8f);
+        CameraFollow.ZoomPunch(0.5f);
+        if (spriteRenderer == null) yield break;
+        Juice.Ghost(spriteRenderer, 1.8f, 1.4f);
+
+        Transform body = spriteRenderer.transform;
+        Quaternion start = body.localRotation;
+        for (float t = 0f; t < 0.35f; t += Time.unscaledDeltaTime)
+        {
+            float k = t / 0.35f;
+            body.localRotation = start * Quaternion.Euler(0f, 0f, -90f * (1f - (1f - k) * (1f - k)));
+            spriteRenderer.color = Color.Lerp(originalSpriteColor, new Color(0.45f, 0.45f, 0.5f), k);
+            yield return null;
+        }
+        body.localRotation = start * Quaternion.Euler(0f, 0f, -90f);
     }
 }

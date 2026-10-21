@@ -12,8 +12,18 @@ public class BlackHole : MonoBehaviour
     private BlackHoleWeapon owner;
     private float pullRadius, duration, popRadius, popDamage, t;
     private SpriteRenderer core;
+    private Color glow = Purple;
+    private float artFill = ArtFill;
     public float PullRadius => pullRadius;
-    public void Tint(Color color) => core.color = color;
+
+    // Swap the purple void for another look (core art, mote + pop colour, how much of the pull radius the art covers).
+    public void Skin(Sprite art, Color color, float fill)
+    {
+        core.sprite = art;
+        glow = color;
+        artFill = fill;
+        foreach (Transform m in motes) m.GetComponent<SpriteRenderer>().color = Color.Lerp(color, Color.white, Random.Range(0f, 0.6f));
+    }
     private readonly Transform[] motes = new Transform[MoteCount];
     private readonly Vector2[] moteState = new Vector2[MoteCount];
 
@@ -62,7 +72,7 @@ public class BlackHole : MonoBehaviour
         float open = Mathf.SmoothStep(0f, 1f, t / OpenTime);
         float collapse = Mathf.SmoothStep(1f, 0.15f, (t - (duration - CollapseTime)) / CollapseTime);
         float throb = 1f + 0.04f * Mathf.Sin(t * 14f);
-        core.transform.localScale = Vector3.one * pullRadius * 2f * ArtFill * open * collapse * throb;
+        core.transform.localScale = Vector3.one * pullRadius * 2f * artFill * open * collapse * throb;
         core.transform.Rotate(0f, 0f, (-120f - 480f * k * k) * Time.deltaTime);
 
         float maxR = pullRadius * collapse;
@@ -87,10 +97,10 @@ public class BlackHole : MonoBehaviour
 
         if (t >= duration)
         {
-            Lighting.Flash(center, popRadius * 3f, Purple, 0.25f);
+            Lighting.Flash(center, popRadius * 3f, glow, 0.25f);
             ExplosionFx.Ring(center, popRadius * 0.8f, Color.white, 0.2f);
-            ExplosionFx.Ring(center, popRadius * 1.3f, Purple);
-            Juice.Sparks(center, Purple, 16, 10f, 0.2f);
+            ExplosionFx.Ring(center, popRadius * 1.3f, glow);
+            Juice.Sparks(center, glow, 16, 10f, 0.2f);
             CameraFollow.Shake(0.05f, 0.1f);
             if (owner != null) owner.Pop(center, popRadius, popDamage);
             else Bomb.Blast(center, popRadius, popDamage, 0f, 1.5f, true);

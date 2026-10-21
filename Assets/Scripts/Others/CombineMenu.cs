@@ -58,10 +58,10 @@ public class CombineMenu : MonoBehaviour
         if (banner.activeSelf)
         {
             float pulse = 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 5f);
-            bannerText.text = $"<b><color=#{ColorUtility.ToHtmlStringRGB(Color.Lerp(new Color(1f, 0.75f, 0.2f), Color.white, pulse))}>COMBINE READY!</color></b>  <size=75%><color=#C9D2F0>{(GamepadUI.Connected ? "[Select]" : "[C]")}</color></size>";
+            bannerText.text = $"<b><color=#{ColorUtility.ToHtmlStringRGB(Color.Lerp(new Color(1f, 0.75f, 0.2f), Color.white, pulse))}>COMBINE READY!</color></b>  <size=75%><color=#C9D2F0>{(GamepadUI.Connected ? "[Select]" : $"[{Keybinds.Label(Keybinds.Action.Combine)}]")}</color></size>";
         }
 
-        bool toggle = (Keyboard.current != null && Keyboard.current.cKey.wasPressedThisFrame)
+        bool toggle = Keybinds.Pressed(Keybinds.Action.Combine)
                       || (Gamepad.current != null && Gamepad.current.selectButton.wasPressedThisFrame);
         if (IsOpen && GamepadUI.Back) toggle = true;
         if (!toggle) return;

@@ -30,11 +30,21 @@ public class XPGem : MonoBehaviour, IPoolable
     private Vector2 burstVelocity;
     private float burstTime;
     private TrailRenderer trail;
+    private SpriteRenderer sr;
+    private float phase;
 
     private void Awake()
     {
         baseScale = transform.localScale;
-        if (TryGetComponent(out SpriteRenderer sr)) Lighting.Glow(sr);
+        if (TryGetComponent(out sr))
+        {
+            Lighting.Glow(sr);
+            // Fish treats instead of gems; keep roughly the old on-screen size.
+            float before = sr.sprite != null ? sr.sprite.bounds.size.x : 1f;
+            sr.sprite = Shapes.Fish;
+            baseScale *= before * 1.2f / sr.sprite.bounds.size.x;
+        }
+        phase = Random.value * 10f;
         trail = gameObject.AddComponent<TrailRenderer>();
         trail.time = 0.18f;
         trail.minVertexDistance = 0.05f;
@@ -115,7 +125,7 @@ public class XPGem : MonoBehaviour, IPoolable
                 trail.startColor = tier.color;
                 trail.endColor = new Color(tier.color.r, tier.color.g, tier.color.b, 0f);
             }
-            if (TryGetComponent(out SpriteRenderer sr))
+            if (sr != null)
             {
                 sr.color = tier.color;
                 sr.sortingOrder = 1;
@@ -138,6 +148,13 @@ public class XPGem : MonoBehaviour, IPoolable
         }
 
         float distance = Vector2.Distance(transform.position, playerTransform.position);
+        if (!isBeingCollected)
+        {
+            // Idle: small wiggle and pulse.
+            float t = Time.time * 5f + phase;
+            transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Sin(t) * 14f);
+            if (sr != null) sr.flipY = false;
+        }
         if (!isBeingCollected && Random.value < 0.004f)
             Juice.Sparks((Vector2)transform.position + Random.insideUnitCircle * 0.1f, Color.white, 1, 0.3f, 0.12f);
 
@@ -156,6 +173,8 @@ public class XPGem : MonoBehaviour, IPoolable
                 float speed = flySpeed + (pullTime - HopTime) * 30f;
                 trail.emitting = true;
                 transform.position = Vector2.MoveTowards(transform.position, playerTransform.position, speed * Time.deltaTime);
+                transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(toPlayer.y, toPlayer.x) * Mathf.Rad2Deg); // swims nose-first
+                if (sr != null) sr.flipY = toPlayer.x < 0f;
                 if (Random.value < 0.4f) Juice.Sparks(transform.position, new Color(tierColor.r, tierColor.g, tierColor.b, 0.7f), 1, 0.2f, 0.1f);
             }
 

@@ -23,7 +23,7 @@ public class MiraPassives : MonoBehaviour
     private PlayerAnimator anim;
     private PlayerUltimate ult;
     private float slashTimer;
-    private float shieldTimer;
+    private float shieldTimer, shieldPop;
     private SpriteRenderer shieldFill, shieldEdge, slashFx;
     private float slashFxTime = -1f;
     private static readonly System.Collections.Generic.List<Collider2D> hits = new System.Collections.Generic.List<Collider2D>(64);
@@ -97,8 +97,8 @@ public class MiraPassives : MonoBehaviour
         stats = GetComponent<PlayerStats>();
         anim = GetComponent<PlayerAnimator>();
         ult = GetComponent<PlayerUltimate>();
-        shieldFill = MakeFx("Shield", Shapes.Circle, 6);
-        shieldEdge = MakeFx("ShieldEdge", Shapes.Ring, 7);
+        shieldFill = MakeFx("Shield", Shapes.Bubble, 6);
+        shieldEdge = MakeFx("ShieldCharge", Shapes.Ring, 7);
         slashFx = MakeFx("Slash", Shapes.Crescent, 30);
         slashFx.gameObject.SetActive(false);
         baseSlashRange = slashRange;
@@ -134,7 +134,13 @@ public class MiraPassives : MonoBehaviour
             }
             ExplosionFx.Ring(pos, 2.8f * stats.areaMultiplier, new Color(0.6f, 0.9f, 1f), 0.3f);
         }
-        ExplosionFx.Spawn(transform.position, 1.2f, new Color(0.55f, 0.85f, 1f));
+        // Pop: the bubble bursts into droplets.
+        Vector2 at = transform.position;
+        ExplosionFx.Ring(at, 1.3f, new Color(0.7f, 0.95f, 1f), 0.25f);
+        ExplosionFx.Spawn(at, 1.2f, new Color(0.55f, 0.85f, 1f));
+        Juice.Sparks(at, new Color(0.6f, 0.9f, 1f), 16, 9f, 0.14f);
+        Sfx.Play(Sfx.Id.Pop, 0.6f, 0.7f);
+        Sfx.Play(Sfx.Id.Shatter, 0.25f, 1.4f);
         CameraFollow.Shake(0.08f, 0.1f);
         return true;
     }
@@ -161,15 +167,23 @@ public class MiraPassives : MonoBehaviour
         if (wasDown) shieldTimer -= Time.deltaTime;
         if (wasDown && ShieldUp)
         {
+            shieldPop = 1f;
+            ExplosionFx.Ring(transform.position, 1.1f, new Color(0.7f, 0.95f, 1f), 0.3f);
+            Juice.Sparks(transform.position, new Color(0.75f, 0.95f, 1f), 8, 4f, 0.1f);
             DamagePopup.SpawnText((Vector2)transform.position + Vector2.up * 0.6f, "SHIELD UP", new Color(0.55f, 0.85f, 1f), 3.5f);
             Sfx.Play(Sfx.Id.Ready, 0.4f, 1.2f);
         }
 
         float k = ShieldUp ? 1f : 1f - shieldTimer / shieldCooldown;
-        float pulse = ShieldUp ? 1f + 0.04f * Mathf.Sin(Time.time * 4f) : 1f;
-        shieldEdge.transform.localScale = shieldFill.transform.localScale = Vector3.one * 1.9f * pulse;
-        shieldEdge.color = new Color(0.55f, 0.85f, 1f, ShieldUp ? 0.7f : 0.2f * k);
-        shieldFill.color = new Color(0.55f, 0.85f, 1f, ShieldUp ? 0.12f : 0f);
+        shieldPop = Mathf.Max(0f, shieldPop - Time.deltaTime * 3f);
+        // Shield up: wobble + slow hue shift, pops in when it comes back. Shield down: ring fills as it recharges.
+        float wob = 0.035f * Mathf.Sin(Time.time * 5f);
+        float spring = 1f + 0.35f * shieldPop * Mathf.Sin(shieldPop * Mathf.PI * 3f);
+        shieldFill.transform.localScale = new Vector3(1f + wob, 1f - wob, 1f) * 2f * spring;
+        Color tint = Color.Lerp(new Color(0.55f, 0.9f, 1f), new Color(0.85f, 0.7f, 1f), 0.5f + 0.5f * Mathf.Sin(Time.time * 1.3f));
+        shieldFill.color = new Color(tint.r, tint.g, tint.b, ShieldUp ? 0.55f : 0f);
+        shieldEdge.transform.localScale = Vector3.one * 2f * Mathf.Lerp(0.4f, 1f, k);
+        shieldEdge.color = new Color(0.55f, 0.85f, 1f, ShieldUp ? 0f : 0.25f * k);
     }
 
     private Transform NearestCat(float range)

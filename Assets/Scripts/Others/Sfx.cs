@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class Sfx
 {
-    public enum Id { Boom, Hit, Pop, Xp, LevelUp, Hurt, Pickup, Alert, Crate, Heartbeat, Ready, Swish, Zap, Crackle, Whoosh, Shatter, Step, Meow, Dash, Click, Tick, Clang, Chest, Blink, GameOver }
+    public enum Id { Boom, Hit, Pop, Xp, LevelUp, Hurt, Pickup, Alert, Crate, Heartbeat, Ready, Swish, Zap, Crackle, Whoosh, Shatter, Step, Meow, Dash, Click, Tick, Clang, Chest, Blink, GameOver, Sparkle, Fanfare }
 
     public static float Volume = 0.5f;
 
@@ -107,6 +107,18 @@ public static class Sfx
             }),
             Id.Chest => Make(id, 0.7f, (t, s) => Noise(s, 0.3f) * Decay(t, 35f) * 0.7f
                                                  + (t > 0.12f ? Square(new[] { 784f, 988f, 1175f, 1568f }[Mathf.Min(3, (int)((t - 0.12f) / 0.07f))], t) * Decay(t - 0.12f, 4f) * 0.18f : 0f)),
+            // Rising glissando with a shimmer on top: the level-up flash.
+            Id.Sparkle => Make(id, 0.45f, (t, s) => (Mathf.Sin(2f * Mathf.PI * Mathf.Lerp(600f, 1800f, Mathf.Sqrt(t / 0.45f)) * t) * 0.6f
+                                                    + Square(2400f + 600f * Mathf.Sin(t * 70f), t) * 0.08f) * Mathf.Sin(Mathf.PI * Mathf.Min(1f, t / 0.45f)) * 0.45f),
+            // Arpeggio into a held major chord: combines, supers, maxed weapons.
+            Id.Fanfare => Make(id, 1.1f, (t, s) =>
+            {
+                float[] notes = { 523f, 659f, 784f, 1047f };
+                int n = Mathf.Min(3, (int)(t / 0.08f));
+                float lead = Square(notes[n], t) * Decay(t - n * 0.08f, n == 3 ? 2.5f : 14f) * 0.22f;
+                float chord = t < 0.32f ? 0f : (Mathf.Sin(2f * Mathf.PI * 523f * t) + Mathf.Sin(2f * Mathf.PI * 659f * t) + Mathf.Sin(2f * Mathf.PI * 784f * t)) * Decay(t - 0.32f, 2.2f) * 0.14f;
+                return lead + chord + Noise(s, 0.9f) * Decay(t - 0.32f, 18f) * (t < 0.32f ? 0f : 0.12f);
+            }),
             _ => Make(id, 0.3f, (t, s) => Noise(s, 0.45f) * Decay(t, 18f) * 0.9f
                                        + Mathf.Sin(2f * Mathf.PI * Mathf.Lerp(160f, 90f, t / 0.3f) * t) * Decay(t, 22f) * 0.6f
                                        + (Random.value < 0.04f ? (Random.value * 2f - 1f) * 1.5f : 0f) * Decay(t, 8f)),

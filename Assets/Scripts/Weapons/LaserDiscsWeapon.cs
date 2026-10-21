@@ -17,14 +17,14 @@ public class LaserDiscsWeapon : SuperWeapon
     private IEnumerator Disc(Vector2 dir)
     {
         float reach = Area(6.5f), beamLength = Area(3.8f), damage = Dmg(10f);
-        Shot disc = Shot.Spawn(Shapes.Ring, Magenta, Area(1.1f), Pos, 27);
+        Shot disc = Shot.Spawn(Shapes.LaserDisc, Color.white, Area(0.95f), Pos, 47);
         disc.life = 10f;
         disc.spin = 720f;
         disc.trail = new Color(1f, 0.5f, 0.85f, 0.6f);
         disc.trailSize = 0.25f;
         disc.ghost = new Color(1f, 0.4f, 0.8f, 0.35f);
         int gen = disc.Generation;
-        Shot glow = Shot.Spawn(Shapes.Circle, new Color(1f, 0.6f, 0.9f, 0.5f), Area(0.6f), Pos, 28);
+        Shot glow = Shot.Spawn(Shapes.Circle, new Color(1f, 0.5f, 0.85f, 0.3f), Area(1.5f), Pos, 26);
         glow.life = 10f;
         int glowGen = glow.Generation;
         var beams = new Shot[4];

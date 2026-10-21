@@ -12,7 +12,7 @@ public class AbsoluteZeroWeapon : BlackHoleWeapon
 
     protected override void OnOpened(BlackHole hole)
     {
-        hole.Tint(new Color(0.75f, 0.92f, 1f));
+        hole.Skin(Shapes.FrostVortex, Ice, 0.62f);
         holes.Add(hole);
     }
 

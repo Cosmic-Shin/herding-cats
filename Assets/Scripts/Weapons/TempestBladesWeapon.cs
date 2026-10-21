@@ -24,7 +24,7 @@ public class TempestBladesWeapon : SuperWeapon
         var gens = new int[Blades];
         for (int i = 0; i < Blades; i++)
         {
-            Shot s = Shot.Spawn(Shapes.Crescent, Storm, size, Pos, 25);
+            Shot s = Shot.Spawn(Shapes.Projectile("Icons/tempest", 1), Color.white, size, Pos, 25);
             s.life = 3f;
             s.spin = 1300f;
             s.trail = new Color(0.6f, 0.9f, 1f, 0.7f);

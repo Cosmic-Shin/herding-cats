@@ -123,37 +123,37 @@ public class PlayerWeapons : MonoBehaviour
 
     public static readonly Def[] CollabDefs =
     {
-        new Def { id = "chakram", name = "Chakram Storm", type = typeof(ChakramStormWeapon) },
-        new Def { id = "thunderstorm", name = "Thunderstorm", type = typeof(ThunderstormWeapon) },
-        new Def { id = "barrage", name = "Cluster Barrage", type = typeof(ClusterBarrageWeapon) },
-        new Def { id = "glacier", name = "Glacier Quake", type = typeof(GlacierQuakeWeapon) },
-        new Def { id = "horizon", name = "Event Horizon", type = typeof(EventHorizonWeapon) },
+        new Def { id = "chakram", name = "Claw Disc", type = typeof(ChakramStormWeapon) },
+        new Def { id = "thunderstorm", name = "Hiss Storm", type = typeof(ThunderstormWeapon) },
+        new Def { id = "barrage", name = "Pounce Barrage", type = typeof(ClusterBarrageWeapon) },
+        new Def { id = "glacier", name = "Frosty Paws", type = typeof(GlacierQuakeWeapon) },
+        new Def { id = "horizon", name = "Litter Box Void", type = typeof(EventHorizonWeapon) },
         new Def { id = "tarpit", name = "Tar Pit", type = typeof(TarPitWeapon) },
-        new Def { id = "tesla", name = "Tesla Coils", type = typeof(TeslaCoilsWeapon) },
-        new Def { id = "gravitywheel", name = "Gravity Wheel", type = typeof(GravityWheelWeapon) },
+        new Def { id = "tesla", name = "Static Fur", type = typeof(TeslaCoilsWeapon) },
+        new Def { id = "gravitywheel", name = "Yarn Ball", type = typeof(GravityWheelWeapon) },
         new Def { id = "halo", name = "Halo", type = typeof(HaloWeapon) },
         new Def { id = "thunderstar", name = "Thunder Star", type = typeof(ThunderStarWeapon) },
-        new Def { id = "absolutezero", name = "Absolute Zero", type = typeof(AbsoluteZeroWeapon) },
+        new Def { id = "absolutezero", name = "Cold Nose", type = typeof(AbsoluteZeroWeapon) },
         new Def { id = "stickymines", name = "Sticky Mines", type = typeof(StickyMinesWeapon) },
-        new Def { id = "seismic", name = "Seismic Field", type = typeof(SeismicFieldWeapon) },
-        new Def { id = "bladeorbit", name = "Blade Orbit", type = typeof(BladeOrbitWeapon) },
-        new Def { id = "cryobeam", name = "Cryo Beam", type = typeof(CryoBeamWeapon) },
-        new Def { id = "phoenix", name = "Phoenix Rang", type = typeof(PhoenixRangWeapon) },
+        new Def { id = "seismic", name = "Kneading Field", type = typeof(SeismicFieldWeapon) },
+        new Def { id = "bladeorbit", name = "Claw Orbit", type = typeof(BladeOrbitWeapon) },
+        new Def { id = "cryobeam", name = "Brain Freeze", type = typeof(CryoBeamWeapon) },
+        new Def { id = "phoenix", name = "Fire Rang", type = typeof(PhoenixRangWeapon) },
 
-        new Def { id = "tempest", name = "Tempest Blades", type = typeof(TempestBladesWeapon) },
-        new Def { id = "cryo", name = "Cryo Singularity", type = typeof(CryoSingularityWeapon) },
-        new Def { id = "stormnet", name = "Storm Network", type = typeof(StormNetworkWeapon) },
-        new Def { id = "magmarift", name = "Magma Rift", type = typeof(MagmaRiftWeapon) },
-        new Def { id = "judgment", name = "Divine Judgment", type = typeof(DivineJudgmentWeapon) },
-        new Def { id = "sawgalaxy", name = "Saw Galaxy", type = typeof(SawGalaxyWeapon) },
-        new Def { id = "permafrost", name = "Permafrost Minefield", type = typeof(PermafrostMinefieldWeapon) },
-        new Def { id = "laserdiscs", name = "Laser Discs", type = typeof(LaserDiscsWeapon) },
-        new Def { id = "blackice", name = "Black Ice Storm", type = typeof(BlackIceStormWeapon) },
-        new Def { id = "hellfire", name = "Hellfire Bombs", type = typeof(HellfireBombsWeapon) },
-        new Def { id = "earthshaker", name = "Earthshaker", type = typeof(EarthshakerWeapon) },
-        new Def { id = "armageddon", name = "Armageddon", type = typeof(ArmageddonWeapon) },
-        new Def { id = "frostfire", name = "Frostfire Eclipse", type = typeof(FrostfireEclipseWeapon) },
-        new Def { id = "infernowheel", name = "Inferno Wheel", type = typeof(InfernoWheelWeapon) },
+        new Def { id = "tempest", name = "Cat-egory 5", type = typeof(TempestBladesWeapon) },
+        new Def { id = "cryo", name = "Snow Globe", type = typeof(CryoSingularityWeapon) },
+        new Def { id = "stormnet", name = "Static Cling", type = typeof(StormNetworkWeapon) },
+        new Def { id = "magmarift", name = "Hot Floor", type = typeof(MagmaRiftWeapon) },
+        new Def { id = "judgment", name = "Holy Hiss", type = typeof(DivineJudgmentWeapon) },
+        new Def { id = "sawgalaxy", name = "Fur Shredder", type = typeof(SawGalaxyWeapon) },
+        new Def { id = "permafrost", name = "Cold Feet", type = typeof(PermafrostMinefieldWeapon) },
+        new Def { id = "laserdiscs", name = "Laser Pointer", type = typeof(LaserDiscsWeapon) },
+        new Def { id = "blackice", name = "Cold Snap", type = typeof(BlackIceStormWeapon) },
+        new Def { id = "hellfire", name = "Spicy Bombs", type = typeof(HellfireBombsWeapon) },
+        new Def { id = "earthshaker", name = "Catquake", type = typeof(EarthshakerWeapon) },
+        new Def { id = "armageddon", name = "Catastrophe", type = typeof(ArmageddonWeapon) },
+        new Def { id = "frostfire", name = "Hot & Cold", type = typeof(FrostfireEclipseWeapon) },
+        new Def { id = "infernowheel", name = "Spin Cycle", type = typeof(InfernoWheelWeapon) },
     };
 
     public static bool IsSuper(string id) => PlayerCollabs.FindSuper(id) != null;
@@ -191,7 +191,21 @@ public class PlayerWeapons : MonoBehaviour
             owned[def.id] = weapon;
             order.Add(def.id);
         }
+        int before = weapon.Level;
         weapon.SetLevel(weapon.Level + 1);
+        if (before < Weapon.MaxLevel && weapon.Level == Weapon.MaxLevel) MaxBurst(def.name);
+    }
+
+    private void MaxBurst(string name)
+    {
+        Vector2 at = transform.position;
+        Color gold = new Color(1f, 0.82f, 0.3f);
+        DamagePopup.SpawnText(at + Vector2.up * 1.3f, name.ToUpper() + "\nMAX!", gold, 6f);
+        ExplosionFx.Ring(at, 5f, gold, 0.5f);
+        Juice.SparksDir(at, Vector2.up, 25f, gold, 20, 11f, 0.18f);
+        Lighting.Flash(at, 7f, gold, 0.6f);
+        CameraFollow.ZoomPunch(0.25f);
+        Sfx.Play(Sfx.Id.Fanfare, 0.55f, 1.15f);
     }
 
     public void Merge(string a, string b, Def collab)

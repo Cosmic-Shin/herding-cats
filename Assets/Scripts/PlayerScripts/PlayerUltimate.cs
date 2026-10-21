@@ -27,12 +27,14 @@ public class PlayerUltimate : MonoBehaviour
     public int ExtraBombs => IsActive ? extraBombs : 0;
 
     private PlayerAutoAttack attack;
-    private SpriteRenderer aura;
+    private SpriteRenderer aura, body;
+    private float trailTimer;
 
     private void Awake()
     {
         attack = GetComponent<PlayerAutoAttack>();
         CooldownRemaining = firstChargeTime;
+        body = GetComponentInChildren<SpriteRenderer>();
         aura = CreateAura();
     }
 
@@ -44,6 +46,13 @@ public class PlayerUltimate : MonoBehaviour
             float pulse = 0.5f + 0.5f * Mathf.Sin(Time.time * 10f);
             aura.transform.localScale = Vector3.one * (1.6f + 0.15f * pulse);
             aura.color = new Color(1f, 0.6f, 0.15f, 0.25f + 0.15f * pulse);
+            // While active: gold afterimages + rising embers.
+            if ((trailTimer -= Time.deltaTime) <= 0f)
+            {
+                trailTimer = 0.07f;
+                if (body != null && !Settings.LowParticles) AfterImage.Spawn(body, new Color(1f, 0.8f, 0.3f, 0.85f));
+                Juice.SparksDir((Vector2)transform.position + Random.insideUnitCircle * 0.5f, Vector2.up, 30f, new Color(1f, 0.7f, 0.2f), 2, 2.5f, 0.1f);
+            }
             if (!IsActive)
             {
                 CooldownRemaining = cooldown;
@@ -59,7 +68,7 @@ public class PlayerUltimate : MonoBehaviour
     }
 
     private static bool Pressed() =>
-        (Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame) ||
+        Keybinds.Pressed(Keybinds.Action.Special) ||
         (Gamepad.current != null && Gamepad.current.buttonNorth.wasPressedThisFrame);
 
     private void Activate()
@@ -77,6 +86,7 @@ public class PlayerUltimate : MonoBehaviour
         ExplosionFx.Ring(transform.position, 5f, Color.white, 0.4f);
         Juice.Sparks(transform.position, new Color(1f, 0.8f, 0.3f), 24, 12f, 0.2f);
         CameraFollow.ZoomPunch(0.8f);
+        GamepadUI.Rumble(0.6f, 0.3f, 0.35f);
         Sfx.Play(Sfx.Id.Whoosh, 0.8f, 0.7f);
     }
 

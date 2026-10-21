@@ -100,6 +100,25 @@ public class CryoBeamWeapon : Weapon
         beam.transform.localScale = new Vector3(length, width * env * (0.9f + 0.1f * Mathf.Sin(Time.time * 50f + index)), 1f);
         if (Random.value < 0.4f)
             Juice.Sparks(Pos + dir * Random.Range(0.5f, length), new Color(0.85f, 0.97f, 1f), 1, 1f, 0.12f);
+        if (Random.value < 0.35f)
+            Frost(Pos + dir * Random.Range(0.8f, length) + Vector2.Perpendicular(dir) * Random.Range(-0.5f, 0.5f) * width, Random.value < 0.3f);
+    }
+
+    // Frost crystal or star that appears on the beam and fades.
+    private static void Frost(Vector2 at, bool twinkle)
+    {
+        const float life = 0.45f;
+        float size = twinkle ? 0.5f : 0.38f;
+        Shot s = Shot.Spawn(twinkle ? Shapes.Star : Shapes.Art("ice shards"), Color.white, size, at, 42);
+        s.life = life;
+        s.spin = twinkle ? 300f : 0f;
+        s.transform.rotation = Quaternion.Euler(0f, 0f, Random.Range(0f, 360f));
+        s.onUpdate = shot =>
+        {
+            float k = shot.age / life;
+            shot.transform.localScale = Vector3.one * size * Mathf.Min(1f, k / 0.2f);
+            shot.Renderer.color = new Color(0.9f, 0.98f, 1f, 1f - k * k);
+        };
     }
 
     private void SetVisible(bool visible)

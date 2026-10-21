@@ -17,12 +17,16 @@ public class BossTimeline : MonoBehaviour
         public Color tint = Color.white;
         public string titleOverride;
         public bool unlocksSupers;
+        [Tooltip("Killing this boss starts the spawner's late-game ramp")]
+        public bool startsLateGame;
         [System.NonSerialized] public bool warned, spawned;
     }
 
     public List<BossEvent> events = new List<BossEvent>();
     public float warningLead = 3f;
     public float spawnDistance = 11f;
+    [Tooltip("x boss HP on top of each event's multiplier (bosses skip the spawner's difficulty dial)")]
+    [Range(0.5f, 1.5f)] public float bossHealth = 0.72f;
 
     [Header("Companion")]
     public EnemyAnimator companionCat;
@@ -42,7 +46,7 @@ public class BossTimeline : MonoBehaviour
     private float runTime;
     private float warningTimer;
 
-    private EnemyHealth finalBoss;
+    private EnemyHealth finalBoss, lateKey;
     private bool cleared;
 
     private void Start()
@@ -83,6 +87,11 @@ public class BossTimeline : MonoBehaviour
         }
         DropCompanionOnFirstKill();
         UnlockSupersOnKill();
+        if (lateKey != null && lateKey.IsDead)
+        {
+            lateKey = null;
+            FindFirstObjectByType<EnemySpawner>().StartLateGame();
+        }
         alive.RemoveAll(h => h == null || h.IsDead);
         UpdateBossBar();
         UpdateArrow();
@@ -110,7 +119,7 @@ public class BossTimeline : MonoBehaviour
     }
 
     private static string ToRoman(int n) => n switch { 1 => "I", 2 => "II", 3 => "III", 4 => "IV", 5 => "V", _ => n.ToString() };
-    public bool BossFight => bossBar != null && bossBar.activeSelf;
+    public bool BossFight => alive.Count > 0;
     public void AdminDropCompanion(Vector2 at)
     {
         if (companionCat == null) return;
@@ -126,7 +135,7 @@ public class BossTimeline : MonoBehaviour
             if (!superKeys[i].IsDead) continue;
             superKeys.RemoveAt(i);
             PlayerCollabs.UnlockSupers();
-            Announce("SUPER COMBINES", "unlocked: fuse two combos with C");
+            Announce("SUPER COMBINES", $"unlocked: fuse two combos with {Keybinds.Prompt(Keybinds.Action.Combine)}");
         }
     }
 
@@ -178,13 +187,14 @@ public class BossTimeline : MonoBehaviour
         }
         if (boss.TryGetComponent(out EnemyHealth health))
         {
-            health.ScaleHealth(e.healthMultiplier);
+            health.ScaleHealth(e.healthMultiplier * bossHealth);
             if (e.tint != Color.white && e.tint.a > 0f) health.Tint(e.tint);
             health.xpValue = Mathf.RoundToInt(health.xpValue * Mathf.Sqrt(e.healthMultiplier));
             health.xpGemCount = Mathf.RoundToInt(health.xpGemCount * Mathf.Sqrt(e.healthMultiplier));
             alive.Add(health);
             if (IsFinal(e)) finalBoss = health;
             if (e.unlocksSupers) superKeys.Add(health);
+            if (e.startsLateGame) lateKey = health;
         }
     }
     private void ShowWarning(string bossName) => Announce("WARNING!", bossName + " approaches");
@@ -212,7 +222,7 @@ public class BossTimeline : MonoBehaviour
     {
         if (bossBar == null) return;
 
-        bool show = alive.Count > 0;
+        bool show = alive.Count > 0 && Time.timeScale > 0f; // hide behind pause / level-up titles
         if (bossBar.activeSelf != show) bossBar.SetActive(show);
         if (!show) return;
 

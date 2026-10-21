@@ -95,6 +95,7 @@ public class PlayerSkills : MonoBehaviour
     private float basePickupRange, baseUltCooldown, baseUltDuration;
     private float regenPerSecond;
     private bool reviveUsed;
+    private float regenFx;
 
     public IReadOnlyList<string> OwnedInOrder => order;
     public bool ReviveUsed => reviveUsed;
@@ -192,7 +193,23 @@ public class PlayerSkills : MonoBehaviour
         if (regenPerSecond > 0f && stats.currentHealth > 0f && stats.currentHealth < stats.maxHealth)
         {
             stats.Heal(regenPerSecond * Time.deltaTime);
+            if ((regenFx -= Time.deltaTime) <= 0f) { regenFx = 0.45f; HealPlus(); }
         }
+
+        // Berserk: red embers rise off Mira while her low-HP damage bonus is kicking in.
+        if (stats.lowHealthDamageBonus > 0f && stats.currentHealth > 0f && stats.currentHealth < stats.maxHealth * 0.5f
+            && !Settings.LowParticles && Random.value < Time.deltaTime * 20f * (1f - stats.currentHealth / stats.maxHealth))
+            Juice.SparksDir((Vector2)transform.position + Random.insideUnitCircle * 0.4f, Vector2.up, 25f, new Color(1f, 0.25f, 0.2f), 2, 2.4f, 0.15f);
+    }
+
+    // Regen tick: green plus that rises and fades.
+    private void HealPlus()
+    {
+        const float life = 0.7f;
+        Shot s = Shot.Spawn(Shapes.Plus, new Color(0.45f, 1f, 0.5f), 0.36f, (Vector2)transform.position + new Vector2(Random.Range(-0.4f, 0.4f), 0.3f), 30);
+        s.velocity = Vector2.up * 1.2f;
+        s.life = life;
+        s.onUpdate = shot => shot.Renderer.color = new Color(0.45f, 1f, 0.5f, 1f - shot.age / life);
     }
 
     public void OnExplosion(Vector2 pos, float radius, float damage)
@@ -259,6 +276,12 @@ public class PlayerSkills : MonoBehaviour
         stats.currentHealth = stats.maxHealth * new[] { 0.3f, 0.5f, 0.7f }[level - 1];
         stats.Heal(0f);
         DamagePopup.SpawnText(transform.position + Vector3.up * 0.5f, "SECOND WIND!", new Color(0.5f, 1f, 0.6f), 6f);
+        Color life = new Color(0.45f, 1f, 0.55f);
+        Juice.Flash(new Color(0.45f, 1f, 0.55f, 0.35f), 0.4f);
+        Lighting.Flash(transform.position, 6f, life, 0.5f);
+        ExplosionFx.Ring(transform.position, 3f, life, 0.5f);
+        ExplosionFx.Crosses(transform.position, 1.5f, life, 8);
+        for (int i = 0; i < 4; i++) HealPlus();
         Shockwave(4f, 1.5f, level >= 3 ? stats.AttackDamage * 3f : 0f);
         return true;
     }
@@ -273,7 +296,8 @@ public class PlayerSkills : MonoBehaviour
             if (hit.TryGetComponent(out IEnemyBrain brain)) brain.Knockback(((Vector2)hit.transform.position - pos).normalized * 7f);
             if (hit.TryGetComponent(out EnemyAI cat)) cat.Stun(stun);
         }
-        ExplosionFx.Spawn(pos, radius, new Color(0.5f, 0.85f, 1f));
+        StompFx.Spawn(pos, radius);
+        ExplosionFx.Ring(pos, radius, new Color(0.5f, 0.85f, 1f), 0.3f);
         CameraFollow.Shake(0.1f, 0.15f);
     }
 

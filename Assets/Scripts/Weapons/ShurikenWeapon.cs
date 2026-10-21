@@ -22,11 +22,12 @@ public class ShurikenWeapon : Weapon
     }
 
     protected virtual Color StarTint => Color.white;
+    protected virtual Sprite StarSprite => Shapes.Art("Icons/shuriken");
     protected virtual void OnStarHit(Vector2 at) { }
 
     private void Throw(Vector2 dir)
     {
-        Shot s = Shot.Spawn(Shapes.Art("Icons/shuriken"), StarTint, 0.7f, Pos);
+        Shot s = Shot.Spawn(StarSprite, StarTint, 0.7f, Pos);
         s.trail = new Color(0.75f, 0.85f, 1f, 0.6f);
         s.trailSize = 0.1f;
         s.velocity = dir * Speed;

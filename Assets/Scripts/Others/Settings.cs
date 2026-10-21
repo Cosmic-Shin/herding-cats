@@ -1,17 +1,23 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 using UnityEngine.UI;
 
 public class Settings : MonoBehaviour
 {
-    public static bool PostProcessing = true, Lights = true, LowParticles, DamageNumbers = true, ScreenShake = true, VSync = true, Fullscreen = true;
+    public static bool PostProcessing = true, Lights = true, LowParticles, DamageNumbers = true, VSync = true, Fullscreen = true;
     public static int FpsCap = 3, Volume = 5, MusicVolume = 6;
-    public static int Flashes = 2;
+    public static int Flashes = 2, Shake = 2, Effects = 3;
+    public static float ShakeScale => Shake == 2 ? 1f : Shake == 1 ? 0.4f : 0f;
     public static float FlashScale => Flashes == 2 ? 1f : Flashes == 1 ? 0.4f : 0f;
     private static readonly string[] FlashNames = { "Off", "Reduced", "Full" };
+    private static readonly float[] EffectAlphas = { 0.35f, 0.55f, 0.75f, 1f };
+    public static float EffectAlpha => EffectAlphas[Effects];
 
     private static readonly int[] FpsCaps = { 30, 60, 120, -1 };
     private static readonly string[] FpsNames = { "30", "60", "120", "Unlimited" };
@@ -28,13 +34,14 @@ public class Settings : MonoBehaviour
         Lights = B("set_lights", true);
         LowParticles = B("set_lowParticles", false);
         DamageNumbers = B("set_damageNumbers", true);
-        ScreenShake = B("set_shake", true);
+        Shake = Mathf.Clamp(PlayerPrefs.GetInt("set_shake_level", B("set_shake", true) ? 2 : 0), 0, 2);
         VSync = B("set_vsync", true);
         Fullscreen = B("set_fullscreen", Screen.fullScreen);
         FpsCap = Mathf.Clamp(PlayerPrefs.GetInt("set_fps", 3), 0, FpsCaps.Length - 1);
         Volume = Mathf.Clamp(PlayerPrefs.GetInt("set_volume", 5), 0, 10);
         MusicVolume = Mathf.Clamp(PlayerPrefs.GetInt("set_music", 6), 0, 10);
         Flashes = Mathf.Clamp(PlayerPrefs.GetInt("set_flashes", 2), 0, 2);
+        Effects = Mathf.Clamp(PlayerPrefs.GetInt("set_effects", 3), 0, EffectAlphas.Length - 1);
         Apply();
     }
 
@@ -45,13 +52,14 @@ public class Settings : MonoBehaviour
         B("set_lights", Lights);
         B("set_lowParticles", LowParticles);
         B("set_damageNumbers", DamageNumbers);
-        B("set_shake", ScreenShake);
+        PlayerPrefs.SetInt("set_shake_level", Shake);
         B("set_vsync", VSync);
         B("set_fullscreen", Fullscreen);
         PlayerPrefs.SetInt("set_fps", FpsCap);
         PlayerPrefs.SetInt("set_volume", Volume);
         PlayerPrefs.SetInt("set_music", MusicVolume);
         PlayerPrefs.SetInt("set_flashes", Flashes);
+        PlayerPrefs.SetInt("set_effects", Effects);
         PlayerPrefs.Save();
     }
 
@@ -114,8 +122,9 @@ public class Settings : MonoBehaviour
         options.Add(new Option { label = "Bloom & vignette", value = () => OnOff(PostProcessing), step = _ => PostProcessing = !PostProcessing });
         options.Add(new Option { label = "Dynamic lights", value = () => OnOff(Lights), step = _ => Lights = !Lights });
         options.Add(new Option { label = "Particles", value = () => LowParticles ? "Low" : "High", step = _ => LowParticles = !LowParticles });
+        options.Add(new Option { label = "Effect opacity", value = () => $"{Mathf.RoundToInt(EffectAlpha * 100)}%", step = d => Effects = Mathf.Clamp(Effects + d, 0, EffectAlphas.Length - 1) });
         options.Add(new Option { label = "Damage numbers", value = () => OnOff(DamageNumbers), step = _ => DamageNumbers = !DamageNumbers });
-        options.Add(new Option { label = "Screen shake", value = () => OnOff(ScreenShake), step = _ => ScreenShake = !ScreenShake });
+        options.Add(new Option { label = "Screen shake", value = () => FlashNames[Shake], step = d => Shake = Wrap(Shake + d, 3) });
         options.Add(new Option { label = "Screen flashes", value = () => FlashNames[Flashes], step = d => Flashes = Wrap(Flashes + d, 3) });
         options.Add(new Option { label = "FPS limit", value = () => FpsNames[FpsCap], step = d => FpsCap = Wrap(FpsCap + d, FpsCaps.Length) });
         options.Add(new Option { label = "VSync", value = () => OnOff(VSync), step = _ => VSync = !VSync });
@@ -146,10 +155,127 @@ public class Settings : MonoBehaviour
             if (firstArrow == null) firstArrow = left;
         }
 
+        RuntimeUI.Button(panel, "Controls", new Vector2(-200, -top + 38), new Vector2(200, 48), ShowControls);
         RuntimeUI.Button(panel, "Back", new Vector2(0, -top + 38), new Vector2(180, 48), Close);
-        RuntimeUI.Text(panel, "Esc to close", 16, new Color(0.6f, 0.64f, 0.75f), new Vector2(230, -top + 38), new Vector2(140, 30));
+        RuntimeUI.Text(panel, "Esc / B to close", 16, new Color(0.6f, 0.64f, 0.75f), new Vector2(215, -top + 38), new Vector2(190, 30));
         Refresh();
-        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(firstArrow.gameObject);
+        mainPanel = panel;
+        mainFocus = firstArrow.gameObject;
+        BuildControls(dim.transform);
+        Select(mainFocus);
+    }
+
+    // ---- Controls page: click an action, then press the new key. ----
+
+    private RectTransform mainPanel, controlsPanel;
+    private GameObject mainFocus;
+    private Button[] keyButtons;
+    private int listening = -1, busyFrame = -1;
+
+    // True while waiting for a key (or on the frame one was taken), so menus don't also treat that key as "back".
+    public static bool Busy => instance != null && (instance.listening >= 0 || instance.busyFrame == Time.frameCount);
+
+    // Esc / gamepad back: cancel a rebind, then leave Controls, then close.
+    public static void Back()
+    {
+        if (instance == null) return;
+        if (instance.listening >= 0) instance.StopListening();
+        else if (instance.controlsPanel.gameObject.activeSelf) instance.ShowMainPage();
+        else Close();
+    }
+
+    private void BuildControls(Transform parent)
+    {
+        int n = Keybinds.Names.Length;
+        const float rowH = 52f;
+        controlsPanel = RuntimeUI.Frame(parent, "Controls", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f)).rectTransform;
+        float height = 230f + n * rowH;
+        controlsPanel.sizeDelta = new Vector2(640, height);
+        float top = height / 2f;
+
+        RuntimeUI.Title(controlsPanel, "CONTROLS", 48f, new Vector2(0, top - 40), 600f);
+        keyButtons = new Button[n];
+        for (int i = 0; i < n; i++)
+        {
+            int action = i;
+            float y = top - 100f - i * rowH;
+            RuntimeUI.Outline(RuntimeUI.Text(controlsPanel, Keybinds.Names[i], 22, new Color(0.8f, 0.84f, 0.95f), new Vector2(-130, y), new Vector2(300, rowH), TextAlignmentOptions.MidlineLeft));
+            keyButtons[i] = RuntimeUI.Button(controlsPanel, "", new Vector2(160, y), new Vector2(240, 44), () => Listen(action));
+        }
+        RuntimeUI.Text(controlsPanel, "Pad: stick move  A dash  Y special  View combine  Start pause", 16, new Color(0.8f, 0.84f, 0.95f), new Vector2(0, -top + 116), new Vector2(620, 24));
+        RuntimeUI.Text(controlsPanel, "Arrow keys always move.  Esc always pauses.", 16, new Color(0.6f, 0.64f, 0.75f), new Vector2(0, -top + 88), new Vector2(600, 24));
+        RuntimeUI.Button(controlsPanel, "Reset", new Vector2(-110, -top + 38), new Vector2(180, 48), () => { Keybinds.ResetAll(); RefreshKeys(); });
+        RuntimeUI.Button(controlsPanel, "Back", new Vector2(110, -top + 38), new Vector2(180, 48), ShowMainPage);
+        RefreshKeys();
+        controlsPanel.gameObject.SetActive(false);
+    }
+
+    private void ShowControls()
+    {
+        mainPanel.gameObject.SetActive(false);
+        controlsPanel.gameObject.SetActive(true);
+        Select(keyButtons[0].gameObject);
+    }
+
+    private void ShowMainPage()
+    {
+        controlsPanel.gameObject.SetActive(false);
+        mainPanel.gameObject.SetActive(true);
+        Select(mainFocus);
+    }
+
+    private void Listen(int action)
+    {
+        if (listening >= 0) return;
+        listening = action;
+        SetKeyLabel(action, "<color=#FFE08A>Press a key...</color>");
+        Select(null); // so the key we're waiting for can't also "click" a button
+    }
+
+    private void Update()
+    {
+        Keyboard kb = Keyboard.current;
+        if (listening < 0 || kb == null) return;
+        if (kb.escapeKey.wasPressedThisFrame) { StopListening(); return; }
+        foreach (KeyControl k in kb.allKeys)
+        {
+            if (k == null || !k.wasPressedThisFrame || k.keyCode == Key.Escape) continue;
+            Keybinds.Set((Keybinds.Action)listening, k.keyCode);
+            StopListening();
+            return;
+        }
+    }
+
+    private void StopListening()
+    {
+        int action = listening;
+        listening = -1;
+        busyFrame = Time.frameCount;
+        RefreshKeys();
+        StartCoroutine(SelectNextFrame(keyButtons[action].gameObject));
+    }
+
+    private IEnumerator SelectNextFrame(GameObject go)
+    {
+        yield return null;
+        Select(go);
+    }
+
+    private void RefreshKeys()
+    {
+        for (int i = 0; i < keyButtons.Length; i++) SetKeyLabel(i, Keybinds.Label((Keybinds.Action)i));
+    }
+
+    private void SetKeyLabel(int i, string text)
+    {
+        TextMeshProUGUI t = keyButtons[i].GetComponentInChildren<TextMeshProUGUI>();
+        t.text = text;
+        t.fontSize = 22;
+    }
+
+    private static void Select(GameObject go)
+    {
+        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(go);
     }
 
     private void Change(Option o, int direction)

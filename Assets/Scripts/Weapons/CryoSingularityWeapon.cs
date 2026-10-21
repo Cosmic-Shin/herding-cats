@@ -13,9 +13,21 @@ public class CryoSingularityWeapon : SuperWeapon
     private IEnumerator Singularity(Vector2 at)
     {
         float pullRadius = Area(6.5f), freezeRadius = Area(2.6f);
-        Shot core = Shot.Spawn(Shapes.Circle, new Color(0.05f, 0.1f, 0.25f, 0.95f), 0.2f, at, 30);
+        Shot core = Shot.Spawn(Shapes.Projectile("Icons/cryo", 1), Color.white, 0.2f, at, 30);
         core.life = 10f;
+        core.spin = 180f;
         int coreGen = core.Generation;
+
+        // Shards orbit inward during the charge.
+        const int ShardCount = 8;
+        var shards = new Shot[ShardCount];
+        var shardGens = new int[ShardCount];
+        for (int i = 0; i < ShardCount; i++)
+        {
+            shards[i] = Shot.Spawn(Shapes.Art("ice shards"), Color.white, 0.6f, at, 32);
+            shards[i].life = 10f;
+            shardGens[i] = shards[i].Generation;
+        }
         Shot halo = Shot.Spawn(Shapes.Ring, new Color(0.6f, 0.9f, 1f, 0.8f), 1f, at, 31);
         halo.life = 10f;
         halo.spin = -360f;
@@ -28,6 +40,13 @@ public class CryoSingularityWeapon : SuperWeapon
             float k = t / charge;
             if (core.IsSame(coreGen)) core.transform.localScale = Vector3.one * Mathf.Lerp(0.2f, 1.6f, k) * (1f + 0.08f * Mathf.Sin(t * 30f));
             if (halo.IsSame(haloGen)) halo.transform.localScale = Vector3.one * Mathf.Lerp(pullRadius * 2f, 2.2f, k);
+            for (int i = 0; i < ShardCount; i++)
+            {
+                if (!shards[i].IsSame(shardGens[i])) continue;
+                float a = i * 360f / ShardCount + t * Mathf.Lerp(120f, 520f, k);
+                Vector2 dir = Rotate(Vector2.right, a);
+                shards[i].transform.SetPositionAndRotation(at + dir * Mathf.Lerp(pullRadius * 0.85f, 0.9f, k * k), Quaternion.Euler(0f, 0f, a + 180f - 90f));
+            }
 
             foreach (Collider2D c in EnemiesNear(at, pullRadius))
             {
@@ -64,7 +83,9 @@ public class CryoSingularityWeapon : SuperWeapon
         Lighting.Flash(at, 9f, Ice, 0.5f);
         Sfx.Play(Sfx.Id.Shatter, 1f, 0.8f);
         CameraFollow.Shake(0.2f, 0.25f);
+        FrostNovaWeapon.ShardBurst(at, Area(5f), 16);
         if (core.IsSame(coreGen)) core.Release();
         if (halo.IsSame(haloGen)) halo.Release();
+        for (int i = 0; i < ShardCount; i++) if (shards[i].IsSame(shardGens[i])) shards[i].Release();
     }
 }

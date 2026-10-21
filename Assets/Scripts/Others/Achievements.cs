@@ -48,28 +48,29 @@ public class Achievements : MonoBehaviour
         runTimeSeen = 0f;
     }
 
+    // Ids are the save keys (PlayerPrefs "ach_<id>"), so they stay as first written even where the goal was retuned later.
     public static readonly Def[] All =
     {
-        new Def { id = "survive5", name = "Survivor", goal = "Survive 10 minutes", reward = "weapon:laser", done = () => RunTime >= 600f },
+        new Def { id = "survive5", name = "Nine Lives", goal = "Survive 10 minutes", reward = "weapon:laser", done = () => RunTime >= 600f },
         new Def { id = "kills1000", name = "Cat Wrangler", goal = "Defeat 3,000 cats in one run", reward = "weapon:mines", done = () => EnemyHealth.Kills >= 3000 },
-        new Def { id = "boss", name = "Boss Hunter", goal = "Defeat 3 bosses in one run", reward = "weapon:blackhole", done = () => EnemyHealth.BossKills >= 3 },
-        new Def { id = "collab", name = "Collaborator", goal = "Make 2 combo weapons in one run", reward = "skill:overdrive", done = () => collabs != null && collabs.Taken.Count >= 2 },
-        new Def { id = "elites25", name = "Elite Slayer", goal = "Defeat 60 elite cats in one run", reward = "skill:blacksmith", done = () => EnemyHealth.EliteKills >= 60 },
-        new Def { id = "level30", name = "Seasoned", goal = "Reach level 45", reward = "skill:secondwind", done = () => Level >= 45 },
-        new Def { id = "super", name = "Superstar", goal = "Make a super combine", reward = "reroll", done = () => collabs != null && collabs.SuperTaken != null },
-        new Def { id = "endless", name = "No End In Sight", goal = "Beat the final boss", reward = "eliminate", done = () => EnemySpawner.Endless },
-        new Def { id = "endless10", name = "Unstoppable", goal = "Survive 15 minutes of endless", reward = "reroll", done = () => spawner != null && EnemySpawner.Endless && spawner.EndlessMinutes >= 15f },
+        new Def { id = "boss", name = "Eye Doctor", goal = "Defeat 3 bosses in one run", reward = "weapon:blackhole", done = () => EnemyHealth.BossKills >= 3 },
+        new Def { id = "collab", name = "Mix & Match", goal = "Make 2 combo weapons in one run", reward = "skill:overdrive", done = () => collabs != null && collabs.Taken.Count >= 2 },
+        new Def { id = "elites25", name = "Fancy Feast", goal = "Defeat 60 elite cats in one run", reward = "skill:blacksmith", done = () => EnemyHealth.EliteKills >= 60 },
+        new Def { id = "level30", name = "Old Cat, New Tricks", goal = "Reach level 45", reward = "skill:secondwind", done = () => Level >= 45 },
+        new Def { id = "super", name = "Purrfect Combo", goal = "Make a super combine", reward = "reroll", done = () => collabs != null && collabs.SuperTaken != null },
+        new Def { id = "endless", name = "Final Meow", goal = "Beat the final boss", reward = "eliminate", done = () => EnemySpawner.Endless },
+        new Def { id = "endless10", name = "Still Herding", goal = "Survive 15 minutes of endless", reward = "reroll", done = () => spawner != null && EnemySpawner.Endless && spawner.EndlessMinutes >= 15f },
 
-        new Def { id = "nohit", name = "Untouchable", goal = "No hits for 3 minutes after 10:00", reward = "skill:dodge",
+        new Def { id = "nohit", name = "Nimble Paws", goal = "No hits for 3 minutes after 10:00", reward = "skill:dodge",
                   done = () => RunTime >= NoHitFrom + NoHitFor && RunTime - Mathf.Max(lastHitAt, NoHitFrom) >= NoHitFor },
-        new Def { id = "chests", name = "Treasure Hunter", goal = "Open 12 chests in one run", reward = "skill:thickskin", done = () => RewardMenu.ChestsOpened >= 12 },
-        new Def { id = "golden", name = "Gold Rush", goal = "Catch 3 golden cats in one run", reward = "weapon:glue", done = () => EnemyHealth.GoldenKills >= 3 },
-        new Def { id = "arsenal", name = "Arsenal", goal = "Have 5 weapons at max level at once", reward = "eliminate", done = () => MaxedWeapons() >= 5 },
-        new Def { id = "speedrun", name = "Overachiever", goal = "Reach level 40 before 10:00", reward = "reroll", done = () => Level >= 40 && RunTime < 600f },
-        new Def { id = "score", name = "High Roller", goal = "Score 150,000 in one run", reward = "reroll", done = () => Leaderboard.Score(RunTime, Level) >= 150000 },
+        new Def { id = "chests", name = "Box Inspector", goal = "Open 12 chests in one run", reward = "skill:thickskin", done = () => RewardMenu.ChestsOpened >= 12 },
+        new Def { id = "golden", name = "Fat Cats", goal = "Catch 3 golden cats in one run", reward = "weapon:glue", done = () => EnemyHealth.GoldenKills >= 3 },
+        new Def { id = "arsenal", name = "Toy Box", goal = "Have 5 weapons at max level at once", reward = "eliminate", done = () => MaxedWeapons() >= 5 },
+        new Def { id = "speedrun", name = "Zoomies", goal = "Reach level 40 before 10:00", reward = "reroll", done = () => Level >= 40 && RunTime < 600f },
+        new Def { id = "score", name = "Top Cat", goal = "Score 150,000 in one run", reward = "reroll", done = () => Leaderboard.Score(RunTime, Level) >= 150000 },
         new Def { id = "herder", name = "Cat Herder", goal = "25,000 cats in total", reward = "eliminate",
                   done = () => LifetimeKills >= 25000, progress = () => $"{Mathf.Min(LifetimeKills, 25000):N0} / 25,000" },
-        new Def { id = "marathon", name = "Marathon", goal = "Play 3 hours in total", reward = "reroll",
+        new Def { id = "marathon", name = "Couch Cat", goal = "Play 3 hours in total", reward = "reroll",
                   done = () => LifetimeSeconds >= 10800f, progress = () => $"{(int)(LifetimeSeconds / 3600f)}h {(int)(LifetimeSeconds % 3600f / 60f):00}m / 3h" },
     };
 

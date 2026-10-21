@@ -35,7 +35,11 @@ public class GlueWeapon : Weapon
         float tick = Dmg(Sting[L]);
         s.onExpire = shot =>
         {
+            // Splat: a squelch, a ring of goo and droplets flung outward.
             ExplosionFx.Spawn(shot.Position, radius * 0.5f, glue);
+            ExplosionFx.Ring(shot.Position, radius * 0.9f, new Color(0.7f, 1f, 0.5f, 0.8f), 0.25f);
+            Juice.Sparks(shot.Position, glue, 10, 7f, 0.16f);
+            Sfx.Play(Sfx.Id.Pop, 0.35f, 0.55f);
             bool magnet = PlayerCollabs.Has("gluemagnet");
             BurningGround.Spawn(shot.Position, radius, duration, tick, glue, slow, pull: magnet ? 3f : 0f, magnetGems: magnet);
         };

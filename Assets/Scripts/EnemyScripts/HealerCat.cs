@@ -9,7 +9,6 @@ public class HealerCat : MonoBehaviour, IPoolable
 
     private static readonly Color Green = new Color(0.45f, 1f, 0.5f);
     private static readonly System.Collections.Generic.List<Collider2D> hits = new System.Collections.Generic.List<Collider2D>(64);
-    private static Sprite plus;
     private EnemyAI ai;
     private EnemyHealth health;
     private Transform mark;
@@ -20,7 +19,7 @@ public class HealerCat : MonoBehaviour, IPoolable
         ai = GetComponent<EnemyAI>();
         health = GetComponent<EnemyHealth>();
         var sr = new GameObject("HealMark").AddComponent<SpriteRenderer>();
-        sr.sprite = Plus;
+        sr.sprite = Shapes.Plus;
         sr.color = Green;
         sr.sortingOrder = GetComponent<SpriteRenderer>().sortingOrder + 2;
         mark = sr.transform;
@@ -40,6 +39,7 @@ public class HealerCat : MonoBehaviour, IPoolable
 
         Vector2 at = transform.position;
         ExplosionFx.Ring(at, radius, Green, 0.45f);
+        ExplosionFx.Crosses(at, radius, Green, 7);
         Juice.Sparks(at, Green, 6, 3f, 0.12f);
         foreach (Collider2D c in Bomb.OverlapEnemies(at, radius, hits))
         {
@@ -48,21 +48,6 @@ public class HealerCat : MonoBehaviour, IPoolable
             if (healed < 0.5f) continue;
             DamagePopup.SpawnText((Vector2)c.transform.position + Vector2.up * 0.3f, "+" + Mathf.RoundToInt(healed), Green, 2.5f);
             Juice.SparksDir(c.transform.position, Vector2.up, 20f, Green, 2, 1.5f, 0.1f);
-        }
-    }
-
-    private static Sprite Plus
-    {
-        get
-        {
-            if (plus != null) return plus;
-            const int s = 7;
-            var tex = new Texture2D(s, s, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point };
-            for (int y = 0; y < s; y++)
-                for (int x = 0; x < s; x++)
-                    tex.SetPixel(x, y, (x >= 2 && x <= 4) || (y >= 2 && y <= 4) ? Color.white : Color.clear);
-            tex.Apply();
-            return plus = Sprite.Create(tex, new Rect(0, 0, s, s), new Vector2(0.5f, 0.5f), s);
         }
     }
 }

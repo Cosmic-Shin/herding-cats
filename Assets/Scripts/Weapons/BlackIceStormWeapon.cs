@@ -13,7 +13,7 @@ public class BlackIceStormWeapon : SuperWeapon
     private IEnumerator Blizzard(Vector2 at)
     {
         float reach = Area(3f), damage = Dmg(30f);
-        Shot cloud = Shot.Spawn(Shapes.Art("cloud"), new Color(0.35f, 0.45f, 0.7f, 0f), reach * 1.4f, at + Vector2.up * 1.2f, 55);
+        Shot cloud = Shot.Spawn(Shapes.Cloud, new Color(0.2f, 0.17f, 0.36f, 0f), reach * 1.7f, at + Vector2.up * 1.2f, 55);
         cloud.life = 10f;
         int gen = cloud.Generation;
         Sfx.Play(Sfx.Id.Whoosh, 0.6f, 0.6f);
@@ -28,13 +28,14 @@ public class BlackIceStormWeapon : SuperWeapon
             if (cloud.IsSame(gen))
             {
                 cloud.transform.position = at + Vector2.up * 1.2f;
-                Color c = flash ? new Color(0.85f, 0.95f, 1f) : new Color(0.35f, 0.45f, 0.7f);
-                c.a = 0.75f * Mathf.Clamp01(t / 0.3f) * Mathf.Clamp01((duration - t) / 0.4f);
+                Color c = flash ? new Color(0.7f, 0.85f, 1f) : new Color(0.2f, 0.17f, 0.36f);
+                c.a = 0.62f * Mathf.Clamp01(t / 0.3f) * Mathf.Clamp01((duration - t) / 0.4f);
                 cloud.Renderer.color = c;
             }
 
             if (Random.value < 0.6f)
                 Juice.SparksDir(at + new Vector2(Random.Range(-reach, reach), 1.2f), new Vector2(-0.3f, -1f), 10f, new Color(0.9f, 0.97f, 1f), 1, 2.5f, 0.09f);
+            if (Random.value < 0.45f) Hail(at + new Vector2(Random.Range(-reach, reach) * 0.9f, 1f));
 
             if ((strike -= Time.deltaTime) <= 0f)
             {
@@ -45,6 +46,7 @@ public class BlackIceStormWeapon : SuperWeapon
                 LightningFx.Spawn(p, IceBolt, 1.4f);
                 Lighting.Flash(p, 3f, IceBolt, 0.15f);
                 StompFx.Spawn(p, Area(1.3f), ice: true);
+                FrostNovaWeapon.ShardBurst(p, Area(1.6f), 6);
                 Sfx.Play(Sfx.Id.Zap, 0.4f, Random.Range(1.1f, 1.4f));
                 HitArea(p, Area(1.3f), damage, e =>
                 {
@@ -61,6 +63,17 @@ public class BlackIceStormWeapon : SuperWeapon
             yield return null;
         }
         if (cloud.IsSame(gen)) cloud.Release();
+    }
+
+    // One falling ice shard: drops from the cloud and fades as it lands.
+    private static void Hail(Vector2 from)
+    {
+        const float life = 0.35f;
+        Shot s = Shot.Spawn(Shapes.Art("ice shards"), Color.white, 0.4f, from, 54);
+        s.velocity = new Vector2(-1.2f, -6f);
+        s.life = life;
+        s.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(-6f, -1.2f) * Mathf.Rad2Deg - 90f);
+        s.onUpdate = shot => shot.Renderer.color = new Color(0.85f, 0.95f, 1f, 1f - shot.age / life);
     }
 
     private static Transform RandomNear(Vector2 at, float radius)

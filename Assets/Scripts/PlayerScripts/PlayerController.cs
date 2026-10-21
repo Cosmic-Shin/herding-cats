@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     private float dashCooldownTimer;
     private Vector2 dashDirection;
 
-    [Header("Dash (Shift / Space)")]
+    [Header("Dash")]
     public float dashSpeed = 10f;
     public float dashDuration = 0.25f;
     public float dashCooldown = 0.6f;
@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
         if (moveInput.sqrMagnitude > 0.01f) lastMoveDir = moveInput;
 
         var kb = Keyboard.current;
-        bool dashPressed = (kb != null && (kb.leftShiftKey.wasPressedThisFrame || kb.spaceKey.wasPressedThisFrame))
+        bool dashPressed = Keybinds.Pressed(Keybinds.Action.Dash) || Keybinds.AltPressed(Key.LeftShift)
                            || GamepadUI.Pressed(g => g.buttonSouth) || (Joystick.current != null && Joystick.current.trigger.wasPressedThisFrame);
         if (dashPressed && Time.timeScale > 0f && !isDashing && dashCooldownTimer <= 0f)
         {
@@ -85,10 +85,10 @@ public class PlayerController : MonoBehaviour
 
         if (kb != null)
         {
-            if (kb.aKey.isPressed || kb.leftArrowKey.isPressed) input.x -= 1;
-            if (kb.dKey.isPressed || kb.rightArrowKey.isPressed) input.x += 1;
-            if (kb.wKey.isPressed || kb.upArrowKey.isPressed) input.y += 1;
-            if (kb.sKey.isPressed || kb.downArrowKey.isPressed) input.y -= 1;
+            if (Keybinds.Held(Keybinds.Action.Left) || kb.leftArrowKey.isPressed) input.x -= 1;
+            if (Keybinds.Held(Keybinds.Action.Right) || kb.rightArrowKey.isPressed) input.x += 1;
+            if (Keybinds.Held(Keybinds.Action.Up) || kb.upArrowKey.isPressed) input.y += 1;
+            if (Keybinds.Held(Keybinds.Action.Down) || kb.downArrowKey.isPressed) input.y -= 1;
         }
 
         if (input == Vector2.zero) input = GamepadUI.Move();

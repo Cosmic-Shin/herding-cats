@@ -108,6 +108,7 @@ public class AuraWeapon : Weapon
         {
             stats.Heal(Mathf.Min(3f, 0.3f * inside));
             Juice.Sparks(Pos, new Color(0.5f, 1f, 0.5f), 2, 1.5f, 0.12f);
+            ExplosionFx.Crosses(Pos, radius, new Color(0.5f, 1f, 0.5f), 3);
         }
     }
 }

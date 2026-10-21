@@ -34,25 +34,37 @@ public class RewardMenu : MonoBehaviour
 
     public static int ChestsOpened;
 
-    public static void OpenHoloBox()
+    // Rewards wait their turn so they never share the pause with a level-up (or each other).
+    private readonly Queue<System.Action> queued = new Queue<System.Action>();
+    private LevelUpUIController levelUp;
+
+    private void Update()
+    {
+        if (queued.Count == 0 || IsOpen || GameOverScreen.IsShowing || stats == null || stats.currentHealth <= 0f) return;
+        if (levelUp == null) levelUp = stats.GetComponent<LevelUpUIController>();
+        if (levelUp != null && levelUp.Busy) return;
+        queued.Dequeue()();
+    }
+
+    public static void OpenHoloBox() => I.queued.Enqueue(() =>
     {
         if (!I.Open()) return;
         Sfx.Play(Sfx.Id.Chest, 0.9f);
         ChestsOpened++;
         I.StartCoroutine(I.HoloBox());
-    }
+    });
 
     private int anvilUses;
     private bool anvilSecondPick;
 
-    public static void OpenAnvil()
+    public static void OpenAnvil() => I.queued.Enqueue(() =>
     {
         if (!I.Open()) return;
         I.anvilUses = PlayerSkills.Instance != null && PlayerSkills.Instance.LevelOf("blacksmith") >= 3 ? 2 : 1;
         I.anvilSecondPick = false;
         I.BuildAnvil();
         Sfx.Play(Sfx.Id.Clang, 0.5f, 0.8f);
-    }
+    });
 
     private bool Open()
     {

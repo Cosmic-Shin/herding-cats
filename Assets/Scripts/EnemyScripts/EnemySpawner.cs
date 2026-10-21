@@ -24,7 +24,7 @@ public class EnemySpawner : MonoBehaviour
     public float maxSpawnRadius = 13f;
 
     [Header("Overall difficulty: x enemy HP and x enemy damage (1 = original tuning)")]
-    [Range(0.5f, 1.5f)] public float difficulty = 0.85f;
+    [Range(0.5f, 1.5f)] public float difficulty = 0.61f;
 
     [Header("Difficulty Scaling")]
     public float difficultyRampInterval = 30f;
@@ -37,7 +37,8 @@ public class EnemySpawner : MonoBehaviour
     [Header("Late-game pressure (on top of the above)")]
     public float healthGrowthQuadratic = 0.05f;
     public float damageGrowthPerMinute = 0.18f;
-    public float lateSpawnStart = 480f;
+    [Tooltip("Seconds after StartLateGame (the 10-min boss kill)")]
+    public float lateSpawnStart = 0f;
     public float lateSpawnRampSeconds = 300f;
     public float lateSpawnMaxBoost = 3f;
     public int lateMaxEnemiesBonus = 100;
@@ -49,14 +50,19 @@ public class EnemySpawner : MonoBehaviour
     public float eliteHealth = 8f;
     public int eliteXpMultiplier = 6;
 
-    [Header("Surge: extra scaling from this time on, so a maxed build can't just stand still")]
-    public float surgeStart = 540f;
+    [Header("Surge: extra scaling so a maxed build can't just stand still")]
+    [Tooltip("Seconds after StartLateGame (the 10-min boss kill)")]
+    public float surgeStart = 30f;
     public float surgeHealthQuadratic = 0.1f;
     public float surgeDamagePerMinute = 0.15f;
     public float surgeSpeedPerMinute = 0.05f;
     public float endlessSpeedPerMinute = 0.12f;
     public float maxSpeedScale = 2.2f;
-    private float SurgeMinutes => Mathf.Max(0f, (runTime - surgeStart) / 60f);
+    private float SurgeMinutes => Mathf.Max(0f, (runTime - lateFrom - surgeStart) / 60f);
+
+    // Late spawn boost and surge stay off until this is called (BossTimeline, on the late-game boss kill).
+    private float lateFrom = float.PositiveInfinity;
+    public void StartLateGame() => lateFrom = Mathf.Min(lateFrom, runTime);
 
     public static float DamageScale { get; private set; } = 1f;
     public static float SpeedScale { get; private set; } = 1f;
@@ -78,13 +84,19 @@ public class EnemySpawner : MonoBehaviour
     public float RunTime => runTime;
     public float EndlessMinutes => Endless ? (runTime - endlessStart) / 60f : 0f;
 
-    private void Awake() { Endless = false; SpeedScale = 1f; }
+    private void Awake()
+    {
+        Endless = false;
+        SpeedScale = 1f;
+        gameObject.AddComponent<WorldEvents>(); // golden hour, meteor showers, shrines
+    }
 
     public void StartEndless()
     {
         if (Endless) return;
         Endless = true;
         endlessStart = runTime;
+        StartLateGame(); // in case the late-game boss was never killed
         endlessTimer = 2.5f;
         StartCoroutine(EndlessShockwave());
         BossTimeline timeline = FindFirstObjectByType<BossTimeline>();
@@ -141,7 +153,7 @@ public class EnemySpawner : MonoBehaviour
             case 1: endlessEliteChance = 0.25f; twist = "big cats can now be elite"; break;
             case 2: endlessWaveRate = 2f; twist = "waves come twice as fast"; break;
             case 3: endlessDamageMul = 2f; twist = "cats hit twice as hard"; break;
-            default: endlessHealthMul *= 2f; endlessDamageMul *= 1.25f; twist = "everything grows stronger"; break;
+            default: endlessHealthMul *= 2f; endlessDamageMul *= 1.25f; twist = "the cats got tougher. again"; break;
         }
 
         int seconds = Mathf.RoundToInt(milestone * milestoneMinutes * 60f);
@@ -179,7 +191,7 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    private float LateBoost => 1f + Mathf.Clamp(runTime - lateSpawnStart, 0f, lateSpawnRampSeconds * (lateSpawnMaxBoost - 1f)) / lateSpawnRampSeconds;
+    private float LateBoost => 1f + Mathf.Clamp(runTime - lateFrom - lateSpawnStart, 0f, lateSpawnRampSeconds * (lateSpawnMaxBoost - 1f)) / lateSpawnRampSeconds;
 
     [System.Serializable]
     public class MiniBoss
@@ -202,6 +214,15 @@ public class EnemySpawner : MonoBehaviour
     public int swarmSizeMax = 30;
     public float swarmSpeed = 4f;
     private float swarmTimer;
+
+    [Header("Mouse packs (a scurry of tiny, fast, fragile mice that rush you together)")]
+    public GameObject mousePrefab;
+    public float firstMousePackTime = 20f;
+    public float mousePackInterval = 15f;
+    public int mousePackSizeStart = 10;
+    public float mousePackGrowthPerMinute = 2f;
+    public int mousePackSizeMax = 30;
+    private float mouseTimer;
 
     [Header("Crates (break for burgers, pickups, rarely a chest)")]
     public float crateInterval = 25f;
@@ -241,6 +262,7 @@ public class EnemySpawner : MonoBehaviour
     private void Prewarm()
     {
         foreach (var wave in enemyWaves) Pool.Prewarm(wave.enemyPrefab, wave.special ? 6 : 40);
+        if (mousePrefab != null) Pool.Prewarm(mousePrefab, mousePackSizeMax);
 
         if (player != null && player.TryGetComponent(out PlayerAutoAttack attack)) Pool.Prewarm(attack.bombPrefab, 40);
         if (enemyWaves.Count > 0 && enemyWaves[0].enemyPrefab != null &&
@@ -305,6 +327,12 @@ public class EnemySpawner : MonoBehaviour
             SpawnSwarm();
         }
 
+        if (mousePrefab != null && runTime >= firstMousePackTime && (mouseTimer -= Time.deltaTime) <= 0f)
+        {
+            mouseTimer = mousePackInterval;
+            SpawnMousePack();
+        }
+
         if (runTime >= firstEventTime && (eventTimer -= Time.deltaTime) <= 0f)
         {
             eventTimer = eventInterval;
@@ -355,6 +383,18 @@ public class EnemySpawner : MonoBehaviour
             GameObject cat = Pool.Spawn(prefab, pos, Quaternion.identity);
             if (cat.TryGetComponent(out EnemyHealth health)) health.ScaleHealth(HealthMultiplier);
             if (cat.TryGetComponent(out EnemyAI ai)) ai.Swarm(dir, swarmSpeed);
+        }
+    }
+
+    public void SpawnMousePack()
+    {
+        if (player == null || mousePrefab == null) return;
+        int count = Mathf.Min(mousePackSizeMax, mousePackSizeStart + Mathf.FloorToInt(runTime / 60f * mousePackGrowthPerMinute), AliveCap - EnemyAI.AliveCount);
+        Vector2 center = GetSpawnPositionAroundPlayer();
+        for (int i = 0; i < count; i++)
+        {
+            GameObject mouse = Pool.Spawn(mousePrefab, center + Random.insideUnitCircle * 1.2f, Quaternion.identity);
+            if (mouse.TryGetComponent(out EnemyHealth health)) health.ScaleHealth(HealthMultiplier);
         }
     }
 

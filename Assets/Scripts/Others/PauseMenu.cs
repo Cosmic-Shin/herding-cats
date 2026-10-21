@@ -16,6 +16,9 @@ public class PauseMenu : MonoBehaviour
     private PlayerStats stats;
     private LevelUpUIController levelUp;
     private float timeScaleBefore = 1f;
+    private RectTransform chart;
+    private Button[] column;
+    private TextMeshProUGUI hintText;
 
     public bool IsPaused { get; private set; }
 
@@ -32,20 +35,32 @@ public class PauseMenu : MonoBehaviour
         RuntimeUI.Restyle(panel.transform);
         foreach (TextMeshProUGUI t in panel.GetComponentsInChildren<TextMeshProUGUI>(true))
             if (t.text.Trim() == "PAUSED") { RuntimeUI.ReplaceTitle(t, "PAUSED", t.fontSize); break; }
+        // Taller stats box (grows downward, away from the title) so the build text isn't squeezed to its minimum size.
+        var box = (RectTransform)statsText.rectTransform.parent;
+        box.anchoredPosition += Vector2.down * 110f;
+        box.sizeDelta = new Vector2(box.sizeDelta.x + 40f, box.sizeDelta.y + 220f);
         panel.SetActive(false);
     }
 
+    private const float StatsSplit = 0.42f; // build stats above, damage chart below
+
     private void Update()
     {
-        bool toggle = (Keyboard.current != null && (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.pKey.wasPressedThisFrame))
+        bool toggle = (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame) || Keybinds.Pressed(Keybinds.Action.Pause)
                       || (Gamepad.current != null && Gamepad.current.startButton.wasPressedThisFrame);
         if (!toggle && GamepadUI.Back && (IsPaused || Settings.IsOpen || ComboBook.IsOpen)) toggle = true;
         if (!toggle) return;
 
-        if (Settings.IsOpen) { Settings.Close(); return; }
+        if (Settings.IsOpen) { if (!Settings.Busy) Settings.Back(); return; }
         if (ComboBook.IsOpen) { ComboBook.Close(); return; }
         if (IsPaused) Resume();
         else if (CanPause()) Pause();
+    }
+
+    // Alt-tab / clicking away opens the pause menu, so returning players aren't hit before they're ready.
+    private void OnApplicationFocus(bool focused)
+    {
+        if (!focused && !IsPaused && !Settings.IsOpen && !ComboBook.IsOpen && CanPause()) Pause();
     }
 
     private bool CanPause() => !MainMenu.IsOpen &&
@@ -58,7 +73,19 @@ public class PauseMenu : MonoBehaviour
         Juice.CancelHitStop();
         timeScaleBefore = Time.timeScale > 0f ? Time.timeScale : 1f;
         Time.timeScale = 0f;
-        statsText.text = BuildStats(stats) + DamageStats.Report();
+        // Build stats on top, damage chart below.
+        statsText.text = BuildStats(stats);
+        statsText.rectTransform.anchorMin = new Vector2(0f, StatsSplit);
+        if (chart != null) Destroy(chart.gameObject);
+        HUD hud = FindFirstObjectByType<HUD>();
+        chart = GameOverScreen.DamageChart(statsText.rectTransform.parent, Vector2.zero, Vector2.zero, hud != null ? hud.RunTime : 0f);
+        chart.anchorMin = Vector2.zero;
+        chart.anchorMax = new Vector2(1f, StatsSplit);
+        chart.offsetMin = new Vector2(36f, 24f);
+        chart.offsetMax = new Vector2(-36f, -8f);
+        // Left from the buttons jumps to the HUD gear slots (hover/select shows details).
+        foreach (Button b in column) { Navigation n = b.navigation; n.selectOnLeft = hud != null ? hud.FirstGearSlot : null; b.navigation = n; }
+        if (hintText != null) hintText.text = $"Esc / {Keybinds.Label(Keybinds.Action.Pause)} to resume";
         panel.SetActive(true);
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(resumeButton.gameObject);
     }
@@ -71,7 +98,7 @@ public class PauseMenu : MonoBehaviour
         settings.onClick.AddListener(() => Settings.Open(settings.gameObject));
 
         const float top = 200f, step = 100f;
-        Button[] column = { resumeButton, restartButton, combos, settings, quitButton };
+        column = new[] { resumeButton, restartButton, combos, settings, quitButton };
         float x = ((RectTransform)quitButton.transform).anchoredPosition.x;
         for (int i = 0; i < column.Length; i++)
         {
@@ -81,6 +108,7 @@ public class PauseMenu : MonoBehaviour
         }
         Transform hint = quitButton.transform.parent.Find("Hint");
         if (hint != null) ((RectTransform)hint).anchoredPosition = new Vector2(x, top - column.Length * step + 30f);
+        if (hint != null) hintText = hint.GetComponentInChildren<TextMeshProUGUI>();
 
         for (int i = 0; i < column.Length; i++)
         {

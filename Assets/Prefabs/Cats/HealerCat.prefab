@@ -13,12 +13,16 @@ PrefabInstance:
       value: HealerCat
       objectReference: {fileID: 0}
     - target: {fileID: 4523547436001512559, guid: f7b955d1e1e673c49928ec87a61b1ae7, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 4723107735738678597, guid: f4490a624bb152442addcad8adb5d6fe, type: 3}
+    - target: {fileID: 4523547436001512559, guid: f7b955d1e1e673c49928ec87a61b1ae7, type: 3}
       propertyPath: m_Color.b
-      value: 0.85
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4523547436001512559, guid: f7b955d1e1e673c49928ec87a61b1ae7, type: 3}
       propertyPath: m_Color.r
-      value: 0.8
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5524314966530618068, guid: f7b955d1e1e673c49928ec87a61b1ae7, type: 3}
       propertyPath: kiteRange
@@ -43,6 +47,10 @@ PrefabInstance:
     - target: {fileID: 5831371279696500961, guid: f7b955d1e1e673c49928ec87a61b1ae7, type: 3}
       propertyPath: maxHealth
       value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 7379834125354533024, guid: f7b955d1e1e673c49928ec87a61b1ae7, type: 3}
+      propertyPath: skin
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8227207131269280029, guid: f7b955d1e1e673c49928ec87a61b1ae7, type: 3}
       propertyPath: m_LocalScale.x

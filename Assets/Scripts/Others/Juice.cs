@@ -112,6 +112,7 @@ public class Juice : MonoBehaviour
     private static void Emit(Vector2 pos, float speed, float size, float life, Color color, Vector2? dir = null)
     {
         if (Settings.LowParticles && Random.value < 0.5f) return;
+        color.a *= Settings.EffectAlpha;
         var p = new ParticleSystem.EmitParams
         {
             position = pos, applyShapeToPosition = true,
@@ -119,6 +120,32 @@ public class Juice : MonoBehaviour
             startSize = size, startLifetime = life, startColor = color,
         };
         I.puffs.Emit(p, 1);
+    }
+
+    // A pale copy of the sprite floats up, wobbling, and fades. Unscaled time so it also plays during the death slow-mo.
+    public static void Ghost(SpriteRenderer src, float rise = 1.2f, float duration = 1f)
+    {
+        if (src == null || src.sprite == null) return;
+        I.StartCoroutine(I.GhostRoutine(src, rise, duration));
+    }
+
+    private IEnumerator GhostRoutine(SpriteRenderer src, float rise, float duration)
+    {
+        var g = new GameObject("Ghost").AddComponent<SpriteRenderer>();
+        g.sprite = src.sprite;
+        g.flipX = src.flipX;
+        g.sortingOrder = src.sortingOrder + 2;
+        g.transform.localScale = src.transform.lossyScale;
+        Lighting.Glow(g);
+        Vector2 start = src.transform.position;
+        for (float t = 0f; t < duration; t += Time.unscaledDeltaTime)
+        {
+            float k = t / duration;
+            g.transform.position = start + new Vector2(Mathf.Sin(t * 6f) * 0.12f, rise * k);
+            g.color = new Color(0.75f, 0.95f, 1f, 0.55f * (1f - k));
+            yield return null;
+        }
+        Destroy(g.gameObject);
     }
 
     private static readonly string[] WakeLines = { "!", "mrrp?", "nya!", "!?" };
@@ -168,7 +195,7 @@ public class Juice : MonoBehaviour
         wasLow = low;
 
         float pulse = 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 5f);
-        vignette.color = low ? new Color(0.9f, 0.05f, 0.05f, 0.35f + 0.3f * pulse) : Color.clear;
+        vignette.color = low ? new Color(0.9f, 0.05f, 0.05f, 0.35f + 0.3f * pulse * Settings.FlashScale) : Color.clear;
         if (low && Time.timeScale > 0f && Time.unscaledTime >= nextBeat)
         {
             nextBeat = Time.unscaledTime + 0.85f;

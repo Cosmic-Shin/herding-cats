@@ -87,6 +87,8 @@ public class LevelUpUIController : MonoBehaviour
     private readonly HashSet<string> banned = new HashSet<string>();
     private Button rerollButton, eliminateButton, skipButton, combosButton;
     public bool IsOpen => isPanelOpen;
+    // True from the level-up flash until the last queued pick is made.
+    public bool Busy => isPanelOpen || celebrating || pendingLevelUps > 0;
     private bool inputReady;
     private bool isGamePaused;
     private float timeScaleBeforePause = 1f;
@@ -138,9 +140,16 @@ public class LevelUpUIController : MonoBehaviour
         ExplosionFx.Ring(at, 3f, new Color(1f, 0.92f, 0.5f), 0.4f);
         ExplosionFx.Spawn(at, 1.2f, new Color(1f, 0.95f, 0.7f), order: 9);
         Juice.Sparks(at, new Color(1f, 0.85f, 0.3f), 18, 8f, 0.18f);
+        Juice.SparksDir(at, Vector2.up, 12f, new Color(1f, 0.95f, 0.6f), 16, 12f, 0.16f); // light pillar
+        Lighting.Flash(at, 6f, new Color(1f, 0.85f, 0.4f), 0.5f);
+        CameraFollow.ZoomPunch(0.2f);
+        Sfx.Play(Sfx.Id.Sparkle, 0.6f);
         DamagePopup.SpawnText(at + Vector2.up * 1f, "LEVEL UP!", new Color(1f, 0.88f, 0.35f), 7f);
         Juice.SlowMo(0.2f, 0.4f);
-        yield return new WaitForSecondsRealtime(0.35f);
+        yield return new WaitForSecondsRealtime(0.15f);
+        ExplosionFx.Ring(stats.transform.position, 5f, new Color(1f, 1f, 1f, 0.8f), 0.35f);
+        yield return new WaitForSecondsRealtime(0.2f);
+        while (RewardMenu.IsOpen) yield return null; // holo box / anvil owns the pause; open after it
         celebrating = false;
         if (stats.currentHealth > 0f && !GameOverScreen.IsShowing && !isPanelOpen) OpenPanel(stats.level);
     }
@@ -228,12 +237,12 @@ public class LevelUpUIController : MonoBehaviour
 
         upgradePool = new List<UpgradeDefinition>
         {
-            new UpgradeDefinition { id = "attack15", description = "Upgrade player's attack by 15%", upgradeType = UpgradeType.AttackDamagePercent, amount = 0.15f },
-            new UpgradeDefinition { id = "health20", description = "Upgrade player's health by 20", upgradeType = UpgradeType.MaxHealth, amount = 20f },
-            new UpgradeDefinition { id = "attackSpeed20", description = "Upgrade player's attack speed by 20%", upgradeType = UpgradeType.AttackSpeedPercent, amount = 0.20f },
-            new UpgradeDefinition { id = "moveSpeed10", description = "Upgrade player's movement speed by 10%", upgradeType = UpgradeType.MoveSpeedPercent, amount = 0.10f },
+            new UpgradeDefinition { id = "attack15", description = "+15% attack damage", upgradeType = UpgradeType.AttackDamagePercent, amount = 0.15f },
+            new UpgradeDefinition { id = "health20", description = "+20 max HP", upgradeType = UpgradeType.MaxHealth, amount = 20f },
+            new UpgradeDefinition { id = "attackSpeed20", description = "+20% attack speed", upgradeType = UpgradeType.AttackSpeedPercent, amount = 0.20f },
+            new UpgradeDefinition { id = "moveSpeed10", description = "+10% movement speed", upgradeType = UpgradeType.MoveSpeedPercent, amount = 0.10f },
             new UpgradeDefinition { id = "projectile1", description = "+1 bomb per throw", upgradeType = UpgradeType.ProjectileCount, amount = 1f },
-            new UpgradeDefinition { id = "heal20", description = "Heal player by 20", upgradeType = UpgradeType.Heal, amount = 20f },
+            new UpgradeDefinition { id = "heal20", description = "Heal 20 HP", upgradeType = UpgradeType.Heal, amount = 20f },
             new UpgradeDefinition { id = "area15", description = "Explosion radius +15%", upgradeType = UpgradeType.AreaPercent, amount = 0.15f },
             new UpgradeDefinition { id = "crit5", description = "Crit chance +5%", upgradeType = UpgradeType.CritChance, amount = 0.05f },
         };

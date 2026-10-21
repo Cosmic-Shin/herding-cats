@@ -34,6 +34,28 @@ public class PlayerAnimator : MonoBehaviour
         if (spriteRenderer == null) spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         SpriteFx.AddShadow(spriteRenderer, 0.55f);
         baseScale = transform.localScale;
+        // Draw Mira above weapon effects (explosions 50-52, lightning 60) so she never gets lost in a fight.
+        // Set after the shadow so it stays on the ground.
+        spriteRenderer.sortingOrder = 70;
+
+        marker = new GameObject("Marker").AddComponent<SpriteRenderer>();
+        marker.transform.SetParent(transform, false);
+        marker.sprite = Shapes.Ring;
+        marker.sortingOrder = 3; // on the ground: over puddles, under cats
+        Lighting.Glow(marker);
+    }
+
+    private static readonly Color MarkerColor = new Color(0.45f, 1f, 0.9f);
+    private SpriteRenderer marker;
+
+    private void OnDisable()
+    {
+        if (marker != null) marker.enabled = false;
+    }
+
+    private void OnEnable()
+    {
+        if (marker != null) marker.enabled = true;
     }
 
     public void Squash(Vector2 amount, float seconds)
@@ -108,6 +130,11 @@ public class PlayerAnimator : MonoBehaviour
         float k = squashLeft > 0f ? squashLeft / squashTime : 0f;
         float breathe = moving || controller.IsDashing ? 0f : 0.025f * Mathf.Sin(Time.time * 3f);
         transform.localScale = Vector3.Scale(baseScale, new Vector3(Mathf.Lerp(1f, squash.x, k) * (1f - breathe * 0.5f), Mathf.Lerp(1f, squash.y, k) * (1f + breathe), 1f));
+
+        marker.transform.position = transform.position + Vector3.down * 0.3f;
+        float pulse = 0.5f + 0.5f * Mathf.Sin(Time.time * 4f);
+        marker.transform.localScale = new Vector3(1.2f / baseScale.x, 0.6f / baseScale.y, 1f) * (1f + 0.06f * pulse);
+        marker.color = new Color(MarkerColor.r, MarkerColor.g, MarkerColor.b, 0.35f + 0.2f * pulse);
 
         if (moving && !controller.IsDashing && (stepTimer -= Time.deltaTime) <= 0f)
         {

@@ -3,7 +3,7 @@ using UnityEngine;
 public class ThunderstormWeapon : Weapon
 {
     private const int Clouds = 3;
-    private static readonly Color StormGrey = new Color(0.55f, 0.55f, 0.68f);
+    private static readonly Color StormGrey = new Color(0.3f, 0.31f, 0.42f);
     private const float CloudLife = 5f;
     private const float CloudRadius = 2.5f;
     private const float DriftSpeed = 1.5f;
@@ -27,7 +27,7 @@ public class ThunderstormWeapon : Weapon
     private void SpawnCloud(Vector2 at)
     {
         float reach = Area(CloudRadius);
-        Shot cloud = Shot.Spawn(Shapes.Art("cloud"), StormGrey, reach * 1.2f, at, sortingOrder: 55);
+        Shot cloud = Shot.Spawn(Shapes.Cloud, StormGrey, reach * 1.2f, at, sortingOrder: 55);
         cloud.life = CloudLife;
 
         float damage = Dmg(StrikeDamage), tick = Dmg(FireTick), strikeRadius = Area(StrikeRadius);
@@ -39,7 +39,7 @@ public class ThunderstormWeapon : Weapon
             c.velocity = near != null ? ((Vector2)near.position - c.Position).normalized * DriftSpeed : Vector2.zero;
             bool flash = c.age < nextStrike - StrikeEvery + 0.08f;
             Color tint = flash ? Color.white : StormGrey;
-            tint.a = 0.55f * Mathf.Clamp01((CloudLife - c.age) / 0.4f) * Mathf.Clamp01(c.age / 0.25f);
+            tint.a = 0.68f * Mathf.Clamp01((CloudLife - c.age) / 0.4f) * Mathf.Clamp01(c.age / 0.25f);
             c.Renderer.color = tint;
             c.transform.localScale = Vector3.one * reach * 1.2f * (1f + 0.04f * Mathf.Sin(c.age * 5f));
             if (Random.value < 0.5f) Juice.Sparks(c.Position + Random.insideUnitCircle * reach * 0.6f, new Color(0.6f, 0.75f, 1f, 0.6f), 1, 0.5f, 0.08f);
@@ -52,6 +52,9 @@ public class ThunderstormWeapon : Weapon
             Vector2 p = under[Random.Range(0, under.Count)].transform.position;
 
             LightningFx.Spawn(p);
+            LightningFx.Spawn(p + Random.insideUnitCircle * 0.4f, new Color(1f, 0.95f, 0.6f), 1.2f);
+            Lighting.Flash(p, 3.5f, new Color(1f, 0.95f, 0.7f), 0.15f);
+            ExplosionFx.Ring(p, strikeRadius, new Color(1f, 0.92f, 0.5f), 0.18f);
             Sfx.Play(Sfx.Id.Crackle, 0.4f);
             foreach (Collider2D hit in EnemiesNear(p, strikeRadius))
                 if (hit.TryGetComponent(out EnemyHealth e)) Hit(e, damage, p);

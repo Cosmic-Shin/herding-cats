@@ -3,6 +3,8 @@ using UnityEngine;
 public class EnemyAnimator : MonoBehaviour
 {
     public Sprite[] born, idle, walk, jump, attack, hurt, death, sleep, wake;
+    [Tooltip("Recolour + accessory for special cats (needs the white cat frames)")]
+    public SpriteFx.CatSkin skin;
 
     private const float HurtFaceTime = 0.2f;
 
@@ -64,6 +66,7 @@ public class EnemyAnimator : MonoBehaviour
     private void Show(Sprite frame)
     {
         if (Time.time < hurtUntil && current != death && hurt != null && hurt.Length > 0) frame = hurt[0];
+        frame = SpriteFx.Skinned(frame, skin);
         sr.sprite = Time.time < flashUntil ? SpriteFx.Flash(frame) : SpriteFx.Outlined(frame);
     }
 

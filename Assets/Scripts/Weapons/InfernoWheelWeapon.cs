@@ -18,7 +18,7 @@ public class InfernoWheelWeapon : SuperWeapon
     {
         float reach = Area(7f), size = Area(2.4f), beamLength = Area(3.5f), pull = Area(3.5f);
         float damage = Dmg(12f), tick = Dmg(8f);
-        Shot wheel = Shot.Spawn(Shapes.Art("Icons/boomerang"), new Color(1f, 0.7f, 0.4f), size, Pos, 27);
+        Shot wheel = Shot.Spawn(Shapes.Projectile("Icons/infernowheel", 1), Color.white, size, Pos, 27);
         wheel.life = 10f;
         wheel.spin = -900f;
         wheel.ghost = new Color(1f, 0.35f, 0.1f, 0.4f);

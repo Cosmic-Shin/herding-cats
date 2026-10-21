@@ -58,10 +58,14 @@ public static class UiIcons
 
     public static Sprite Icon(string id)
     {
-        if (string.IsNullOrEmpty(id) || id.StartsWith("passive:") || (id.StartsWith("stat:") && id != "stat:ProjectileCount")) return null;
+        if (string.IsNullOrEmpty(id)) return null;
+        if (id.StartsWith("passive:")) return Load("Icons/passive_" + id.Substring(8));
+        if (id == "stat:MoveSpeedPercent") return Load("Icons/speed");
+        if (id.StartsWith("stat:") && id != "stat:ProjectileCount") return Load("Icons/stat_" + id.Substring(5));
         if (id.StartsWith("skill:")) return Load("Icons/skill_" + id.Substring(6)) ?? Load("Icons/" + id.Substring(6));
         if (id == "stat:ProjectileCount") id = "bomb";
         PlayerCollabs.Def collab = PlayerCollabs.Find(id);
+        if (collab != null && (collab.kind == PlayerCollabs.Kind.Merge || collab.kind == PlayerCollabs.Kind.Super) && Load("Icons/" + id) is Sprite own) return own;
         if (collab != null && collab.kind == PlayerCollabs.Kind.Super) return Load("Icons/" + collab.icon);
         if (collab != null && collab.kind == PlayerCollabs.Kind.Merge) id = collab.a;
         return Load("Icons/" + id);

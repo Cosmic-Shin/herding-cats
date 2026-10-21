@@ -23,7 +23,7 @@ public class GravityWheelWeapon : Weapon
     private void Throw(Vector2 dir)
     {
         float size = Area(Size);
-        Shot s = Shot.Spawn(Shapes.Crescent, new Color(0.6f, 0.4f, 1f), 0.6f * size, Pos);
+        Shot s = Shot.Spawn(Shapes.Projectile("Icons/gravitywheel", 1), Color.white, 0.6f * size, Pos);
         s.trail = new Color(0.7f, 0.45f, 1f, 0.7f);
         s.velocity = dir * Speed;
         s.life = 5f;

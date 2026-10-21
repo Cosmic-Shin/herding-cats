@@ -26,8 +26,16 @@ public class AoeWarning : MonoBehaviour
         innerSr.color = new Color(1f, 0.2f, 0.1f, 0.35f);
         innerSr.sortingOrder = 3;
 
+        // Crisp pulsing rim so the danger zone reads at a glance, even over busy ground.
+        var rim = new GameObject("Rim").AddComponent<SpriteRenderer>();
+        rim.transform.SetParent(go.transform, false);
+        Lighting.Glow(rim);
+        rim.sprite = Shapes.Ring;
+        rim.sortingOrder = 4;
+
         var w = go.AddComponent<AoeWarning>();
         w.fill = inner.transform;
+        w.rim = rim;
         w.duration = Mathf.Max(0.05f, duration);
     }
 
@@ -59,12 +67,14 @@ public class AoeWarning : MonoBehaviour
     }
 
     private bool lengthwise;
+    private SpriteRenderer rim;
 
     private void Update()
     {
         t += Time.deltaTime / duration;
         float k = Mathf.Clamp01(t);
         fill.localScale = lengthwise ? new Vector3(k, 1f, 1f) : Vector3.one * k;
+        if (rim != null) rim.color = new Color(1f, 0.25f, 0.15f, 0.55f + 0.4f * Mathf.Abs(Mathf.Sin(t * duration * 12f)));
         if (t >= 1f) Destroy(gameObject);
     }
 }
