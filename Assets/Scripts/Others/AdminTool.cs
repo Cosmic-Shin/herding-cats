@@ -108,7 +108,7 @@ public class AdminTool : MonoBehaviour
 
         GUILayout.BeginHorizontal();
         if (ult != null && GUILayout.Button("Ultimate ready")) ult.Recharge();
-        if (passives != null && GUILayout.Button("Refill shield")) passives.RechargeShield();
+        if (passives != null && passives.enabled && GUILayout.Button("Refill shield")) passives.RechargeShield();
         if (bosses != null && Companion.Instance == null && GUILayout.Button("Drop Cat Buddy"))
             bosses.AdminDropCompanion((Vector2)stats.transform.position + Vector2.right * 1.5f);
         GUILayout.EndHorizontal();

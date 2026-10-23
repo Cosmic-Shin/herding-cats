@@ -73,6 +73,7 @@ public class MainMenu : MonoBehaviour
         if (!IsOpen) return;
         Time.timeScale = 0f;
         if (!Started) HideGameUi();
+        if (preview != null) preview.gameObject.SetActive(mainPage != null && mainPage.activeSelf && !Settings.IsOpen);
 
         if (mainPage != null && mainPage.activeSelf && !Settings.IsOpen && nameField.isFocused &&
             (GamepadUI.Move().sqrMagnitude > 0.25f || GamepadUI.Pressed(g => g.buttonSouth)))
@@ -87,7 +88,16 @@ public class MainMenu : MonoBehaviour
         bool back = (kb != null && kb.escapeKey.wasPressedThisFrame) || GamepadUI.Back;
         if (Settings.IsOpen) { if (back && !Settings.Busy) Settings.Back(); return; }
         if ((achPage != null && achPage.activeSelf) || (creditsPage != null && creditsPage.activeSelf)) { if (back) ShowMain(); return; }
-        if (!boardPage.activeSelf) return;
+        if (!boardPage.activeSelf)
+        {
+            // Left/right on the hero or map row flips through the options (click/A goes forward).
+            GameObject sel = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
+            int step = (kb != null && kb.leftArrowKey.wasPressedThisFrame) || GamepadUI.Pressed(g => g.dpad.left) ? -1
+                     : (kb != null && kb.rightArrowKey.wasPressedThisFrame) || GamepadUI.Pressed(g => g.dpad.right) ? 1 : 0;
+            if (step != 0 && heroButton != null && sel == heroButton.gameObject) CycleHero(step);
+            else if (step != 0 && mapButton != null && sel == mapButton.gameObject) CycleMap(step);
+            return;
+        }
         if (back) boardBack();
         else if ((kb != null && kb.leftArrowKey.wasPressedThisFrame) || GamepadUI.Pressed(g => g.leftShoulder)) SetPage(page - 1);
         else if ((kb != null && kb.rightArrowKey.wasPressedThisFrame) || GamepadUI.Pressed(g => g.rightShoulder)) SetPage(page + 1);
@@ -117,7 +127,7 @@ public class MainMenu : MonoBehaviour
     {
         Canvas canvas = RuntimeUI.Canvas("MainMenuCanvas", 500);
         root = canvas.gameObject;
-        RuntimeUI.Box(canvas.transform, "Dim", Vector2.zero, Vector2.one, new Color(0.03f, 0.02f, 0.08f, 0.22f)).raycastTarget = false;
+        RuntimeUI.Box(canvas.transform, "Dim", Vector2.zero, Vector2.one, new Color(0.03f, 0.02f, 0.08f, MapGenerator.Winter ? 0.42f : 0.22f)).raycastTarget = false;
         BuildMain(canvas.transform);
         BuildBoard(canvas.transform);
         BuildAchievements(canvas.transform);
@@ -134,6 +144,12 @@ public class MainMenu : MonoBehaviour
         version.anchoredPosition = new Vector2(-14f, 8f);
 
         Transform list = mainPage.transform;
+        Backdrop(list, new Vector2(0, 66), new Vector2(800, 112));
+        heroButton = TextButton(list, "Hero", 100, () => CycleHero(1), size: 26f);
+        mapButton = TextButton(list, "Map", 62, () => CycleMap(1), size: 26f);
+        mapButton.GetComponent<TextMeshProUGUI>().text = $"<  MAP: {MapGenerator.Names[MapGenerator.Choice].ToUpper()}  >";
+        heroBlurb = RuntimeUI.Outline(RuntimeUI.Text(list, "", 16, new Color(0.79f, 0.82f, 0.94f), new Vector2(0, 30), new Vector2(760, 24)));
+        CycleHero(0);
         nameLabel = RuntimeUI.Outline(RuntimeUI.Text(list, "NAME:", 30, ItemColor, new Vector2(-110, -5), new Vector2(160, 44), TextAlignmentOptions.MidlineRight));
         nameField = NameField(list, new Vector2(100, -5), new Vector2(240, 44));
         nameHint = RuntimeUI.Outline(RuntimeUI.Text(list, "", 16, new Color(1f, 0.45f, 0.4f), new Vector2(0, -35), new Vector2(480, 22)));
@@ -151,6 +167,7 @@ public class MainMenu : MonoBehaviour
     }
 
     private static Color ItemColor => RuntimeUI.ItemColor;
+    private static string Pad(UnityEngine.InputSystem.LowLevel.GamepadButton b) => Keybinds.PadLabel(b);
 
     private const float TitleY = 190f;
 
@@ -173,7 +190,31 @@ public class MainMenu : MonoBehaviour
         rt.sizeDelta = size;
         return rt;
     }
-    private TextMeshProUGUI nameLabel;
+    private TextMeshProUGUI nameLabel, heroBlurb;
+    private Button heroButton, mapButton;
+    private HeroPreview preview;
+    private static bool reselectMap;
+
+    // The map is built when the scene loads, so switching reloads the scene (the menu backdrop shows the new map).
+    private void CycleMap(int step)
+    {
+        int n = MapGenerator.Names.Length;
+        PlayerPrefs.SetInt("map", ((MapGenerator.Choice + step) % n + n) % n);
+        PlayerPrefs.Save();
+        if (TypedName != "") PlayerName = TypedName; // keep an unsaved name across the reload
+        reselectMap = true;
+        Sfx.Play(Sfx.Id.Click, 0.5f);
+        BackToMenu();
+    }
+
+    private void CycleHero(int step)
+    {
+        if (step != 0) { Hero.Cycle(step); Sfx.Play(Sfx.Id.Click, 0.5f); }
+        heroButton.GetComponent<TextMeshProUGUI>().text = $"<  HERO: {Hero.Current.name.ToUpper()}  >";
+        heroBlurb.text = Hero.Current.blurb;
+        if (preview == null) preview = HeroPreview.Create();
+        preview.Show(Hero.Current.id);
+    }
 
     private static Button TextButton(Transform parent, string label, float y, UnityEngine.Events.UnityAction onClick, float x = 0f, float size = 32f) =>
         RuntimeUI.TextButton(parent, label, new Vector2(x, y), size, onClick);
@@ -202,7 +243,8 @@ public class MainMenu : MonoBehaviour
         placeholder.alignment = TextAlignmentOptions.MidlineLeft;
         field.caretColor = Color.white;
         field.onValueChanged.AddListener(_ => Validate());
-        field.onSubmit.AddListener(_ => TryStart());
+        // Acts like a button: Enter starts editing, Enter again confirms. It never starts the run.
+        field.shouldActivateOnSelect = false;
         return field;
     }
 
@@ -221,6 +263,7 @@ public class MainMenu : MonoBehaviour
         Validate();
         if (!startButton.interactable) return;
         PlayerName = TypedName;
+        if (preview != null) Destroy(preview.gameObject);
         PlayerPrefs.SetString("playerName", PlayerName);
         PlayerPrefs.Save();
         Started = true;
@@ -253,7 +296,7 @@ public class MainMenu : MonoBehaviour
     {
         foreach (Canvas c in FindObjectsByType<Canvas>(FindObjectsSortMode.None))
         {
-            if (!c.isRootCanvas || !c.enabled || c.gameObject == root || c.GetComponentInParent<Settings>() != null || c.GetComponentInParent<ClickFx>() != null) continue;
+            if (!c.isRootCanvas || !c.enabled || c.gameObject == root || c.GetComponentInParent<Settings>() != null || c.GetComponentInParent<ClickFx>() != null || c.GetComponentInParent<GamepadUI>() != null) continue;
             c.enabled = false;
             hiddenUi.Add(c);
         }
@@ -275,6 +318,8 @@ public class MainMenu : MonoBehaviour
             bool on = EventSystem.current != null && EventSystem.current.currentSelectedGameObject == nameField.gameObject;
             nameLabel.color = on ? Gold : ItemColor;
             nameField.textComponent.color = on ? Gold : Color.white;
+            if (startButton.interactable) // valid name, so the hint line is free (errors keep it otherwise)
+                nameHint.text = nameField.isFocused ? "<color=#C9D2F0>Press Enter to confirm</color>" : "";
         }
 
         if (boardPage == null || !boardPage.activeSelf) return;
@@ -298,8 +343,9 @@ public class MainMenu : MonoBehaviour
         boardPage.SetActive(false);
         achPage.SetActive(false);
         creditsPage.SetActive(false);
+        if (reselectMap) { reselectMap = false; Select(mapButton.gameObject); return; }
         Select(nameField.gameObject);
-        nameField.ActivateInputField();
+        if (TypedName == "") nameField.ActivateInputField(); // first run: let them type straight away
     }
 
     private void BuildBoard(Transform parent)
@@ -355,7 +401,7 @@ public class MainMenu : MonoBehaviour
         pageText = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 24, ItemColor, new Vector2(0, -292), new Vector2(240, 44)));
         nextButton = TextButton(panel, "Next >", -292, () => SetPage(page + 1), 210, 28);
         backLabel = TextButton(panel, "Back", -292, () => boardBack(), -480, 28).GetComponent<TextMeshProUGUI>();
-        RuntimeUI.Outline(RuntimeUI.Text(panel, "<color=#FF7AD9>pink time</color> = endless\n<- / -> or LB / RB pages   Esc / B back", 16, Faint, new Vector2(470, -292), new Vector2(240, 44)));
+        RuntimeUI.Outline(RuntimeUI.Text(panel, $"<color=#FF7AD9>pink time</color> = endless\n<- / -> or {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.LeftShoulder)} / {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.RightShoulder)} pages   Esc / {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.East)} back", 16, Faint, new Vector2(470, -292), new Vector2(240, 44)));
     }
 
     private static TextMeshProUGUI Column(Transform parent, string text, float left, float width, float y, Color color, float size)
@@ -431,10 +477,11 @@ public class MainMenu : MonoBehaviour
         achBack = TextButton(panel, "Back", -292, ShowMain, 0, 28);
     }
 
-    private static string RewardShort(string reward)
+    private static string RewardShort(string reward, bool earned)
     {
         if (reward == "reroll") return "<color=#9FD8FF>+1 Reroll</color>";
         if (reward == "eliminate") return "<color=#9FD8FF>+1 Eliminate</color>";
+        if (reward == Achievements.MeowlReward) return earned ? "<color=#BF8CFF>Meowl</color>" : "<color=#BF8CFF>???</color>";
         string id = reward.Substring(reward.IndexOf(':') + 1);
         return reward.StartsWith("weapon:") ? $"<color=#FFB36B>{PlayerWeapons.Find(id).name}</color>" : $"<color=#D7A6FF>{PlayerSkills.Find(id).name}</color>";
     }
@@ -450,7 +497,7 @@ public class MainMenu : MonoBehaviour
             string mark = on ? "<color=#7CFF9A>[X]</color>" : "<color=#5A6280>[ ]</color>";
             string name = on ? $"<color=#FFE08A>{d.name}</color>" : d.name;
             string progress = !on && d.progress != null ? $"  <color=#FFB36B>({d.progress()})</color>" : "";
-            sb.Append($"{mark}<pos=4%><b>{name}</b><pos=27%><color=#C9D2F0>{d.goal}</color>{progress}<pos=74%>{(on ? "" : "<alpha=#88>")}{RewardShort(d.reward)}<alpha=#FF>\n");
+            sb.Append($"{mark}<pos=4%><b>{name}</b><pos=27%><color=#C9D2F0>{d.goal}</color>{progress}<pos=74%>{(on ? "" : "<alpha=#88>")}{RewardShort(d.reward, on)}<alpha=#FF>\n");
         }
         sb.Append($"\n<color=#9AA3C0>{done} / {Achievements.All.Length} done.  <color=#FFB36B>Weapons</color> and <color=#D7A6FF>skills</color> join the level-up pool once earned; <color=#9FD8FF>bonuses</color> apply every run.</color>");
         achText.text = sb.ToString();

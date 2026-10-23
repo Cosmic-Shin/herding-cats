@@ -153,10 +153,10 @@ public class PauseMenu : MonoBehaviour
         return "<size=120%><b><color=#FFE08A>Your Build</color></b></size>\n\n" +
                Row("Level", stats.level.ToString()) +
                Row("HP", $"{Mathf.CeilToInt(stats.currentHealth)}/{Mathf.CeilToInt(stats.maxHealth)}") +
-               Row("Bomb damage", stats.AttackDamage.ToString("0.#")) +
-               Row("Throws/sec", stats.AttackSpeed.ToString("0.##")) +
-               Row("Bombs/throw", stats.ProjectileCount.ToString()) +
-               Row("Blast radius", stats.BombRadius.ToString("0.##")) +
+               Row(Hero.Current.stats[0], stats.AttackDamage.ToString("0.#")) +
+               Row(Hero.Current.stats[1], stats.AttackSpeed.ToString("0.##")) +
+               Row(Hero.Current.stats[2], (NyxDrones.Active != null ? NyxDrones.Active.Count : stats.ProjectileCount).ToString()) +
+               Row(Hero.Current.stats[3], Hero.Range(stats).ToString("0.##")) +
                Row("Crit", $"{stats.critChance:P0}  x{stats.critDamage:0.##}") +
                Row("Move speed", stats.MoveSpeed.ToString("0.#")) +
                Row("Pickup range", stats.pickupRange.ToString("0.#")) +

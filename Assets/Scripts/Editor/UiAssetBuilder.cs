@@ -273,7 +273,94 @@ public static class UiAssetBuilder
             "....KYYKKYYK....", "...KYYK..KYYK...", "..KYYK....KYYK..", "..KKK......KKK..",
             ".......KK.......", "......KOOK......", ".....KOOOOK.....", "....KOOKKOOK....",
             "...KOOK..KOOK...", "..KOOK....KOOK..", "..KKK......KKK..", "................" } },
+        // Kai (greatsword hero)
+        { "sword", new[] {
+            "..........KKKKK.", ".........KSSSWK.", "........KSSSWDK.", ".......KSSSWDK..",
+            "......KSSSWDK...", ".....KSSSWDK....", "....KSSSWDK.....", "...KSSSWDK......",
+            "..KKSSWDK.......", ".KYKKWDKK.......", "..KYKKKYK.......", "...KNKYK........",
+            "..KNK.K.........", ".KNK............", "KYK.............", "KK.............." } },
+        { "passive_heavy", new[] {
+            "................", "...Y.......Y....", "..YWY.....YWY...", "...Y.......Y....",
+            "......KKKK......", ".....KSSSSK.....", ".....KSSWSK.....", ".....KSSWSK.....",
+            ".....KSSWSK.....", ".....KSSWSK.....", "..Y..KSSWSK..Y..", ".YWY.KSSWSK.YWY.",
+            "..Y..KSSSSK..Y..", "...KKKKKKKKKK...", "..KDDDDDDDDDDK..", "...KKKKKKKKKK..." } },
+        { "passive_execute", new[] {
+            "................", "................", ".....KKKKKK.....", "....KWWWWWWK....",
+            "...KWWWWWWWWK...", "...KWRRWWRRWK...", "...KWRRWWRRWK...", "...KWWWWWWWWK...",
+            "....KWWKKWWK....", ".....KWWWWK.....", ".....KWKWKK.....", "......KKKK......",
+            "................", "................", "................", "................" } },
+        { "passive_dashslash", new[] {
+            "................", "...........KK...", "..........KWK...", ".........KWK....",
+            "........KWK.....", ".CCCC..KWK......", "......KWK.......", ".CCCCKWK........",
+            "....KWK.........", ".CCKWK..........", "..KWK...........", ".KWK............",
+            ".KK.............", "................", "................", "................" } },
+        { "kai_chain", new[] {
+            "................", ".......KK....KK.", "......KWK...KCK.", ".....KWK...KCK..",
+            "....KWK...KCK...", "...KWK...KCK....", "..KWK...KCK.....", ".KWK...KCK......",
+            ".KK...KCK.......", ".....KCK........", ".....KK.........", "................",
+            "................", "................", "................", "................" } },
+        { "kai_cluster", new[] {
+            "................", "..........KK....", ".........KSWK...", "..KK......KK....",
+            ".KSWK...........", "..KK.....KK.....", "........KSWK....", "...KK....KK.....",
+            "..KSWK..........", "...KK....KKK....", ".........KSSK...", "..........KK....",
+            "................", "................", "................", "................" } },
+        { "kai_napalm", new[] {
+            "................", "......Y.........", ".....YOY....Y...", "....YOROY..YOY..",
+            "...YORRROYYOROY.", "...ORRRRRORRRRO.", "..KKKKKKKKKKKKK.", "..KSSSSSSSSSSWK.",
+            "..KDDDDDDDDDDDK.", "..KKKKKKKKKKKKK.", "................", "................",
+            "................", "................", "................", "................" } },
+        // Nyx (drone hacker)
+        { "drone", new[] {
+            "................", "................", ".KKKK......KKKK.", "KSSSSK....KSSSSK",
+            ".KKKK......KKKK.", "...KK......KK...", "....KKKKKKKK....", "...KDDDDDDDDK...",
+            "..KDDCCCCCCDDK..", "..KDDCWWWWCDDK..", "..KDDCCCCCCDDK..", "...KDDDDDDDDK...",
+            "....KKKKKKKK....", ".....K....K.....", "....KK....KK....", "................" } },
+        { "nyx_chain", new[] {
+            "................", "..........KK....", ".........KCCK...", "........KCCK....",
+            ".......KCCK.....", "......KCCKKKK...", ".....KCCCCCCK...", "....KKKKCCK.....",
+            "......KCCK......", ".....KCCK.......", "....KCCK........", "...KCCK.........",
+            "...KKK..........", "................", "................", "................" } },
+        { "nyx_cluster", new[] {
+            "................", "................", "......KKKK......", "......KWCK......",
+            "......KCCK......", "......KKKK......", "..KKK......KKK..", "..KCK......KCK..",
+            "..KKK......KKK..", "................", ".....KKK..KKK...", ".....KCK..KCK...",
+            ".....KKK..KKK...", "................", "................", "................" } },
+        { "nyx_napalm", new[] {
+            "................", "................", "................", "................",
+            "................", "................", "...C......C.....", "..CWC....CWC....",
+            "...C..C...C.....", ".....CWC........", "......C.....C...", "...........CWC..",
+            ".KKKKKKKKKKKKKK.", ".KLLLLLLLLLLLLK.", ".KKKKKKKKKKKKKK.", "................" } },
+        { "passive_hack", new[] {
+            "................", "................", ".KKKKKKKKKKKKKK.", ".KDDDDDDDDDDDDK.",
+            ".KDMDDDDDDDDDDK.", ".KDDMDDDDDDDDDK.", ".KDMDDMMMDDDDDK.", ".KDDDDDDDDDDDDK.",
+            ".KDCCDCDCCCDDDK.", ".KDDDDDDDDDDDDK.", ".KKKKKKKKKKKKKK.", "......KSSK......",
+            "....KKKKKKKK....", "................", "................", "................" } },
+        { "passive_mark", new[] {
+            "................", ".......RR.......", ".....KKRRKK.....", "....K..RR..K....",
+            "...K...RR...K...", "..K..........K..", "..K....KK....K..", "RRRRR.KRRK.RRRRR",
+            "RRRRR.KRRK.RRRRR", "..K....KK....K..", "..K..........K..", "...K...RR...K...",
+            "....K..RR..K....", ".....KKRRKK.....", ".......RR.......", "................" } },
+        { "passive_backdoor", new[] {
+            "................", "................", "....KKKKKKKK....", "....KNNNNNNK....",
+            "....KNPPPPNK....", "....KNPMMPNK....", "....KNPMMPNK....", "....KNPPPPNK....",
+            "....KNNNNYNK....", "....KNNNNNNK....", "....KNPPPPNK....", "....KNPPPPNK....",
+            "....KNNNNNNK....", "..KKKKKKKKKKKK..", "................", "................" } },
     };
+
+    // Builds just the named icons (BuildIcons rewrites every icon).
+    public static void BuildIcons(params string[] names)
+    {
+        Directory.CreateDirectory(IconDir);
+        foreach (string name in names)
+        {
+            string[] rows = Icons[name];
+            var tex = new Texture2D(16, 16, TextureFormat.RGBA32, false);
+            for (int y = 0; y < 16; y++)
+                for (int x = 0; x < 16; x++)
+                    tex.SetPixel(x, y, x < rows[15 - y].Length && Palette.TryGetValue(rows[15 - y][x], out Color c) ? c : Color.clear);
+            SavePng(tex, $"{IconDir}/{name}.png", Vector4.zero);
+        }
+    }
 
     private static void BuildIcons()
     {

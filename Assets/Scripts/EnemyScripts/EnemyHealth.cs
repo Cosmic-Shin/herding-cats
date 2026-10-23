@@ -18,6 +18,13 @@ public class EnemyHealth : MonoBehaviour, IPoolable
 
     public float CurrentHealth => currentHealth;
     public bool IsDead => isDead;
+    public bool IsBoss => ai is BossAI;
+
+    // Nyx's Mark Target: marked cats take extra damage from everything.
+    [System.NonSerialized] public float markedUntil;
+    [System.NonSerialized] public bool markedXp;
+    public static float MarkMultiplier = 1.5f;
+    public bool IsMarked => Time.time < markedUntil;
     public bool IsImpaired => ai != null && ai.IsImpaired;
     public Color BaseColor => baseColor;
     public int Life { get; private set; }
@@ -28,7 +35,7 @@ public class EnemyHealth : MonoBehaviour, IPoolable
     public static int GoldenKills { get; private set; }
     public static int KillScore { get; private set; }
     public static void ResetRunCounters() { Kills = BossKills = EliteKills = GoldenKills = KillScore = PlayerHealth.Hits = RewardMenu.ChestsOpened = 0; DamageStats.Reset(); }
-    private static float nextBossHitStop;
+    private static float nextBossHitStop, nextHeavyHit;
 
     private const int MaxGemsOnField = 250;
 
@@ -89,6 +96,8 @@ public class EnemyHealth : MonoBehaviour, IPoolable
         xpValue = baseXpValue;
         xpGemCount = BaseGemCount;
         burningUntil = 0f;
+        markedUntil = 0f;
+        markedXp = false;
         maxHealth = baseMaxHealth;
         currentHealth = maxHealth;
         isDead = false;
@@ -119,6 +128,7 @@ public class EnemyHealth : MonoBehaviour, IPoolable
     public void TakeDamage(float amount, Vector2 sourcePos, bool crit = false, bool knockback = true)
     {
         if (isDead) return;
+        if (IsMarked) amount *= MarkMultiplier;
         if (ai is EnemyAI frozen && frozen.IsFrozen) amount *= 1.5f;
         if (ai is EnemyAI armored && armored.IsArmored) amount *= 0.2f;
         if (ai is EnemyAI shielded && shielded.Blocks(sourcePos))
@@ -142,6 +152,16 @@ public class EnemyHealth : MonoBehaviour, IPoolable
         if (knockback)
             Juice.SparksDir(Vector2.MoveTowards(transform.position, sourcePos, 0.25f), (Vector2)transform.position - sourcePos, 35f,
                             crit ? new Color(1f, 0.9f, 0.3f) : Color.white, crit ? 7 : 4, crit ? 7f : 5f, 0.11f);
+        // Weighty hits: crits and chunky hits (a big share of the cat's HP) kick harder.
+        // Shared cooldown so a swarm of hits doesn't turn into constant stutter.
+        float weight = Mathf.Min(amount / Mathf.Max(1f, maxHealth), 1f) + (crit ? 0.5f : 0f);
+        if (knockback && weight >= 0.5f && Time.unscaledTime >= nextHeavyHit)
+        {
+            nextHeavyHit = Time.unscaledTime + 0.15f;
+            CameraFollow.Shake(0.03f + 0.05f * weight, 0.08f);
+            GamepadUI.Rumble(0.08f * weight, 0.2f * weight, 0.06f);
+            if (!(ai is BossAI)) Juice.HitStop(0.015f + 0.02f * weight);
+        }
         if (crit && ai is BossAI && Time.unscaledTime >= nextBossHitStop)
         {
             Juice.HitStop(0.04f);

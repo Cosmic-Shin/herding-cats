@@ -161,7 +161,7 @@ public class PlayerCollabs : MonoBehaviour
         return d.kind == Kind.Super ? $"{Find(d.a).name} + {Find(d.b).name}"
              : d.kind == Kind.Merge ? $"{Weapon(d.a)} + {Weapon(d.b)}"
              : d.kind == Kind.Boost ? $"{Weapon(d.a)} + {Skill(d.b)}"
-             : $"Max Bombs + {Skill(d.b)}";
+             : $"{PieceName("bombs", false)} + {Skill(d.b)}";
     }
 
     public List<Def> Offerable()
@@ -294,7 +294,7 @@ public class PlayerCollabs : MonoBehaviour
     public static int PieceMax(string id, bool isSkill) =>
         id == "bombs" ? MaxBombsPerThrow : isSkill ? PlayerSkills.Find(id).levels.Length : Weapon.MaxLevel;
     public static string PieceName(string id, bool isSkill) =>
-        id == "bombs" ? "Max Bombs" : isSkill ? PlayerSkills.Find(id).name : PlayerWeapons.Find(id).name;
+        id == "bombs" ? Hero.Current.maxPiece : isSkill ? PlayerSkills.Find(id).name : PlayerWeapons.Find(id).name;
     public bool PieceUsed(string id) => used.Contains(id);
 
     public List<(Def def, string partner, bool partnerIsSkill, int score)> CombosWithOwnedPartner(string pieceId)
@@ -318,6 +318,7 @@ public class PlayerCollabs : MonoBehaviour
 
     public void Take(Def d)
     {
+        Achievements.MarkTried(d.kind == Kind.Super ? "x" : "c", d.id);
         if (d.kind == Kind.Super) { TakeSuper(d); return; }
         taken.Add(d.id);
         used.Add(d.kind == Kind.Bomb ? "bombs" : d.a);
@@ -332,7 +333,9 @@ public class PlayerCollabs : MonoBehaviour
     private const float FlyTime = 0.35f;
 
     private static string IconPath(string id) =>
-        id == null ? "Icons/bomb" : Resources.Load<Texture2D>("Icons/" + id) != null ? "Icons/" + id : "Icons/skill_" + id;
+        id == null ? "Icons/" + Hero.Current.weapon
+        : Resources.Load<Texture2D>("Icons/" + id) != null ? "Icons/" + id
+        : Hero.Current.iconPrefix != null && Resources.Load<Texture2D>("Icons/" + Hero.Current.iconPrefix + id) != null ? "Icons/" + Hero.Current.iconPrefix + id : "Icons/skill_" + id;
 
     private void FlyIn(string icon, Vector2 side, System.Action onArrive)
     {

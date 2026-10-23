@@ -59,6 +59,9 @@ public static class UiIcons
     public static Sprite Icon(string id)
     {
         if (string.IsNullOrEmpty(id)) return null;
+        // Kai: "+1 swing" shows his sword, and the bomb skills use their sword-version icons.
+        if (!Hero.UsesBombs && id == "stat:ProjectileCount") return Load("Icons/" + Hero.Current.weapon);
+        if (Hero.Current.iconPrefix != null && id.StartsWith("skill:") && Load("Icons/" + Hero.Current.iconPrefix + id.Substring(6)) is Sprite heroSkill) return heroSkill;
         if (id.StartsWith("passive:")) return Load("Icons/passive_" + id.Substring(8));
         if (id == "stat:MoveSpeedPercent") return Load("Icons/speed");
         if (id.StartsWith("stat:") && id != "stat:ProjectileCount") return Load("Icons/stat_" + id.Substring(5));

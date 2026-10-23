@@ -20,6 +20,7 @@ All music by **Kevin MacLeod** (incompetech.com), licensed under
 |---|---|---|---|
 | Topdown RPG 32x32 – Nature v1.5 (ground, trees, rocks, bushes, water) | `Assets/Assets/Tilemap` | **Mixel** (© 2025) | Free for personal and commercial video games; attribution appreciated. No redistribution/resale, no asset packs, no NFTs or AI training. Full terms in `Assets/Assets/Tilemap/LICENSE.txt`. |
 | Slime Cat Mega Pack (all cats: black, blue, white, brown, demon, rainbow) | `Assets/Assets/Cats` | **ToffeeCraft** | https://toffeecraft.itch.io/slime-cat-mega-pack (purchased) |
+| Meowl spinning cube (secret companion) | `Assets/Resources/Meowl` | **TODO: author** | **TODO: source / license** |
 | Beholder bosses (1–3) | `Assets/Assets/Beholders` (attack effect also copied to `Assets/Resources/Fx/beholder_strike.png`) | **CraftPix.net** | https://craftpix.net/file-licenses/ (purchased) |
 
 The special enemies (Shield, Sniper, Toxic, Charger, Splitter, Kamikaze, Gem Thief, Healer, Mama)

@@ -184,6 +184,7 @@ public class PlayerWeapons : MonoBehaviour
 
     public void LevelUp(Def def)
     {
+        Achievements.MarkTried("w", def.id);
         if (!owned.TryGetValue(def.id, out Weapon weapon))
         {
             weapon = (Weapon)gameObject.AddComponent(def.type);

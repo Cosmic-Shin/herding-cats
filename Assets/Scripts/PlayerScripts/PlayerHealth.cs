@@ -58,7 +58,7 @@ public class PlayerHealth : MonoBehaviour
             return;
         }
 
-        if (MiraPassives.Instance != null && MiraPassives.Instance.TryBlock())
+        if (MiraPassives.Active != null && MiraPassives.Active.TryBlock())
         {
             StartCoroutine(ShieldGrace());
             GamepadUI.Rumble(0.1f, 0.4f, 0.1f);
@@ -146,10 +146,12 @@ public class PlayerHealth : MonoBehaviour
 
         if (controller != null) controller.enabled = false;
         if (TryGetComponent(out PlayerAutoAttack attack)) attack.enabled = false;
+        if (TryGetComponent(out KaiSword sword)) sword.enabled = false;
+        if (TryGetComponent(out NyxDrones drones)) drones.enabled = false;
         if (TryGetComponent(out PlayerAnimator anim)) anim.enabled = false;
         if (TryGetComponent(out PlayerUltimate ult)) ult.enabled = false;
         foreach (Weapon weapon in GetComponents<Weapon>()) weapon.enabled = false;
-        if (TryGetComponent(out MiraPassives passives)) passives.enabled = false;
+        foreach (HeroPassives passives in GetComponents<HeroPassives>()) passives.enabled = false;
 
         StartCoroutine(DeathFx());
     }

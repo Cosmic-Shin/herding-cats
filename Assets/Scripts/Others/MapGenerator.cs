@@ -49,6 +49,28 @@ public class MapGenerator : MonoBehaviour
     public static int ObstacleMask { get; private set; }
     public static int TallMask { get; private set; }
     public const float WallPad = 1.2f;
+    // Map picked on the menu. Read once per scene load; the menu reloads the scene when it changes.
+    public static readonly string[] Names = { "Meadow", "Winter", "Volcano" };
+    public static int Choice => Mathf.Clamp(PlayerPrefs.GetInt("map", 0), 0, Names.Length - 1);
+    public static int Biome { get; private set; } // index into Names
+    public static bool Winter => Biome == 1;
+    public static bool Volcano => Biome == 2;
+
+    // Winter ponds freeze (anything on them keeps its momentum; grip = how fast velocity can change, units/s²).
+    // Volcano ponds are lava: walkable, but they burn.
+    public const float IceGrip = 9f;
+    private static bool[] ice;
+    private static int iceMin, iceN;
+    public static bool OnIce(Vector2 p) => Winter && OnPond(p);
+    public static bool OnLava(Vector2 p) => Volcano && OnPond(p);
+
+    private static bool OnPond(Vector2 p)
+    {
+        if (ice == null) return false;
+        int x = Mathf.FloorToInt(p.x) - iceMin, y = Mathf.FloorToInt(p.y) - iceMin;
+        return x >= 0 && y >= 0 && x < iceN && y < iceN && ice[x + y * iceN];
+    }
+
     private static MapGenerator instance;
 
     private const int GroundOrder = -100, OverlayOrder = -99, DecorOrder = -90, MediumOrder = -80, TreeOrder = -70, GlowOrder = 9;
@@ -87,6 +109,8 @@ public class MapGenerator : MonoBehaviour
 
     private void Awake()
     {
+        Biome = Choice;
+        if (Biome != 0) ponds = Mathf.RoundToInt(ponds * (Winter ? 2.2f : 1.6f));
         if (menuMap) MenuCenter = transform.position;
         else
         {
@@ -116,7 +140,7 @@ public class MapGenerator : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (instance == this) instance = null;
+        if (instance == this) { instance = null; ice = null; }
         if (menuMap) MenuCenter = null;
     }
 
@@ -152,7 +176,7 @@ public class MapGenerator : MonoBehaviour
         var pondRects = new List<RectInt>();
         for (int attempt = 0; attempt < ponds * 30 && pondRects.Count < ponds; attempt++)
         {
-            int w = rng.Next(3, 9), h = rng.Next(3, 7);
+            int w = Biome != 0 ? rng.Next(4, 12) : rng.Next(3, 9), h = Biome != 0 ? rng.Next(4, 9) : rng.Next(3, 7);
             var r = new RectInt(rng.Next(-halfSize + 3, halfSize - 3 - w), rng.Next(-halfSize + 3, halfSize - 3 - h), w, h);
             var padded = new RectInt(r.x - 3, r.y - 3, r.width + 6, r.height + 6);
             if (pondRects.Exists(o => o.Overlaps(padded))) continue;
@@ -173,15 +197,18 @@ public class MapGenerator : MonoBehaviour
                     isWater[i] = true;
                     bool edge = l || rt || b || t;
                     if (edge && reeds.Length > 0 && R() < 0.15f) overlayTiles[i] = TileFor(Pick(reeds));
-                    else if (!edge && lilies.Length > 0 && R() < 0.14f) overlayTiles[i] = TileFor(Pick(lilies));
-                    else if (!edge && glints.Length > 0 && R() < 0.06f) overlayTiles[i] = TileFor(Pick(glints));
+                    else if (!edge && lilies.Length > 0 && R() < 0.14f && Biome == 0) overlayTiles[i] = TileFor(Pick(lilies));
+                    else if (!edge && glints.Length > 0 && R() < (Winter ? 0.1f : 0.06f)) overlayTiles[i] = TileFor(Pick(glints));
                 }
+            if (Biome != 0) { if (Volcano) LavaGlow(r); continue; } // frozen or molten: walkable, no collider
             var go = new GameObject("Pond");
             go.layer = tallLayer;
             go.transform.SetParent(transform, false);
             go.transform.localPosition = new Vector2(r.x + r.width / 2f, r.y + r.height / 2f);
             go.AddComponent<BoxCollider2D>().size = new Vector2(r.width - 0.5f, r.height - 0.5f);
         }
+
+        if (Biome != 0 && !menuMap) { ice = isWater; iceMin = min; iceN = n; }
 
         const int Block = 16;
         bool Dry(int x, int y, int w, int h)
@@ -280,7 +307,7 @@ public class MapGenerator : MonoBehaviour
         go.transform.SetParent(parent, false);
         go.transform.localPosition = new Vector3(Mathf.Round(at.x * 32f) / 32f, Mathf.Round(at.y * 32f) / 32f, 0f);
         var sr = go.AddComponent<SpriteRenderer>();
-        sr.sprite = sprite;
+        sr.sprite = Snowy(sprite);
         sr.sortingOrder = order;
         if (R() < 0.5f) go.transform.localScale = new Vector3(-1f, 1f, 1f);
         return sr;
@@ -345,11 +372,107 @@ public class MapGenerator : MonoBehaviour
         if (!tiles.TryGetValue(s, out Tile t))
         {
             t = ScriptableObject.CreateInstance<Tile>();
-            t.sprite = Padded(s);
+            t.sprite = Padded(Snowy(s));
             t.flags = TileFlags.None;
             tiles[s] = t;
         }
         return t;
+    }
+
+    // Winter and Volcano: the meadow art recoloured on the CPU.
+    // Winter: green -> snow, water -> ice, the rest a little colder. Volcano: green -> charred ash, water -> lava, the rest scorched.
+    // ponytail: whole-texture recolour at load (a few frames on first load of a biome); a palette shader if load time ever matters.
+    private static readonly Dictionary<(Texture2D, int), Texture2D> snowTextures = new Dictionary<(Texture2D, int), Texture2D>();
+    private readonly Dictionary<Sprite, Sprite> snowSprites = new Dictionary<Sprite, Sprite>();
+
+    private Sprite Snowy(Sprite s)
+    {
+        if (Biome == 0 || s == null) return s;
+        if (snowSprites.TryGetValue(s, out Sprite cached)) return cached;
+        if (!snowTextures.TryGetValue((s.texture, Biome), out Texture2D tex) || tex == null) snowTextures[(s.texture, Biome)] = tex = Recolor(s.texture);
+        Sprite w = Sprite.Create(tex, s.rect, new Vector2(s.pivot.x / s.rect.width, s.pivot.y / s.rect.height), s.pixelsPerUnit, 0, SpriteMeshType.FullRect);
+        w.name = s.name;
+        return snowSprites[s] = w;
+    }
+
+    private static Texture2D Recolor(Texture2D src)
+    {
+        // GPU round trip so it works on textures that aren't marked readable.
+        RenderTexture rt = RenderTexture.GetTemporary(src.width, src.height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
+        Graphics.Blit(src, rt);
+        RenderTexture prev = RenderTexture.active;
+        RenderTexture.active = rt;
+        var tex = new Texture2D(src.width, src.height, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
+        tex.ReadPixels(new Rect(0, 0, src.width, src.height), 0, 0);
+        RenderTexture.active = prev;
+        RenderTexture.ReleaseTemporary(rt);
+
+        Color32[] px = tex.GetPixels32();
+        for (int i = 0; i < px.Length; i++) if (px[i].a > 0) px[i] = Volcano ? Ash(px[i]) : Snow(px[i]);
+        tex.SetPixels32(px);
+        tex.Apply();
+        return tex;
+    }
+
+    public static Color32 Snow(Color32 c)
+    {
+        float r = c.r / 255f, g = c.g / 255f, b = c.b / 255f, lum = 0.3f * r + 0.59f * g + 0.11f * b;
+        Color o;
+        if (b > r * 1.25f && b > g * 0.85f) // water -> pale ice
+            o = Color.Lerp(new Color(0.5f, 0.74f, 0.95f), new Color(0.78f, 0.93f, 1f), Mathf.Clamp01((lum - 0.2f) / 0.5f));
+        else if (g > r * 1.05f && g > b * 1.05f) // leaves and grass -> snow, darker greens become blue shadow
+            o = Color.Lerp(new Color(0.52f, 0.6f, 0.76f), new Color(0.86f, 0.9f, 0.96f), Mathf.Clamp01((lum - 0.18f) / 0.42f));
+        else // bark, rock, dirt: keep, just colder
+            o = Color.Lerp(new Color(r, g, b), new Color(lum * 0.95f, lum, lum * 1.1f), 0.25f);
+        Color32 result = o;
+        result.a = c.a;
+        return result;
+    }
+
+    public static Color32 Ash(Color32 c)
+    {
+        float r = c.r / 255f, g = c.g / 255f, b = c.b / 255f, lum = 0.3f * r + 0.59f * g + 0.11f * b;
+        Color o;
+        if (b > r * 1.25f && b > g * 0.85f) // water -> lava: bright highlights become yellow-hot
+            o = Color.Lerp(new Color(0.75f, 0.16f, 0.05f), new Color(1f, 0.78f, 0.25f), Mathf.Clamp01((lum - 0.25f) / 0.45f));
+        else if (g > r * 1.05f && g > b * 1.05f) // leaves and grass -> charred ash
+            o = Color.Lerp(new Color(0.13f, 0.11f, 0.11f), new Color(0.4f, 0.35f, 0.33f), Mathf.Clamp01((lum - 0.15f) / 0.45f));
+        else // bark, rock, dirt: darker and scorched
+            o = new Color(r * 0.6f + 0.05f, g * 0.48f + 0.02f, b * 0.42f + 0.02f);
+        Color32 result = o;
+        result.a = c.a;
+        return result;
+    }
+
+    // Lava pools: the shared animated lava blobs (as used by fire puddles) tile the inside of each pool,
+    // under a soft pulsing glow, so they bubble and read as hot even in the dim volcano light.
+    private readonly List<SpriteRenderer> lavaGlows = new List<SpriteRenderer>();
+    private readonly List<(SpriteRenderer sr, int variant, float phase)> lavaBlobs = new List<(SpriteRenderer, int, float)>();
+
+    private void LavaGlow(RectInt r)
+    {
+        for (float x = r.xMin + 1.5f; x <= r.xMax - 1.5f + 0.01f; x += 1.3f)
+            for (float y = r.yMin + 1.5f; y <= r.yMax - 1.5f + 0.01f; y += 1.3f)
+            {
+                var blob = new GameObject("Lava").AddComponent<SpriteRenderer>();
+                blob.transform.SetParent(transform, false);
+                blob.transform.localPosition = new Vector2(x + R() * 0.4f - 0.2f, y + R() * 0.4f - 0.2f);
+                blob.transform.localScale = Vector3.one * (2.6f + R() * 0.7f);
+                blob.transform.rotation = Quaternion.Euler(0f, 0f, R() * 360f);
+                blob.sortingOrder = OverlayOrder + 1;
+                Lighting.Glow(blob);
+                lavaBlobs.Add((blob, rng.Next(LavaArt.Variants), R() * 10f));
+            }
+
+        var sr = new GameObject("LavaGlow").AddComponent<SpriteRenderer>();
+        sr.transform.SetParent(transform, false);
+        sr.transform.localPosition = new Vector2(r.x + r.width / 2f, r.y + r.height / 2f);
+        sr.transform.localScale = new Vector3(r.width - 0.6f, r.height - 0.6f, 1f);
+        sr.sprite = Shapes.Circle;
+        sr.color = new Color(1f, 0.45f, 0.1f, 0.25f);
+        sr.sortingOrder = OverlayOrder + 1;
+        Lighting.Glow(sr);
+        lavaGlows.Add(sr);
     }
 
     private const int Pad = 2, Cell = 32 + 2 * Pad, CellsPerRow = 8;
@@ -422,6 +545,10 @@ public class MapGenerator : MonoBehaviour
 
     private void Update()
     {
+        for (int i = 0; i < lavaGlows.Count; i++) // slow molten pulse (unscaled so it moves behind the menu too)
+            lavaGlows[i].color = new Color(1f, 0.45f, 0.1f, 0.18f + 0.1f * Mathf.Sin(Time.unscaledTime * 1.8f + i * 1.3f));
+        foreach (var (sr, variant, phase) in lavaBlobs)
+            sr.sprite = LavaArt.Get(variant, (int)((Time.unscaledTime + phase) * 5f), 1f);
         if (menuMap) return;
         if (player == null)
         {
@@ -430,6 +557,7 @@ public class MapGenerator : MonoBehaviour
             player = p.transform;
         }
         Vector2 pos = player.position;
+        if (Volcano && MainMenu.Started && Time.timeScale > 0f) VolcanoHazards(pos);
         float[] dist = { pos.x - Bounds.xMin, Bounds.xMax - pos.x, pos.y - Bounds.yMin, Bounds.yMax - pos.y };
         float pulse = 0.75f + 0.25f * Mathf.Sin(Time.time * 5f);
         int touching = 0;
@@ -444,5 +572,31 @@ public class MapGenerator : MonoBehaviour
             nextEdgePopup = Time.time + 4f;
             DamagePopup.SpawnText(pos + Vector2.up * 1.4f, touching > 1 ? "CORNER OF THE MAP" : "EDGE OF THE MAP", new Color(1f, 0.6f, 0.4f), 4f);
         }
+    }
+
+    // Volcano: standing in lava burns, and eruptions rain down near the player (cats get hit too).
+    private float lavaTick, eruptionTimer = 20f, runClock;
+    private PlayerHealth playerHealth;
+    public const float LavaDamage = 4f;
+
+    private void VolcanoHazards(Vector2 pos)
+    {
+        runClock += Time.deltaTime;
+        if (playerHealth == null) playerHealth = player.GetComponent<PlayerHealth>();
+        if (OnLava(pos) && (lavaTick -= Time.deltaTime) <= 0f)
+        {
+            lavaTick = 0.5f;
+            if (playerHealth != null) playerHealth.TakeDamage(LavaDamage);
+            Juice.SparksDir(pos + Vector2.down * 0.3f, Vector2.up, 40f, new Color(1f, 0.55f, 0.15f), 4, 3f, 0.1f);
+        }
+        if ((eruptionTimer -= Time.deltaTime) > 0f) return;
+        eruptionTimer = Random.Range(7f, 11f);
+        int count = 1 + Mathf.Min(2, (int)(runClock / 240f)); // one more every 4 minutes, up to 3
+        for (int i = 0; i < count; i++)
+        {
+            Vector2 at = ClampInside(pos + Random.insideUnitCircle.normalized * Random.Range(i == 0 ? 1.5f : 3f, 7f), WallPad);
+            DelayedBlast.Spawn(at, 1.6f, 1.4f, 10f, eruption: true);
+        }
+        Sfx.Play(Sfx.Id.Alert, 0.35f, 0.6f);
     }
 }

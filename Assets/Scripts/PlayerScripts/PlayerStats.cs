@@ -67,6 +67,8 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
+    private void Start() => Hero.Apply(this);
+
     public void Heal(float amount)
     {
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);

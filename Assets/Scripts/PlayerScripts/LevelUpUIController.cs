@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(PlayerStats))]
@@ -434,13 +435,16 @@ public class LevelUpUIController : MonoBehaviour
             if (weight <= 0f) continue;
 
             string title = string.IsNullOrEmpty(upgrade.title) ? upgrade.id : upgrade.title;
+            string description = upgrade.description;
+            var own = Hero.Upgrade(upgrade.upgradeType.ToString()); // heroes without bombs word these their own way
+            if (own.HasValue) (title, description) = own.Value;
             UpgradeDefinition captured = upgrade;
             int score = 0;
             string hint = upgrade.upgradeType == UpgradeType.ProjectileCount
                 ? ComboSuggestion("bombs", stats.projectileCount + 1 >= PlayerCollabs.MaxBombsPerThrow, out score) : "";
             offers.Add(new Offer
             {
-                text = $"<size=115%><b><color=#FFE08A>{title}</color></b></size>\n<color=#C9D2F0>{upgrade.description}</color>" + hint,
+                text = $"<size=115%><b><color=#FFE08A>{title}</color></b></size>\n<color=#C9D2F0>{description}</color>" + hint,
                 apply = () => captured.Apply(stats),
                 icon = "stat:" + upgrade.upgradeType,
                 weight = weight * (1f + 0.4f * score),
@@ -491,13 +495,13 @@ public class LevelUpUIController : MonoBehaviour
             }
         }
 
-        MiraPassives mira = MiraPassives.Instance;
+        HeroPassives mira = HeroPassives.Instance;
         if (mira != null)
         {
-            foreach (MiraPassives.Passive p in mira.Offerable())
+            foreach (HeroPassives.Passive p in mira.Offerable())
             {
                 int next = mira.LevelOf(p.id) + 1;
-                MiraPassives.Passive captured = p;
+                HeroPassives.Passive captured = p;
                 offers.Add(new Offer
                 {
                     text = $"<size=115%><b><color=#7FE3FF>{p.name}</color></b></size>  <size=80%><color=#9FD8FF>Lv {next}</color></size>\n<color=#C9D2F0>{p.levels[next - 2]}</color>",
@@ -764,6 +768,8 @@ public class LevelUpUIController : MonoBehaviour
         else shown.RemoveAt(slot);
         ShowOffers();
         RefreshActions();
+        Button next = shown.Count > 0 ? upgradeButtons[Mathf.Min(slot, shown.Count - 1)] : skipButton;
+        if (next != null && EventSystem.current != null) EventSystem.current.SetSelectedGameObject(next.gameObject);
     }
 
     private void Reroll()
@@ -812,10 +818,10 @@ public class LevelUpUIController : MonoBehaviour
     private void RefreshActions()
     {
         if (rerollButton == null) return;
-        SetAction(rerollButton, $"{(GamepadUI.Connected ? "[X]" : "[R]")} Reroll ({rerolls})", rerolls > 0);
-        SetAction(eliminateButton, eliminating ? "Pick a card..." : $"{(GamepadUI.Connected ? "[Y]" : "[E]")} Eliminate ({eliminates})", eliminates > 0);
-        SetAction(skipButton, GamepadUI.Connected ? "[RB] Skip (+10% HP)" : "[X] Skip (+10% HP)", true);
-        SetAction(combosButton, GamepadUI.Connected ? "[LB] Combos" : "[Q] Combos", true);
+        SetAction(rerollButton, $"[{(GamepadUI.Connected ? Keybinds.PadLabel(GamepadButton.West) : "R")}] Reroll ({rerolls})", rerolls > 0);
+        SetAction(eliminateButton, eliminating ? "Pick a card..." : $"[{(GamepadUI.Connected ? Keybinds.PadLabel(GamepadButton.North) : "E")}] Eliminate ({eliminates})", eliminates > 0);
+        SetAction(skipButton, $"[{(GamepadUI.Connected ? Keybinds.PadLabel(GamepadButton.RightShoulder) : "X")}] Skip (+10% HP)", true);
+        SetAction(combosButton, $"[{(GamepadUI.Connected ? Keybinds.PadLabel(GamepadButton.LeftShoulder) : "Q")}] Combos", true);
     }
 
     private static void SetAction(Button b, string label, bool usable)

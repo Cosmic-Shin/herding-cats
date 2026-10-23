@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
 
 public class Settings : MonoBehaviour
@@ -157,7 +158,7 @@ public class Settings : MonoBehaviour
 
         RuntimeUI.Button(panel, "Controls", new Vector2(-200, -top + 38), new Vector2(200, 48), ShowControls);
         RuntimeUI.Button(panel, "Back", new Vector2(0, -top + 38), new Vector2(180, 48), Close);
-        RuntimeUI.Text(panel, "Esc / B to close", 16, new Color(0.6f, 0.64f, 0.75f), new Vector2(215, -top + 38), new Vector2(190, 30));
+        RuntimeUI.Text(panel, $"Esc / {Keybinds.PadLabel(GamepadButton.East)} to close", 16, new Color(0.6f, 0.64f, 0.75f), new Vector2(215, -top + 38), new Vector2(190, 30));
         Refresh();
         mainPanel = panel;
         mainFocus = firstArrow.gameObject;
@@ -169,8 +170,10 @@ public class Settings : MonoBehaviour
 
     private RectTransform mainPanel, controlsPanel;
     private GameObject mainFocus;
-    private Button[] keyButtons;
-    private int listening = -1, busyFrame = -1;
+    private Button[] keyButtons, padButtons;
+    private TextMeshProUGUI[] padFixed;
+    private int listening = -1, busyFrame = -1, listenFrame = -1;
+    private bool listeningPad;
 
     // True while waiting for a key (or on the frame one was taken), so menus don't also treat that key as "back".
     public static bool Busy => instance != null && (instance.listening >= 0 || instance.busyFrame == Time.frameCount);
@@ -190,20 +193,28 @@ public class Settings : MonoBehaviour
         const float rowH = 52f;
         controlsPanel = RuntimeUI.Frame(parent, "Controls", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f)).rectTransform;
         float height = 230f + n * rowH;
-        controlsPanel.sizeDelta = new Vector2(640, height);
+        controlsPanel.sizeDelta = new Vector2(780, height);
         float top = height / 2f;
 
-        RuntimeUI.Title(controlsPanel, "CONTROLS", 48f, new Vector2(0, top - 40), 600f);
+        RuntimeUI.Title(controlsPanel, "CONTROLS", 48f, new Vector2(0, top - 40), 700f);
+        Color head = new Color(0.6f, 0.64f, 0.75f);
+        RuntimeUI.Text(controlsPanel, "KEYBOARD", 16, head, new Vector2(60, top - 78), new Vector2(200, 24));
+        RuntimeUI.Text(controlsPanel, "CONTROLLER", 16, head, new Vector2(270, top - 78), new Vector2(200, 24));
         keyButtons = new Button[n];
+        padButtons = new Button[n];
+        padFixed = new TextMeshProUGUI[n];
         for (int i = 0; i < n; i++)
         {
             int action = i;
-            float y = top - 100f - i * rowH;
-            RuntimeUI.Outline(RuntimeUI.Text(controlsPanel, Keybinds.Names[i], 22, new Color(0.8f, 0.84f, 0.95f), new Vector2(-130, y), new Vector2(300, rowH), TextAlignmentOptions.MidlineLeft));
-            keyButtons[i] = RuntimeUI.Button(controlsPanel, "", new Vector2(160, y), new Vector2(240, 44), () => Listen(action));
+            float y = top - 110f - i * rowH;
+            RuntimeUI.Outline(RuntimeUI.Text(controlsPanel, Keybinds.Names[i], 22, new Color(0.8f, 0.84f, 0.95f), new Vector2(-230, y), new Vector2(260, rowH), TextAlignmentOptions.MidlineLeft));
+            keyButtons[i] = RuntimeUI.Button(controlsPanel, "", new Vector2(60, y), new Vector2(200, 44), () => Listen(action, false));
+            if (Keybinds.PadRebindable((Keybinds.Action)i))
+                padButtons[i] = RuntimeUI.Button(controlsPanel, "", new Vector2(270, y), new Vector2(200, 44), () => Listen(action, true));
+            else // movement and pause are fixed on a pad, shown as plain text so navigation skips them
+                padFixed[i] = RuntimeUI.Outline(RuntimeUI.Text(controlsPanel, "", 22, head, new Vector2(270, y), new Vector2(200, 44)));
         }
-        RuntimeUI.Text(controlsPanel, "Pad: stick move  A dash  Y special  View combine  Start pause", 16, new Color(0.8f, 0.84f, 0.95f), new Vector2(0, -top + 116), new Vector2(620, 24));
-        RuntimeUI.Text(controlsPanel, "Arrow keys always move.  Esc always pauses.", 16, new Color(0.6f, 0.64f, 0.75f), new Vector2(0, -top + 88), new Vector2(600, 24));
+        RuntimeUI.Text(controlsPanel, $"Arrow keys / stick always move.  Esc / {Keybinds.PadLabel(GamepadButton.Start)} always pause.", 16, head, new Vector2(0, -top + 88), new Vector2(740, 24));
         RuntimeUI.Button(controlsPanel, "Reset", new Vector2(-110, -top + 38), new Vector2(180, 48), () => { Keybinds.ResetAll(); RefreshKeys(); });
         RuntimeUI.Button(controlsPanel, "Back", new Vector2(110, -top + 38), new Vector2(180, 48), ShowMainPage);
         RefreshKeys();
@@ -224,19 +235,38 @@ public class Settings : MonoBehaviour
         Select(mainFocus);
     }
 
-    private void Listen(int action)
+    private void Listen(int action, bool forPad)
     {
         if (listening >= 0) return;
         listening = action;
-        SetKeyLabel(action, "<color=#FFE08A>Press a key...</color>");
+        listeningPad = forPad;
+        listenFrame = Time.frameCount; // the press that opened this must not count as the new binding
+        SetLabel(forPad ? padButtons[action] : keyButtons[action],
+                 forPad ? "<color=#FFE08A>Press a button...</color>" : "<color=#FFE08A>Press a key...</color>");
         Select(null); // so the key we're waiting for can't also "click" a button
     }
 
     private void Update()
     {
+        if (listening < 0 || Time.frameCount == listenFrame) return;
         Keyboard kb = Keyboard.current;
-        if (listening < 0 || kb == null) return;
-        if (kb.escapeKey.wasPressedThisFrame) { StopListening(); return; }
+        Gamepad pad = Gamepad.current;
+        if ((kb != null && kb.escapeKey.wasPressedThisFrame) || (pad != null && pad.startButton.wasPressedThisFrame)) { StopListening(); return; }
+
+        if (listeningPad)
+        {
+            if (pad == null) return;
+            foreach (GamepadButton b in Keybinds.PadChoices)
+            {
+                if (!pad[b].wasPressedThisFrame) continue;
+                Keybinds.SetPad((Keybinds.Action)listening, b);
+                StopListening();
+                return;
+            }
+            return;
+        }
+
+        if (kb == null) return;
         foreach (KeyControl k in kb.allKeys)
         {
             if (k == null || !k.wasPressedThisFrame || k.keyCode == Key.Escape) continue;
@@ -252,7 +282,7 @@ public class Settings : MonoBehaviour
         listening = -1;
         busyFrame = Time.frameCount;
         RefreshKeys();
-        StartCoroutine(SelectNextFrame(keyButtons[action].gameObject));
+        StartCoroutine(SelectNextFrame((listeningPad ? padButtons[action] : keyButtons[action]).gameObject));
     }
 
     private IEnumerator SelectNextFrame(GameObject go)
@@ -263,12 +293,18 @@ public class Settings : MonoBehaviour
 
     private void RefreshKeys()
     {
-        for (int i = 0; i < keyButtons.Length; i++) SetKeyLabel(i, Keybinds.Label((Keybinds.Action)i));
+        for (int i = 0; i < keyButtons.Length; i++)
+        {
+            var a = (Keybinds.Action)i;
+            SetLabel(keyButtons[i], Keybinds.Label(a));
+            if (padButtons[i] != null) SetLabel(padButtons[i], Keybinds.PadLabel(Keybinds.GetPad(a)).ToUpperInvariant());
+            else padFixed[i].text = a == Keybinds.Action.Pause ? Keybinds.PadLabel(GamepadButton.Start).ToUpperInvariant() : "STICK";
+        }
     }
 
-    private void SetKeyLabel(int i, string text)
+    private static void SetLabel(Button b, string text)
     {
-        TextMeshProUGUI t = keyButtons[i].GetComponentInChildren<TextMeshProUGUI>();
+        TextMeshProUGUI t = b.GetComponentInChildren<TextMeshProUGUI>();
         t.text = text;
         t.fontSize = 22;
     }

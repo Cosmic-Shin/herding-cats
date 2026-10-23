@@ -57,6 +57,8 @@ public class Lighting : MonoBehaviour
         cam = GetComponent<Camera>();
         spawner = FindFirstObjectByType<EnemySpawner>();
         gameObject.AddComponent<Ambience>();
+        if (MapGenerator.Winter) ambientColor = new Color(0.8f, 0.88f, 1f); // cold daylight
+        if (MapGenerator.Volcano) ambientColor = new Color(1f, 0.66f, 0.55f); // smoky red light
         foreach (Light2D l in FindObjectsByType<Light2D>(FindObjectsSortMode.None))
             if (l.lightType == Light2D.LightType.Global) global = l;
         if (global != null)

@@ -33,6 +33,39 @@ public class Achievements : MonoBehaviour
         return n;
     }
 
+    // "Tried" = picked at least once in any run, saved per item so it builds up across runs.
+    // Kinds: w weapon, s skill, c combo, x super combo.
+    public static void MarkTried(string kind, string id)
+    {
+        string key = $"tried_{kind}_{id}";
+        if (PlayerPrefs.GetInt(key, 0) == 1) return;
+        PlayerPrefs.SetInt(key, 1);
+        PlayerPrefs.Save();
+    }
+
+    private static int TriedCount()
+    {
+        int n = 0;
+        foreach (var d in PlayerWeapons.All) if (PlayerPrefs.GetInt("tried_w_" + d.id, 0) == 1) n++;
+        foreach (var s in PlayerSkills.All) if (PlayerPrefs.GetInt("tried_s_" + s.id, 0) == 1) n++;
+        foreach (var c in PlayerCollabs.All) if (PlayerPrefs.GetInt("tried_c_" + c.id, 0) == 1) n++;
+        foreach (var x in PlayerCollabs.Supers) if (PlayerPrefs.GetInt("tried_x_" + x.id, 0) == 1) n++;
+        return n;
+    }
+
+    private static int TryTotal => PlayerWeapons.All.Length + PlayerSkills.All.Length + PlayerCollabs.All.Length + PlayerCollabs.Supers.Length;
+
+    private static void ResetTried()
+    {
+        foreach (var d in PlayerWeapons.All) PlayerPrefs.DeleteKey("tried_w_" + d.id);
+        foreach (var s in PlayerSkills.All) PlayerPrefs.DeleteKey("tried_s_" + s.id);
+        foreach (var c in PlayerCollabs.All) PlayerPrefs.DeleteKey("tried_c_" + c.id);
+        foreach (var x in PlayerCollabs.Supers) PlayerPrefs.DeleteKey("tried_x_" + x.id);
+    }
+
+    public const string MeowlReward = "companion:meowl";
+    public static bool MeowlUnlocked => System.Array.Exists(All, d => d.reward == MeowlReward && IsUnlocked(d));
+
     private static int runKillsSeen;
     private static float runTimeSeen;
     public static int LifetimeKills => PlayerPrefs.GetInt("life_kills", 0) + runKillsSeen;
@@ -72,6 +105,8 @@ public class Achievements : MonoBehaviour
                   done = () => LifetimeKills >= 25000, progress = () => $"{Mathf.Min(LifetimeKills, 25000):N0} / 25,000" },
         new Def { id = "marathon", name = "Couch Cat", goal = "Play 3 hours in total", reward = "reroll",
                   done = () => LifetimeSeconds >= 10800f, progress = () => $"{(int)(LifetimeSeconds / 3600f)}h {(int)(LifetimeSeconds % 3600f / 60f):00}m / 3h" },
+        new Def { id = "tryall", name = "Seen It All", goal = "Try every weapon, skill, combo and super", reward = MeowlReward,
+                  done = () => TriedCount() >= TryTotal, progress = () => $"{TriedCount()} / {TryTotal}" },
     };
 
     public static bool IsUnlocked(Def d) => PlayerPrefs.GetInt("ach_" + d.id, 0) == 1;
@@ -84,6 +119,7 @@ public class Achievements : MonoBehaviour
     {
         if (reward == "reroll") return "+1 Reroll every run";
         if (reward == "eliminate") return "+1 Eliminate every run";
+        if (reward == MeowlReward) return "a secret companion: MEOWL!";
         string id = reward.Substring(reward.IndexOf(':') + 1);
         return reward.StartsWith("weapon:") ? "Weapon: " + PlayerWeapons.Find(id).name : "Skill: " + PlayerSkills.Find(id).name;
     }
@@ -93,6 +129,7 @@ public class Achievements : MonoBehaviour
         foreach (Def d in All) PlayerPrefs.DeleteKey("ach_" + d.id);
         PlayerPrefs.DeleteKey("life_kills");
         PlayerPrefs.DeleteKey("life_seconds");
+        ResetTried();
         PlayerPrefs.Save();
     }
 
@@ -122,6 +159,7 @@ public class Achievements : MonoBehaviour
         runTimeSeen = RunTime;
         if (PlayerHealth.Hits != seenHits) { seenHits = PlayerHealth.Hits; lastHitAt = RunTime; }
         if (stats == null || stats.currentHealth <= 0f) return;
+        if (Meowl.Instance == null && MeowlUnlocked) Meowl.Join(stats.gameObject); // every run once earned, or right after unlocking
 
         foreach (Def d in All)
         {

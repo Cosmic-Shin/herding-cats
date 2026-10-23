@@ -84,7 +84,8 @@ public class EnemyAI : MonoBehaviour, IEnemyBrain, IPoolable
     private float stateDuration;
     private float abilityTimer;
     private float damageTimer;
-    private Vector2 knockback;
+    private Vector2 knockback, iceVelocity;
+    private float lavaTick;
     private Vector2 leapDir;
     private bool fired;
     private float boostTimer;
@@ -638,6 +639,16 @@ public class EnemyAI : MonoBehaviour, IEnemyBrain, IPoolable
             velocity *= 1f - slowAmount;
             if (slowTimer <= 0f) slowAmount = 0f;
         }
+
+        if (MapGenerator.OnLava(rb.position) && health != null && (lavaTick -= dt) <= 0f) // cats burn in lava too
+        {
+            lavaTick = 0.5f;
+            DamageStats.Source = "Lava";
+            health.TakeDamage(Mathf.Max(3f, health.maxHealth * 0.06f), rb.position, false, false);
+            health.MarkBurning();
+        }
+        if (MapGenerator.OnIce(rb.position)) velocity = Vector2.MoveTowards(iceVelocity, velocity, MapGenerator.IceGrip * dt);
+        iceVelocity = velocity;
 
         rb.linearVelocity = velocity + knockback + pull;
         pull = Vector2.zero;

@@ -72,7 +72,8 @@ public class HUD : MonoBehaviour
         portrait.icon.enabled = portrait.icon.sprite != null;
         portrait.frame.gameObject.AddComponent<RectMask2D>().padding = Vector4.one * 6f;
         Place(portrait.icon.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, 34f), new Vector2(230f, 230f));
-        Label(panel, "MIRA", 26, Color.white, new Vector2(124, -10), new Vector2(200, 30), TextAlignmentOptions.TopLeft);
+        portraitIcon = portrait.icon;
+        heroLabel = Label(panel, "", 26, Color.white, new Vector2(124, -10), new Vector2(200, 30), TextAlignmentOptions.TopLeft);
         levelText = Label(panel, "LV 1", 26, new Color(1f, 0.85f, 0.35f), new Vector2(124, -10), new Vector2(364, 30), TextAlignmentOptions.TopRight);
 
         (hpFill, hpFillImage) = Bar(panel, new Vector2(124, -44), new Vector2(364, 32), new Color(0.2f, 0.04f, 0.07f));
@@ -188,9 +189,18 @@ public class HUD : MonoBehaviour
 
     private static string LevelTag(int level, int max) => level >= max ? "<color=#FFD24A>MAX</color>" : level.ToString();
 
+    private Image portraitIcon;
+    private TextMeshProUGUI heroLabel;
+
     private void Update()
     {
         if (stats == null || hpFill == null) return;
+        string hero = Hero.Current.name.ToUpper(); // the menu can switch heroes after the HUD is built
+        if (heroLabel.text != hero && stats.TryGetComponent(out PlayerAnimator anim) && anim.spriteRenderer != null)
+        {
+            heroLabel.text = hero;
+            portraitIcon.sprite = anim.spriteRenderer.sprite;
+        }
         string special = Keybinds.Prompt(Keybinds.Action.Special); // may be rebound, or a pad plugged in
         if (specialBadge.text != special) specialBadge.text = special;
 
@@ -321,7 +331,7 @@ public class HUD : MonoBehaviour
         if (ready && !ultWasReady)
         {
             Sfx.Play(Sfx.Id.Ready, 0.6f);
-            DamagePopup.SpawnText((Vector2)stats.transform.position + Vector2.up * 1f, "SPECIAL READY!", new Color(1f, 0.85f, 0.35f), 5f);
+            DamagePopup.SpawnText((Vector2)stats.transform.position + Vector2.up * 1f, $"{ult.Name} READY!", new Color(1f, 0.85f, 0.35f), 5f);
             ultPing = 1f;
         }
         ultWasReady = ready;
@@ -333,20 +343,20 @@ public class HUD : MonoBehaviour
         {
             ultFill.fillAmount = ult.ActiveRemaining / ult.duration;
             ultFill.color = new Color(1f, 0.55f, 0.15f);
-            ultText.text = $"SPECIAL\n<color=#FFB040>ACTIVE {Mathf.CeilToInt(ult.ActiveRemaining)}s</color>";
+            ultText.text = $"{ult.Name}\n<color=#FFB040>ACTIVE {Mathf.CeilToInt(ult.ActiveRemaining)}s</color>";
         }
         else if (ult.IsReady)
         {
             ultFill.fillAmount = 1f;
             float pulse = 0.75f + 0.25f * Mathf.Sin(Time.unscaledTime * 6f);
             ultFill.color = new Color(1f, 0.82f, 0.3f) * pulse + new Color(0, 0, 0, 1f - pulse);
-            ultText.text = "SPECIAL\n<color=#FFE08A>READY!</color>";
+            ultText.text = $"{ult.Name}\n<color=#FFE08A>READY!</color>";
         }
         else
         {
             ultFill.fillAmount = 1f - ult.CooldownRemaining / ult.cooldown;
             ultFill.color = new Color(0.45f, 0.5f, 0.65f);
-            ultText.text = $"SPECIAL\n<color=#9AA3C0>{Mathf.CeilToInt(ult.CooldownRemaining)}s</color>";
+            ultText.text = $"{ult.Name}\n<color=#9AA3C0>{Mathf.CeilToInt(ult.CooldownRemaining)}s</color>";
         }
     }
 

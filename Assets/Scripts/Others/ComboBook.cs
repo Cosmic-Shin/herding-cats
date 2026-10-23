@@ -108,7 +108,7 @@ public class ComboBook : MonoBehaviour
         button.transition = Selectable.Transition.None;
         bg.gameObject.AddComponent<SelectGlow>();
         bg.gameObject.AddComponent<CardHover>();
-        string kind = super ? "Super combine" : d.kind == PlayerCollabs.Kind.Merge ? "Weapon merge" : d.kind == PlayerCollabs.Kind.Boost ? "Weapon boost" : "Bomb upgrade";
+        string kind = super ? "Super combine" : d.kind == PlayerCollabs.Kind.Merge ? "Weapon merge" : d.kind == PlayerCollabs.Kind.Boost ? "Weapon boost" : Hero.Current.upgradeKind;
         button.onClick.AddListener(() => info.text = $"<color=#FFD24A>{d.name}</color>  <color=#9AA3C0>({kind})</color>\n{d.text}");
 
         Image slot = RuntimeUI.Box(bg.transform, "Slot", new Vector2(0f, 0.5f), new Vector2(0f, 0.5f), Color.white);
@@ -120,7 +120,7 @@ public class ComboBook : MonoBehaviour
         icon.rectTransform.offsetMax = -Vector2.one * 8;
         icon.preserveAspect = true;
         TextMeshProUGUI badge = RuntimeUI.Text(slot.transform, "", 18, Color.white, Vector2.zero, new Vector2(56, 56));
-        UiIcons.Apply(d.kind == PlayerCollabs.Kind.Merge || super ? d.id : d.kind == PlayerCollabs.Kind.Boost ? d.a : "bomb", icon, badge);
+        UiIcons.Apply(d.kind == PlayerCollabs.Kind.Merge || super ? d.id : d.kind == PlayerCollabs.Kind.Boost ? d.a : Hero.Current.weapon, icon, badge);
         if (faded) icon.color = new Color(1f, 1f, 1f, 0.5f);
 
         string tag = status switch

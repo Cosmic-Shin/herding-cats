@@ -182,9 +182,9 @@ public class RewardMenu : MonoBehaviour
                 if (skills.LevelOf(id) >= s.levels.Length || (id == "secondwind" && skills.ReviveUsed)) continue;
                 options.Add(() => { skills.LevelUp(s); return ("skill:" + s.id, $"{s.name}\n{Lv(skills.LevelOf(s.id))}"); });
             }
-        MiraPassives mira = MiraPassives.Instance;
+        HeroPassives mira = HeroPassives.Instance;
         if (mira != null)
-            foreach (MiraPassives.Passive p in mira.Offerable())
+            foreach (HeroPassives.Passive p in mira.Offerable())
                 options.Add(() => { mira.LevelUp(p.id); return ("passive:" + p.id, $"{p.name}\n{Lv(mira.LevelOf(p.id))}"); });
         LevelUpUIController levelUp = stats.GetComponent<LevelUpUIController>();
         if (levelUp != null)

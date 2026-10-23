@@ -134,6 +134,7 @@ public class PlayerSkills : MonoBehaviour
 
     public void LevelUp(Skill skill)
     {
+        Achievements.MarkTried("s", skill.id);
         int level = LevelOf(skill.id) + 1;
         if (level == 1) order.Add(skill.id);
         owned[skill.id] = level;
@@ -214,6 +215,7 @@ public class PlayerSkills : MonoBehaviour
 
     public void OnExplosion(Vector2 pos, float radius, float damage)
     {
+        if (!Hero.UsesBombs) return; // Kai and Nyx run their own versions off their weapon
         int chain = LevelOf("chain");
         if (chain > 0 && Random.value < new[] { 0.15f, 0.25f, 0.35f }[chain - 1]) Chain(pos, radius, damage);
 

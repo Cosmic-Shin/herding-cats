@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
 
         var kb = Keyboard.current;
         bool dashPressed = Keybinds.Pressed(Keybinds.Action.Dash) || Keybinds.AltPressed(Key.LeftShift)
-                           || GamepadUI.Pressed(g => g.buttonSouth) || (Joystick.current != null && Joystick.current.trigger.wasPressedThisFrame);
+                           || Keybinds.PadPressed(Keybinds.Action.Dash) || (Joystick.current != null && Joystick.current.trigger.wasPressedThisFrame);
         if (dashPressed && Time.timeScale > 0f && !isDashing && dashCooldownTimer <= 0f)
         {
             BeginDash();
@@ -99,10 +99,15 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Vector2 velocity = isDashing ? dashDirection * dashSpeed : moveInput * stats.MoveSpeed;
+        // On ice you keep your momentum (a dash onto ice skids on afterwards).
+        if (!isDashing && MapGenerator.OnIce(rb.position)) velocity = Vector2.MoveTowards(iceVelocity, velocity, MapGenerator.IceGrip * Time.fixedDeltaTime);
+        iceVelocity = velocity;
         rb.MovePosition(rb.position + Slide(rb.position, velocity * Time.fixedDeltaTime, isDashing ? dashMask : MapGenerator.ObstacleMask));
     }
 
     private int dashMask;
+    private Vector2 iceVelocity;
+    public void ResetDashCooldown() => dashCooldownTimer = 0f;
     private const float MaxDashOvershoot = 1.5f;
 
     private int DashMask(Vector2 dir, float length)
@@ -182,13 +187,16 @@ public class PlayerController : MonoBehaviour
         if (blinkLevel >= 3)
         {
             DamageStats.Source = "Blink";
-            Bomb.Blast(from, 1.8f, stats.AttackDamage * 2f, stats.critChance, stats.critDamage, secondary: true);
+            if (KaiSword.Active != null) KaiSword.Active.Spin(from, 2f);
+            else if (NyxDrones.Active != null) NyxDrones.Active.Emp(from, 2f);
+            else Bomb.Blast(from, 1.8f, stats.AttackDamage * 2f, stats.critChance, stats.critDamage, secondary: true);
         }
 
         rb.position = to;
         transform.position = to;
         ExplosionFx.Spawn(to, 0.7f, blinkColor);
         Juice.Smoke(to, 1f, 4);
+        if (KaiPassives.Active != null) KaiPassives.Active.BlinkCut(from, to); // Dash Slash works with Blink too
         Juice.Sparks(to, blinkColor, 10, 5f, 0.14f);
         if (TryGetComponent(out PlayerAnimator anim)) anim.Squash(new Vector2(1.3f, 0.75f), 0.18f);
 

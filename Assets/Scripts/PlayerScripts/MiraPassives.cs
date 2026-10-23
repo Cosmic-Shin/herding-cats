@@ -1,9 +1,10 @@
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerStats))]
-public class MiraPassives : MonoBehaviour
+public class MiraPassives : HeroPassives
 {
-    public static MiraPassives Instance { get; private set; }
+    // The active Mira, or null when another hero is picked.
+    public static MiraPassives Active => Instance as MiraPassives;
 
     [Header("Blade Dancer")]
     public float slashCooldown = 3f;
@@ -31,14 +32,6 @@ public class MiraPassives : MonoBehaviour
     public bool ShieldUp => shieldTimer <= 0f;
     public void RechargeShield() => shieldTimer = 0f;
 
-    public const int MaxPassiveLevel = 4;
-
-    public class Passive
-    {
-        public string id, name;
-        public string[] levels;
-    }
-
     public static readonly Passive[] All =
     {
         new Passive { id = "blade", name = "Blade Dancer", levels = new[] {
@@ -55,21 +48,14 @@ public class MiraPassives : MonoBehaviour
             "Recharges in 8s; the pop blasts for 300% damage" } },
     };
 
-    private readonly System.Collections.Generic.Dictionary<string, int> passiveLevels =
-        new System.Collections.Generic.Dictionary<string, int> { { "blade", 1 }, { "weakspot", 1 }, { "shield", 1 } };
     private float weakSpotBonus = 1f;
     private bool backSlash, slashSlows;
     private float baseSlashRange;
 
-    public static Passive FindPassive(string id) => System.Array.Find(All, p => p.id == id);
-    public int LevelOf(string id) => passiveLevels.TryGetValue(id, out int l) ? l : 0;
+    protected override Passive[] Passives => All;
 
-    public System.Collections.Generic.List<Passive> Offerable() =>
-        new System.Collections.Generic.List<Passive>(System.Array.FindAll(All, p => LevelOf(p.id) < MaxPassiveLevel));
-
-    public void LevelUp(string id)
+    protected override void Apply(string id, int level)
     {
-        int level = passiveLevels[id] = Mathf.Min(MaxPassiveLevel, LevelOf(id) + 1);
         switch (id)
         {
             case "blade":
@@ -89,11 +75,11 @@ public class MiraPassives : MonoBehaviour
         }
     }
 
-    public static float CritBonus(EnemyHealth enemy) => AutoCrit(enemy) ? Instance.weakSpotBonus : 1f;
+    public static float CritBonus(EnemyHealth enemy) => AutoCrit(enemy) ? Active.weakSpotBonus : 1f;
 
-    private void Awake()
+    protected override void Awake()
     {
-        Instance = this;
+        base.Awake();
         stats = GetComponent<PlayerStats>();
         anim = GetComponent<PlayerAnimator>();
         ult = GetComponent<PlayerUltimate>();
@@ -115,7 +101,7 @@ public class MiraPassives : MonoBehaviour
         return sr;
     }
 
-    public static bool AutoCrit(EnemyHealth enemy) => Instance != null && Instance.weakSpot && enemy.IsImpaired;
+    public static bool AutoCrit(EnemyHealth enemy) => Active != null && Active.weakSpot && enemy.IsImpaired;
 
     public bool TryBlock()
     {
@@ -243,8 +229,16 @@ public class MiraPassives : MonoBehaviour
         if (k >= 1f) { slashFxTime = -1f; slashFx.gameObject.SetActive(false); }
     }
 
-    private void OnDisable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+        if (shieldEdge != null) shieldEdge.gameObject.SetActive(true);
+        if (shieldFill != null) shieldFill.gameObject.SetActive(true);
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
         if (shieldEdge != null) shieldEdge.gameObject.SetActive(false);
         if (shieldFill != null) shieldFill.gameObject.SetActive(false);
         if (slashFx != null) slashFx.gameObject.SetActive(false);

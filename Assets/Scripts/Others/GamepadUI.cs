@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
 public class GamepadUI : MonoBehaviour
@@ -29,6 +30,16 @@ public class GamepadUI : MonoBehaviour
         g.buttonNorth.wasPressedThisFrame || g.startButton.wasPressedThisFrame || g.selectButton.wasPressedThisFrame ||
         g.leftShoulder.wasPressedThisFrame || g.rightShoulder.wasPressedThisFrame;
 
+    private static bool KeyPoke()
+    {
+        Keyboard k = Keyboard.current;
+        return k != null && (k.upArrowKey.wasPressedThisFrame || k.downArrowKey.wasPressedThisFrame ||
+                             k.leftArrowKey.wasPressedThisFrame || k.rightArrowKey.wasPressedThisFrame ||
+                             k.wKey.wasPressedThisFrame || k.aKey.wasPressedThisFrame || k.sKey.wasPressedThisFrame ||
+                             k.dKey.wasPressedThisFrame || k.enterKey.wasPressedThisFrame || k.spaceKey.wasPressedThisFrame ||
+                             k.tabKey.wasPressedThisFrame);
+    }
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Create()
     {
@@ -52,7 +63,16 @@ public class GamepadUI : MonoBehaviour
     private void OnApplicationFocus(bool focus) { if (!focus && Gamepad.current != null) Gamepad.current.ResetHaptics(); }
     private void OnDestroy() { if (Gamepad.current != null) Gamepad.current.ResetHaptics(); }
 
-    private GameObject lastSelected;
+    private GameObject lastSelected, lastGood;
+
+    private static bool Usable(GameObject g) =>
+        g != null && g.activeInHierarchy && g.TryGetComponent(out Selectable s) && s.IsInteractable();
+
+    private static int Order(Component c)
+    {
+        Canvas canvas = c.GetComponentInParent<Canvas>();
+        return canvas != null ? canvas.rootCanvas.sortingOrder : 0;
+    }
 
     private void Update()
     {
@@ -68,16 +88,32 @@ public class GamepadUI : MonoBehaviour
         else if (!Cursor.visible && Mouse.current != null && Mouse.current.delta.ReadValue().sqrMagnitude > 4f) Cursor.visible = true;
 
         EventSystem es = EventSystem.current;
-        if (es == null) return;
+        if (es == null) { UpdateFrame(null); return; }
+        // A stray click on empty space used to drop the selection and strand keyboard/pad players.
+        if (es.currentInputModule is InputSystemUIInputModule ui && ui.deselectOnBackgroundClick)
+        {
+            ui.deselectOnBackgroundClick = false;
+            ui.moveRepeatDelay = 0.35f;
+            ui.moveRepeatRate = 0.09f;
+        }
+
         GameObject sel = es.currentSelectedGameObject;
         if (sel != lastSelected)
         {
             if (sel != null && lastSelected != null && sel.activeInHierarchy) Sfx.Play(Sfx.Id.Tick, 0.5f);
             lastSelected = sel;
         }
-        if (Time.timeScale > 0f) return;
-        if (sel != null && sel.activeInHierarchy && sel.TryGetComponent(out Selectable s) && s.IsInteractable()) return;
-        bool poked = Move().sqrMagnitude > 0.25f || Pressed(g => g.buttonSouth) ||
+        bool ok = Usable(sel);
+        if (ok) lastGood = sel;
+        UpdateFrame(ok && Time.timeScale == 0f ? sel : null);
+
+        // Space selects like Enter (buttons/toggles only, so text fields still get spaces).
+        if (ok && Time.timeScale == 0f && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame &&
+            (sel.TryGetComponent(out Button _) || sel.TryGetComponent(out Toggle _)))
+            ExecuteEvents.Execute(sel, new BaseEventData(es), ExecuteEvents.submitHandler);
+
+        if (Time.timeScale > 0f || ok || Settings.Busy) return; // Busy: waiting for a rebind press
+        bool poked = Move().sqrMagnitude > 0.25f || Pressed(g => g.buttonSouth) || KeyPoke() ||
                      (Joystick.current != null && Joystick.current.trigger.wasPressedThisFrame);
         if (!poked) return;
 
@@ -86,8 +122,7 @@ public class GamepadUI : MonoBehaviour
         foreach (Selectable c in Selectable.allSelectablesArray)
         {
             if (!c.IsInteractable() || !c.gameObject.activeInHierarchy) continue;
-            Canvas canvas = c.GetComponentInParent<Canvas>();
-            int order = canvas != null ? canvas.rootCanvas.sortingOrder : 0;
+            int order = Order(c);
             Vector3 p = c.transform.position, b = best != null ? best.transform.position : Vector3.zero;
             if (order > bestOrder || (order == bestOrder && (p.y > b.y + 1f || (Mathf.Abs(p.y - b.y) <= 1f && p.x < b.x))))
             {
@@ -95,6 +130,74 @@ public class GamepadUI : MonoBehaviour
                 bestOrder = order;
             }
         }
-        if (best != null) es.SetSelectedGameObject(best.gameObject);
+        // Go back to where the player was if it's still on the top menu, else the top-left item.
+        if (Usable(lastGood) && Order(lastGood.transform) >= bestOrder) es.SetSelectedGameObject(lastGood);
+        else if (best != null) es.SetSelectedGameObject(best.gameObject);
     }
+
+    // Pixel arrow that slides to the left of whatever is selected while a menu is open.
+    private RectTransform arrow;
+    private bool arrowOn;
+
+    private static Sprite ArrowSprite()
+    {
+        // Classic RPG cursor: 5x9 triangle with a 1px dark outline (7x11 texture).
+        const int w = 7, h = 11;
+        var tex = new Texture2D(w, h, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
+        bool Fill(int x, int y) => x >= 1 && x <= 5 && Mathf.Abs(y - 5) <= 5 - x;
+        Color gold = new(1f, 0.82f, 0.3f), dark = new(0.05f, 0.03f, 0.1f), clear = new(0, 0, 0, 0);
+        for (int y = 0; y < h; y++)
+            for (int x = 0; x < w; x++)
+            {
+                bool edge = false;
+                for (int dy = -1; dy <= 1; dy++) for (int dx = -1; dx <= 1; dx++) edge |= Fill(x + dx, y + dy);
+                tex.SetPixel(x, y, Fill(x, y) ? gold : edge ? dark : clear);
+            }
+        tex.Apply();
+        return Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), 100f);
+    }
+
+    private void UpdateFrame(GameObject target)
+    {
+        if (arrow == null)
+        {
+            var canvasGo = new GameObject("SelectArrow", typeof(Canvas));
+            canvasGo.transform.SetParent(transform, false);
+            Canvas c = canvasGo.GetComponent<Canvas>();
+            c.renderMode = RenderMode.ScreenSpaceOverlay;
+            c.sortingOrder = 30000;
+            Image img = new GameObject("Arrow", typeof(RectTransform)).AddComponent<Image>();
+            img.sprite = ArrowSprite();
+            img.raycastTarget = false;
+            arrow = img.rectTransform;
+            arrow.SetParent(canvasGo.transform, false);
+            arrow.anchorMin = arrow.anchorMax = Vector2.zero;
+            arrow.pivot = new Vector2(1f, 0.5f);
+        }
+
+        bool show = target != null && target.transform is RectTransform;
+        arrow.gameObject.SetActive(show);
+        if (!show) { arrowOn = false; return; }
+
+        // Text buttons have wide boxes; point at the actual text instead.
+        RectTransform rt = (RectTransform)target.transform;
+        Rect local = rt.rect;
+        if (target.TryGetComponent(out TMPro.TextMeshProUGUI tmp) && tmp.textBounds.size.x > 1f)
+            local = new Rect(tmp.textBounds.min, tmp.textBounds.size);
+        Canvas owner = target.GetComponentInParent<Canvas>();
+        Camera cam = owner != null && owner.rootCanvas.renderMode != RenderMode.ScreenSpaceOverlay ? owner.rootCanvas.worldCamera : null;
+        Vector2 a = RectTransformUtility.WorldToScreenPoint(cam, rt.TransformPoint(local.min));
+        Vector2 b = RectTransformUtility.WorldToScreenPoint(cam, rt.TransformPoint(local.max));
+
+        float scale = Screen.height / 1080f;
+        Vector2 pos = new(Mathf.Min(a.x, b.x) - 18f * scale, (a.y + b.y) * 0.5f);
+        float k = arrowOn ? 1f - Mathf.Exp(-Time.unscaledDeltaTime * 20f) : 1f;
+        Vector2 slid = Vector2.Lerp(arrow.anchoredPosition + Vector2.right * bob, pos, k);
+        bob = -Mathf.Abs(Mathf.Sin(Time.unscaledTime * 5f)) * 8f * scale; // nudges left and back, like it's pointing
+        arrow.anchoredPosition = slid - Vector2.right * bob;
+        arrow.sizeDelta = new Vector2(7f, 11f) * 3.5f * scale;
+        arrowOn = true;
+    }
+
+    private float bob;
 }
