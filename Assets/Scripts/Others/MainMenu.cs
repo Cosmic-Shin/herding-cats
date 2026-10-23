@@ -39,7 +39,7 @@ public class MainMenu : MonoBehaviour
 
     private class Row
     {
-        public Image bg, medal, shine, glow;
+        public Image bg, medal, shine, glow, hero, mapDot;
         public TextMeshProUGUI rank, name, score, time, level;
         public HUD.Slot[] build;
     }
@@ -53,7 +53,7 @@ public class MainMenu : MonoBehaviour
     private void OnBoardChanged()
     {
         if (boardPage == null || !boardPage.activeSelf) return;
-        entries = Leaderboard.Load();
+        entries = Leaderboard.Load(HeroFilter, MapFilter);
         SetPage(page);
     }
 
@@ -98,10 +98,42 @@ public class MainMenu : MonoBehaviour
             else if (step != 0 && mapButton != null && sel == mapButton.gameObject) CycleMap(step);
             return;
         }
-        if (back) boardBack();
+        if (back) { boardBack(); return; }
+        // Left/right on a filter button changes the filter; otherwise it turns the page.
+        GameObject selected = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
+        int dir = (kb != null && kb.leftArrowKey.wasPressedThisFrame) || GamepadUI.Pressed(g => g.dpad.left) ? -1
+                : (kb != null && kb.rightArrowKey.wasPressedThisFrame) || GamepadUI.Pressed(g => g.dpad.right) ? 1 : 0;
+        if (dir != 0 && heroFilterButton != null && selected == heroFilterButton.gameObject) CycleFilter(ref heroFilter, Hero.All.Length, dir);
+        else if (dir != 0 && mapFilterButton != null && selected == mapFilterButton.gameObject) CycleFilter(ref mapFilter, MapGenerator.Names.Length, dir);
         else if ((kb != null && kb.leftArrowKey.wasPressedThisFrame) || GamepadUI.Pressed(g => g.leftShoulder)) SetPage(page - 1);
         else if ((kb != null && kb.rightArrowKey.wasPressedThisFrame) || GamepadUI.Pressed(g => g.rightShoulder)) SetPage(page + 1);
     }
+
+    // Leaderboard filters: -1 = all, otherwise an index into Hero.All / MapGenerator.Names.
+    private int heroFilter = -1, mapFilter = -1;
+    private Button heroFilterButton, mapFilterButton;
+    private string HeroFilter => heroFilter < 0 ? null : Hero.All[heroFilter].id;
+    private string MapFilter => mapFilter < 0 ? null : MapGenerator.Names[mapFilter];
+    private bool Filtered => heroFilter >= 0 || mapFilter >= 0;
+
+    private void CycleFilter(ref int value, int count, int step)
+    {
+        value = (value + 1 + step + count + 1) % (count + 1) - 1;
+        Sfx.Play(Sfx.Id.Click, 0.5f);
+        RefreshFilterLabels();
+        entries = Leaderboard.Load(HeroFilter, MapFilter);
+        SetPage(0);
+    }
+
+    private void RefreshFilterLabels()
+    {
+        if (heroFilterButton == null) return;
+        heroFilterButton.GetComponent<TextMeshProUGUI>().text = $"<  HERO: {(HeroFilter ?? "All").ToUpper()}  >";
+        mapFilterButton.GetComponent<TextMeshProUGUI>().text = $"<  MAP: {(MapFilter ?? "All").ToUpper()}  >";
+    }
+
+    private static Color MapColor(string map) =>
+        map == "Winter" ? new Color(0.7f, 0.9f, 1f) : map == "Volcano" ? new Color(1f, 0.45f, 0.15f) : new Color(0.45f, 0.85f, 0.35f);
 
     public void ShowRanking(int rank, System.Action onContinue)
     {
@@ -110,6 +142,9 @@ public class MainMenu : MonoBehaviour
         root = canvas.gameObject;
         RuntimeUI.Box(canvas.transform, "Dim", Vector2.zero, Vector2.one, new Color(0.03f, 0.02f, 0.08f, 0.85f));
         BuildBoard(canvas.transform);
+        heroFilter = mapFilter = -1; // the rank is on the full board
+        heroFilterButton.gameObject.SetActive(false);
+        mapFilterButton.gameObject.SetActive(false);
         SetTitle(boardTitle, rank == 1 ? "NEW HIGH SCORE!  <color=#7CFF9A>RANK #1</color>" : $"YOU MADE THE BOARD!  <color=#7CFF9A>RANK #{rank}</color>");
         backLabel.text = "CONTINUE";
         boardBack = () =>
@@ -355,9 +390,12 @@ public class MainMenu : MonoBehaviour
         boardTitle = BuildTitle(panel, "LEADERBOARD", 60f, 292f);
         Backdrop(panel, new Vector2(0, 5), new Vector2(1170, 530), 0.78f);
         boardBack = ShowMain;
+        heroFilterButton = TextButton(panel, "Hero", 292, () => CycleFilter(ref heroFilter, Hero.All.Length, 1), -430, 22);
+        mapFilterButton = TextButton(panel, "Map", 292, () => CycleFilter(ref mapFilter, MapGenerator.Names.Length, 1), 430, 22);
+        RefreshFilterLabels();
         const float headerY = 245f;
         Column(panel, "RANK", -555, 80, headerY, Faint, 20);
-        Column(panel, "NAME", -470, 230, headerY, Faint, 20);
+        Column(panel, "NAME", -436, 196, headerY, Faint, 20);
         Column(panel, "SCORE", -230, 150, headerY, Faint, 20);
         Column(panel, "TIME", -70, 100, headerY, Faint, 20);
         Column(panel, "LV", 35, 60, headerY, Faint, 20);
@@ -387,7 +425,21 @@ public class MainMenu : MonoBehaviour
             rim.effectColor = new Color(0.04f, 0.03f, 0.1f, 0.9f);
             rim.effectDistance = new Vector2(2, -2);
             row.rank = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 24, Color.white, new Vector2(-530, y), new Vector2(70, 40)));
-            row.name = Column(panel, "", -470, 230, y, Color.white, 24);
+            // Hero portrait with a little map badge, then the name.
+            row.hero = RuntimeUI.Box(panel, "Hero", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Color.white);
+            row.hero.rectTransform.anchoredPosition = new Vector2(-452, y + 2);
+            row.hero.rectTransform.sizeDelta = new Vector2(40, 40);
+            row.hero.preserveAspect = true;
+            row.hero.raycastTarget = false;
+            row.mapDot = RuntimeUI.Box(panel, "Map", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Color.white);
+            row.mapDot.sprite = Shapes.Circle;
+            row.mapDot.rectTransform.anchoredPosition = new Vector2(-438, y - 12);
+            row.mapDot.rectTransform.sizeDelta = new Vector2(12, 12);
+            row.mapDot.raycastTarget = false;
+            var dotRim = row.mapDot.gameObject.AddComponent<Outline>();
+            dotRim.effectColor = new Color(0.04f, 0.03f, 0.1f, 0.9f);
+            dotRim.effectDistance = new Vector2(1, -1);
+            row.name = Column(panel, "", -428, 188, y, Color.white, 24);
             row.score = Column(panel, "", -230, 150, y, Gold, 24);
             row.time = Column(panel, "", -70, 100, y, Color.white, 24);
             row.level = Column(panel, "", 35, 60, y, Color.white, 24);
@@ -401,7 +453,7 @@ public class MainMenu : MonoBehaviour
         pageText = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 24, ItemColor, new Vector2(0, -292), new Vector2(240, 44)));
         nextButton = TextButton(panel, "Next >", -292, () => SetPage(page + 1), 210, 28);
         backLabel = TextButton(panel, "Back", -292, () => boardBack(), -480, 28).GetComponent<TextMeshProUGUI>();
-        RuntimeUI.Outline(RuntimeUI.Text(panel, $"<color=#FF7AD9>pink time</color> = endless\n<- / -> or {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.LeftShoulder)} / {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.RightShoulder)} pages   Esc / {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.East)} back", 16, Faint, new Vector2(470, -292), new Vector2(240, 44)));
+        RuntimeUI.Outline(RuntimeUI.Text(panel, $"<color=#FF7AD9>pink time</color> = endless  dot: <color=#73D959>meadow</color> <color=#B3E6FF>winter</color> <color=#FF7326>volcano</color>\n<- / -> or {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.LeftShoulder)} / {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.RightShoulder)} pages   Esc / {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.East)} back", 16, Faint, new Vector2(470, -292), new Vector2(240, 44)));
     }
 
     private static TextMeshProUGUI Column(Transform parent, string text, float left, float width, float y, Color color, float size)
@@ -415,7 +467,7 @@ public class MainMenu : MonoBehaviour
 
     private void ShowBoard()
     {
-        entries = Leaderboard.Load();
+        entries = Leaderboard.Load(HeroFilter, MapFilter);
         if (mainPage != null) mainPage.SetActive(false);
         boardPage.SetActive(true);
         SetPage(LastRank > 0 ? (LastRank - 1) / RowsPerPage : 0);
@@ -443,10 +495,18 @@ public class MainMenu : MonoBehaviour
             row.glow.gameObject.SetActive(mine);
             if (mine) row.rank.color = medal ? Color.white : Gold;
             else row.rank.color = Color.white;
-            row.bg.color = rank == LastRank ? new Color(1f, 0.85f, 0.3f, 0.18f) : i % 2 == 0 ? new Color(1f, 1f, 1f, 0.06f) : Color.clear;
-            row.shine.gameObject.SetActive(rank == LastRank && e != null);
+            bool justMade = rank == LastRank && !Filtered;
+            row.bg.color = justMade ? new Color(1f, 0.85f, 0.3f, 0.18f) : i % 2 == 0 ? new Color(1f, 1f, 1f, 0.06f) : Color.clear;
+            row.shine.gameObject.SetActive(justMade && e != null);
 
             row.name.text = e != null ? NameFilter.Clean(e.name) : "<color=#5A6280>---</color>";
+            row.hero.gameObject.SetActive(e != null);
+            row.mapDot.gameObject.SetActive(e != null);
+            if (e != null)
+            {
+                row.hero.sprite = Hero.Portrait(Leaderboard.HeroOf(e));
+                row.mapDot.color = MapColor(Leaderboard.MapOf(e));
+            }
             row.score.text = e != null ? e.score.ToString("N0") : "";
             row.time.text = e != null ? $"{(e.endless ? "<color=#FF7AD9>" : "")}{e.seconds / 60:00}:{e.seconds % 60:00}" : "";
             row.level.text = e != null ? e.level.ToString() : "";

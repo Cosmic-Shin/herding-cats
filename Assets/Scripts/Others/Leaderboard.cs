@@ -20,6 +20,7 @@ public static class Leaderboard
         public string device;
         public int score, seconds, level, kills, bossKills;
         public bool endless;
+        public string hero, map; // empty on runs from before heroes and maps existed (those were Mira on Meadow)
         public List<Item> build = new List<Item>();
     }
 
@@ -45,14 +46,29 @@ public static class Leaderboard
 
     public static int Score(float seconds, int level) => (int)seconds * 10 + EnemyHealth.KillScore + level * 100;
 
+    public static string HeroOf(Entry e) => string.IsNullOrEmpty(e.hero) ? "Mira" : e.hero;
+    public static string MapOf(Entry e) => string.IsNullOrEmpty(e.map) ? "Meadow" : e.map;
+
     // The shared online board when we have it, otherwise this PC's local file.
-    public static List<Entry> Load()
+    public static List<Entry> Load() => Load(null, null);
+
+    // Filtered by hero and/or map (null = any). The online "all" board only keeps each player's single best run,
+    // so filtered views merge the per hero+map online boards, matching runs on the all board, and this PC's runs.
+    public static List<Entry> Load(string hero, string map)
     {
-        if (Online != null) return new List<Entry>(Online);
-        List<Entry> local = LoadLocal();
-        local.Sort((a, b) => b.score.CompareTo(a.score));
-        KeepBestPerName(local);
-        return local;
+        if (hero == null && map == null && Online != null) return new List<Entry>(Online);
+        bool Match(Entry e) => (hero == null || HeroOf(e) == hero) && (map == null || MapOf(e) == map);
+        var list = new List<Entry>();
+        if (hero != null || map != null)
+        {
+            if (Online != null) list.AddRange(Online.FindAll(Match));
+            foreach (var board in OnlineCombos) list.AddRange(board.Value.FindAll(Match));
+        }
+        list.AddRange(LoadLocal().FindAll(Match));
+        list.Sort((a, b) => b.score.CompareTo(a.score));
+        KeepBestPerName(list);
+        if (list.Count > Size) list.RemoveRange(Size, list.Count - Size);
+        return list;
     }
 
     // One row per player name (their best). The same person on two PCs or installs gets two online
@@ -113,12 +129,17 @@ public static class Leaderboard
     // ---- Online board (Unity Leaderboards, anonymous sign-in) ----
     // ponytail: client-submitted scores, so a determined cheater can post fakes; route through Cloud Code if that ever matters.
     private const string BoardId = "highscores";
+    // One extra board per hero + map ("hs_kai_volcano" ...), so a player's best on each shows up in the filters.
+    // These have to exist in the Unity dashboard; until they do, uploads/fetches to them just fail quietly.
+    private static string ComboId(string hero, string map) => $"hs_{hero}_{map}".ToLowerInvariant();
+    private static readonly Dictionary<string, List<Entry>> OnlineCombos = new Dictionary<string, List<Entry>>();
+    private static bool comboWarned;
     public static List<Entry> Online { get; private set; }
     public static event Action Changed;
     private static Task<bool> signIn;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetStatics() { Online = null; Changed = null; signIn = null; }
+    private static void ResetStatics() { Online = null; Changed = null; signIn = null; OnlineCombos.Clear(); comboWarned = false; }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Boot() => _ = Refresh();
@@ -141,22 +162,43 @@ public static class Leaderboard
         if (!await SignIn()) return;
         try
         {
-            var page = await LeaderboardsService.Instance.GetScoresAsync(BoardId, new GetScoresOptions { Limit = Size, IncludeMetadata = true });
-            string me = AuthenticationService.Instance.PlayerId;
-            var list = new List<Entry>();
-            foreach (var r in page.Results)
-            {
-                Entry e = string.IsNullOrEmpty(r.Metadata) ? null : JsonUtility.FromJson<Entry>(r.Metadata);
-                if (e == null) continue;
-                e.score = (int)r.Score;
-                e.device = r.PlayerId == me ? DeviceId : r.PlayerId; // keeps IsMine working
-                list.Add(e);
-            }
-            KeepBestPerName(list); // server order is already best-first
-            Online = list;
+            Online = await Fetch(BoardId);
             Changed?.Invoke();
         }
         catch (Exception e) { Debug.LogWarning("Online leaderboard fetch failed: " + e.Message); }
+
+        foreach (Hero.Def h in Hero.All)
+            foreach (string m in MapGenerator.Names)
+            {
+                string id = ComboId(h.id, m);
+                try { OnlineCombos[id] = await Fetch(id); }
+                catch (Exception e) { ComboWarn(e); }
+            }
+        Changed?.Invoke();
+    }
+
+    private static async Task<List<Entry>> Fetch(string boardId)
+    {
+        var page = await LeaderboardsService.Instance.GetScoresAsync(boardId, new GetScoresOptions { Limit = Size, IncludeMetadata = true });
+        string me = AuthenticationService.Instance.PlayerId;
+        var list = new List<Entry>();
+        foreach (var r in page.Results)
+        {
+            Entry e = string.IsNullOrEmpty(r.Metadata) ? null : JsonUtility.FromJson<Entry>(r.Metadata);
+            if (e == null) continue;
+            e.score = (int)r.Score;
+            e.device = r.PlayerId == me ? DeviceId : r.PlayerId; // keeps IsMine working
+            list.Add(e);
+        }
+        KeepBestPerName(list); // server order is already best-first
+        return list;
+    }
+
+    private static void ComboWarn(Exception e)
+    {
+        if (comboWarned) return;
+        comboWarned = true;
+        Debug.LogWarning("Per hero/map online boards unavailable (create hs_<hero>_<map> boards in the Unity dashboard): " + e.Message);
     }
 
     private static async Task Upload(Entry entry)
@@ -167,6 +209,8 @@ public static class Leaderboard
             Entry copy = JsonUtility.FromJson<Entry>(JsonUtility.ToJson(entry));
             copy.device = null; // don't publish the hardware id
             await LeaderboardsService.Instance.AddPlayerScoreAsync(BoardId, entry.score, new AddPlayerScoreOptions { Metadata = copy });
+            try { await LeaderboardsService.Instance.AddPlayerScoreAsync(ComboId(HeroOf(entry), MapOf(entry)), entry.score, new AddPlayerScoreOptions { Metadata = copy }); }
+            catch (Exception e) { ComboWarn(e); }
             await Refresh();
         }
         catch (Exception e) { Debug.LogWarning("Score upload failed: " + e.Message); }
@@ -184,6 +228,8 @@ public static class Leaderboard
             kills = EnemyHealth.Kills,
             bossKills = EnemyHealth.BossKills,
             endless = EnemySpawner.Endless,
+            hero = Hero.Current.id,
+            map = MapGenerator.Names[MapGenerator.Biome],
         };
 
         if (stats.TryGetComponent(out PlayerWeapons weapons))

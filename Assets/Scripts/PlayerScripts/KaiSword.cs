@@ -148,7 +148,7 @@ public class KaiSword : MonoBehaviour
         swinging = false;
     }
 
-    // Windup, then a fast heavy sweep; damage lands as the blade passes the middle of the arc.
+    // Windup, then a fast heavy sweep. Each cat is hit at the moment the blade passes over it (once per swing).
     private IEnumerator Swing(Vector2 dir, float damageMult, bool clockwise, bool first, bool isEcho = false)
     {
         float center = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg, half = arc / 2f * (clockwise ? 1f : -1f);
@@ -165,53 +165,78 @@ public class KaiSword : MonoBehaviour
             yield return null;
         }
         Sfx.Play(Sfx.Id.Whoosh, 0.55f, isEcho ? 1.1f : 0.75f);
-        bool struck = false;
         Ribbon(true, isEcho ? EchoBlue : ult != null && ult.IsActive ? PlayerUltimate.RageRed : Steel);
+        struck.Clear();
+        biteSum = Vector2.zero;
+        float prevK = 0f;
         for (float t = 0f; t < sweep; t += Time.deltaTime)
         {
             float k = 1f - Mathf.Pow(1f - t / sweep, 3f);
-            SetBlade(transform.position, Mathf.LerpAngle(from, to, k), 72);
+            // Plain Lerp, not LerpAngle: the arc is over 180°, and LerpAngle would take the short way round (behind him).
+            SetBlade(transform.position, Mathf.Lerp(from, to, k), 72);
             if (!Settings.LowParticles && Time.frameCount % 2 == 0) AfterImage.Spawn(blade, isEcho ? new Color(0.6f, 0.85f, 1f, 0.4f) : Ghost);
-            if (!struck && k >= 0.35f) { struck = true; Strike(dir, damageMult, isEcho); }
+            Cut(center, from, to, prevK, k, damageMult, isEcho);
+            prevK = k;
             yield return null;
         }
-        if (!struck) Strike(dir, damageMult, isEcho);
+        Cut(center, from, to, prevK, 1f, damageMult, isEcho);
+        SwingEnd(dir, damageMult, isEcho);
         Ribbon(false, Steel);
         if (anim != null) anim.Squash(new Vector2(1.2f, 0.85f), 0.15f);
         for (float t = 0f; t < 0.06f / pace; t += Time.deltaTime) yield return null; // brief recovery, blade held at the end
     }
 
-    private void Strike(Vector2 dir, float damageMult, bool isEcho)
+    private readonly HashSet<EnemyHealth> struck = new HashSet<EnemyHealth>(); // cats already hit by this swing
+    private Vector2 biteSum;
+    private const float CatRadius = 0.35f; // how wide a cat is, so the blade edge catches it slightly early
+
+    // Hit every cat the blade passed over between sweep progress prevK and k (0 = start of the arc, 1 = end).
+    private void Cut(float center, float from, float to, float prevK, float k, float damageMult, bool isEcho)
     {
         Vector2 pos = transform.position;
         float r = Reach, damage = SwingDamage * damageMult;
         bool concussion = PlayerCollabs.Has("concussion");
-        int count = 0;
+        int before = struck.Count;
         DamageStats.Source = isEcho ? "Echo Slash" : Source;
-        foreach (Collider2D c in Bomb.OverlapEnemies(pos, r, hits))
+        foreach (Collider2D c in Bomb.OverlapEnemies(pos, r + CatRadius, hits))
         {
-            Vector2 to = (Vector2)c.transform.position - pos;
-            if (Vector2.Angle(dir, to) > arc / 2f || !c.TryGetComponent(out EnemyHealth e) || e.IsDead) continue;
+            if (!c.TryGetComponent(out EnemyHealth e) || e.IsDead || struck.Contains(e)) continue;
+            Vector2 off = (Vector2)c.transform.position - pos;
+            float dist = off.magnitude;
+            // Where along the sweep this cat sits, as progress 0..1, plus a little slack for its width.
+            float angle = center + Mathf.DeltaAngle(center, Mathf.Atan2(off.y, off.x) * Mathf.Rad2Deg);
+            float p = (from - angle) / (from - to);
+            float slack = Mathf.Rad2Deg * Mathf.Atan2(CatRadius, Mathf.Max(dist, 0.3f)) / Mathf.Abs(from - to);
+            if (p < prevK - slack || p > k + slack) continue; // blade hasn't reached it yet, or it's outside the arc
+            struck.Add(e);
+            biteSum += (Vector2)c.transform.position;
             // Shove scales down toward the edge of his reach, so cats get pushed into the sweet spot, not out of range.
-            float shove = push * (concussion ? 1.6f : 1f) * Mathf.Clamp01(1.1f - to.magnitude / r);
-            Hit(e, pos, damage, to.normalized, shove, concussion ? 0.6f : 0f);
-            count++;
+            float shove = push * (concussion ? 1.6f : 1f) * Mathf.Clamp01(1.1f - dist / r);
+            Hit(e, pos, damage, dist > 0.01f ? off / dist : Vector2.up, shove, concussion ? 0.6f : 0f);
         }
-
-        CameraFollow.Shake(0.05f + 0.02f * Mathf.Min(count, 5), 0.1f);
-        if (count >= 3) // a big cleave kicks up dust where the blade bit in
-        {
-            Vector2 bite = pos + dir * r * 0.65f;
-            Juice.Smoke(bite, 0.8f, 3);
-            ExplosionFx.Ring(bite, r * 0.5f, new Color(1f, 0.95f, 0.85f, 0.6f), 0.2f);
-        }
-        if (count > 0)
+        if (before == 0 && struck.Count > 0) // the moment the blade connects
         {
             Sfx.Play(Sfx.Id.Clang, 0.35f, Random.Range(0.55f, 0.7f));
             GamepadUI.Rumble(0.15f, 0.35f, 0.08f);
-            if (Time.unscaledTime >= nextHitStop) { nextHitStop = Time.unscaledTime + 0.25f; Juice.HitStop(0.035f + 0.01f * Mathf.Min(count, 4)); }
+            if (Time.unscaledTime >= nextHitStop) { nextHitStop = Time.unscaledTime + 0.25f; Juice.HitStop(0.04f); }
         }
-        SwordSkills(pos, dir, r, damage, isEcho);
+    }
+
+    // After the sweep: shake by how much it hit, dust where a big cleave bit in, then the sword skills.
+    private void SwingEnd(Vector2 dir, float damageMult, bool isEcho)
+    {
+        Vector2 pos = transform.position;
+        float r = Reach;
+        int count = struck.Count;
+        Vector2 bite = count > 0 ? biteSum / count : pos + dir * r * 0.6f;
+        CameraFollow.Shake(0.05f + 0.02f * Mathf.Min(count, 5), 0.1f);
+        if (count >= 3)
+        {
+            Juice.Smoke(bite, 0.8f, 3);
+            ExplosionFx.Ring(bite, r * 0.5f, new Color(1f, 0.95f, 0.85f, 0.6f), 0.2f);
+        }
+        Vector2 aim = (bite - pos).sqrMagnitude > 0.01f ? (bite - pos).normalized : dir;
+        SwordSkills(pos, aim, r, SwingDamage * damageMult, isEcho);
     }
 
     // One sword hit: crit, Heavy Blade stun/bonus, Execute, knockback. Also used by Dash Slash and the sword skills.

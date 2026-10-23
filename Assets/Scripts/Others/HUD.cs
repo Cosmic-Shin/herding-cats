@@ -191,15 +191,34 @@ public class HUD : MonoBehaviour
 
     private Image portraitIcon;
     private TextMeshProUGUI heroLabel;
+    private bool gearNavLive = true;
+
+    // The gear slots are selectable so the pause menu can show their details. Anywhere else (level-up, rewards,
+    // combine) they'd just be dead stops for the d-pad, so they're taken out of navigation unless paused.
+    private void UpdateGearNavigation()
+    {
+        bool live = Paused;
+        if (live == gearNavLive) return;
+        gearNavLive = live;
+        foreach (Slot[] set in new[] { weaponSlots, skillSlots })
+            foreach (Slot s in set)
+                if (s != null && s.frame.TryGetComponent(out Button b))
+                    b.navigation = new Navigation { mode = live ? Navigation.Mode.Automatic : Navigation.Mode.None };
+        if (!live && EventSystem.current != null && EventSystem.current.currentSelectedGameObject is GameObject sel && sel.GetComponent<SlotTip>() != null)
+            EventSystem.current.SetSelectedGameObject(null); // don't leave the cursor parked on a slot
+    }
 
     private void Update()
     {
         if (stats == null || hpFill == null) return;
+        UpdateGearNavigation();
         string hero = Hero.Current.name.ToUpper(); // the menu can switch heroes after the HUD is built
-        if (heroLabel.text != hero && stats.TryGetComponent(out PlayerAnimator anim) && anim.spriteRenderer != null)
+        if (heroLabel.text != hero)
         {
             heroLabel.text = hero;
-            portraitIcon.sprite = anim.spriteRenderer.sprite;
+            portraitIcon.sprite = Hero.Portrait(Hero.Current.id); // always the front-facing frame, so the face shows
+            portraitIcon.rectTransform.anchoredPosition = new Vector2(0f, 34f + Hero.Current.portraitDrop * 230f / 32f);
+            portraitIcon.enabled = portraitIcon.sprite != null;
         }
         string special = Keybinds.Prompt(Keybinds.Action.Special); // may be rebound, or a pad plugged in
         if (specialBadge.text != special) specialBadge.text = special;

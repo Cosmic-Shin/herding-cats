@@ -14,6 +14,7 @@ public static class Hero
         public string iconPrefix;        // their skill icons, e.g. "kai_" -> Icons/kai_cluster
         public string maxPiece = "Max Bombs", upgradeKind = "Bomb upgrade";
         public string[] stats = { "Bomb damage", "Throws/sec", "Bombs/throw", "Blast radius" };
+        public float portraitDrop;       // HUD portrait: art pixels to shift the crop down so the face shows (big hair)
         public Dictionary<string, (string title, string text)> upgrades; // by upgrade type
         public Dictionary<string, (string name, string[] levels)> skills;
         public Dictionary<string, (string name, string text)> combos;    // combos and supers
@@ -26,6 +27,7 @@ public static class Hero
         {
             id = "Kai", name = "Kai", blurb = "Swordsman: a huge slab of a sword that stuns, executes, and cuts through dashes.",
             weapon = "sword", iconPrefix = "kai_", maxPiece = "Max Swings", upgradeKind = "Sword upgrade",
+            portraitDrop = 5f,
             stats = new[] { "Damage", "Attack speed", "Swings/attack", "Sword reach" },
             upgrades = new Dictionary<string, (string, string)>
             {
@@ -186,6 +188,15 @@ public static class Hero
 
     // "Mira_DownLeft_2" -> "_DownLeft_2"
     private static string Suffix(string name) => name.Substring(name.IndexOf('_'));
+
+    // Front-facing frame, for the HUD portrait and leaderboard rows.
+    private static readonly Dictionary<string, Sprite> portraits = new Dictionary<string, Sprite>();
+    public static Sprite Portrait(string id)
+    {
+        if (portraits.TryGetValue(id, out Sprite s) && s != null) return s;
+        foreach (Sprite f in Resources.LoadAll<Sprite>("Heroes/" + id)) if (f.name.EndsWith("_Down_0")) s = f;
+        return portraits[id] = s;
+    }
 }
 
 // Shared leveling for a hero's three passives (level 1 at the start, up to 4 from level-ups).
