@@ -15,7 +15,7 @@ public class WorldEvents : MonoBehaviour
     private PlayerStats stats;
     private BossTimeline timeline;
     private EnemySpawner spawner;
-    private float eventTimer, shrineTimer;
+    private float eventTimer, shrineTimer, weatherTimer = 150f;
     private bool goldenNext = true;
     private Shrine shrine;
 
@@ -37,6 +37,11 @@ public class WorldEvents : MonoBehaviour
             eventTimer = Random.Range(eventGap.x, eventGap.y);
             StartCoroutine(goldenNext ? GoldenHour() : MeteorShower());
             goldenNext = !goldenNext;
+        }
+        if ((weatherTimer -= Time.deltaTime) <= 0f && !EnemySpawner.Endless)
+        {
+            weatherTimer = Random.Range(150f, 210f);
+            StartCoroutine(Weather());
         }
         if (shrine == null && (shrineTimer -= Time.deltaTime) <= 0f)
         {
@@ -68,6 +73,20 @@ public class WorldEvents : MonoBehaviour
         stats.expMultiplier /= 2f;
         Lighting.Mood = null;
         DamagePopup.SpawnText((Vector2)player.position + Vector2.up * 1.2f, "golden hour over", Gold, 4f);
+    }
+
+    // ---- Weather: a ~40s storm that suits the map (rainstorm / blizzard / ash storm). Just looks, no gameplay change ----
+    private IEnumerator Weather()
+    {
+        string sub = MapGenerator.Winter ? "you can barely see a thing" : MapGenerator.Volcano ? "the sky is raining ash" : "the cats hate getting wet";
+        Color color = MapGenerator.Winter ? new Color(0.8f, 0.92f, 1f) : MapGenerator.Volcano ? new Color(1f, 0.5f, 0.3f) : new Color(0.6f, 0.75f, 1f);
+        Announce(Ambience.WeatherName, sub, color);
+        Sfx.Play(Sfx.Id.Whoosh, 0.5f, 0.5f);
+        for (float t = 0f; t < 4f; t += Time.deltaTime) { Ambience.WeatherLevel = t / 4f; yield return null; }
+        Ambience.WeatherLevel = 1f;
+        yield return new WaitForSeconds(32f);
+        for (float t = 0f; t < 5f; t += Time.deltaTime) { Ambience.WeatherLevel = 1f - t / 5f; yield return null; }
+        Ambience.WeatherLevel = 0f;
     }
 
     // ---- Meteor Shower: marked meteors rain around you for 12s; they only hurt cats ----

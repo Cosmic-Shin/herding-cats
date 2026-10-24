@@ -49,8 +49,14 @@ public class MapGenerator : MonoBehaviour
     public static int ObstacleMask { get; private set; }
     public static int TallMask { get; private set; }
     public const float WallPad = 1.2f;
-    // Map picked on the menu. Read once per scene load; the menu reloads the scene when it changes.
+    // Map picked on the run-select screen. Read once per scene load; Play reloads the scene first if it changed.
     public static readonly string[] Names = { "Meadow", "Winter", "Volcano" };
+    public static readonly string[] Blurbs =
+    {
+        "<color=#7CFF9A>EASY</color>\nGreen fields, trees and ponds.\nNo hazards: the classic cat hunt.",
+        "<color=#B3E6FF>TRICKY</color>\nSnow, frosted trees and frozen ponds.\nYou can cross the ice, but everything on it slides, you included.",
+        "<color=#FF7326>HARD</color>\nAsh fields and bubbling lava.\nLava burns you and cats alike, and eruptions rain down near you more and more often.",
+    };
     public static int Choice => Mathf.Clamp(PlayerPrefs.GetInt("map", 0), 0, Names.Length - 1);
     public static int Biome { get; private set; } // index into Names
     public static bool Winter => Biome == 1;
@@ -201,6 +207,7 @@ public class MapGenerator : MonoBehaviour
                     else if (!edge && glints.Length > 0 && R() < (Winter ? 0.1f : 0.06f)) overlayTiles[i] = TileFor(Pick(glints));
                 }
             if (Biome != 0) { if (Volcano) LavaGlow(r); continue; } // frozen or molten: walkable, no collider
+            WaterShimmer(r);
             var go = new GameObject("Pond");
             go.layer = tallLayer;
             go.transform.SetParent(transform, false);
@@ -268,7 +275,7 @@ public class MapGenerator : MonoBehaviour
         for (int i = 0, count = Mathf.RoundToInt(bushesPerBlock * blocks); i < count; i++)
         {
             Vector2 p = Spot(2f);
-            if (!WaterAt(p, 1)) Prop(props, Pick(bushes), p, MediumOrder);
+            if (!WaterAt(p, 1)) Sway(Prop(props, Pick(bushes), p, MediumOrder), false);
         }
         void Solids(Sprite[] set, float perBlock, bool tree)
         {
@@ -280,6 +287,7 @@ public class MapGenerator : MonoBehaviour
                 solids.Add(p);
                 SpriteRenderer sr = Prop(props, Pick(set), p, tree ? TreeOrder + Mathf.RoundToInt(Mathf.Repeat(-p.y, 16f)) : MediumOrder);
                 Solid(sr, tree);
+                if (tree) Sway(sr, true);
             }
         }
         Solids(rocks, rocksPerBlock, false);
@@ -294,7 +302,7 @@ public class MapGenerator : MonoBehaviour
                 Vector2 along = new Vector2(side.y, side.x);
                 Vector2 p = side * (halfSize - inset) + along * (s + R() * 0.5f);
                 bool tree = R() < 0.4f;
-                Prop(props, tree ? Pick(smallTrees) : Pick(bushes), p, tree ? TreeOrder + Mathf.RoundToInt(Mathf.Repeat(-p.y, 16f)) : MediumOrder);
+                Sway(Prop(props, tree ? Pick(smallTrees) : Pick(bushes), p, tree ? TreeOrder + Mathf.RoundToInt(Mathf.Repeat(-p.y, 16f)) : MediumOrder), tree);
             }
     }
 
@@ -397,16 +405,8 @@ public class MapGenerator : MonoBehaviour
 
     private static Texture2D Recolor(Texture2D src)
     {
-        // GPU round trip so it works on textures that aren't marked readable.
-        RenderTexture rt = RenderTexture.GetTemporary(src.width, src.height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
-        Graphics.Blit(src, rt);
-        RenderTexture prev = RenderTexture.active;
-        RenderTexture.active = rt;
-        var tex = new Texture2D(src.width, src.height, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
-        tex.ReadPixels(new Rect(0, 0, src.width, src.height), 0, 0);
-        RenderTexture.active = prev;
-        RenderTexture.ReleaseTemporary(rt);
-
+        Texture2D copy = ReadableCopy(src);
+        var tex = copy == src ? Object.Instantiate(src) : copy; // never recolour the source asset itself
         Color32[] px = tex.GetPixels32();
         for (int i = 0; i < px.Length; i++) if (px[i].a > 0) px[i] = Volcano ? Ash(px[i]) : Snow(px[i]);
         tex.SetPixels32(px);
@@ -473,39 +473,169 @@ public class MapGenerator : MonoBehaviour
         sr.sortingOrder = OverlayOrder + 1;
         Lighting.Glow(sr);
         lavaGlows.Add(sr);
+
+        // The pool lights up everything around it (warm, flickering).
+        lavaLights.Add(Lighting.MakeLight("LavaLight", sr.transform, 1f, 0.7f, new Color(1f, 0.45f, 0.15f)));
+        lavaLights[lavaLights.Count - 1].pointLightOuterRadius = Mathf.Max(r.width, r.height) * 0.9f + 1.5f;
+    }
+
+    private readonly List<UnityEngine.Rendering.Universal.Light2D> lavaLights = new List<UnityEngine.Rendering.Universal.Light2D>();
+
+    // ---- Props that react: bushes and trees sway when the hero brushes or dashes through them, or a cat or blast hits them ----
+    private class Swayer { public Transform t; public Vector2 anchor, top; public Vector3 scale; public bool tree; public float shake, amp, cooldown, phase; }
+    private readonly List<Swayer> swayers = new List<Swayer>();
+    private readonly Dictionary<Vector2Int, List<Swayer>> swayCells = new Dictionary<Vector2Int, List<Swayer>>();
+    private const float SwayCell = 4f;
+
+    private void Sway(SpriteRenderer sr, bool tree)
+    {
+        if (sr == null) return;
+        Vector2 pos = sr.transform.position;
+        float h = sr.sprite.bounds.extents.y;
+        var s = new Swayer { t = sr.transform, tree = tree, scale = sr.transform.localScale, phase = R() * 6f,
+                             anchor = tree ? pos + Vector2.down * h * 0.7f : pos, top = pos + Vector2.up * h * 0.5f };
+        swayers.Add(s);
+        var cell = new Vector2Int(Mathf.FloorToInt(s.anchor.x / SwayCell), Mathf.FloorToInt(s.anchor.y / SwayCell));
+        if (!swayCells.TryGetValue(cell, out var list)) swayCells[cell] = list = new List<Swayer>();
+        list.Add(s);
+    }
+
+    // Shake any bush/tree near a point. strength ~0.3 for a brush past, 1 for a dash or big hit.
+    public static void Nudge(Vector2 pos, float radius, float strength)
+    {
+        if (instance == null) return;
+        instance.NudgeAt(pos, radius, strength);
+    }
+
+    private void NudgeAt(Vector2 pos, float radius, float strength)
+    {
+        int x0 = Mathf.FloorToInt((pos.x - radius - 1f) / SwayCell), x1 = Mathf.FloorToInt((pos.x + radius + 1f) / SwayCell);
+        int y0 = Mathf.FloorToInt((pos.y - radius - 1f) / SwayCell), y1 = Mathf.FloorToInt((pos.y + radius + 1f) / SwayCell);
+        for (int cx = x0; cx <= x1; cx++)
+            for (int cy = y0; cy <= y1; cy++)
+            {
+                if (!swayCells.TryGetValue(new Vector2Int(cx, cy), out var list)) continue;
+                foreach (Swayer s in list)
+                {
+                    float reach = radius + (s.tree ? 0.7f : 0.6f);
+                    if ((s.anchor - pos).sqrMagnitude > reach * reach) continue;
+                    s.amp = Mathf.Max(s.amp * (s.shake > 0f ? 1f : 0f), strength);
+                    s.shake = 0.5f;
+                    if (s.cooldown > 0f) continue;
+                    s.cooldown = 0.35f;
+                    // Something falls off: leaves, snow or ash.
+                    Color bit = Winter ? Color.white : Volcano ? new Color(0.4f, 0.37f, 0.35f) : new Color(0.4f, 0.7f, 0.28f);
+                    Juice.Sparks(s.top + Random.insideUnitCircle * 0.3f, bit, Mathf.RoundToInt(2 + 4 * strength), 2.5f, 0.09f);
+                }
+            }
+    }
+
+    private void UpdateSway(float dt)
+    {
+        foreach (Swayer s in swayers)
+        {
+            if (s.cooldown > 0f) s.cooldown -= dt;
+            if (s.shake <= 0f) continue;
+            s.shake -= dt;
+            float k = Mathf.Max(0f, s.shake / 0.5f) * s.amp;
+            float wob = Mathf.Sin((0.5f - s.shake) * 38f + s.phase) * k;
+            s.t.localRotation = Quaternion.Euler(0f, 0f, wob * (s.tree ? 3f : 7f));
+            s.t.localScale = new Vector3(s.scale.x * (1f + 0.05f * wob), s.scale.y * (1f - 0.03f * Mathf.Abs(wob)), 1f);
+            if (s.shake <= 0f) { s.t.localRotation = Quaternion.identity; s.t.localScale = s.scale; }
+        }
+    }
+
+    // ---- Moving water (meadow ponds): drifting highlight streaks, and ripples where the hero walks along the edge ----
+    private readonly List<(SpriteRenderer sr, RectInt pond, float speed, float phase)> shimmers = new List<(SpriteRenderer, RectInt, float, float)>();
+    private readonly List<RectInt> waterPonds = new List<RectInt>();
+    private float nextRipple;
+
+    private void WaterShimmer(RectInt r)
+    {
+        waterPonds.Add(r);
+        int count = Mathf.Clamp(r.width * r.height / 6, 2, 6);
+        for (int i = 0; i < count; i++)
+        {
+            var sr = new GameObject("Shimmer").AddComponent<SpriteRenderer>();
+            sr.transform.SetParent(transform, false);
+            sr.sprite = Shapes.Square;
+            sr.sortingOrder = OverlayOrder + 1;
+            Lighting.Glow(sr);
+            sr.transform.localPosition = new Vector2(r.xMin + 1f + R() * (r.width - 2f), r.yMin + 1f + R() * (r.height - 2f));
+            sr.transform.localScale = new Vector3(0.5f + R() * 0.8f, 0.07f, 1f);
+            shimmers.Add((sr, r, 0.15f + R() * 0.25f, R() * 6f));
+        }
+    }
+
+    private void UpdateWater(float dt, Vector2? walker)
+    {
+        float t = Time.unscaledTime;
+        foreach (var (sr, pond, speed, phase) in shimmers)
+        {
+            Vector3 p = sr.transform.localPosition;
+            p.x += speed * dt;
+            if (p.x > pond.xMax - 1.2f) p.x = pond.xMin + 0.6f; // wrap back to the far side
+            sr.transform.localPosition = p;
+            float a = 0.15f + Mathf.Max(0f, Mathf.Sin(t * 1.3f + phase)) * 0.4f;
+            sr.color = new Color(0.85f, 0.95f, 1f, a);
+        }
+        if (walker == null || waterPonds.Count == 0 || Time.time < nextRipple) return;
+        Vector2 w = walker.Value;
+        foreach (RectInt r in waterPonds)
+        {
+            Vector2 edge = new Vector2(Mathf.Clamp(w.x, r.xMin + 0.3f, r.xMax - 0.3f), Mathf.Clamp(w.y, r.yMin + 0.3f, r.yMax - 0.3f));
+            if ((edge - w).sqrMagnitude > 1.2f * 1.2f) continue;
+            nextRipple = Time.time + 0.3f;
+            ExplosionFx.Ring(edge, 0.45f, new Color(0.8f, 0.92f, 1f, 0.6f), 0.45f);
+            return;
+        }
     }
 
     private const int Pad = 2, Cell = 32 + 2 * Pad, CellsPerRow = 8;
     private Texture2D padded;
+    private Color32[] paddedPx;
     private int nextCell;
+    private readonly Dictionary<Texture2D, Color32[]> srcPixels = new Dictionary<Texture2D, Color32[]>();
 
+    // Each ground tile gets its edge pixels repeated around it so tiles don't show seams.
+    // Done on the CPU: GPU CopyTexture silently did nothing in the web build, leaving the ground grey.
     private Sprite Padded(Sprite s)
     {
         if (nextCell >= CellsPerRow * CellsPerRow) return s;
         Texture2D src = s.texture;
+        if (!srcPixels.TryGetValue(src, out Color32[] px)) srcPixels[src] = px = ReadableCopy(src).GetPixels32();
         if (padded == null)
-            padded = new Texture2D(Cell * CellsPerRow, Cell * CellsPerRow, src.format, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
-        if (src.format != padded.format) return s;
+        {
+            padded = new Texture2D(Cell * CellsPerRow, Cell * CellsPerRow, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
+            paddedPx = new Color32[padded.width * padded.height];
+        }
         int sx = (int)s.rect.x, sy = (int)s.rect.y, w = (int)s.rect.width, h = (int)s.rect.height;
         int dx = nextCell % CellsPerRow * Cell, dy = nextCell / CellsPerRow * Cell;
         nextCell++;
 
-        Graphics.CopyTexture(src, 0, 0, sx, sy, w, h, padded, 0, 0, dx + Pad, dy + Pad);
-        for (int p = 0; p < Pad; p++)
-        {
-            Graphics.CopyTexture(src, 0, 0, sx, sy, w, 1, padded, 0, 0, dx + Pad, dy + p);
-            Graphics.CopyTexture(src, 0, 0, sx, sy + h - 1, w, 1, padded, 0, 0, dx + Pad, dy + Pad + h + p);
-            Graphics.CopyTexture(src, 0, 0, sx, sy, 1, h, padded, 0, 0, dx + p, dy + Pad);
-            Graphics.CopyTexture(src, 0, 0, sx + w - 1, sy, 1, h, padded, 0, 0, dx + Pad + w + p, dy + Pad);
-            for (int q = 0; q < Pad; q++)
-            {
-                Graphics.CopyTexture(src, 0, 0, sx, sy, 1, 1, padded, 0, 0, dx + p, dy + q);
-                Graphics.CopyTexture(src, 0, 0, sx + w - 1, sy, 1, 1, padded, 0, 0, dx + Pad + w + p, dy + q);
-                Graphics.CopyTexture(src, 0, 0, sx, sy + h - 1, 1, 1, padded, 0, 0, dx + p, dy + Pad + h + q);
-                Graphics.CopyTexture(src, 0, 0, sx + w - 1, sy + h - 1, 1, 1, padded, 0, 0, dx + Pad + w + p, dy + Pad + h + q);
-            }
-        }
+        for (int y = -Pad; y < h + Pad; y++)
+            for (int x = -Pad; x < w + Pad; x++)
+                paddedPx[(dy + Pad + y) * padded.width + dx + Pad + x] =
+                    px[(sy + Mathf.Clamp(y, 0, h - 1)) * src.width + sx + Mathf.Clamp(x, 0, w - 1)];
+        padded.SetPixels32(paddedPx);
+        padded.Apply(false);
         return Sprite.Create(padded, new Rect(dx + Pad, dy + Pad, w, h), new Vector2(0.5f, 0.5f), s.pixelsPerUnit, 0, SpriteMeshType.FullRect);
+    }
+
+    // CPU-readable copy of any texture (GPU round trip, so it works on textures that aren't marked readable).
+    private static Texture2D ReadableCopy(Texture2D src)
+    {
+        if (src.isReadable && src.format == TextureFormat.RGBA32) return src;
+        RenderTexture rt = RenderTexture.GetTemporary(src.width, src.height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
+        Graphics.Blit(src, rt);
+        RenderTexture prev = RenderTexture.active;
+        RenderTexture.active = rt;
+        var tex = new Texture2D(src.width, src.height, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
+        tex.ReadPixels(new Rect(0, 0, src.width, src.height), 0, 0);
+        tex.Apply(false);
+        RenderTexture.active = prev;
+        RenderTexture.ReleaseTemporary(rt);
+        return tex;
     }
 
     private static Color GroundTint(int x, int y)
@@ -549,7 +679,10 @@ public class MapGenerator : MonoBehaviour
             lavaGlows[i].color = new Color(1f, 0.45f, 0.1f, 0.18f + 0.1f * Mathf.Sin(Time.unscaledTime * 1.8f + i * 1.3f));
         foreach (var (sr, variant, phase) in lavaBlobs)
             sr.sprite = LavaArt.Get(variant, (int)((Time.unscaledTime + phase) * 5f), 1f);
-        if (menuMap) return;
+        for (int i = 0; i < lavaLights.Count; i++) // lava light flickers
+            if (lavaLights[i] != null) lavaLights[i].intensity = 1.15f + 0.2f * Mathf.Sin(Time.unscaledTime * 3.1f + i * 1.7f) + 0.08f * Mathf.Sin(Time.unscaledTime * 11f + i);
+        UpdateSway(Time.deltaTime);
+        if (menuMap) { UpdateWater(Time.unscaledDeltaTime, null); return; }
         if (player == null)
         {
             GameObject p = GameObject.FindGameObjectWithTag("Player");
@@ -558,6 +691,7 @@ public class MapGenerator : MonoBehaviour
         }
         Vector2 pos = player.position;
         if (Volcano && MainMenu.Started && Time.timeScale > 0f) VolcanoHazards(pos);
+        UpdateWater(Time.unscaledDeltaTime, MainMenu.Started ? pos + Vector2.down * 0.3f : (Vector2?)null);
         float[] dist = { pos.x - Bounds.xMin, Bounds.xMax - pos.x, pos.y - Bounds.yMin, Bounds.yMax - pos.y };
         float pulse = 0.75f + 0.25f * Mathf.Sin(Time.time * 5f);
         int touching = 0;

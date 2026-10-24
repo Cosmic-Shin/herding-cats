@@ -350,7 +350,7 @@ public class HUD : MonoBehaviour
         if (ready && !ultWasReady)
         {
             Sfx.Play(Sfx.Id.Ready, 0.6f);
-            DamagePopup.SpawnText((Vector2)stats.transform.position + Vector2.up * 1f, $"{ult.Name} READY!", new Color(1f, 0.85f, 0.35f), 5f);
+            DamagePopup.SpawnText((Vector2)stats.transform.position + Vector2.up * 1f, $"{ult.Name} READY!  [{Keybinds.Prompt(Keybinds.Action.Special)}]", new Color(1f, 0.85f, 0.35f), 5f);
             ultPing = 1f;
         }
         ultWasReady = ready;
@@ -369,7 +369,7 @@ public class HUD : MonoBehaviour
             ultFill.fillAmount = 1f;
             float pulse = 0.75f + 0.25f * Mathf.Sin(Time.unscaledTime * 6f);
             ultFill.color = new Color(1f, 0.82f, 0.3f) * pulse + new Color(0, 0, 0, 1f - pulse);
-            ultText.text = $"{ult.Name}\n<color=#FFE08A>READY!</color>";
+            ultText.text = $"{ult.Name}\n<color=#FFE08A>READY! press [{Keybinds.Prompt(Keybinds.Action.Special)}]</color>";
         }
         else
         {

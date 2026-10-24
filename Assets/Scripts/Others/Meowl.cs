@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Secret companion from the "Seen It All" achievement. A spinning meowl floats behind the player
-// and every few seconds lets out a meow blast on the nearest cat.
+// and every few seconds lets out a meow blast on the nearest cat (it stuns with Kai, and can hack with Nyx).
 public class Meowl : MonoBehaviour
 {
-    private const float Fps = 12f, BlastEvery = 2f, BlastRadius = 2.4f, Range = 8f, DamagePercent = 1.2f;
+    private const float Fps = 12f, BlastEvery = 2f, BlastRadius = 2.4f, Range = 8f, DamagePercent = 1.2f, StunTime = 0.6f;
     private static readonly Vector2 Offset = new(-0.9f, 0.8f);
     private static readonly Color Tint = new(0.75f, 0.55f, 1f);
     private static readonly List<Collider2D> hits = new(64);
@@ -79,8 +79,19 @@ public class Meowl : MonoBehaviour
         bool crit = Random.value < stats.critChance;
         if (crit) damage *= stats.critDamage;
         DamageStats.Source = "Meowl";
+        // Hero flavour: with Kai the blast stuns, with Nyx it can hack (same odds as her Hack passive).
+        KaiPassives kai = KaiPassives.Active;
+        NyxPassives nyx = NyxPassives.Active;
+        int stunned = 0;
         foreach (Collider2D c in Bomb.OverlapEnemies(at, BlastRadius, hits))
-            if (c.TryGetComponent(out EnemyHealth h)) h.TakeDamage(damage, at, crit);
+        {
+            if (!c.TryGetComponent(out EnemyHealth h)) continue;
+            h.TakeDamage(damage, at, crit);
+            if (h.IsDead) continue;
+            if (kai != null && c.TryGetComponent(out EnemyAI cat)) { cat.Stun(StunTime); stunned++; }
+            if (nyx != null) nyx.TryHack(h);
+        }
+        if (stunned > 0) Juice.Sparks(at + Vector2.up * 0.3f, new Color(1f, 0.85f, 0.35f), 6, 4f, 0.1f);
 
         ExplosionFx.Spawn(at, BlastRadius * 0.7f, Tint);
         ExplosionFx.Ring(at, BlastRadius, Tint, 0.35f);

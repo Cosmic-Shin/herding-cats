@@ -6,17 +6,17 @@ using UnityEngine.InputSystem.LowLevel;
 // Esc / Start always pause, so a bad binding can never lock the player out.
 public static class Keybinds
 {
-    public enum Action { Up, Down, Left, Right, Dash, Special, Combine, Pause }
+    public enum Action { Up, Down, Left, Right, Dash, Special, Combine, Pause, Interact }
 
-    public static readonly string[] Names = { "Move up", "Move down", "Move left", "Move right", "Dash", "Special", "Combine", "Pause" };
-    private static readonly Key[] Defaults = { Key.W, Key.S, Key.A, Key.D, Key.Space, Key.F, Key.C, Key.P };
+    public static readonly string[] Names = { "Move up", "Move down", "Move left", "Move right", "Dash", "Special", "Combine", "Pause", "Open chest/anvil" };
+    private static readonly Key[] Defaults = { Key.W, Key.S, Key.A, Key.D, Key.Space, Key.F, Key.C, Key.P, Key.E };
     private static readonly Key[] keys = (Key[])Defaults.Clone();
 
     // Movement stays on the stick/d-pad and pause on Start; only these can move on a pad.
     private static readonly GamepadButton[] PadDefaults =
     {
         GamepadButton.DpadUp, GamepadButton.DpadDown, GamepadButton.DpadLeft, GamepadButton.DpadRight,
-        GamepadButton.RightShoulder, GamepadButton.North, GamepadButton.Select, GamepadButton.Start,
+        GamepadButton.RightShoulder, GamepadButton.North, GamepadButton.Select, GamepadButton.Start, GamepadButton.West,
     };
     private static readonly GamepadButton[] pad = (GamepadButton[])PadDefaults.Clone();
 
@@ -28,7 +28,7 @@ public static class Keybinds
         GamepadButton.LeftStick, GamepadButton.RightStick, GamepadButton.Select,
     };
 
-    public static bool PadRebindable(Action a) => a == Action.Dash || a == Action.Special || a == Action.Combine;
+    public static bool PadRebindable(Action a) => a == Action.Dash || a == Action.Special || a == Action.Combine || a == Action.Interact;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Load()
@@ -42,7 +42,10 @@ public static class Keybinds
     public static GamepadButton GetPad(Action a) => pad[(int)a];
 
     // What to show in on-screen prompts: the controller button when a pad is plugged in, else the key.
-    public static string Prompt(Action a) => GamepadUI.Connected ? PadLabel(GetPad(a)) : Label(a);
+    public static string Prompt(Action a) =>
+        Gamepad.current != null ? PadLabel(GetPad(a))
+        : Joystick.current != null && JoystickButton(a) is string b ? (b == "trigger" ? "Btn 1" : "Btn " + b.Substring(6))
+        : Label(a);
 
     // Assigning a key that another action uses swaps the two, so nothing ends up unbound.
     public static void Set(Action a, Key key)
@@ -77,7 +80,15 @@ public static class Keybinds
 
     public static bool Held(Action a) => Keyboard.current != null && Keyboard.current[Get(a)].isPressed;
     public static bool Pressed(Action a) => Keyboard.current != null && Keyboard.current[Get(a)].wasPressedThisFrame;
-    public static bool PadPressed(Action a) => Gamepad.current != null && Gamepad.current[GetPad(a)].wasPressedThisFrame;
+    public static bool PadPressed(Action a) =>
+        Gamepad.current != null ? Gamepad.current[GetPad(a)].wasPressedThisFrame
+        : JoystickButton(a) is string b && Joystick.current?.TryGetChildControl<UnityEngine.InputSystem.Controls.ButtonControl>(b) is { } c && c.wasPressedThisFrame;
+
+    // Generic joysticks have no named face buttons, only "trigger", "button2", "button3"...
+    private static string JoystickButton(Action a) => a switch
+    {
+        Action.Dash => "trigger", Action.Special => "button2", Action.Combine => "button3", Action.Interact => "button4", _ => null,
+    };
 
     // A fixed extra key (e.g. Shift for dash) that works unless the player bound it to something else.
     public static bool AltPressed(Key key) =>

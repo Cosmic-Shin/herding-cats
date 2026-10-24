@@ -307,6 +307,8 @@ public class LevelUpUIController : MonoBehaviour
 
         TextMeshProUGUI statsText = FindChild<TextMeshProUGUI>(levelUpPanel.transform, "StatsText");
         if (statsText != null) statsText.text = PauseMenu.BuildStats(stats);
+        Image face = FindChild<Image>(levelUpPanel.transform, "Face"); // the build panel portrait follows the picked hero
+        if (face != null && Hero.Portrait(Hero.Current.id) is Sprite heroFace) face.sprite = heroFace;
 
         SetPanelVisible(true);
         PauseGame();
@@ -408,7 +410,8 @@ public class LevelUpUIController : MonoBehaviour
             case UpgradeType.Heal:
                 float missing = 1f - stats.currentHealth / stats.maxHealth;
                 return missing < 0.15f ? 0f : missing * 3f;
-            case UpgradeType.ProjectileCount: return stats.projectileCount >= 6 ? 0f : 1f;
+            case UpgradeType.ProjectileCount: return stats.projectileCount >= PlayerCollabs.MaxBombsPerThrow ? 0f : 1f;
+            case UpgradeType.MaxHealth: return stats.maxHealth >= PlayerStats.MaxHealthCap ? 0f : 1f;
             case UpgradeType.CritChance: return stats.critChance >= 0.5f ? 0f : 1f;
             case UpgradeType.AreaPercent: return stats.areaMultiplier >= 2.5f ? 0f : 1f;
             case UpgradeType.AttackSpeedPercent: return stats.attackSpeedMultiplier >= 2f ? 0f : 1f;
@@ -549,7 +552,8 @@ public class LevelUpUIController : MonoBehaviour
         foreach (UpgradeDefinition u in pool) if ((roll -= UpgradeWeight(u)) <= 0f) { pick = u; break; }
         pick.Apply(stats);
         icon = "stat:" + pick.upgradeType;
-        title = string.IsNullOrEmpty(pick.title) ? pick.id : pick.title;
+        // Use the hero's own wording (Kai's "+1 bomb" is an extra swing).
+        title = Hero.Upgrade(pick.upgradeType.ToString())?.title ?? (string.IsNullOrEmpty(pick.title) ? pick.id : pick.title);
         return true;
     }
 
@@ -635,9 +639,20 @@ public class LevelUpUIController : MonoBehaviour
             tr.localScale = Vector3.Lerp(tr.localScale, Vector3.one * (on ? 1.05f : 1f), k);
             tr.localRotation = Quaternion.Slerp(tr.localRotation, Quaternion.Euler(0f, 0f, on ? -1.5f + Mathf.Sin(t * 3f) * 1.5f : 0f), k);
             Color c = glow.effectColor;
-            c.a = on ? 0.75f + 0.25f * Mathf.Sin(t * 6f) : 0.35f;
+            c.a = on ? 0.85f + 0.15f * Mathf.Sin(t * 6f) : 0.35f;
             glow.effectColor = c;
-            glow.effectDistance = on ? new Vector2(5f, 5f) : new Vector2(2f, 2f);
+            glow.effectDistance = on ? new Vector2(6f, 6f) : new Vector2(2f, 2f);
+
+            if (!looks.TryGetValue(b, out CardLook look)) continue;
+            // Selected: the card lights up in its colour, the stripe widens, and the shine sweeps every couple of seconds.
+            Image bg = b.GetComponent<Image>();
+            Color lit = Color.Lerp(look.baseColor, look.kind, 0.28f);
+            lit.a = 1f;
+            bg.color = Color.Lerp(bg.color, on ? lit : look.baseColor, k);
+            RectTransform stripe = look.stripe.rectTransform;
+            stripe.sizeDelta = new Vector2(Mathf.Lerp(stripe.sizeDelta.x, on ? 12f : 7f, k), 0f);
+            if (on && Time.unscaledTime > look.shineAt + 2.2f) look.shineAt = Time.unscaledTime;
+            SweepShine(look.shine, (RectTransform)tr, look.shineAt);
         }
     }
 
@@ -694,7 +709,67 @@ public class LevelUpUIController : MonoBehaviour
                 button.gameObject.AddComponent<CardHover>();
             }
             glow.effectColor = kind;
+            Decorate(button, offer.kind, kind, eliminating ? new Color(0.38f, 0.06f, 0.08f, 1f) : card, i);
         }
+    }
+
+    // ---- Card dressing: a coloured stripe and kind tag, a shine sweep on appear, and a lit-up look when selected ----
+    private class CardLook { public Image stripe, shine; public TextMeshProUGUI tag; public Color baseColor, kind; public float shineAt; }
+    private readonly Dictionary<Button, CardLook> looks = new Dictionary<Button, CardLook>();
+
+    private static string KindName(OfferKind kind) => kind switch
+    {
+        OfferKind.Weapon => "WEAPON", OfferKind.Skill => "SKILL", OfferKind.Passive => "PASSIVE", OfferKind.Companion => "BUDDY", _ => "STAT",
+    };
+
+    private void Decorate(Button button, OfferKind kind, Color kindColor, Color baseColor, int index)
+    {
+        if (!looks.TryGetValue(button, out CardLook look))
+        {
+            look = new CardLook();
+            var rt = (RectTransform)button.transform;
+            // Stripe and shine live in a masked layer behind the text and icons, so they never cover them
+            // and the card itself stays unmasked (a mask on a tilting card clips its corners).
+            var fx = new GameObject("CardFx", typeof(RectTransform), typeof(RectMask2D)).GetComponent<RectTransform>();
+            fx.SetParent(rt, false);
+            fx.anchorMin = Vector2.zero;
+            fx.anchorMax = Vector2.one;
+            fx.offsetMin = fx.offsetMax = Vector2.zero;
+            fx.SetAsFirstSibling();
+
+            look.stripe = RuntimeUI.Box(fx, "Stripe", new Vector2(0f, 0f), new Vector2(0f, 1f), Color.white);
+            look.stripe.rectTransform.pivot = new Vector2(0f, 0.5f);
+            look.stripe.rectTransform.sizeDelta = new Vector2(7f, 0f);
+            look.stripe.raycastTarget = false;
+
+            look.shine = RuntimeUI.Box(fx, "Shine", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Color(1f, 1f, 1f, 0.16f));
+            look.shine.rectTransform.sizeDelta = new Vector2(50f, rt.rect.height * 2.2f);
+            look.shine.rectTransform.localRotation = Quaternion.Euler(0f, 0f, -20f);
+            look.shine.raycastTarget = false;
+
+            look.tag = RuntimeUI.Text(rt, "", 14, Color.white, Vector2.zero, new Vector2(120f, 20f), TextAlignmentOptions.TopRight); // no outline: the panel is still hidden here
+            look.tag.rectTransform.anchorMin = look.tag.rectTransform.anchorMax = look.tag.rectTransform.pivot = new Vector2(1f, 1f);
+            look.tag.rectTransform.anchoredPosition = new Vector2(-10f, -6f);
+            look.tag.raycastTarget = false;
+            looks[button] = look;
+        }
+        look.kind = kindColor;
+        look.baseColor = baseColor;
+        look.stripe.color = kindColor;
+        look.tag.text = KindName(kind);
+        look.tag.color = kindColor;
+        look.shineAt = Time.unscaledTime + 0.15f + index * 0.06f; // sweeps in just after each card pops in
+    }
+
+    // The shine travels left to right across a card over 0.45s starting at `start`.
+    private static void SweepShine(Image shine, RectTransform card, float start)
+    {
+        float k = (Time.unscaledTime - start) / 0.45f;
+        bool on = k >= 0f && k <= 1f;
+        shine.enabled = on;
+        if (!on) return;
+        float half = card.rect.width / 2f + 60f;
+        shine.rectTransform.anchoredPosition = new Vector2(Mathf.Lerp(-half, half, k), 0f);
     }
 
     private void ClosePanel()
@@ -822,6 +897,12 @@ public class LevelUpUIController : MonoBehaviour
         SetAction(eliminateButton, eliminating ? "Pick a card..." : $"[{(GamepadUI.Connected ? Keybinds.PadLabel(GamepadButton.North) : "E")}] Eliminate ({eliminates})", eliminates > 0);
         SetAction(skipButton, $"[{(GamepadUI.Connected ? Keybinds.PadLabel(GamepadButton.RightShoulder) : "X")}] Skip (+10% HP)", true);
         SetAction(combosButton, $"[{(GamepadUI.Connected ? Keybinds.PadLabel(GamepadButton.LeftShoulder) : "Q")}] Combos", true);
+
+        var row = new List<Button>();
+        foreach (Button b in new[] { combosButton, rerollButton, eliminateButton, skipButton }) if (b.interactable) row.Add(b);
+        Button lastCard = upgradeButtons.FindLast(b => b != null && b.gameObject.activeSelf);
+        for (int i = 0; i < row.Count; i++)
+            RuntimeUI.Nav(row[i], up: lastCard, left: i > 0 ? row[i - 1] : null, right: i < row.Count - 1 ? row[i + 1] : null);
     }
 
     private static void SetAction(Button b, string label, bool usable)

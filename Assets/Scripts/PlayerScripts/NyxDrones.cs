@@ -146,6 +146,7 @@ public class NyxDrones : MonoBehaviour
         halo.sortingOrder = 66;
         Lighting.Glow(halo);
         TrailRenderer thruster = HeroFx.Trail(sr.transform, Vector3.zero, 0.14f, Cyan, 0.14f, 67);
+        Lighting.MakeLight("DroneLight", sr.transform, 1.3f, 0.55f, Cyan); // each drone lights the ground under it
         drones.Add(new Drone { sr = sr, halo = halo, thruster = thruster, pos = at, timer = Random.value * Interval });
         HeroFx.Bits(at, Cyan, Color.white, 6, 3f); // boots up in a burst of pixels
         Sfx.Play(Sfx.Id.Blink, 0.25f, 1.6f);

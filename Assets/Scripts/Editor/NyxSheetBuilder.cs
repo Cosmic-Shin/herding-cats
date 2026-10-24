@@ -6,7 +6,7 @@ using UnityEngine;
 
 // Builds Nyx's 20 hero sheets (same layout as Mira/Kai: 32x32 cells; walk and roll 4 frames, slash 5)
 // from her hand-drawn 4-direction walk sheet. Drawn frames are kept as-is; the rest are derived:
-// diagonal walks from the side views (face painted over for the turned-away ones), rolls by rotating
+// diagonal walks from the side views, rolls by rotating
 // a tucked pose, and a placeholder "gadget" attack. Re-run after editing the source sheet.
 public static class NyxSheetBuilder
 {
@@ -16,8 +16,7 @@ public static class NyxSheetBuilder
     private static readonly int[] Palette = {
         0xF57C00, 0xE65100, 0xEF6C00, 0x000000, 0xF8D0B8, 0x2D7044, 0x945B50, 0x212121, 0xDBA57E, 0xB5B5B5,
         0xD50000, 0xFFFFFF, 0x225232, 0xF44336, 0xF5F5F5, 0xBB8367, 0xD6D6D6, 0xE3E3E3 };
-    private static readonly HashSet<int> Skin = new HashSet<int> { 0xF8D0B8, 0xDBA57E, 0xBB8367, 0x945B50 };
-    private static readonly Color32 Hair = Hex(0xF57C00), Glow = Hex(0x00E5FF), GlowCore = Hex(0xE0FFFF);
+    private static readonly Color32 Glow = Hex(0x00E5FF), GlowCore = Hex(0xE0FFFF);
 
     // A frame, top-origin like a paint program.
     private class Img
@@ -70,16 +69,9 @@ public static class NyxSheetBuilder
         }
         UnityEngine.Object.DestroyImmediate(src);
 
-        Frame[] Map(Frame[] f, Func<Img, Img> fn)
-        {
-            var o = new Frame[f.Length];
-            for (int i = 0; i < f.Length; i++) o[i] = new Frame { img = fn(f[i].img), top = f[i].top };
-            return o;
-        }
-        rows["DownLeft"] = rows["Left"];
-        rows["DownRight"] = rows["Right"];
-        rows["UpLeft"] = Map(rows["Left"], TurnAway);
-        rows["UpRight"] = Map(rows["Right"], TurnAway);
+        // Diagonals use the side views with the face showing (like Kai's up-left, which shows his eye and cheek).
+        rows["DownLeft"] = rows["UpLeft"] = rows["Left"];
+        rows["DownRight"] = rows["UpRight"] = rows["Right"];
         string[] eight = { "Down", "DownLeft", "DownRight", "Left", "Right", "Up", "UpLeft", "UpRight" };
 
         foreach (string d in eight)
@@ -118,23 +110,6 @@ public static class NyxSheetBuilder
         }
         AssetDatabase.Refresh();
         Debug.Log("Nyx sheets built.");
-    }
-
-    // Turned away (3/4 back): paint the face and its features over with hair; hands and body stay.
-    private static Img TurnAway(Img f)
-    {
-        var o = new Img(f.w, f.h);
-        Array.Copy(f.px, o.px, f.px.Length);
-        for (int y = 0; y < f.h * 55 / 100; y++)
-            for (int x = 0; x < f.w; x++)
-            {
-                if (!f.Solid(x, y)) continue;
-                int c = Rgb(f[x, y]);
-                bool edge = !f.Solid(x - 1, y) || !f.Solid(x + 1, y) || !f.Solid(x, y - 1) || !f.Solid(x, y + 1);
-                bool feature = (c == 0x000000 || c == 0x212121 || c == 0xFFFFFF || c == 0xF5F5F5) && !edge;
-                if (Skin.Contains(c) || feature) o[x, y] = Hair;
-            }
-        return o;
     }
 
     private static Img Rot90(Img f, bool clockwise)

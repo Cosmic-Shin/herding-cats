@@ -56,12 +56,14 @@ public class RewardMenu : MonoBehaviour
 
     private int anvilUses;
     private bool anvilSecondPick;
+    private int lastRow, lastCol; // which anvil button was used, so the second pick starts there
 
     public static void OpenAnvil() => I.queued.Enqueue(() =>
     {
         if (!I.Open()) return;
         I.anvilUses = PlayerSkills.Instance != null && PlayerSkills.Instance.LevelOf("blacksmith") >= 3 ? 2 : 1;
         I.anvilSecondPick = false;
+        I.lastRow = I.lastCol = 0;
         I.BuildAnvil();
         Sfx.Play(Sfx.Id.Clang, 0.5f, 0.8f);
     });
@@ -132,9 +134,12 @@ public class RewardMenu : MonoBehaviour
         float[] stopAt = { 0.9f, 1.2f, 1.5f };
         bool[] stopped = new bool[3];
         float t = 0f, nextFace = 0f;
+        bool skipped = false;
+        TextMeshProUGUI skipHint = RuntimeUI.Outline(RuntimeUI.Text(box, $"[{SkipLabel}] skip", 18, new Color(0.6f, 0.65f, 0.8f), new Vector2(0, -164), new Vector2(300, 30)));
         while (!stopped[2])
         {
             t += Time.unscaledDeltaTime;
+            if (!skipped && t > 0.1f && SkipPressed()) { skipped = true; t = stopAt[2]; } // stop every reel now
             bool flip = t >= nextFace;
             if (flip) nextFace = t + 0.07f;
             for (int i = 0; i < 3; i++)
@@ -153,9 +158,22 @@ public class RewardMenu : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSecondsRealtime(0.3f);
+        Destroy(skipHint.gameObject);
+        yield return new WaitForSecondsRealtime(skipped ? 0.15f : 0.3f); // short pause so the skip press can't also hit Continue
         Button ok = RuntimeUI.Button(box, "Continue", new Vector2(0, -164), new Vector2(220, 52), Close);
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(ok.gameObject);
+    }
+
+    private static string SkipLabel => GamepadUI.Connected ? Keybinds.PadLabel(UnityEngine.InputSystem.LowLevel.GamepadButton.South) : "Enter";
+
+    private static bool SkipPressed()
+    {
+        var k = UnityEngine.InputSystem.Keyboard.current;
+        var m = UnityEngine.InputSystem.Mouse.current;
+        return (k != null && (k.enterKey.wasPressedThisFrame || k.spaceKey.wasPressedThisFrame || k[Keybinds.Get(Keybinds.Action.Interact)].wasPressedThisFrame))
+            || (m != null && m.leftButton.wasPressedThisFrame)
+            || GamepadUI.Pressed(g => g.buttonSouth) || Keybinds.PadPressed(Keybinds.Action.Interact)
+            || (UnityEngine.InputSystem.Joystick.current != null && UnityEngine.InputSystem.Joystick.current.trigger.wasPressedThisFrame);
     }
 
     private (string, string) FullHeal()
@@ -210,7 +228,7 @@ public class RewardMenu : MonoBehaviour
         RuntimeUI.Text(box, "Level up a weapon, or enhance a maxed one (up to +5).", 20, new Color(0.8f, 0.84f, 0.95f),
                        new Vector2(0, top - 88), new Vector2(800, 30));
 
-        Button first = null;
+        var rowButtons = new List<List<Button>>();
         if (owned.Count == 0)
             RuntimeUI.Text(box, "No weapons yet.", 24, new Color(0.6f, 0.65f, 0.8f), new Vector2(0, top - 150), new Vector2(600, 40));
 
@@ -236,34 +254,43 @@ public class RewardMenu : MonoBehaviour
             RuntimeUI.Outline(RuntimeUI.Text(box, $"{PlayerWeapons.Find(id).name}\n<color=#FFD24A>{level}</color>", 22, Color.white,
                                              new Vector2(-180, y), new Vector2(280, rowHeight - 8), TextAlignmentOptions.MidlineLeft));
 
-            Button b = null;
+            var row = new List<Button>();
+            int r = i;
             if (!maxed)
             {
-                b = RuntimeUI.Button(box, "Level Up", new Vector2(230, y), new Vector2(300, 52), () => { weapons.LevelUp(PlayerWeapons.Find(id)); Done(id); });
+                row.Add(RuntimeUI.Button(box, "Level Up", new Vector2(230, y), new Vector2(300, 52), () => { weapons.LevelUp(PlayerWeapons.Find(id)); Done(id, r, 0); }));
             }
             else if (weapon.Enhance < Weapon.MaxEnhance)
             {
-                b = RuntimeUI.Button(box, "+DMG", new Vector2(120, y), new Vector2(120, 52), () => { weapon.AddEnhance(Weapon.Boost.Damage); Done(id); });
-                RuntimeUI.Button(box, "+AREA", new Vector2(240, y), new Vector2(120, 52), () => { weapon.AddEnhance(Weapon.Boost.Area); Done(id); });
-                RuntimeUI.Button(box, "+SPD", new Vector2(360, y), new Vector2(120, 52), () => { weapon.AddEnhance(Weapon.Boost.Speed); Done(id); });
+                row.Add(RuntimeUI.Button(box, "+DMG", new Vector2(120, y), new Vector2(120, 52), () => { weapon.AddEnhance(Weapon.Boost.Damage); Done(id, r, 0); }));
+                row.Add(RuntimeUI.Button(box, "+AREA", new Vector2(240, y), new Vector2(120, 52), () => { weapon.AddEnhance(Weapon.Boost.Area); Done(id, r, 1); }));
+                row.Add(RuntimeUI.Button(box, "+SPD", new Vector2(360, y), new Vector2(120, 52), () => { weapon.AddEnhance(Weapon.Boost.Speed); Done(id, r, 2); }));
             }
             else
             {
                 RuntimeUI.Text(box, "<color=#8890A8>Fully enhanced</color>", 22, Color.white, new Vector2(240, y), new Vector2(360, 40));
             }
-            if (first == null) first = b;
+            rowButtons.Add(row);
         }
+
+        // First pick: the top button. Second pick: the same row and button as before (or the nearest row that still has one).
+        Button focus = null;
+        for (int d = 0; d < rowButtons.Count && focus == null; d++)
+            foreach (int r in new[] { lastRow + d, lastRow - d })
+                if (r >= 0 && r < rowButtons.Count && rowButtons[r].Count > 0) { focus = rowButtons[r][Mathf.Min(lastCol, rowButtons[r].Count - 1)]; break; }
 
         Button notNow = RuntimeUI.Button(box, anvilSecondPick ? "Done" : "Not now", new Vector2(0, -height / 2f + 40f), new Vector2(200, 48), () =>
         {
             Close();
             if (!anvilSecondPick) Pickup.Spawn(Pickup.Kind.Anvil, (Vector2)stats.transform.position + Vector2.right * 2f);
         });
-        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject((first != null ? first : notNow).gameObject);
+        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject((focus != null ? focus : notNow).gameObject);
     }
 
-    private void Done(string id)
+    private void Done(string id, int row, int col)
     {
+        lastRow = row;
+        lastCol = col;
         Close();
         Sfx.Play(Sfx.Id.Clang, 0.9f);
         DamagePopup.SpawnText((Vector2)stats.transform.position + Vector2.up * 0.8f, $"{PlayerWeapons.Find(id).name.ToUpper()} UP!", new Color(0.85f, 0.88f, 0.95f), 5f);

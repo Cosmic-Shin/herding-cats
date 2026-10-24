@@ -38,6 +38,7 @@ public class Lighting : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        WeatherTint = Color.white;
         Mood = null;
     }
 
@@ -95,6 +96,21 @@ public class Lighting : MonoBehaviour
         }
     }
 
+    // A small point light for world things (lava, drones, fireflies). Off when the Lights setting is off.
+    public static Light2D MakeLight(string name, Transform parent, float radius, float intensity, Color color)
+    {
+        Light2D l = PointLight(name, parent);
+        l.pointLightOuterRadius = radius;
+        l.pointLightInnerRadius = radius * 0.15f;
+        l.intensity = intensity;
+        l.color = color;
+        l.enabled = Settings.Lights;
+        return l;
+    }
+
+    // Weather darkens/tints the daylight on top of whatever else is going on (1 = no change).
+    public static Color WeatherTint = Color.white;
+
     private static Light2D PointLight(string name, Transform parent)
     {
         var go = new GameObject(name);
@@ -139,11 +155,11 @@ public class Lighting : MonoBehaviour
 
         if (!EnemySpawner.Endless)
         {
-            if (global != null) global.color = Color.Lerp(global.color, Mood ?? ambientColor, Time.deltaTime * 2f);
+            if (global != null) global.color = Color.Lerp(global.color, (Mood ?? ambientColor) * WeatherTint, Time.deltaTime * 2f);
             return;
         }
         float k = Time.deltaTime * 0.6f;
-        if (global != null) global.color = Color.Lerp(global.color, endlessColor, k);
+        if (global != null) global.color = Color.Lerp(global.color, endlessColor * WeatherTint, k);
         if (cam != null) cam.backgroundColor = Color.Lerp(cam.backgroundColor, endlessSky, k);
     }
 }

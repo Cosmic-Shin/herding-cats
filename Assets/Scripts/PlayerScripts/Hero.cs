@@ -10,6 +10,7 @@ public static class Hero
     public class Def
     {
         public string id, name, blurb;
+        public string kit;               // the run-select screen: weapon, passives, special
         public string weapon = "bomb";   // icon of the main weapon
         public string iconPrefix;        // their skill icons, e.g. "kai_" -> Icons/kai_cluster
         public string maxPiece = "Max Bombs", upgradeKind = "Bomb upgrade";
@@ -22,10 +23,19 @@ public static class Hero
 
     public static readonly Def[] All =
     {
-        new Def { id = "Mira", name = "Mira", blurb = "Blade dancer: slashes close cats, and a bubble shield blocks a hit." },
+        new Def
+        {
+            id = "Mira", name = "Mira", blurb = "Blade dancer: slashes close cats, and a bubble shield blocks a hit.",
+            kit = Kit("Bombs: lobs bombs that stick to cats and blow up the crowd around them.",
+                      "Blade Dancer: slashes any cat that gets too close", "Weak Spot: extra-strong crits on slowed or stunned cats", "Bubble Shield: blocks a whole hit, then recharges",
+                      "SPECIAL: a burst of bombs all around her, then bigger, stronger bombs"),
+        },
         new Def
         {
             id = "Kai", name = "Kai", blurb = "Swordsman: a huge slab of a sword that stuns, executes, and cuts through dashes.",
+            kit = Kit("Greatsword: slow, huge wide cleaves that shove cats back. Strong up close.",
+                      "Heavy Blade: every hit stuns", "Execute: cats left under 15% HP die on the spot", "Dash Slash: dashing cuts through every cat in the way",
+                      "RAGE: a full spin, then faster, bigger swings that heal him on every hit"),
             weapon = "sword", iconPrefix = "kai_", maxPiece = "Max Swings", upgradeKind = "Sword upgrade",
             portraitDrop = 5f,
             stats = new[] { "Damage", "Attack speed", "Swings/attack", "Sword reach" },
@@ -71,6 +81,9 @@ public static class Hero
         new Def
         {
             id = "Nyx", name = "Nyx", blurb = "Hacker: drones that hack cats, mark targets and run exploits.",
+            kit = Kit("Drones: a swarm of zapper drones darts out at cats. She attacks from range.",
+                      "Hack: zapped cats sometimes freeze and zap their friends", "Mark Target: the toughest cat nearby takes +50% damage", "Backdoor: every 12th zap is a big guaranteed crit",
+                      "SYSTEM OVERRIDE: an EMP that hacks every cat on screen, then faster drones"),
             weapon = "drone", iconPrefix = "nyx_", maxPiece = "Max Drones", upgradeKind = "Drone upgrade",
             stats = new[] { "Damage", "Fire rate", "Drones", "Zap radius" },
             upgrades = new Dictionary<string, (string, string)>
@@ -113,6 +126,13 @@ public static class Hero
             },
         },
     };
+
+    private static string Kit(string weapon, string p1, string p2, string p3, string special)
+    {
+        int colon = special.IndexOf(':');
+        return $"<color=#FFB36B>WEAPON</color>  {weapon}\n\n<color=#7FE3FF>PASSIVES</color>\n- {p1}\n- {p2}\n- {p3}\n\n" +
+               $"<color=#FFD24A>{special.Substring(0, colon)}</color>  {special.Substring(colon + 2)}";
+    }
 
     public static int Index => Mathf.Clamp(PlayerPrefs.GetInt("hero", 0), 0, All.Length - 1);
     public static Def Current => All[Index];

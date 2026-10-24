@@ -64,6 +64,20 @@ public class EnemySpawner : MonoBehaviour
     private float lateFrom = float.PositiveInfinity;
     public void StartLateGame() => lateFrom = Mathf.Min(lateFrom, runTime);
 
+    [Header("Power steps: x enemy HP and damage at 10:00, and again when the 15:00 boss dies")]
+    public float powerStep = 1.2f;
+    public float firstStepTime = 600f;
+    private float stepMul = 1f;
+    private bool firstStepDone;
+
+    // Called by BossTimeline when the 15-min boss dies (silently: the super-combo banner shows then).
+    public void StepUp(string why)
+    {
+        stepMul *= powerStep;
+        BossTimeline timeline = FindFirstObjectByType<BossTimeline>();
+        if (timeline != null && why != null) timeline.Announce("THE CATS GROW STRONGER", why);
+    }
+
     public static float DamageScale { get; private set; } = 1f;
     public static float SpeedScale { get; private set; } = 1f;
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -75,9 +89,15 @@ public class EnemySpawner : MonoBehaviour
     public int endlessRingStart = 14;
     public int endlessRingPerMinute = 4;
     public int endlessRingMax = 36;
-    public int endlessMaxAlive = 160;
+    public int endlessMaxAlive = 500;
     public float endlessHealthStart = 1f;
     public float endlessHealthPerMinute = 0.4f;
+    [Tooltip("Regular waves keep spawning in endless, this many times faster (grows per minute, capped)")]
+    public float endlessHordeStart = 3f;
+    public float endlessHordePerMinute = 0.5f;
+    public float endlessHordeMax = 8f;
+    public int endlessBigCatRoom = 120; // regular cats stop at endlessMaxAlive minus this, so the big-cat rings still fit
+    public float endlessSpeedStart = 0.35f;
     public static bool Endless { get; private set; }
     private float endlessStart, endlessTimer;
 
@@ -177,7 +197,7 @@ public class EnemySpawner : MonoBehaviour
         int ring = Mathf.Min(endlessRingMax, endlessRingStart + Mathf.FloorToInt(minutes * endlessRingPerMinute));
         ring = Mathf.Min(ring, endlessMaxAlive - EnemyAI.AliveCount);
         float turn = Random.Range(0f, 360f);
-        float health = (endlessHealthStart + minutes * endlessHealthPerMinute) * endlessHealthMul;
+        float health = endlessHealthStart + minutes * endlessHealthPerMinute; // endlessHealthMul is already in HealthMultiplier
         for (int i = 0; i < ring; i++)
         {
             float angle = (turn + i * 360f / ring + Random.Range(-6f, 6f)) * Mathf.Deg2Rad;
@@ -280,8 +300,9 @@ public class EnemySpawner : MonoBehaviour
 
         runTime += Time.deltaTime;
         difficultyTimer += Time.deltaTime;
-        DamageScale = (1f + runTime / 60f * damageGrowthPerMinute) * difficulty * (1f + SurgeMinutes * surgeDamagePerMinute) * endlessDamageMul;
-        SpeedScale = Mathf.Min(maxSpeedScale, 1f + SurgeMinutes * surgeSpeedPerMinute + EndlessMinutes * endlessSpeedPerMinute);
+        if (!firstStepDone && runTime >= firstStepTime) { firstStepDone = true; StepUp("10 minutes in"); }
+        DamageScale = (1f + runTime / 60f * damageGrowthPerMinute) * difficulty * (1f + SurgeMinutes * surgeDamagePerMinute) * endlessDamageMul * stepMul;
+        SpeedScale = Mathf.Min(maxSpeedScale, 1f + SurgeMinutes * surgeSpeedPerMinute + (Endless ? endlessSpeedStart + EndlessMinutes * endlessSpeedPerMinute : 0f));
 
         if ((crateTimer -= Time.deltaTime) <= 0f)
         {
@@ -289,10 +310,11 @@ public class EnemySpawner : MonoBehaviour
             if (Crate.Count < maxCrates) SpawnCrate();
         }
 
-        if (Endless) { UpdateEndless(); return; }
+        if (Endless) UpdateEndless();
 
-        float lateBoost = LateBoost;
-        int cap = AliveCap;
+        // Endless (HoloCure style): a flood of regular cats on top of the big-cat rings.
+        float lateBoost = LateBoost * (Endless ? Mathf.Min(endlessHordeMax, endlessHordeStart + EndlessMinutes * endlessHordePerMinute) * endlessWaveRate : 1f);
+        int cap = Endless ? endlessMaxAlive - endlessBigCatRoom : AliveCap;
 
         if (difficultyTimer >= difficultyRampInterval)
         {
@@ -313,6 +335,8 @@ public class EnemySpawner : MonoBehaviour
                 SpawnEnemy(wave.enemyPrefab);
             }
         }
+
+        if (Endless) return; // timed minibosses, swarms, mice and events belong to the main run
 
         foreach (MiniBoss m in miniBosses)
         {
@@ -352,6 +376,11 @@ public class EnemySpawner : MonoBehaviour
             ai.contactRange *= m.scale;
             ai.sleepChance = 0f;
             ai.unstoppable = unstoppable;
+        }
+        if (unstoppable && boss.TryGetComponent(out EnemyHealth loot))
+        {
+            loot.dropsHoloBox = false; // endless rings spawn dozens; guaranteed chests/burgers flooded the map
+            loot.burgerDropChance = 0.02f;
         }
         if (boss.TryGetComponent(out EnemyHealth health))
         {
@@ -510,7 +539,7 @@ public class EnemySpawner : MonoBehaviour
     }
 
     public float HealthMultiplier => (1f + runTime / 60f * healthGrowthPerMinute + (runTime / 60f) * (runTime / 60f) * healthGrowthQuadratic) * difficulty
-                                    * (1f + SurgeMinutes * SurgeMinutes * surgeHealthQuadratic);
+                                    * (1f + SurgeMinutes * SurgeMinutes * surgeHealthQuadratic) * stepMul * endlessHealthMul;
 
     private void SpawnEnemy(GameObject prefab)
     {

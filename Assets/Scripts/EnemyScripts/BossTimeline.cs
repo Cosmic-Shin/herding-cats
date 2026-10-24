@@ -134,6 +134,7 @@ public class BossTimeline : MonoBehaviour
             if (superKeys[i] == null) { superKeys.RemoveAt(i); continue; }
             if (!superKeys[i].IsDead) continue;
             superKeys.RemoveAt(i);
+            FindFirstObjectByType<EnemySpawner>()?.StepUp(null);
             PlayerCollabs.UnlockSupers();
             Announce("SUPER COMBINES", $"unlocked: fuse two combos with {Keybinds.Prompt(Keybinds.Action.Combine)}");
         }

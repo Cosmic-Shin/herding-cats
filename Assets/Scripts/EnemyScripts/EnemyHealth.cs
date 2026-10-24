@@ -34,7 +34,8 @@ public class EnemyHealth : MonoBehaviour, IPoolable
     public static int EliteKills { get; private set; }
     public static int GoldenKills { get; private set; }
     public static int KillScore { get; private set; }
-    public static void ResetRunCounters() { Kills = BossKills = EliteKills = GoldenKills = KillScore = PlayerHealth.Hits = RewardMenu.ChestsOpened = 0; DamageStats.Reset(); }
+    public static void ResetRunCounters() { Kills = BossKills = EliteKills = GoldenKills = KillScore = PlayerHealth.Hits = RewardMenu.ChestsOpened = 0; DamageStats.Reset();
+        Burger.DropChanceMultiplier = Pickup.AnvilChanceMultiplier = 1f; MarkMultiplier = 1.5f; }
     private static float nextBossHitStop, nextHeavyHit;
 
     private const int MaxGemsOnField = 250;
@@ -233,8 +234,8 @@ public class EnemyHealth : MonoBehaviour, IPoolable
         }
     }
 
-    private const float EliteChestChance = 0.04f;
-    public const int MaxRandomChests = 3;
+    private const float EliteChestChance = 0.02f;
+    public const int MaxRandomChests = Pickup.MaxHoloBoxes;
 
     private void EliteDeath()
     {
@@ -328,7 +329,7 @@ public class EnemyHealth : MonoBehaviour, IPoolable
             else SpawnGemShower();
         }
 
-        if (Random.value < burgerDropChance * Burger.DropChanceMultiplier)
+        if (Random.value < burgerDropChance * Burger.DropChanceMultiplier * (burgerDropChance >= 1f ? 1f : Burger.DropRateScale))
         {
             Burger.Spawn((Vector2)transform.position + Random.insideUnitCircle * 0.3f);
         }

@@ -40,12 +40,11 @@ public class Crate : MonoBehaviour
 
         float r = Random.value;
         if (Random.value < (Pickup.AnvilChanceMultiplier - 1f) * 0.05f) Pickup.Spawn(Pickup.Kind.Anvil, pos);
-        else if (r < 0.5f) Burger.Spawn(pos);
-        else if (r < 0.65f) Pickup.Spawn(Pickup.Kind.Magnet, pos);
-        else if (r < 0.8f) Pickup.Spawn(Pickup.Kind.Speed, pos);
-        else if (r < 0.92f) Pickup.Spawn(Pickup.Kind.Bomb, pos);
-        else if (Pickup.HoloBoxCount < EnemyHealth.MaxRandomChests) Pickup.Spawn(Pickup.Kind.HoloBox, pos);
-        else Burger.Spawn(pos);
+        else if (r < 0.3f) Burger.Spawn(pos);
+        else if (r < 0.52f) Pickup.Spawn(Pickup.Kind.Magnet, pos);
+        else if (r < 0.74f) Pickup.Spawn(Pickup.Kind.Speed, pos);
+        else if (r < 0.96f || Pickup.HoloBoxCount >= Pickup.MaxHoloBoxes) Pickup.Spawn(Pickup.Kind.Bomb, pos);
+        else Pickup.Spawn(Pickup.Kind.HoloBox, pos);
 
         Destroy(gameObject);
     }

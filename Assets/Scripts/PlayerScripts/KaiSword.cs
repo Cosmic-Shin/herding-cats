@@ -18,7 +18,7 @@ public class KaiSword : MonoBehaviour
     public float followUpDamage = 0.85f; // the extra swings
     public float push = 6f; // heavy, but not so far he knocks cats out of his own reach
 
-    private static readonly Color Edge = new Color(1f, 0.95f, 0.9f), Ghost = new Color(0.75f, 0.78f, 0.9f, 0.5f), Ember = new Color(1f, 0.35f, 0.2f);
+    private static readonly Color Edge = new Color(1f, 0.95f, 0.9f), Ember = new Color(1f, 0.35f, 0.2f);
     private static readonly List<Collider2D> hits = new List<Collider2D>(64), near = new List<Collider2D>(64);
     private static Sprite bladeSprite;
     private static float nextHitStop, nextExecutePopup;
@@ -29,7 +29,7 @@ public class KaiSword : MonoBehaviour
     private PlayerUltimate ult;
     private PlayerSkills skills;
     private SpriteRenderer blade;
-    private TrailRenderer trail, core; // ribbon left by the upper blade as it sweeps, plus a bright edge line at the tip
+    private bool sweeping; // blade mid-sweep (the smear follows it); otherwise the smear fades out
     private float timer, restAngle = 225f, echo, spinLeft, spinAngle;
     private bool swinging;
     private static readonly Color EchoBlue = new Color(0.55f, 0.8f, 1f), CritGold = new Color(1f, 0.85f, 0.35f), Steel = new Color(0.85f, 0.9f, 1f);
@@ -48,20 +48,96 @@ public class KaiSword : MonoBehaviour
         blade = new GameObject("Greatsword").AddComponent<SpriteRenderer>();
         blade.sprite = BladeSprite;
         // Blade runs ~2.5 units up from the grip at 1x; the ribbon covers its upper half.
-        trail = HeroFx.Trail(blade.transform, new Vector3(0f, 1.85f, 0f), 1.3f, Steel, 0.12f, 71);
-        core = HeroFx.Trail(blade.transform, new Vector3(0f, 2.45f, 0f), 0.22f, Color.white, 0.09f, 73);
+        BuildSmear();
     }
 
-    private void Ribbon(bool on, Color color)
+    // ---- Swing smear: a smooth curved slash drawn behind the blade, brightest along the cutting edge,
+    // fading toward the hilt and toward the tail of the swing. Rebuilt every frame from the blade's angle,
+    // so it stays round however few frames the swing gets (a TrailRenderer came out jagged).
+    private const int SmearSegments = 28;
+    private static readonly float[] SmearRadius = { 0.28f, 0.72f, 0.93f, 1f, 1.06f };    // fraction of reach
+    private static readonly float[] SmearAlpha = { 0f, 0.28f, 0.75f, 1f, 0f };           // soft inside, bright rim, soft outer edge
+    private static readonly float[] SmearWhite = { 0f, 0.1f, 0.45f, 0.85f, 0.85f };      // how far toward white each ring is
+    private Mesh smear;
+    private MeshRenderer smearRenderer;
+    private Vector3[] smearVerts;
+    private Color[] smearColors;
+    private Color smearColor = Steel;
+    private float smearTail, smearTip, smearFade; // angles (degrees) and the leftover fade after a swing ends
+
+    private void BuildSmear()
     {
-        if (trail == null) return;
-        if (on && !trail.emitting) trail.Clear();
-        trail.colorGradient = HeroFx.Fade(color);
-        trail.widthMultiplier = 1.3f * Reach / reach;
-        trail.emitting = on;
-        if (on && !core.emitting) core.Clear();
-        core.widthMultiplier = 0.22f * Reach / reach;
-        core.emitting = on;
+        var go = new GameObject("SwingSmear");
+        smear = new Mesh { name = "SwingSmear" };
+        smear.MarkDynamic();
+        int rings = SmearRadius.Length, n = (SmearSegments + 1) * rings;
+        smearVerts = new Vector3[n];
+        smearColors = new Color[n];
+        var tris = new int[SmearSegments * (rings - 1) * 6];
+        int t = 0;
+        for (int s = 0; s < SmearSegments; s++)
+            for (int j = 0; j < rings - 1; j++)
+            {
+                int a = s * rings + j, b = a + rings;
+                tris[t++] = a; tris[t++] = b; tris[t++] = a + 1;
+                tris[t++] = a + 1; tris[t++] = b; tris[t++] = b + 1;
+            }
+        smear.vertices = smearVerts;
+        smear.colors = smearColors;
+        smear.triangles = tris;
+        go.AddComponent<MeshFilter>().sharedMesh = smear;
+        smearRenderer = go.AddComponent<MeshRenderer>();
+        Lighting.Glow(smearRenderer);
+        smearRenderer.sortingOrder = 71;
+        smearRenderer.enabled = false;
+    }
+
+    // Draw the smear from `tail` to `tip` (blade angles, degrees) around Kai; `alpha` fades the whole thing.
+    private void DrawSmear(float tail, float tip, float alpha)
+    {
+        if (smear == null) return;
+        smearRenderer.enabled = alpha > 0.01f;
+        if (!smearRenderer.enabled) return;
+        Vector2 pos = transform.position;
+        float r = Reach, a = alpha * Settings.EffectAlpha;
+        int rings = SmearRadius.Length;
+        for (int s = 0; s <= SmearSegments; s++)
+        {
+            float k = s / (float)SmearSegments; // 0 = tail, 1 = at the blade
+            float ang = Mathf.Lerp(tail, tip, k) * Mathf.Deg2Rad;
+            Vector2 d = new Vector2(Mathf.Cos(ang), Mathf.Sin(ang));
+            float along = k * k * (3f - 2f * k); // tail fades in smoothly
+            for (int j = 0; j < rings; j++)
+            {
+                int i = s * rings + j;
+                smearVerts[i] = pos + d * r * SmearRadius[j];
+                Color c = Color.Lerp(smearColor, Color.white, SmearWhite[j]);
+                c.a = SmearAlpha[j] * along * a;
+                smearColors[i] = c;
+            }
+        }
+        smear.vertices = smearVerts;
+        smear.colors = smearColors;
+        smear.RecalculateBounds();
+    }
+
+    // While sweeping: the tail lags behind the blade, so it reads as a crescent rather than a full fan.
+    private void SmearSweep(float from, float to, float k, Color color)
+    {
+        smearColor = color;
+        smearTail = Mathf.Lerp(from, to, Mathf.Max(0f, k - 0.55f));
+        smearTip = Mathf.Lerp(from, to, k);
+        smearFade = 1f;
+        DrawSmear(smearTail, smearTip, 1f);
+    }
+
+    // After the swing: the tail catches up to the blade and the smear fades out quickly.
+    private void SmearFadeOut()
+    {
+        if (smearFade <= 0f) return;
+        smearFade = Mathf.Max(0f, smearFade - Time.deltaTime / 0.12f);
+        smearTail = Mathf.Lerp(smearTail, smearTip, Time.deltaTime * 18f);
+        DrawSmear(smearTail, smearTip, smearFade * smearFade);
     }
 
     private void OnEnable()
@@ -74,7 +150,9 @@ public class KaiSword : MonoBehaviour
     {
         if (Active == this) Active = null;
         if (blade != null) blade.enabled = false;
-        if (trail != null) { trail.emitting = false; core.emitting = false; }
+        smearFade = 0f;
+        sweeping = false;
+        if (smearRenderer != null) smearRenderer.enabled = false;
         StopAllCoroutines();
         swinging = false;
     }
@@ -82,6 +160,7 @@ public class KaiSword : MonoBehaviour
     private void OnDestroy()
     {
         if (blade != null) Destroy(blade.gameObject);
+        if (smearRenderer != null) Destroy(smearRenderer.gameObject);
     }
 
     private void Update()
@@ -97,6 +176,7 @@ public class KaiSword : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (!sweeping) SmearFadeOut();
         if (swinging) return;
         Vector2 pos = transform.position;
         if (spinLeft > 0f)
@@ -104,7 +184,7 @@ public class KaiSword : MonoBehaviour
             spinLeft -= Time.deltaTime;
             spinAngle -= 1400f * Time.deltaTime;
             SetBlade(pos, spinAngle, 72);
-            Ribbon(spinLeft > 0f, Steel);
+            if (spinLeft > 0f) { smearColor = Steel; smearTip = spinAngle; smearTail = spinAngle + 230f; smearFade = 1f; DrawSmear(smearTail, smearTip, 1f); }
             return;
         }
         // Resting on his back: hilt over the shoulder, blade hanging down behind him.
@@ -165,7 +245,8 @@ public class KaiSword : MonoBehaviour
             yield return null;
         }
         Sfx.Play(Sfx.Id.Whoosh, 0.55f, isEcho ? 1.1f : 0.75f);
-        Ribbon(true, isEcho ? EchoBlue : ult != null && ult.IsActive ? PlayerUltimate.RageRed : Steel);
+        Color slash = isEcho ? EchoBlue : ult != null && ult.IsActive ? PlayerUltimate.RageRed : Steel;
+        sweeping = true;
         struck.Clear();
         biteSum = Vector2.zero;
         float prevK = 0f;
@@ -174,14 +255,15 @@ public class KaiSword : MonoBehaviour
             float k = 1f - Mathf.Pow(1f - t / sweep, 3f);
             // Plain Lerp, not LerpAngle: the arc is over 180°, and LerpAngle would take the short way round (behind him).
             SetBlade(transform.position, Mathf.Lerp(from, to, k), 72);
-            if (!Settings.LowParticles && Time.frameCount % 2 == 0) AfterImage.Spawn(blade, isEcho ? new Color(0.6f, 0.85f, 1f, 0.4f) : Ghost);
+            SmearSweep(from, to, k, slash);
             Cut(center, from, to, prevK, k, damageMult, isEcho);
             prevK = k;
             yield return null;
         }
         Cut(center, from, to, prevK, 1f, damageMult, isEcho);
         SwingEnd(dir, damageMult, isEcho);
-        Ribbon(false, Steel);
+        SmearSweep(from, to, 1f, slash);
+        sweeping = false;
         if (anim != null) anim.Squash(new Vector2(1.2f, 0.85f), 0.15f);
         for (float t = 0f; t < 0.06f / pace; t += Time.deltaTime) yield return null; // brief recovery, blade held at the end
     }

@@ -5760,14 +5760,21 @@ MonoBehaviour:
   surgeSpeedPerMinute: 0.05
   endlessSpeedPerMinute: 0.12
   maxSpeedScale: 2.2
+  powerStep: 1.2
+  firstStepTime: 600
   endlessWaveInterval: 1.5
   endlessMinWaveInterval: 0.5
   endlessRingStart: 24
   endlessRingPerMinute: 8
   endlessRingMax: 60
-  endlessMaxAlive: 260
+  endlessMaxAlive: 500
   endlessHealthStart: 1
   endlessHealthPerMinute: 1.2
+  endlessHordeStart: 3
+  endlessHordePerMinute: 0.5
+  endlessHordeMax: 8
+  endlessBigCatRoom: 120
+  endlessSpeedStart: 0.35
   milestoneMinutes: 5
   miniBosses:
   - time: 90

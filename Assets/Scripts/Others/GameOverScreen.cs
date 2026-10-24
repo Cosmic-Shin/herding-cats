@@ -45,6 +45,7 @@ public class GameOverScreen : MonoBehaviour
         Juice.CancelHitStop();
         Time.timeScale = 0.3f;
         Juice.Flash(new Color(1f, 0.2f, 0.15f, 0.5f), 0.6f);
+        if (stats != null) SceneFade.FocusOn(stats.transform.position, 0.75f, slowMoTime); // the paw closes in around the fallen hero
         yield return new WaitForSecondsRealtime(slowMoTime);
         Time.timeScale = 0f;
 
@@ -246,6 +247,6 @@ public class GameOverScreen : MonoBehaviour
     private static void Restart()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneFade.Reload();
     }
 }

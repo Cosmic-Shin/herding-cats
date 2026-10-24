@@ -20,7 +20,7 @@ public class MainMenu : MonoBehaviour
     {
         Started = false;
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneFade.Reload(); // paw wipe closes, reloads, opens
     }
 
     private const int RowsPerPage = 10, Pages = Leaderboard.Size / RowsPerPage, BuildIcons = PlayerWeapons.MaxWeapons + PlayerSkills.MaxSkills;
@@ -64,6 +64,7 @@ public class MainMenu : MonoBehaviour
         IsOpen = true;
         Time.timeScale = 0f;
         Build();
+        if (autoStart) { autoStart = false; TryStart(true); } // came back from a reload for the chosen map (still behind the wipe)
     }
 
     private void Update()
@@ -73,7 +74,7 @@ public class MainMenu : MonoBehaviour
         if (!IsOpen) return;
         Time.timeScale = 0f;
         if (!Started) HideGameUi();
-        if (preview != null) preview.gameObject.SetActive(mainPage != null && mainPage.activeSelf && !Settings.IsOpen);
+        if (preview != null) preview.gameObject.SetActive(selectPage != null && selectPage.activeSelf && !Settings.IsOpen);
 
         if (mainPage != null && mainPage.activeSelf && !Settings.IsOpen && nameField.isFocused &&
             (GamepadUI.Move().sqrMagnitude > 0.25f || GamepadUI.Pressed(g => g.buttonSouth)))
@@ -88,12 +89,12 @@ public class MainMenu : MonoBehaviour
         bool back = (kb != null && kb.escapeKey.wasPressedThisFrame) || GamepadUI.Back;
         if (Settings.IsOpen) { if (back && !Settings.Busy) Settings.Back(); return; }
         if ((achPage != null && achPage.activeSelf) || (creditsPage != null && creditsPage.activeSelf)) { if (back) ShowMain(); return; }
+        if (selectPage != null && selectPage.activeSelf && back) { ShowMain(); return; }
         if (!boardPage.activeSelf)
         {
             // Left/right on the hero or map row flips through the options (click/A goes forward).
             GameObject sel = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
-            int step = (kb != null && kb.leftArrowKey.wasPressedThisFrame) || GamepadUI.Pressed(g => g.dpad.left) ? -1
-                     : (kb != null && kb.rightArrowKey.wasPressedThisFrame) || GamepadUI.Pressed(g => g.dpad.right) ? 1 : 0;
+            int step = GamepadUI.NavX;
             if (step != 0 && heroButton != null && sel == heroButton.gameObject) CycleHero(step);
             else if (step != 0 && mapButton != null && sel == mapButton.gameObject) CycleMap(step);
             return;
@@ -101,12 +102,11 @@ public class MainMenu : MonoBehaviour
         if (back) { boardBack(); return; }
         // Left/right on a filter button changes the filter; otherwise it turns the page.
         GameObject selected = EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
-        int dir = (kb != null && kb.leftArrowKey.wasPressedThisFrame) || GamepadUI.Pressed(g => g.dpad.left) ? -1
-                : (kb != null && kb.rightArrowKey.wasPressedThisFrame) || GamepadUI.Pressed(g => g.dpad.right) ? 1 : 0;
+        int dir = GamepadUI.NavX;
         if (dir != 0 && heroFilterButton != null && selected == heroFilterButton.gameObject) CycleFilter(ref heroFilter, Hero.All.Length, dir);
         else if (dir != 0 && mapFilterButton != null && selected == mapFilterButton.gameObject) CycleFilter(ref mapFilter, MapGenerator.Names.Length, dir);
-        else if ((kb != null && kb.leftArrowKey.wasPressedThisFrame) || GamepadUI.Pressed(g => g.leftShoulder)) SetPage(page - 1);
-        else if ((kb != null && kb.rightArrowKey.wasPressedThisFrame) || GamepadUI.Pressed(g => g.rightShoulder)) SetPage(page + 1);
+        else if (dir < 0 || GamepadUI.Pressed(g => g.leftShoulder)) SetPage(page - 1);
+        else if (dir > 0 || GamepadUI.Pressed(g => g.rightShoulder)) SetPage(page + 1);
     }
 
     // Leaderboard filters: -1 = all, otherwise an index into Hero.All / MapGenerator.Names.
@@ -167,6 +167,7 @@ public class MainMenu : MonoBehaviour
         BuildBoard(canvas.transform);
         BuildAchievements(canvas.transform);
         BuildCredits(canvas.transform);
+        BuildSelect(canvas.transform);
         ShowMain();
     }
 
@@ -179,23 +180,24 @@ public class MainMenu : MonoBehaviour
         version.anchoredPosition = new Vector2(-14f, 8f);
 
         Transform list = mainPage.transform;
-        Backdrop(list, new Vector2(0, 66), new Vector2(800, 112));
-        heroButton = TextButton(list, "Hero", 100, () => CycleHero(1), size: 26f);
-        mapButton = TextButton(list, "Map", 62, () => CycleMap(1), size: 26f);
-        mapButton.GetComponent<TextMeshProUGUI>().text = $"<  MAP: {MapGenerator.Names[MapGenerator.Choice].ToUpper()}  >";
-        heroBlurb = RuntimeUI.Outline(RuntimeUI.Text(list, "", 16, new Color(0.79f, 0.82f, 0.94f), new Vector2(0, 30), new Vector2(760, 24)));
-        CycleHero(0);
         nameLabel = RuntimeUI.Outline(RuntimeUI.Text(list, "NAME:", 30, ItemColor, new Vector2(-110, -5), new Vector2(160, 44), TextAlignmentOptions.MidlineRight));
         nameField = NameField(list, new Vector2(100, -5), new Vector2(240, 44));
         nameHint = RuntimeUI.Outline(RuntimeUI.Text(list, "", 16, new Color(1f, 0.45f, 0.4f), new Vector2(0, -35), new Vector2(480, 22)));
 
-        startButton = TextButton(list, "Start", -80, TryStart);
-        TextButton(list, "Leaderboard", -126, ShowBoard);
+        startButton = TextButton(list, "Start", -80, ShowSelect);
+        Button board = TextButton(list, "Leaderboard", -126, ShowBoard);
         TextButton(list, "Achievements", -172, ShowAchievements);
         Button settings = null;
         settings = TextButton(list, "Settings", -218, () => Settings.Open(settings.gameObject));
         TextButton(list, "Credits", -264, ShowCredits);
+#if !UNITY_WEBGL || UNITY_EDITOR
         TextButton(list, "Quit", -310, Quit);
+#endif
+        // The name field sits off-center, so automatic nav skipped Start.
+        Navigation startNav = startButton.navigation; startNav.mode = Navigation.Mode.Explicit;
+        startNav.selectOnUp = nameField; startNav.selectOnDown = board;
+        startButton.navigation = startNav;
+        RuntimeUI.Nav(nameField, down: startButton);
 
         nameField.text = PlayerName != "" ? PlayerName : PlayerPrefs.GetString("playerName", "");
         Validate();
@@ -225,30 +227,108 @@ public class MainMenu : MonoBehaviour
         rt.sizeDelta = size;
         return rt;
     }
-    private TextMeshProUGUI nameLabel, heroBlurb;
-    private Button heroButton, mapButton;
-    private HeroPreview preview;
-    private static bool reselectMap;
+    private TextMeshProUGUI nameLabel;
 
-    // The map is built when the scene loads, so switching reloads the scene (the menu backdrop shows the new map).
-    private void CycleMap(int step)
+    // ---- Run select: Start opens this; pick a hero and a map, read what they do, then Play. ----
+    private GameObject selectPage;
+    private Button heroButton, mapButton, playButton;
+    private TextMeshProUGUI heroText, mapText;
+    private Image mapSwatch, previewFrame;
+    private MapPreviewUI mapPreview;
+    private HeroPreview preview;
+    private int pendingMap;
+    private static bool autoStart; // set when Play has to reload the scene for a different map
+
+    private static readonly Color[] MapSwatches = { new Color(0.45f, 0.75f, 0.35f), new Color(0.75f, 0.88f, 1f), new Color(0.95f, 0.4f, 0.12f) };
+
+    private void BuildSelect(Transform parent)
     {
-        int n = MapGenerator.Names.Length;
-        PlayerPrefs.SetInt("map", ((MapGenerator.Choice + step) % n + n) % n);
+        selectPage = Page(parent, "Select");
+        RectTransform panel = Container(selectPage.transform, new Vector2(1200, 680));
+        BuildTitle(panel, "CHOOSE YOUR RUN", 56f, 296f);
+
+        // Left: hero. The animated preview stands in the open gap between the name and the text
+        // (it's drawn in the world, so a backdrop over it would darken it).
+        Backdrop(panel, new Vector2(-305, 215), new Vector2(570, 60), 0.85f);
+        heroButton = TextButton(panel, "Hero", 215, () => CycleHero(1), -305, 30);
+        Backdrop(panel, new Vector2(-305, -150), new Vector2(570, 260), 0.85f);
+        heroText = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 17, Color.white, new Vector2(-305, -150), new Vector2(540, 244), TextAlignmentOptions.TopLeft));
+        heroText.textWrappingMode = TextWrappingModes.Normal;
+        heroText.enableAutoSizing = true;
+        heroText.fontSizeMin = 12;
+        heroText.fontSizeMax = 17;
+
+        // Right: map.
+        Backdrop(panel, new Vector2(305, -20), new Vector2(570, 530), 0.85f);
+        mapButton = TextButton(panel, "Map", 215, () => CycleMap(1), 305, 30);
+        mapSwatch = RuntimeUI.Box(panel, "Accent", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Color.white);
+        mapSwatch.rectTransform.anchoredPosition = new Vector2(305, 180);
+        mapSwatch.rectTransform.sizeDelta = new Vector2(420, 5);
+        mapSwatch.raycastTarget = false;
+        mapText = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 21, Color.white, new Vector2(305, 20), new Vector2(510, 280), TextAlignmentOptions.Top));
+        mapText.textWrappingMode = TextWrappingModes.Normal;
+        mapText.lineSpacing = 12f;
+        previewFrame = RuntimeUI.Box(panel, "PreviewFrame", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Color.white);
+        previewFrame.rectTransform.anchoredPosition = new Vector2(305, -190);
+        previewFrame.rectTransform.sizeDelta = new Vector2(506, 136);
+        previewFrame.raycastTarget = false;
+        mapPreview = MapPreviewUI.Create(panel, new Vector2(305, -190), new Vector2(500, 130));
+
+        playButton = TextButton(panel, "Play", -310, Play, 0, 38);
+        Button back = TextButton(panel, "Back", -310, ShowMain, -480, 26);
+        // Left/right on Hero/Map changes them, so the cursor only moves up/down: Hero -> Map -> Play.
+        RuntimeUI.Nav(heroButton, up: playButton, down: mapButton);
+        RuntimeUI.Nav(mapButton, up: heroButton, down: playButton);
+        RuntimeUI.Nav(playButton, up: mapButton, down: heroButton, left: back);
+        RuntimeUI.Nav(back, up: mapButton, down: heroButton, right: playButton);
+        RuntimeUI.Outline(RuntimeUI.Text(panel, $"<- / -> on a row to change it\nEsc / {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.East)} back", 16, Faint, new Vector2(450, -310), new Vector2(320, 44)));
+    }
+
+    // Start: check the name, then on to picking the hero and map.
+    private void ShowSelect()
+    {
+        Validate();
+        if (!startButton.interactable) return;
+        PlayerName = TypedName;
+        PlayerPrefs.SetString("playerName", PlayerName);
         PlayerPrefs.Save();
-        if (TypedName != "") PlayerName = TypedName; // keep an unsaved name across the reload
-        reselectMap = true;
-        Sfx.Play(Sfx.Id.Click, 0.5f);
-        BackToMenu();
+        mainPage.SetActive(false);
+        selectPage.SetActive(true);
+        pendingMap = MapGenerator.Choice;
+        CycleHero(0);
+        CycleMap(0);
+        Select(playButton.gameObject);
     }
 
     private void CycleHero(int step)
     {
         if (step != 0) { Hero.Cycle(step); Sfx.Play(Sfx.Id.Click, 0.5f); }
-        heroButton.GetComponent<TextMeshProUGUI>().text = $"<  HERO: {Hero.Current.name.ToUpper()}  >";
-        heroBlurb.text = Hero.Current.blurb;
+        heroButton.GetComponent<TextMeshProUGUI>().text = $"<  {Hero.Current.name.ToUpper()}  >";
+        heroText.text = $"<color=#C9D2F0>{Hero.Current.blurb}</color>\n\n{Hero.Current.kit}";
         if (preview == null) preview = HeroPreview.Create();
+        preview.screen = new Vector2(-0.48f, 0.2f); // in the open gap of the left panel, under the hero name
         preview.Show(Hero.Current.id);
+    }
+
+    // Just a choice here; the map is built when the scene loads, so Play reloads first if it changed.
+    private void CycleMap(int step)
+    {
+        int n = MapGenerator.Names.Length;
+        pendingMap = ((pendingMap + step) % n + n) % n;
+        if (step != 0) Sfx.Play(Sfx.Id.Click, 0.5f);
+        mapButton.GetComponent<TextMeshProUGUI>().text = $"<  {MapGenerator.Names[pendingMap].ToUpper()}  >";
+        mapText.text = MapGenerator.Blurbs[pendingMap];
+        mapSwatch.color = MapSwatches[pendingMap];
+        previewFrame.color = MapSwatches[pendingMap];
+        mapPreview.Show(pendingMap);
+    }
+
+    private void Play()
+    {
+        PlayerPrefs.SetInt("map", pendingMap);
+        PlayerPrefs.Save();
+        if (pendingMap != MapGenerator.Biome) { autoStart = true; BackToMenu(); return; } // rebuild the world for that map, then go
+        SceneFade.Close(() => { TryStart(true); SceneFade.Open(); }); // paw wipe into the run
     }
 
     private static Button TextButton(Transform parent, string label, float y, UnityEngine.Events.UnityAction onClick, float x = 0f, float size = 32f) =>
@@ -293,7 +373,7 @@ public class MainMenu : MonoBehaviour
         nameHint.text = ok ? "" : blocked ? "Please pick a different name" : "A name is required to start";
     }
 
-    private void TryStart()
+    private void TryStart(bool instant = false)
     {
         Validate();
         if (!startButton.interactable) return;
@@ -307,7 +387,8 @@ public class MainMenu : MonoBehaviour
         foreach (Canvas c in hiddenUi) if (c != null) c.enabled = true;
         hiddenUi.Clear();
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
-        StartCoroutine(FadeOut());
+        if (instant) { Destroy(root); root = null; } // hidden behind the paw wipe: just go
+        else StartCoroutine(FadeOut());
     }
 
     private System.Collections.IEnumerator FadeOut()
@@ -331,7 +412,7 @@ public class MainMenu : MonoBehaviour
     {
         foreach (Canvas c in FindObjectsByType<Canvas>(FindObjectsSortMode.None))
         {
-            if (!c.isRootCanvas || !c.enabled || c.gameObject == root || c.GetComponentInParent<Settings>() != null || c.GetComponentInParent<ClickFx>() != null || c.GetComponentInParent<GamepadUI>() != null) continue;
+            if (!c.isRootCanvas || !c.enabled || c.gameObject == root || c.GetComponentInParent<Settings>() != null || c.GetComponentInParent<ClickFx>() != null || c.GetComponentInParent<GamepadUI>() != null || c.GetComponent<SceneFade>() != null) continue;
             c.enabled = false;
             hiddenUi.Add(c);
         }
@@ -378,7 +459,7 @@ public class MainMenu : MonoBehaviour
         boardPage.SetActive(false);
         achPage.SetActive(false);
         creditsPage.SetActive(false);
-        if (reselectMap) { reselectMap = false; Select(mapButton.gameObject); return; }
+        if (selectPage != null) selectPage.SetActive(false);
         Select(nameField.gameObject);
         if (TypedName == "") nameField.ActivateInputField(); // first run: let them type straight away
     }
@@ -476,10 +557,18 @@ public class MainMenu : MonoBehaviour
 
     private void SetPage(int p)
     {
-        page = Mathf.Clamp(p, 0, Pages - 1);
-        pageText.text = $"Page {page + 1} / {Pages}";
+        int pages = Mathf.Clamp((entries.Count + RowsPerPage - 1) / RowsPerPage, 1, Pages);
+        page = Mathf.Clamp(p, 0, pages - 1);
+        pageText.text = $"Page {page + 1} / {pages}";
         SetEnabled(prevButton, page > 0);
-        SetEnabled(nextButton, page < Pages - 1);
+        SetEnabled(nextButton, page < pages - 1);
+        // Left/right turns pages (or changes a filter), so the cursor only moves up/down: filters, Next, Prev, Back.
+        var chain = new List<Selectable> { heroFilterButton, mapFilterButton };
+        if (nextButton.interactable) chain.Add(nextButton);
+        if (prevButton.interactable) chain.Add(prevButton);
+        chain.Add(backLabel.GetComponent<Button>());
+        for (int i = 0; i < chain.Count; i++)
+            RuntimeUI.Nav(chain[i], up: i > 0 ? chain[i - 1] : null, down: i < chain.Count - 1 ? chain[i + 1] : null);
 
         for (int i = 0; i < RowsPerPage; i++)
         {

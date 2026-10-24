@@ -26,6 +26,7 @@ public class ExplosionFx : MonoBehaviour
 
     public static void Spawn(Vector2 pos, float radius, Color? tint = null, int order = 50)
     {
+        if (radius >= 1f) MapGenerator.Nudge(pos, radius, 0.8f); // blasts rattle nearby bushes and trees
         if (tint != null)
         {
             Layer(pos, radius * 2f, GetCircle(), tint, 0.25f, 0.8f, order);

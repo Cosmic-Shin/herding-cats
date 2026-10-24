@@ -28,6 +28,14 @@ public static class Leaderboard
 
     private static string FilePath => Path.Combine(Application.persistentDataPath, "leaderboard.json");
 
+#if UNITY_WEBGL && !UNITY_EDITOR
+    private static string ReadLocal() => PlayerPrefs.GetString("leaderboard_json", "");
+    private static void WriteLocal(string json) { PlayerPrefs.SetString("leaderboard_json", json); PlayerPrefs.Save(); }
+#else
+    private static string ReadLocal() => File.Exists(FilePath) ? File.ReadAllText(FilePath) : "";
+    private static void WriteLocal(string json) => File.WriteAllText(FilePath, json);
+#endif
+
     private static string deviceId;
     public static string DeviceId
     {
@@ -91,7 +99,8 @@ public static class Leaderboard
     {
         try
         {
-            if (File.Exists(FilePath)) return JsonUtility.FromJson<Data>(File.ReadAllText(FilePath))?.entries ?? new List<Entry>();
+            string json = ReadLocal();
+            if (!string.IsNullOrEmpty(json)) return JsonUtility.FromJson<Data>(json)?.entries ?? new List<Entry>();
         }
         catch (Exception e) { Debug.LogWarning("Leaderboard unreadable, starting fresh: " + e.Message); }
         return new List<Entry>();
@@ -102,7 +111,7 @@ public static class Leaderboard
         List<Entry> list = LoadLocal();
         list.Add(entry);
         int rank = Insert(list, entry);
-        try { File.WriteAllText(FilePath, JsonUtility.ToJson(new Data { entries = list })); }
+        try { WriteLocal(JsonUtility.ToJson(new Data { entries = list })); }
         catch (Exception e) { Debug.LogWarning("Leaderboard not saved: " + e.Message); }
 
         _ = Upload(entry);

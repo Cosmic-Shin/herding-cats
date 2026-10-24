@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
 
         var kb = Keyboard.current;
         bool dashPressed = Keybinds.Pressed(Keybinds.Action.Dash) || Keybinds.AltPressed(Key.LeftShift)
-                           || Keybinds.PadPressed(Keybinds.Action.Dash) || (Joystick.current != null && Joystick.current.trigger.wasPressedThisFrame);
+                           || Keybinds.PadPressed(Keybinds.Action.Dash);
         if (dashPressed && Time.timeScale > 0f && !isDashing && dashCooldownTimer <= 0f)
         {
             BeginDash();
@@ -102,6 +102,7 @@ public class PlayerController : MonoBehaviour
         // On ice you keep your momentum (a dash onto ice skids on afterwards).
         if (!isDashing && MapGenerator.OnIce(rb.position)) velocity = Vector2.MoveTowards(iceVelocity, velocity, MapGenerator.IceGrip * Time.fixedDeltaTime);
         iceVelocity = velocity;
+        if (isDashing) MapGenerator.Nudge(rb.position, 0.9f, 1f); // dashing through bushes shakes them hard
         rb.MovePosition(rb.position + Slide(rb.position, velocity * Time.fixedDeltaTime, isDashing ? dashMask : MapGenerator.ObstacleMask));
     }
 

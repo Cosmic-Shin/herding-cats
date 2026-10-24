@@ -17,6 +17,7 @@ public class HeroPreview : MonoBehaviour
     private string hero;
     private float t, attackT = -1f, nextAttack = 1f;
     private Camera cam;
+    public Vector2 screen = new Vector2(0.68f, -0.3f); // where it stands, as a fraction of the half-screen from centre
 
     public static HeroPreview Create() => new GameObject("HeroPreview").AddComponent<HeroPreview>();
 
@@ -91,7 +92,7 @@ public class HeroPreview : MonoBehaviour
 
         // Stand to the right of the menu.
         float hh = cam.orthographicSize, hw = hh * cam.aspect;
-        transform.position = new Vector3(cam.transform.position.x + hw * 0.68f, cam.transform.position.y - hh * 0.3f, 0f);
+        transform.position = new Vector3(cam.transform.position.x + hw * screen.x, cam.transform.position.y + hh * screen.y, 0f);
 
         // Idle breathing; attack plays the slash frames.
         if ((nextAttack -= dt) <= 0f) { nextAttack = AttackEvery; attackT = 0f; }

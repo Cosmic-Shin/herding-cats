@@ -358,6 +358,7 @@ public class EnemyAI : MonoBehaviour, IEnemyBrain, IPoolable
         if (unstoppable) return;
         knockback = impulse;
         knockTrail = 0.15f;
+        if (impulse.sqrMagnitude > 25f) MapGenerator.Nudge(rb.position + impulse.normalized * 0.6f, 0.7f, Mathf.Min(1f, impulse.magnitude / 12f)); // sent flying into a bush or tree
         if (state == State.Sleeping) SetState(State.Waking);
         else if (state == State.Chasing) SetState(State.Hurt);
     }

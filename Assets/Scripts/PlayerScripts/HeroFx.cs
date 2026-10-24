@@ -5,6 +5,31 @@ using UnityEngine;
 public static class HeroFx
 {
     private static Sprite reticle, shard;
+    private static readonly System.Collections.Generic.Dictionary<Sprite, Sprite> silhouettes = new System.Collections.Generic.Dictionary<Sprite, Sprite>();
+
+    // A pure-white copy of a sprite (same shape, pivot and size), for hit flashes. Works on unreadable textures
+    // by copying through the GPU; cached per frame sprite.
+    public static Sprite Silhouette(Sprite s)
+    {
+        if (s == null) return null;
+        if (silhouettes.TryGetValue(s, out Sprite w) && w != null) return w;
+        Texture2D src = s.texture;
+        RenderTexture rt = RenderTexture.GetTemporary(src.width, src.height, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
+        Graphics.Blit(src, rt);
+        RenderTexture prev = RenderTexture.active;
+        RenderTexture.active = rt;
+        Rect r = s.rect; // the frame's full cell (whole pixels; textureRect can be fractional for tight sprites)
+        var tex = new Texture2D((int)r.width, (int)r.height, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
+        tex.ReadPixels(new Rect(r.x, r.y, r.width, r.height), 0, 0);
+        RenderTexture.active = prev;
+        RenderTexture.ReleaseTemporary(rt);
+        Color32[] px = tex.GetPixels32();
+        for (int i = 0; i < px.Length; i++) px[i] = new Color32(255, 255, 255, px[i].a);
+        tex.SetPixels32(px);
+        tex.Apply();
+        Vector2 pivot = new Vector2(s.pivot.x / r.width, s.pivot.y / r.height);
+        return silhouettes[s] = Sprite.Create(tex, new Rect(0, 0, r.width, r.height), pivot, s.pixelsPerUnit);
+    }
 
     // A ribbon trail (Unity TrailRenderer, unlit) fading from `color` to clear. Starts off; toggle `emitting`.
     public static TrailRenderer Trail(Transform parent, Vector3 localPos, float width, Color color, float time, int order)
@@ -75,15 +100,20 @@ public static class HeroFx
     // A bright core that pops and shrinks (the centre of a zap or impact).
     public static void Pop(Vector2 at, Color color, float size)
     {
-        const float life = 0.12f;
-        Shot s = Shot.Spawn(Shapes.Circle, color, size, at, 63);
+        // A soft tinted glow with a small white-hot centre, both fading out.
+        const float life = 0.14f;
+        Color glow = Color.Lerp(color, Color.white, 0.3f);
+        Shot s = Shot.Spawn(Shapes.SoftGlow, glow, size * 1.8f, at, 63);
         s.life = life;
         s.onUpdate = shot =>
         {
             float k = shot.age / life;
-            shot.transform.localScale = Vector3.one * size * (1f + 0.4f * k);
-            shot.Renderer.color = new Color(1f, 1f, 1f, Settings.EffectAlpha * (1f - k));
+            shot.transform.localScale = Vector3.one * size * 1.8f * (1f + 0.5f * k);
+            shot.Renderer.color = new Color(glow.r, glow.g, glow.b, Settings.EffectAlpha * (1f - k));
         };
+        Shot c = Shot.Spawn(Shapes.SoftGlow, Color.white, size * 0.7f, at, 64);
+        c.life = life * 0.7f;
+        c.onUpdate = shot => shot.Renderer.color = new Color(1f, 1f, 1f, Settings.EffectAlpha * (1f - shot.age / (life * 0.7f)));
     }
 
     // RGB-split glitch: two tinted copies of a sprite jittered sideways for a frame or two.

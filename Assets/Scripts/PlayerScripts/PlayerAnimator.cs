@@ -66,6 +66,7 @@ public class PlayerAnimator : MonoBehaviour
 
     private const float GlowTime = 1.2f;
     private float stepTimer, glowLeft;
+    private bool stepLeft;
     private SpriteRenderer glow;
     private Color glowColor;
 
@@ -140,7 +141,9 @@ public class PlayerAnimator : MonoBehaviour
         {
             stepTimer = 0.28f;
             Vector2 feet = (Vector2)transform.position + Vector2.down * 0.3f;
-            Juice.Smoke(feet, 0.3f, 1);
+            if (!MapGenerator.Winter) Juice.Smoke(feet, 0.3f, 1);
+            GroundFx.Step(feet, facing, stepLeft = !stepLeft);
+            MapGenerator.Nudge(feet, 0.5f, 0.3f); // brushing past bushes
             Sfx.Play(Sfx.Id.Step, 0.25f, Random.Range(0.9f, 1.15f));
         }
 

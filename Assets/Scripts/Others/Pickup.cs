@@ -11,9 +11,40 @@ public class Pickup : MonoBehaviour
     public static float AnvilChanceMultiplier = 1f;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetStatics() { AnvilChanceMultiplier = 1f; HoloBoxCount = 0; }
+    private static void ResetStatics() { AnvilChanceMultiplier = 1f; HoloBoxCount = AnvilCount = 0; }
     public static int HoloBoxCount { get; private set; }
-    private void OnDestroy() { if (kind == Kind.HoloBox) HoloBoxCount--; }
+    public static int AnvilCount { get; private set; }
+    public const int MaxHoloBoxes = 5, MaxAnvils = 5; // on the field at once; extra drops are skipped
+    private const float InteractRadius = 1.5f;
+    private static int claimedFrame = -1; // one chest/anvil per press, even when two are in reach
+    private TMPro.TextMeshPro prompt;
+
+    private void OnDestroy()
+    {
+        if (kind == Kind.HoloBox) HoloBoxCount--; else if (kind == Kind.Anvil) AnvilCount--;
+        if (prompt != null) Destroy(prompt.gameObject);
+    }
+
+    // "[E] Open" floating above a chest/anvil while the hero is close enough to open it.
+    private void ShowPrompt(bool show)
+    {
+        if (!show) { if (prompt != null) prompt.gameObject.SetActive(false); return; }
+        if (prompt == null)
+        {
+            prompt = new GameObject("OpenPrompt").AddComponent<TMPro.TextMeshPro>();
+            prompt.fontSize = 4f;
+            prompt.fontStyle = TMPro.FontStyles.Bold;
+            prompt.alignment = TMPro.TextAlignmentOptions.Center;
+            prompt.sortingOrder = 100;
+            prompt.outlineWidth = 0.25f;
+            prompt.outlineColor = Color.black;
+            prompt.rectTransform.sizeDelta = new Vector2(6f, 1f);
+        }
+        prompt.gameObject.SetActive(true);
+        prompt.text = $"[{Keybinds.Prompt(Keybinds.Action.Interact)}] {(kind == Kind.HoloBox ? "Open" : "Use anvil")}";
+        prompt.transform.position = new Vector3(transform.position.x, baseY + 1.5f + 0.06f * Mathf.Sin(age * 5f), 0f);
+        prompt.color = Color.Lerp(glowColor, Color.white, 0.5f + 0.5f * Mathf.Sin(age * 6f));
+    }
     private static readonly List<Collider2D> hits = new List<Collider2D>(256);
 
     private Kind kind;
@@ -27,12 +58,15 @@ public class Pickup : MonoBehaviour
 
     public static void Spawn(Kind kind, Vector2 pos)
     {
+        if (kind == Kind.HoloBox && HoloBoxCount >= MaxHoloBoxes) return;
+        if (kind == Kind.Anvil && AnvilCount >= MaxAnvils) return;
         pos = MapGenerator.PlaceDrop(pos);
         var go = new GameObject("Pickup_" + kind);
         go.transform.position = pos;
         var p = go.AddComponent<Pickup>();
         p.kind = kind;
         if (kind == Kind.HoloBox) HoloBoxCount++;
+        else if (kind == Kind.Anvil) AnvilCount++;
         p.sr = go.AddComponent<SpriteRenderer>();
         p.sr.sprite = UiIcons.Icon(kind switch
         {
@@ -73,7 +107,7 @@ public class Pickup : MonoBehaviour
     public static void TryCatDrop(Vector2 pos)
     {
         if (Random.value >= CatDropChance) return;
-        if (Random.value < 0.12f * AnvilChanceMultiplier) { Spawn(Kind.Anvil, pos); return; }
+        if (Random.value < 0.06f * AnvilChanceMultiplier) { Spawn(Kind.Anvil, pos); return; }
         float r = Random.value * 0.88f;
         Spawn(r < 0.35f ? Kind.Magnet : r < 0.6f ? Kind.Speed : Kind.Bomb, pos);
     }
@@ -109,10 +143,25 @@ public class Pickup : MonoBehaviour
             sr.enabled = age < SmallLife - 3f || Mathf.Repeat(age * 6f, 1f) > 0.4f;
         }
 
-        if (Time.timeScale == 0f || RewardMenu.IsOpen || stats.currentHealth <= 0f) return;
-        if (Vector2.Distance(player.position, transform.position) > CollectRadius) return;
+        bool canAct = Time.timeScale > 0f && !RewardMenu.IsOpen && stats.currentHealth > 0f;
+        float dist = Vector2.Distance(player.position, transform.position);
 
-        if (kind == Kind.HoloBox) { opening = 0f; Juice.SlowMo(0.15f, 0.6f); return; }
+        if (!Small)
+        {
+            // Chests and anvils wait for the player, so a crowded late game doesn't keep pausing on every touch.
+            bool near = canAct && dist <= InteractRadius;
+            ShowPrompt(near);
+            if (!near || claimedFrame == Time.frameCount) return;
+            if (!Keybinds.Pressed(Keybinds.Action.Interact) && !Keybinds.PadPressed(Keybinds.Action.Interact)) return;
+            claimedFrame = Time.frameCount;
+            ShowPrompt(false);
+            if (kind == Kind.HoloBox) { opening = 0f; Juice.SlowMo(0.15f, 0.6f); return; }
+            Collect();
+            Destroy(gameObject);
+            return;
+        }
+
+        if (!canAct || dist > CollectRadius) return;
         Collect();
         Destroy(gameObject);
     }

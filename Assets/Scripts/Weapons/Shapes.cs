@@ -2,7 +2,49 @@ using UnityEngine;
 
 public static class Shapes
 {
-    private static Sprite square, star, ring, crescent, plus, riot, bubble;
+    private static Sprite square, star, ring, crescent, plus, riot, bubble, softGlow, softRays;
+
+    // Eight soft light rays fading out from the centre (a "shiny item" burst). 1 unit across; tint it.
+    public static Sprite SoftRays
+    {
+        get
+        {
+            if (softRays != null) return softRays;
+            const int n = 96;
+            var tex = new Texture2D(n, n) { filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
+            for (int y = 0; y < n; y++)
+                for (int x = 0; x < n; x++)
+                {
+                    Vector2 p = new Vector2(x + 0.5f - n / 2f, y + 0.5f - n / 2f) / (n / 2f);
+                    float d = p.magnitude, ang = Mathf.Atan2(p.y, p.x);
+                    float ray = Mathf.Pow(Mathf.Abs(Mathf.Cos(ang * 4f)), 10f); // 8 thin wedges
+                    float fade = Mathf.Clamp01(1f - d);
+                    tex.SetPixel(x, y, new Color(1f, 1f, 1f, ray * fade * fade));
+                }
+            tex.Apply();
+            return softRays = Sprite.Create(tex, new Rect(0, 0, n, n), new Vector2(0.5f, 0.5f), n);
+        }
+    }
+
+    // White radial glow, bright in the middle and fading smoothly to nothing at the edge. 1 unit across; tint it.
+    public static Sprite SoftGlow
+    {
+        get
+        {
+            if (softGlow != null) return softGlow;
+            const int n = 64;
+            var tex = new Texture2D(n, n) { filterMode = FilterMode.Bilinear, wrapMode = TextureWrapMode.Clamp };
+            for (int y = 0; y < n; y++)
+                for (int x = 0; x < n; x++)
+                {
+                    float d = Vector2.Distance(new Vector2(x + 0.5f, y + 0.5f), new Vector2(n / 2f, n / 2f)) / (n / 2f);
+                    float a = Mathf.Clamp01(1f - d);
+                    tex.SetPixel(x, y, new Color(1f, 1f, 1f, a * a));
+                }
+            tex.Apply();
+            return softGlow = Sprite.Create(tex, new Rect(0, 0, n, n), new Vector2(0.5f, 0.5f), n);
+        }
+    }
 
     // Curved riot shield, long side along x, bulging toward -y. Full colour (don't tint).
     public static Sprite RiotShield => riot != null ? riot : riot = MakeColored(24, 12, 30f, (x, y) =>

@@ -194,13 +194,29 @@ public class Juice : MonoBehaviour
             DamagePopup.SpawnText((Vector2)player.transform.position + Vector2.up * 0.9f, "!", new Color(1f, 0.25f, 0.2f), 7f);
         wasLow = low;
 
-        float pulse = 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 5f);
-        vignette.color = low ? new Color(0.9f, 0.05f, 0.05f, 0.35f + 0.3f * pulse * Settings.FlashScale) : Color.clear;
+        // How close to death, 0 (just under the threshold) .. 1 (nearly dead). The camera desaturates by this too.
+        LowHpLevel = low ? 1f - player.currentHealth / (player.maxHealth * LowHpFraction) : 0f;
+        // The edge throbs on each heartbeat, and the heart beats faster the lower you are.
+        beat = Mathf.MoveTowards(beat, 0f, Time.unscaledDeltaTime * 2.5f);
+        hurt = Mathf.MoveTowards(hurt, 0f, Time.unscaledDeltaTime * 3.5f);
         if (low && Time.timeScale > 0f && Time.unscaledTime >= nextBeat)
         {
-            nextBeat = Time.unscaledTime + 0.85f;
+            nextBeat = Time.unscaledTime + Mathf.Lerp(0.95f, 0.5f, LowHpLevel);
+            beat = 1f;
             Sfx.Play(Sfx.Id.Heartbeat, 0.6f);
         }
+        float a = low ? 0.16f + 0.12f * LowHpLevel + 0.22f * beat * beat : 0f;
+        a = Mathf.Max(a, 0.4f * hurt); // a hit flashes the edges red
+        vignette.color = a > 0f ? new Color(0.9f, 0.05f, 0.05f, a * Settings.FlashScale) : Color.clear;
+    }
+
+    public static float LowHpLevel { get; private set; }
+    private float beat, hurt;
+
+    // Taking a hit: a quick red pulse around the screen edges.
+    public static void Hurt()
+    {
+        if (I != null) I.hurt = 1f;
     }
 
     private static Image FullScreen(Transform parent, string name, Sprite sprite)
@@ -225,7 +241,7 @@ public class Juice : MonoBehaviour
             for (int x = 0; x < n; x++)
             {
                 float d = new Vector2(x - n / 2f + 0.5f, y - n / 2f + 0.5f).magnitude / (n / 2f);
-                tex.SetPixel(x, y, new Color(1f, 1f, 1f, Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.6f, 1.05f, d))));
+                tex.SetPixel(x, y, new Color(1f, 1f, 1f, Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.75f, 1.3f, d)))); // a thin band at the edges
             }
         tex.Apply();
         return Sprite.Create(tex, new Rect(0, 0, n, n), new Vector2(0.5f, 0.5f));

@@ -68,9 +68,13 @@ public class Settings : MonoBehaviour
     {
         Sfx.Volume = Volume / 10f;
         Music.Volume = MusicVolume / 10f;
+#if UNITY_WEBGL && !UNITY_EDITOR
+        Application.targetFrameRate = -1;
+#else
         QualitySettings.vSyncCount = VSync ? 1 : 0;
         Application.targetFrameRate = FpsCaps[FpsCap];
         if (Screen.fullScreen != Fullscreen) Screen.fullScreen = Fullscreen;
+#endif
         CameraFollow.SetPostProcessing(PostProcessing);
         Lighting.SetDynamic(Lights);
     }
@@ -127,9 +131,13 @@ public class Settings : MonoBehaviour
         options.Add(new Option { label = "Damage numbers", value = () => OnOff(DamageNumbers), step = _ => DamageNumbers = !DamageNumbers });
         options.Add(new Option { label = "Screen shake", value = () => FlashNames[Shake], step = d => Shake = Wrap(Shake + d, 3) });
         options.Add(new Option { label = "Screen flashes", value = () => FlashNames[Flashes], step = d => Flashes = Wrap(Flashes + d, 3) });
+#if UNITY_WEBGL && !UNITY_EDITOR
+        options.Add(new Option { label = "Fullscreen", value = () => OnOff(Screen.fullScreen), step = _ => Screen.fullScreen = !Screen.fullScreen });
+#else
         options.Add(new Option { label = "FPS limit", value = () => FpsNames[FpsCap], step = d => FpsCap = Wrap(FpsCap + d, FpsCaps.Length) });
         options.Add(new Option { label = "VSync", value = () => OnOff(VSync), step = _ => VSync = !VSync });
         options.Add(new Option { label = "Fullscreen", value = () => OnOff(Fullscreen), step = _ => Fullscreen = !Fullscreen });
+#endif
         options.Add(new Option { label = "Music volume", value = () => $"{MusicVolume * 10}%", step = d => MusicVolume = Mathf.Clamp(MusicVolume + d, 0, 10) });
         options.Add(new Option { label = "Sound volume", value = () => $"{Volume * 10}%", step = d => Volume = Mathf.Clamp(Volume + d, 0, 10) });
 
@@ -144,24 +152,31 @@ public class Settings : MonoBehaviour
 
         RuntimeUI.Title(panel, "SETTINGS", 48f, new Vector2(0, top - 40), 600f);
 
-        Button firstArrow = null;
+        var rows = new List<Button>();
         for (int i = 0; i < options.Count; i++)
         {
             Option o = options[i];
             float y = top - 95f - i * rowH;
             RuntimeUI.Outline(RuntimeUI.Text(panel, o.label, 22, new Color(0.8f, 0.84f, 0.95f), new Vector2(-130, y), new Vector2(300, rowH), TextAlignmentOptions.MidlineLeft));
             Button left = RuntimeUI.Button(panel, "<", new Vector2(80, y), new Vector2(44, 38), () => Change(o, -1));
+            Button row = RuntimeUI.Button(panel, "", new Vector2(175, y), new Vector2(140, 38), () => Change(o, +1));
             o.valueText = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 22, Color.white, new Vector2(175, y), new Vector2(140, rowH)));
-            RuntimeUI.Button(panel, ">", new Vector2(270, y), new Vector2(44, 38), () => Change(o, +1));
-            if (firstArrow == null) firstArrow = left;
+            Button right = RuntimeUI.Button(panel, ">", new Vector2(270, y), new Vector2(44, 38), () => Change(o, +1));
+            left.navigation = right.navigation = new Navigation { mode = Navigation.Mode.None };
+            rows.Add(row);
         }
+        rowButtons = rows;
 
-        RuntimeUI.Button(panel, "Controls", new Vector2(-200, -top + 38), new Vector2(200, 48), ShowControls);
-        RuntimeUI.Button(panel, "Back", new Vector2(0, -top + 38), new Vector2(180, 48), Close);
+        Button controls = RuntimeUI.Button(panel, "Controls", new Vector2(-200, -top + 38), new Vector2(200, 48), ShowControls);
+        Button back = RuntimeUI.Button(panel, "Back", new Vector2(0, -top + 38), new Vector2(180, 48), Close);
+        for (int i = 0; i < rows.Count; i++)
+            RuntimeUI.Nav(rows[i], up: i > 0 ? rows[i - 1] : back, down: i < rows.Count - 1 ? rows[i + 1] : back);
+        RuntimeUI.Nav(back, up: rows[rows.Count - 1], down: rows[0], left: controls);
+        RuntimeUI.Nav(controls, up: rows[rows.Count - 1], down: rows[0], right: back);
         RuntimeUI.Text(panel, $"Esc / {Keybinds.PadLabel(GamepadButton.East)} to close", 16, new Color(0.6f, 0.64f, 0.75f), new Vector2(215, -top + 38), new Vector2(190, 30));
         Refresh();
         mainPanel = panel;
-        mainFocus = firstArrow.gameObject;
+        mainFocus = rows[0].gameObject;
         BuildControls(dim.transform);
         Select(mainFocus);
     }
@@ -169,6 +184,7 @@ public class Settings : MonoBehaviour
     // ---- Controls page: click an action, then press the new key. ----
 
     private RectTransform mainPanel, controlsPanel;
+    private List<Button> rowButtons;
     private GameObject mainFocus;
     private Button[] keyButtons, padButtons;
     private TextMeshProUGUI[] padFixed;
@@ -248,6 +264,11 @@ public class Settings : MonoBehaviour
 
     private void Update()
     {
+        if (listening < 0 && rowButtons != null && mainPanel.gameObject.activeInHierarchy && GamepadUI.NavX != 0 && EventSystem.current != null)
+        {
+            int row = rowButtons.FindIndex(b => b.gameObject == EventSystem.current.currentSelectedGameObject);
+            if (row >= 0) Change(options[row], GamepadUI.NavX);
+        }
         if (listening < 0 || Time.frameCount == listenFrame) return;
         Keyboard kb = Keyboard.current;
         Gamepad pad = Gamepad.current;

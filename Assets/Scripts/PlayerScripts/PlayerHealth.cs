@@ -84,7 +84,8 @@ public class PlayerHealth : MonoBehaviour
         {
             if (skills != null) skills.OnPlayerHit();
             Juice.HitStop(0.08f);
-            Juice.Flash(new Color(1f, 0.15f, 0.15f, 0.25f), 0.25f);
+            Juice.Hurt(); // red pulse around the screen edges
+            StartCoroutine(WhiteFlash());
             Vector2 at = transform.position;
             Juice.Sparks(at, new Color(1f, 0.3f, 0.3f), 8, 6f, 0.13f);
             ExplosionFx.Ring(at, 0.9f, new Color(1f, 0.35f, 0.35f), 0.2f);
@@ -94,6 +95,31 @@ public class PlayerHealth : MonoBehaviour
             if (TryGetComponent(out PlayerAnimator anim)) anim.Squash(new Vector2(0.8f, 1.2f), 0.15f);
             StartCoroutine(InvincibilityFrames());
         }
+    }
+
+    // Getting hit: the hero goes pure white for an instant, then fades back (follows the current animation frame).
+    private SpriteRenderer hitFlash;
+
+    private IEnumerator WhiteFlash()
+    {
+        if (spriteRenderer == null) yield break;
+        if (hitFlash == null)
+        {
+            hitFlash = new GameObject("HitFlash").AddComponent<SpriteRenderer>();
+            hitFlash.transform.SetParent(spriteRenderer.transform, false);
+            Lighting.Glow(hitFlash);
+        }
+        hitFlash.enabled = true;
+        const float duration = 0.14f;
+        for (float t = 0f; t < duration; t += Time.unscaledDeltaTime)
+        {
+            hitFlash.sprite = HeroFx.Silhouette(spriteRenderer.sprite);
+            hitFlash.flipX = spriteRenderer.flipX;
+            hitFlash.sortingOrder = spriteRenderer.sortingOrder + 1;
+            hitFlash.color = new Color(1f, 1f, 1f, 0.95f * (1f - t / duration));
+            yield return null;
+        }
+        hitFlash.enabled = false;
     }
 
     private IEnumerator ShieldGrace()

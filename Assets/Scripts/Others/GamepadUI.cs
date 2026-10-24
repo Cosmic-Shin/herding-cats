@@ -13,6 +13,26 @@ public class GamepadUI : MonoBehaviour
     public static bool Back => Pressed(g => g.buttonEast);
     public static bool Connected => Gamepad.current != null;
 
+    // -1 / +1 on the frame left or right is pressed (arrows, A/D, d-pad, stick or joystick), for rows that cycle a value.
+    private static int navXFrame = -1, navX, stickXWas;
+    public static int NavX
+    {
+        get
+        {
+            if (navXFrame == Time.frameCount) return navX;
+            navXFrame = Time.frameCount;
+            Keyboard k = Keyboard.current;
+            int key = k == null ? 0
+                : k.leftArrowKey.wasPressedThisFrame || k.aKey.wasPressedThisFrame ? -1
+                : k.rightArrowKey.wasPressedThisFrame || k.dKey.wasPressedThisFrame ? 1 : 0;
+            float x = Move().x;
+            int stick = x < -0.5f ? -1 : x > 0.5f ? 1 : 0;
+            navX = key != 0 ? key : stick != stickXWas ? stick : 0;
+            stickXWas = stick;
+            return navX;
+        }
+    }
+
     public static Vector2 Move()
     {
         Gamepad gp = Gamepad.current;
@@ -22,7 +42,9 @@ public class GamepadUI : MonoBehaviour
             return v.sqrMagnitude > 0.04f ? v : gp.dpad.ReadValue();
         }
         Joystick js = Joystick.current;
-        return js != null ? js.stick.ReadValue() : Vector2.zero;
+        if (js == null) return Vector2.zero;
+        Vector2 s = js.stick.ReadValue();
+        return s.sqrMagnitude > 0.04f || js.hatswitch == null ? s : js.hatswitch.ReadValue(); // generic pads put the d-pad on a hat
     }
 
     private static bool AnyButton(Gamepad g) =>
@@ -98,12 +120,26 @@ public class GamepadUI : MonoBehaviour
         }
 
         GameObject sel = es.currentSelectedGameObject;
+        // Arrowing off the edge of a menu could land on a button of the menu underneath (the pause menu behind the
+        // combo book), hiding the cursor. Undo any move down to a lower canvas while the menu above is still up.
+        if (sel != null && sel != lastGood && Time.timeScale == 0f && Usable(lastGood) && Order(sel.transform) < Order(lastGood.transform))
+        {
+            es.SetSelectedGameObject(lastGood);
+            sel = lastGood;
+        }
         if (sel != lastSelected)
         {
             if (sel != null && lastSelected != null && sel.activeInHierarchy) Sfx.Play(Sfx.Id.Tick, 0.5f);
             lastSelected = sel;
         }
         bool ok = Usable(sel);
+        // The selected button got disabled under the cursor (e.g. the last reroll): Unity drops the selection, which
+        // hid the arrow and stranded keyboard/pad players. Hop to the nearest usable button right away.
+        if (!ok && Time.timeScale == 0f && !Settings.Busy && lastGood != null && lastGood.activeInHierarchy && !Usable(lastGood))
+        {
+            Selectable near = Nearest(lastGood);
+            if (near != null) { es.SetSelectedGameObject(near.gameObject); sel = lastSelected = near.gameObject; ok = true; }
+        }
         if (ok) lastGood = sel;
         UpdateFrame(ok && Time.timeScale == 0f ? sel : null);
 
@@ -133,6 +169,21 @@ public class GamepadUI : MonoBehaviour
         // Go back to where the player was if it's still on the top menu, else the top-left item.
         if (Usable(lastGood) && Order(lastGood.transform) >= bestOrder) es.SetSelectedGameObject(lastGood);
         else if (best != null) es.SetSelectedGameObject(best.gameObject);
+    }
+
+    private static Selectable Nearest(GameObject from)
+    {
+        Selectable best = null;
+        float bestDist = float.MaxValue;
+        int order = Order(from.transform);
+        foreach (Selectable c in Selectable.allSelectablesArray)
+        {
+            if (c.gameObject == from || !c.IsInteractable() || !c.gameObject.activeInHierarchy || c.navigation.mode == Navigation.Mode.None) continue;
+            if (Order(c) != order) continue;
+            float d = (c.transform.position - from.transform.position).sqrMagnitude;
+            if (d < bestDist) { bestDist = d; best = c; }
+        }
+        return best;
     }
 
     // Pixel arrow that slides to the left of whatever is selected while a menu is open.

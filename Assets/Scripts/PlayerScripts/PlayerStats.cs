@@ -93,8 +93,12 @@ public class PlayerStats : MonoBehaviour
         moveSpeedMultiplier -= amount;
     }
 
+    public const float MaxHealthCap = 500f;
+
     public void IncreaseMaxHealth(float amount)
     {
+        amount = Mathf.Min(amount, MaxHealthCap - maxHealth);
+        if (amount <= 0f) return;
         maxHealth += amount;
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
@@ -102,7 +106,7 @@ public class PlayerStats : MonoBehaviour
 
     public void IncreaseProjectileCount(int amount)
     {
-        projectileCount += amount;
+        projectileCount = Mathf.Min(projectileCount + amount, PlayerCollabs.MaxBombsPerThrow);
     }
 
     public void AddExp(int amount)

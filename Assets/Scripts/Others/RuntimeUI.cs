@@ -76,6 +76,10 @@ public static class RuntimeUI
         for (int i = 0; i < layers.Length; i++) layers[i].text = i == layers.Length - 1 ? text : plain;
     }
 
+    // Fixed arrow/d-pad routes (null = nowhere), for rows where left/right changes a value or automatic nav jumps oddly.
+    public static void Nav(Selectable s, Selectable up = null, Selectable down = null, Selectable left = null, Selectable right = null) =>
+        s.navigation = new Navigation { mode = Navigation.Mode.Explicit, selectOnUp = up, selectOnDown = down, selectOnLeft = left, selectOnRight = right };
+
     public static Button TextButton(Transform parent, string label, Vector2 pos, float size, UnityAction onClick, float width = 0f)
     {
         TextMeshProUGUI t = Outline(Text(parent, label.ToUpper(), size, Color.white, pos, new Vector2(width > 0f ? width : size * 11f, size * 1.45f)));

@@ -16,7 +16,8 @@ public class PlayerCollabs : MonoBehaviour
         public Kind kind;
     }
 
-    public const int MaxBombsPerThrow = 6;
+    // Mira 6 bombs; Kai 4 swings (each is a full heavy sweep); Nyx 4, i.e. 8 drones.
+    public static int MaxBombsPerThrow => Hero.Current.id == "Kai" || Hero.Current.id == "Nyx" ? 4 : 6;
     public const int MaxCollabs = 4;
 
     public static readonly Def[] All =
