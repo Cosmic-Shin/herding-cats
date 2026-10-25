@@ -19,12 +19,18 @@ public abstract class Weapon : MonoBehaviour
     {
         Enhance++;
         if (boost == Boost.Damage) bonusDamage += 0.15f;
-        else if (boost == Boost.Area) bonusArea += 0.15f;
+        else if (boost == Boost.Area) bonusArea += 0.06f; // +30% at +5; 15% each let a maxed aura cover the screen
         else bonusSpeed += 0.12f;
         OnEnhanced(boost);
     }
 
     protected virtual void OnEnhanced(Boost boost) { }
+
+    public void CopyEnhance(Weapon from)
+    {
+        Enhance = from.Enhance;
+        (bonusDamage, bonusArea, bonusSpeed) = (from.bonusDamage, from.bonusArea, from.bonusSpeed);
+    }
 
     protected PlayerStats stats;
     protected PlayerController controller;

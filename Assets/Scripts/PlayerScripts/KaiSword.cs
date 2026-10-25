@@ -11,10 +11,10 @@ public class KaiSword : MonoBehaviour
     public const string Source = "Greatsword";
     public static KaiSword Active { get; private set; }
 
-    public float swingInterval = 1.25f; // seconds between attacks at 1x attack speed
+    public float swingInterval = 1.8f; // seconds between attacks at 1x attack speed
     public float reach = 2.6f;
     public float arc = 200f;
-    public float damageMultiplier = 1.9f;
+    public float damageMultiplier = 0.85f;
     public float followUpDamage = 0.85f; // the extra swings
     public float push = 6f; // heavy, but not so far he knocks cats out of his own reach
 

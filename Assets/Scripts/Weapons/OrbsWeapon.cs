@@ -22,7 +22,8 @@ public class OrbsWeapon : Weapon
             var sr = go.AddComponent<SpriteRenderer>();
             Lighting.Glow(sr);
             sr.sprite = Shapes.Orb;
-            sr.color = new Color(0.6f, 0.92f, 1f);
+            bool shoo = PlayerCollabs.Has("repulsor");
+            sr.color = shoo ? new Color(0.9f, 0.97f, 1f) : new Color(0.6f, 0.92f, 1f);
             sr.sortingOrder = 15;
             go.transform.localScale = Vector3.one * 0.5f;
             var glow = new GameObject("Glow").AddComponent<SpriteRenderer>();
@@ -83,6 +84,7 @@ public class OrbsWeapon : Weapon
                     if (c.TryGetComponent(out IEnemyBrain brain)) brain.Knockback(((Vector2)c.transform.position - Pos).normalized * 12f);
                     if (c.TryGetComponent(out EnemyAI cat)) cat.Stun(0.4f);
                     Juice.Sparks(p, new Color(0.5f, 0.75f, 1f), 3, 4f, 0.12f);
+                    ExplosionFx.Ring(p, 0.9f, new Color(0.7f, 0.9f, 1f, 0.8f), 0.2f);
                 }
             }
         }

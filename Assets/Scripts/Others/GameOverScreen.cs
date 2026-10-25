@@ -49,6 +49,7 @@ public class GameOverScreen : MonoBehaviour
         yield return new WaitForSecondsRealtime(slowMoTime);
         Time.timeScale = 0f;
 
+        if (Debug.isDebugBuild) Debug.Log(DamageStats.Report(Hero.Current.name, hud != null ? hud.RunTime : 0f));
         Leaderboard.Entry entry = Leaderboard.FromRun(stats, hud != null ? hud.RunTime : 0f);
         int rank = Leaderboard.Submit(entry);
         MainMenu.LastRank = rank;

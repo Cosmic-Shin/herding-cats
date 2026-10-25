@@ -127,7 +127,7 @@ public class PlayerSkills : MonoBehaviour
             int level = LevelOf(s.id);
             if (s.id == "secondwind" && reviveUsed) continue;
             if (level == 0 && Achievements.IsLocked("skill:" + s.id)) continue;
-            if (level > 0 ? level < s.levels.Length : owned.Count < MaxSkills) result.Add(s);
+            if (level > 0 ? level < s.levels.Length : order.Count < MaxSkills) result.Add(s);
         }
         return result;
     }
@@ -139,6 +139,7 @@ public class PlayerSkills : MonoBehaviour
         if (level == 1) order.Add(skill.id);
         owned[skill.id] = level;
         Apply(skill.id, level);
+        if (level == skill.levels.Length) PlayerCollabs.MaxHint(skill.id, transform.position + Vector3.up * 0.8f);
     }
 
     private void Apply(string id, int level)
@@ -166,6 +167,11 @@ public class PlayerSkills : MonoBehaviour
             case "blacksmith": Pickup.AnvilChanceMultiplier = level >= 2 ? 2.5f : 1.75f; break;
         }
     }
+
+    // A combo took this skill in: it keeps working (and stays maxed, so it's never offered again)
+    // but leaves the skill bar, freeing the slot.
+    public void Absorb(string id) => order.Remove(id);
+    public void Unabsorb(string id) { if (owned.ContainsKey(id) && !order.Contains(id)) order.Add(id); }
 
     public void Remove(string id)
     {

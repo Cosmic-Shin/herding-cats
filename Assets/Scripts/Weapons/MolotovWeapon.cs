@@ -13,6 +13,8 @@ public class MolotovWeapon : Weapon
         if (!Ready(3f)) return;
         Sfx.Play(Sfx.Id.Swish, 0.3f, 0.7f);
 
+        bool campfire = PlayerCollabs.Has("campfire");
+        if (campfire) Lob(Pos + Random.insideUnitCircle * 0.3f); // Campfire: one always lands at your feet, so there's somewhere to heal
         for (int i = 0; i < Count[L]; i++)
         {
             Transform target = RandomEnemy(7f);
@@ -24,7 +26,8 @@ public class MolotovWeapon : Weapon
     private void Lob(Vector2 at)
     {
         Shot s = Shot.Spawn(Shapes.Art("Icons/molotov"), Color.white, 0.55f, Pos);
-        s.trail = new Color(1f, 0.55f, 0.15f);
+        bool campfire = PlayerCollabs.Has("campfire");
+        s.trail = campfire ? new Color(0.55f, 1f, 0.45f) : new Color(1f, 0.55f, 0.15f);
         s.trailSize = 0.12f;
         s.velocity = (at - Pos) / FlightTime;
         s.life = FlightTime;
@@ -37,7 +40,12 @@ public class MolotovWeapon : Weapon
             Juice.SparksDir(shot.Position, Vector2.up, 50f, new Color(1f, 0.6f, 0.15f), 8, 5f + radius * 2f, 0.2f);
             Juice.Smoke(shot.Position, radius * 0.5f, 2);
             Lighting.Flash(shot.Position, radius * 2f, new Color(1f, 0.6f, 0.2f), 0.2f);
-            BurningGround.Spawn(shot.Position, radius, duration, tick, healPlayer: PlayerCollabs.Has("campfire") ? 2f : 0f);
+            BurningGround.Spawn(shot.Position, radius, duration, tick, healPlayer: campfire ? 2f : 0f);
+            if (campfire)
+            {
+                ExplosionFx.Ring(shot.Position, radius, new Color(0.5f, 1f, 0.5f, 0.8f), 0.35f);
+                ExplosionFx.Crosses(shot.Position, radius * 0.7f, new Color(0.5f, 1f, 0.5f), 3);
+            }
         };
     }
 }

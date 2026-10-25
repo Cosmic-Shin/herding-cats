@@ -247,6 +247,8 @@ public static class Leaderboard
                 int level = weapons.LevelOf(id);
                 entry.build.Add(new Item { icon = id, level = PlayerWeapons.IsCollab(id) ? "" : level >= Weapon.MaxLevel ? "MAX" : level.ToString() });
             }
+        if (stats.TryGetComponent(out PlayerCollabs collabs))
+            foreach (string id in collabs.MainCombos) entry.build.Add(new Item { icon = id, level = "" });
         if (stats.TryGetComponent(out PlayerSkills skills))
             foreach (string id in skills.OwnedInOrder)
             {

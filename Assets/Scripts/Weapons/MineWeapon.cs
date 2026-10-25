@@ -33,9 +33,11 @@ public class MineWeapon : Weapon
 
     public void DropBurst(Vector2 at)
     {
-        for (int i = 0; i < 3; i++)
+        ExplosionFx.Ring(at, 1.6f, new Color(1f, 0.45f, 0.4f, 0.8f), 0.3f);
+        Juice.Sparks(at, new Color(1f, 0.6f, 0.4f), 8, 5f, 0.12f);
+        for (int i = 0; i < 5; i++)
         {
-            Shot mine = SpawnMine(at + Random.insideUnitCircle * 0.8f, Dmg(Damage[L]), Area(Radius[L]), Explode);
+            Shot mine = SpawnMine(at + Random.insideUnitCircle * 1.1f, Dmg(Damage[L]), Area(Radius[L]), Explode);
             mines.Add((mine, mine.Generation));
         }
     }

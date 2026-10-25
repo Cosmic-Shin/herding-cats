@@ -90,7 +90,7 @@ public static class Hero
             {
                 { "AttackDamagePercent", ("Attack Up", "+15% drone damage") },
                 { "AttackSpeedPercent", ("Overclock", "Drones fire 20% faster") },
-                { "ProjectileCount", ("Extra Drones", "+2 drones") },
+                { "ProjectileCount", ("Extra Drones", "+1 drone") },
                 { "AreaPercent", ("Wide Zap", "+15% zap radius") },
                 { "CritChance", ("Lucky Byte", "+5% crit chance (crits deal 1.5x)") },
             },

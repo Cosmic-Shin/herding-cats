@@ -140,6 +140,16 @@ public class PlayerWeapons : MonoBehaviour
         new Def { id = "cryobeam", name = "Brain Freeze", type = typeof(CryoBeamWeapon) },
         new Def { id = "phoenix", name = "Fire Rang", type = typeof(PhoenixRangWeapon) },
 
+        // Weapon + skill combos: the same weapon, renamed, with the combo effect switched on (see PlayerCollabs.Has).
+        new Def { id = "missilechain", name = "Chain Missiles", type = typeof(MissileWeapon) },
+        new Def { id = "auraguard", name = "Thick Coat", type = typeof(AuraWeapon) },
+        new Def { id = "blinkmines", name = "Parting Gift", type = typeof(MineWeapon) },
+        new Def { id = "gluemagnet", name = "Sticky Magnet", type = typeof(GlueWeapon) },
+        new Def { id = "sanctuary", name = "Purr Therapy", type = typeof(AuraWeapon) },
+        new Def { id = "campfire", name = "Campfire", type = typeof(MolotovWeapon) },
+        new Def { id = "supernova", name = "Supernova", type = typeof(BlackHoleWeapon) },
+        new Def { id = "repulsor", name = "Shoo!", type = typeof(OrbsWeapon) },
+
         new Def { id = "tempest", name = "Cat-egory 5", type = typeof(TempestBladesWeapon) },
         new Def { id = "cryo", name = "Snow Globe", type = typeof(CryoSingularityWeapon) },
         new Def { id = "stormnet", name = "Static Cling", type = typeof(StormNetworkWeapon) },
@@ -194,7 +204,7 @@ public class PlayerWeapons : MonoBehaviour
         }
         int before = weapon.Level;
         weapon.SetLevel(weapon.Level + 1);
-        if (before < Weapon.MaxLevel && weapon.Level == Weapon.MaxLevel) MaxBurst(def.name);
+        if (before < Weapon.MaxLevel && weapon.Level == Weapon.MaxLevel) { MaxBurst(def.name); PlayerCollabs.MaxHint(def.id, transform.position); }
     }
 
     private void MaxBurst(string name)
@@ -212,6 +222,7 @@ public class PlayerWeapons : MonoBehaviour
     public void Merge(string a, string b, Def collab)
     {
         int slot = order.IndexOf(a);
+        Weapon carried = Get(a);
         foreach (string id in new[] { a, b })
         {
             if (owned.TryGetValue(id, out Weapon w)) Destroy(w);
@@ -224,6 +235,7 @@ public class PlayerWeapons : MonoBehaviour
         owned[collab.id] = weapon;
         order.Insert(Mathf.Clamp(slot, 0, order.Count), collab.id);
         weapon.SetLevel(Weapon.MaxLevel);
+        if (carried != null) weapon.CopyEnhance(carried); // anvil work on the first piece isn't lost
     }
 
     public void Remove(string id)

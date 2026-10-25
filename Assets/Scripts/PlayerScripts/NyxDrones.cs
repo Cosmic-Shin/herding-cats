@@ -11,10 +11,10 @@ public class NyxDrones : MonoBehaviour
     public const string Source = "Drones";
     public static NyxDrones Active { get; private set; }
 
-    public float fireInterval = 1.2f; // per drone at 1x attack speed
+    public float fireInterval = 1.8f; // per drone at 1x attack speed
     public float range = 6.5f;
     public float orbitRadius = 1.3f;
-    public float damageMultiplier = 0.75f;
+    public float damageMultiplier = 0.55f;
     public float zapRadius = 1.2f; // same as a bomb blast
 
     public static readonly Color Cyan = new Color(0.3f, 0.9f, 1f);
@@ -41,10 +41,10 @@ public class NyxDrones : MonoBehaviour
     private float orbit, volleyTimer, nextLaunch, barrageUntil;
 
     private float Fury => PlayerCollabs.Has("furyfuse") && stats.maxHealth > 0f ? 1f - Mathf.Clamp01(stats.currentHealth / stats.maxHealth) : 0f;
-    // Attack speed counts a bit extra for her (each drone only hits one spot at a time).
-    private float Interval => fireInterval / Mathf.Max(0.1f, Mathf.Pow(stats.AttackSpeed, 1.4f) * (1f + Fury));
-    // Swarm size: 2 per bomb upgrade (2, 4, 6 ... 12), since each drone hits one spot at a time.
-    public int Count { get { int n = Mathf.Max(1, stats.ProjectileCount); return 2 * n + (ult != null ? ult.ExtraBombs : 0); } }
+    // Attack speed scales her fire rate like everyone else (it used to count extra and snowballed late).
+    private float Interval => fireInterval / Mathf.Max(0.1f, stats.AttackSpeed * (1f + Fury));
+    // Swarm size: 1 base + 1 per bomb upgrade (2, 3, 4, 5).
+    public int Count { get { int n = Mathf.Max(1, stats.ProjectileCount); return n + 1 + (ult != null ? ult.ExtraBombs : 0); } }
     public float ZapRadius => zapRadius * stats.areaMultiplier * (ult != null ? ult.RadiusMultiplier : 1f) * (1f + 0.5f * Fury);
     public float ZapDamage => stats.AttackDamage * damageMultiplier * (ult != null ? ult.DamageMultiplier : 1f);
 

@@ -36,8 +36,8 @@ public class Burger : MonoBehaviour
     private SpriteRenderer halo, rays;
     private float age;
 
-    public const int MaxOnField = 8;
-    public const float DropRateScale = 0.5f; // global nerf on every regular cat's burgerDropChance
+    public const int MaxOnField = 12;
+    public const float DropRateScale = 0.75f; // global nerf on every regular cat's burgerDropChance
 
     public static void Spawn(Vector2 pos)
     {

@@ -37,7 +37,7 @@ public class MissileWeapon : Weapon
     private void Launch(Vector2 dir, EnemyHealth target)
     {
         Shot s = Shot.Spawn(Shapes.Art("Icons/missiles"), Color.white, 0.6f, Pos);
-        s.trail = new Color(1f, 0.6f, 0.2f);
+        s.trail = PlayerCollabs.Has("missilechain") ? new Color(1f, 0.9f, 0.35f) : new Color(1f, 0.6f, 0.2f);
         s.velocity = dir * Speed;
         s.life = 3f;
         s.hitRadius = 0.3f;
@@ -69,6 +69,8 @@ public class MissileWeapon : Weapon
 
     protected virtual void OnBlast(Vector2 pos, float radius, float damage)
     {
-        if (PlayerCollabs.Has("missilechain") && PlayerSkills.Instance != null) PlayerSkills.Instance.Chain(pos, radius, damage);
+        if (!PlayerCollabs.Has("missilechain") || PlayerSkills.Instance == null) return;
+        PlayerSkills.Instance.Chain(pos, radius, damage);
+        ExplosionFx.Ring(pos, radius * 1.6f, new Color(1f, 0.85f, 0.3f, 0.7f), 0.25f);
     }
 }

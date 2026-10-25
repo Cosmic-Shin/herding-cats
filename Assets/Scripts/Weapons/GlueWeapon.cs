@@ -24,7 +24,7 @@ public class GlueWeapon : Weapon
 
     private void Lob(Vector2 at)
     {
-        Color glue = new Color(0.55f, 1f, 0.35f);
+        Color glue = PlayerCollabs.Has("gluemagnet") ? new Color(1f, 0.45f, 0.8f) : new Color(0.55f, 1f, 0.35f); // Sticky Magnet: pink
         Shot s = Shot.Spawn(Shapes.Art("Icons/glue"), Color.white, 0.5f, Pos);
         s.trail = glue;
         s.spin = 360f;

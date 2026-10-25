@@ -157,7 +157,7 @@ public class GamepadUI : MonoBehaviour
         int bestOrder = int.MinValue;
         foreach (Selectable c in Selectable.allSelectablesArray)
         {
-            if (!c.IsInteractable() || !c.gameObject.activeInHierarchy) continue;
+            if (!c.IsInteractable() || !c.gameObject.activeInHierarchy || c.navigation.mode == Navigation.Mode.None) continue;
             int order = Order(c);
             Vector3 p = c.transform.position, b = best != null ? best.transform.position : Vector3.zero;
             if (order > bestOrder || (order == bestOrder && (p.y > b.y + 1f || (Mathf.Abs(p.y - b.y) <= 1f && p.x < b.x))))

@@ -86,7 +86,7 @@ public class HUD : MonoBehaviour
         panelPos = panel.anchoredPosition;
 
         float row1 = -Margin - 124 - 12, row2 = row1 - SlotSize - SlotGap, row3 = row2 - SlotSize - SlotGap;
-        weaponSlots = new Slot[PlayerWeapons.MaxWeapons + 1];
+        weaponSlots = new Slot[PlayerWeapons.MaxWeapons + 1 + PlayerCollabs.MaxCollabs]; // weapons, buddy, main-attack combos
         for (int i = 0; i < weaponSlots.Length; i++) weaponSlots[i] = MakeSlot(root, new Vector2(Margin + i * (SlotSize + SlotGap), row1), SlotSize);
         skillSlots = new Slot[PlayerSkills.MaxSkills];
         for (int i = 0; i < skillSlots.Length; i++) skillSlots[i] = MakeSlot(root, new Vector2(Margin + i * (SlotSize + SlotGap), row2), SlotSize);
@@ -278,7 +278,8 @@ public class HUD : MonoBehaviour
 
         IReadOnlyList<string> owned = weapons.OwnedInOrder;
         Companion buddy = Companion.Instance;
-        int signature = (buddy != null ? buddy.Level : 0) + combinableSignature;
+        List<string> mainCombos = collabs != null ? collabs.MainCombos : new List<string>();
+        int signature = (buddy != null ? buddy.Level : 0) + combinableSignature + mainCombos.Count * 7919;
         foreach (string id in owned) signature = signature * 31 + id.GetHashCode() + weapons.LevelOf(id) + 100 * weapons.Get(id).Enhance;
         if (signature == weaponsSignature) return;
         weaponsSignature = signature;
@@ -295,9 +296,17 @@ public class HUD : MonoBehaviour
             if (super) weaponSlots[i].frame.color = new Color(1f, 0.6f, 0.95f);
         }
 
-        Slot buddySlot = weaponSlots[PlayerWeapons.MaxWeapons];
-        buddySlot.frame.gameObject.SetActive(buddy != null);
-        if (buddy != null) Fill(buddySlot, "buddy", LevelTag(buddy.Level, Companion.MaxLevel), gold: true);
+        // After the weapons: the buddy, then combos on the main attack, packed left with no gaps.
+        int next = PlayerWeapons.MaxWeapons;
+        extraCombos.Clear();
+        if (buddy != null) { extraCombos.Add(null); Fill(weaponSlots[next++], "buddy", LevelTag(buddy.Level, Companion.MaxLevel), gold: true); }
+        foreach (string id in mainCombos)
+        {
+            if (next >= weaponSlots.Length) break;
+            extraCombos.Add(id);
+            Fill(weaponSlots[next++], id, "", gold: true);
+        }
+        for (int i = PlayerWeapons.MaxWeapons; i < weaponSlots.Length; i++) weaponSlots[i].frame.gameObject.SetActive(i < next);
     }
 
     private void UpdateSkills()
@@ -445,6 +454,11 @@ public class HUD : MonoBehaviour
 
         for (int i = 0; i < PlayerWeapons.MaxWeapons; i++) { int k = i; AddTip(weaponSlots[i], () => weapons != null && k < weapons.OwnedInOrder.Count ? WeaponTip(weapons.OwnedInOrder[k]) : ""); }
         for (int i = 0; i < skillSlots.Length; i++) { int k = i; AddTip(skillSlots[i], () => skills != null && k < skills.OwnedInOrder.Count ? SkillTip(skills.OwnedInOrder[k]) : ""); }
+        for (int i = PlayerWeapons.MaxWeapons; i < weaponSlots.Length; i++)
+        {
+            int k = i - PlayerWeapons.MaxWeapons;
+            AddTip(weaponSlots[i], () => k < extraCombos.Count && extraCombos[k] != null ? ComboTip(extraCombos[k], "") : "");
+        }
     }
 
     internal Selectable FirstGearSlot { get { Button b = weaponSlots[0].frame.GetComponent<Button>(); return b != null && b.interactable ? b : null; } }
@@ -491,20 +505,28 @@ public class HUD : MonoBehaviour
     {
         Weapon w = weapons.Get(id);
         string enhance = w != null && w.Enhance > 0 ? $"  <color=#FFD24A>+{w.Enhance}</color>" : "";
-        PlayerCollabs.Def combo = PlayerCollabs.Find(id);
-        if (combo != null)
-        {
-            PlayerWeapons.Def d = PlayerWeapons.Find(id);
-            string tag = combo.kind == PlayerCollabs.Kind.Super ? "<color=#FF7AD9>SUPER</color>" : "<color=#FFD24A>COMBO</color>";
-            return Tip(combo.name, tag + enhance, combo.text, null, d != null ? d.name : combo.name);
-        }
+        if (PlayerCollabs.Find(id) != null) return ComboTip(id, enhance);
         PlayerWeapons.Def def = PlayerWeapons.Find(id);
         if (def == null || def.levels == null) return "";
         int level = weapons.LevelOf(id);
         string lv = level >= def.levels.Length ? "<color=#FFD24A>MAX</color>" : $"Lv {level}/{def.levels.Length}";
         string body = level > 1 ? $"{def.levels[0]}\n<color=#FFD24A>Latest:</color> {def.levels[level - 1]}" : def.levels[0];
-        return Tip(def.name, lv + enhance, body, level < def.levels.Length ? def.levels[level] : null, def.name);
+        return Tip(def.name, lv + enhance, body + PairLine(id), level < def.levels.Length ? def.levels[level] : null, def.name);
     }
+
+    private readonly List<string> extraCombos = new List<string>(); // what each slot after the weapons shows (null = buddy)
+
+    private static string ComboTip(string id, string enhance)
+    {
+        PlayerCollabs.Def combo = PlayerCollabs.Find(id);
+        PlayerWeapons.Def d = PlayerWeapons.Find(id);
+        string tag = combo.kind == PlayerCollabs.Kind.Super ? "<color=#FF7AD9>SUPER</color>" : "<color=#FFD24A>COMBO</color>";
+        string body = $"<color=#FFB36B>{PlayerCollabs.Recipe(combo)}</color>\n{combo.text}";
+        return Tip(combo.name, tag + enhance, body, null, d != null ? d.name : null);
+    }
+
+    private static string PairLine(string id) =>
+        PlayerCollabs.PairHint(id, 3) is string hint ? $"\n\n<color=#FFD24A>Pairs with:</color> {hint}" : "";
 
     private string SkillTip(string id)
     {
@@ -514,6 +536,6 @@ public class HUD : MonoBehaviour
         string lv = level >= s.levels.Length ? "<color=#FFD24A>MAX</color>" : $"Lv {level}/{s.levels.Length}";
         // Each level line after the first is an upgrade; show everything earned so far.
         string body = string.Join("\n", s.levels, 0, Mathf.Clamp(level, 1, s.levels.Length));
-        return Tip(s.name, lv, body, level < s.levels.Length ? s.levels[level] : null, null);
+        return Tip(s.name, lv, body + PairLine(id), level < s.levels.Length ? s.levels[level] : null, null);
     }
 }

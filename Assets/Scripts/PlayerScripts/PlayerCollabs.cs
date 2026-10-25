@@ -16,7 +16,7 @@ public class PlayerCollabs : MonoBehaviour
         public Kind kind;
     }
 
-    // Mira 6 bombs; Kai 4 swings (each is a full heavy sweep); Nyx 4, i.e. 8 drones.
+    // Mira 6 bombs; Kai 4 swings (each is a full heavy sweep); Nyx 4, i.e. 5 drones.
     public static int MaxBombsPerThrow => Hero.Current.id == "Kai" || Hero.Current.id == "Nyx" ? 4 : 6;
     public const int MaxCollabs = 4;
 
@@ -59,16 +59,16 @@ public class PlayerCollabs : MonoBehaviour
         new Def { id = "missilechain", kind = Kind.Boost, a = "missiles", b = "chain", name = "Chain Missiles",
                   text = "Every missile blast sets off a chain reaction" },
         new Def { id = "auraguard", kind = Kind.Boost, a = "aura", b = "thickskin", name = "Thick Coat",
-                  text = "Cats touching you inside the aura deal 30% less damage" },
+                  text = "Steel aura. Cats touching you inside it deal 30% less damage" },
         new Def { id = "blinkmines", kind = Kind.Boost, a = "mines", b = "blink", name = "Parting Gift",
-                  text = "Blinking leaves 3 mines where you were" },
+                  text = "Blinking leaves 5 mines where you were" },
         new Def { id = "gluemagnet", kind = Kind.Boost, a = "glue", b = "magnet", name = "Sticky Magnet",
                   text = "Glue puddles drag cats to their center and pull XP gems to you" },
 
         new Def { id = "sanctuary", kind = Kind.Boost, a = "aura", b = "regen", name = "Purr Therapy",
-                  text = "Heal 0.3 HP for every cat inside your aura each tick (up to 3 HP)" },
+                  text = "Green healing aura. Heal 0.3 HP for every cat inside it each tick (up to 3 HP)" },
         new Def { id = "campfire", kind = Kind.Boost, a = "molotov", b = "regen", name = "Campfire",
-                  text = "Standing in your own fire heals you 2 HP per tick" },
+                  text = "Every throw also lights a healing campfire at your feet. Standing in your fire heals 2 HP per tick" },
         new Def { id = "supernova", kind = Kind.Boost, a = "blackhole", b = "cluster", name = "Supernova",
                   text = "Black holes pop in a wider blast and scatter 8 mini bombs" },
         new Def { id = "repulsor", kind = Kind.Boost, a = "orbs", b = "shockwave", name = "Shoo!",
@@ -131,6 +131,8 @@ public class PlayerCollabs : MonoBehaviour
     private PlayerSkills skills;
 
     public IReadOnlyList<string> Taken => taken;
+    // Combos on the hero's own attack (bombs/sword/drones + a skill). They have no weapon, so the HUD lists them after the weapons.
+    public List<string> MainCombos => taken.FindAll(id => Find(id).kind == Kind.Bomb);
 
     public static bool Has(string id) => instance != null && (instance.taken.Contains(id) || instance.superTaken == id);
 
@@ -199,7 +201,8 @@ public class PlayerCollabs : MonoBehaviour
         if (!taken.Remove(d.id)) return;
         used.Remove(FirstPiece(d));
         used.Remove(d.b);
-        if (d.kind == Kind.Merge) weapons.Remove(d.id);
+        if (d.kind != Kind.Bomb) weapons.Remove(d.id);
+        if (d.kind != Kind.Merge) skills.Unabsorb(d.b);
     }
 
     public bool InSuper(string comboId)
@@ -317,6 +320,30 @@ public class PlayerCollabs : MonoBehaviour
         return result;
     }
 
+    // "Regeneration -> Campfire, ..." for combos this piece can still go into, or null.
+    public static string PairHint(string pieceId, int max = 2)
+    {
+        if (instance == null) return null;
+        var parts = new List<string>();
+        foreach (Def d in All)
+        {
+            Status s = instance.StatusOf(d);
+            if (s == Status.Done || s == Status.Blocked) continue;
+            string first = FirstPiece(d);
+            if (pieceId == first) parts.Add($"{PieceName(d.b, SecondIsSkill(d))} -> {d.name}");
+            else if (pieceId == d.b) parts.Add($"{PieceName(first, false)} -> {d.name}");
+        }
+        if (parts.Count == 0) return null;
+        string more = parts.Count > max ? $" +{parts.Count - max} more" : "";
+        return string.Join(", ", parts.GetRange(0, Mathf.Min(max, parts.Count))) + more;
+    }
+
+    public static void MaxHint(string pieceId, Vector2 at)
+    {
+        string hint = PairHint(pieceId);
+        if (hint != null) DamagePopup.SpawnText(at + Vector2.up * 0.5f, "Pairs with " + hint, new Color(1f, 0.82f, 0.3f), 3.2f);
+    }
+
     public void Take(Def d)
     {
         Achievements.MarkTried(d.kind == Kind.Super ? "x" : "c", d.id);
@@ -324,7 +351,10 @@ public class PlayerCollabs : MonoBehaviour
         taken.Add(d.id);
         used.Add(d.kind == Kind.Bomb ? "bombs" : d.a);
         used.Add(d.b);
-        if (d.kind == Kind.Merge) weapons.Merge(d.a, d.b, PlayerWeapons.Find(d.id));
+        // Weapon + skill combos become a weapon of their own (the skill keeps working but frees its slot);
+        // main-weapon combos just free the skill slot and show next to the weapons.
+        if (d.kind != Kind.Bomb) weapons.Merge(d.a, d.b, PlayerWeapons.Find(d.id));
+        if (d.kind != Kind.Merge) skills.Absorb(d.b);
 
         Sfx.Play(Sfx.Id.Whoosh, 0.6f, 1.2f);
         FlyIn(IconPath(d.a), Vector2.left, null);
@@ -380,6 +410,10 @@ public class PlayerCollabs : MonoBehaviour
     private IEnumerator DelayedBlast(Vector2 pos)
     {
         yield return new WaitForSeconds(0.1f);
+        float r = 1.3f * stats.areaMultiplier; // Firebomb: burning cats go up in a fireball
+        ExplosionFx.Ring(pos, r * 1.3f, new Color(1f, 0.45f, 0.1f, 0.9f), 0.3f);
+        Juice.SparksDir(pos, Vector2.up, 40f, new Color(1f, 0.6f, 0.15f), 8, 6f, 0.15f);
+        Lighting.Flash(pos, r * 2f, new Color(1f, 0.5f, 0.15f), 0.25f);
         Bomb.Blast(pos, 1.3f * stats.areaMultiplier, stats.AttackDamage * 0.6f, stats.critChance, stats.critDamage, secondary: true);
     }
 }

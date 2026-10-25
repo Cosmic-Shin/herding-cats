@@ -29,6 +29,10 @@ public class BlackHoleWeapon : Weapon
     {
         bool supernova = PlayerCollabs.Has("supernova");
         Explode(at, radius * (supernova ? 1.4f : 1f), damage);
-        if (supernova && PlayerSkills.Instance != null) PlayerSkills.Instance.ScatterMinis(at, 8, damage * 0.35f, radius * 0.6f);
+        if (!supernova) return;
+        if (PlayerSkills.Instance != null) PlayerSkills.Instance.ScatterMinis(at, 8, damage * 0.35f, radius * 0.6f);
+        ExplosionFx.Ring(at, radius * 2f, new Color(1f, 0.85f, 0.5f), 0.4f);
+        Lighting.Flash(at, radius * 3f, new Color(1f, 0.8f, 0.4f), 0.4f);
+        Juice.Sparks(at, Color.white, 14, 9f, 0.15f);
     }
 }

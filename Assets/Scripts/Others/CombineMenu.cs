@@ -39,6 +39,8 @@ public class CombineMenu : MonoBehaviour
         RectTransform rt = b.GetComponent<RectTransform>();
         rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f);
         rt.anchoredPosition = new Vector2(0, -118);
+        // Opened by its key or a click; as a nav stop it sat on the top canvas and trapped the pad/arrow cursor.
+        b.navigation = new Navigation { mode = Navigation.Mode.None };
         bannerText = b.GetComponentInChildren<TextMeshProUGUI>();
         banner = b.gameObject;
         banner.SetActive(false);
@@ -136,7 +138,17 @@ public class CombineMenu : MonoBehaviour
             if (super) row.GetComponent<Image>().color = new Color(1f, 0.45f, 0.9f, 0.14f);
             string title = super ? $"<color=#FF7AD9>SUPER: {def.name}</color>" : $"<color=#FFD24A>{def.name}</color>";
             TextMeshProUGUI rowText = RuntimeUI.Text(row, $"<b>{title}</b>  <size=80%><color=#FFB36B>{PlayerCollabs.Recipe(def)}</color></size>\n<size=85%><color=#C9D2F0>{def.text}</color></size>",
-                           21, Color.white, new Vector2(-85, 0), new Vector2(540, rowHeight - 14f), TextAlignmentOptions.MidlineLeft);
+                           21, Color.white, new Vector2(-40, 0), new Vector2(450, rowHeight - 14f), TextAlignmentOptions.MidlineLeft);
+
+            Image slot = RuntimeUI.Box(row, "Slot", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Color.white);
+            UiIcons.Frame(slot, super ? UiIcons.BoxGold : UiIcons.Slot);
+            slot.rectTransform.anchoredPosition = new Vector2(-322, 0);
+            slot.rectTransform.sizeDelta = new Vector2(70, 70);
+            Image icon = RuntimeUI.Box(slot.transform, "Icon", Vector2.zero, Vector2.one, Color.white);
+            icon.rectTransform.offsetMin = Vector2.one * 10;
+            icon.rectTransform.offsetMax = -Vector2.one * 10;
+            icon.preserveAspect = true;
+            UiIcons.Apply(def.id, icon, RuntimeUI.Text(slot.transform, "", 24, Color.white, Vector2.zero, new Vector2(70, 70)));
             rowText.enableAutoSizing = true;
             rowText.fontSizeMin = 12;
             rowText.fontSizeMax = 21;
