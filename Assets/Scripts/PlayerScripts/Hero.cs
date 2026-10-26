@@ -90,7 +90,7 @@ public static class Hero
             {
                 { "AttackDamagePercent", ("Attack Up", "+15% drone damage") },
                 { "AttackSpeedPercent", ("Overclock", "Drones fire 20% faster") },
-                { "ProjectileCount", ("Extra Drones", "+1 drone") },
+                { "ProjectileCount", ("Extra Drones", "+2 drones") },
                 { "AreaPercent", ("Wide Zap", "+15% zap radius") },
                 { "CritChance", ("Lucky Byte", "+5% crit chance (crits deal 1.5x)") },
             },
@@ -204,6 +204,19 @@ public static class Hero
                     if (clip.frames[i] != null && frames.TryGetValue(Suffix(clip.frames[i].name), out Sprite swap)) clip.frames[i] = swap;
         if (anim.spriteRenderer != null && anim.spriteRenderer.sprite != null && frames.TryGetValue(Suffix(anim.spriteRenderer.sprite.name), out Sprite now))
             anim.spriteRenderer.sprite = now;
+
+        // Ultimate look: Heroes/<id>Goggles holds the same frames with goggles down (only Nyx has one).
+        anim.altFrames = null;
+        anim.useAlt = null;
+        var alt = new Dictionary<string, Sprite>();
+        foreach (Sprite s in Resources.LoadAll<Sprite>("Heroes/" + id + "Goggles")) alt[Suffix(s.name)] = s;
+        if (alt.Count == 0 || !player.TryGetComponent(out PlayerUltimate ult)) return;
+        anim.altFrames = new Dictionary<Sprite, Sprite>();
+        foreach (PlayerAnimator.Clip[] clips in new[] { anim.walk, anim.roll, anim.throwClips })
+            foreach (PlayerAnimator.Clip clip in clips)
+                foreach (Sprite f in clip.frames)
+                    if (f != null && alt.TryGetValue(Suffix(f.name), out Sprite down)) anim.altFrames[f] = down;
+        anim.useAlt = () => ult.IsActive;
     }
 
     // "Mira_DownLeft_2" -> "_DownLeft_2"

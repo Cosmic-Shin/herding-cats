@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-// Paw stamp, ring and sparkles on mouse click. Runs on unscaled time so it works in paused menus.
+// Paw stamp, ring and a short trail of paw prints on mouse click. Runs on unscaled time so it works in paused menus.
 public class ClickFx : MonoBehaviour
 {
     private static readonly Color Pink = new Color(1f, 0.55f, 0.68f);
@@ -40,13 +40,23 @@ public class ClickFx : MonoBehaviour
     {
         float scale = Screen.height / 1080f;
 
-        StartCoroutine(Animate(Make(paw, Color.white), pos, 46f * scale, Random.Range(-20f, 20f), 0.45f, pop: true));
+        // A big stamp and a ring, then a little cat walks off: small prints stepping away, left-right-left.
+        Vector2 dir = Quaternion.Euler(0f, 0f, Random.Range(0f, 360f)) * Vector2.up;
+        float facing = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f; // the paw sprite's toes point up
+        StartCoroutine(Animate(Make(paw, Color.white), pos, 46f * scale, facing, 0.45f, pop: true));
         StartCoroutine(Animate(Make(Shapes.Ring, Pink), pos, 70f * scale, 0f, 0.3f, pop: false));
-        for (int i = 0; i < 5; i++)
+        Vector2 side = Vector2.Perpendicular(dir);
+        for (int i = 0; i < 4; i++)
         {
-            Vector2 dir = Quaternion.Euler(0f, 0f, i * 72f + Random.Range(-20f, 20f)) * Vector2.up;
-            StartCoroutine(Fly(Make(Shapes.Plus, i % 2 == 0 ? Cream : Pink), pos, dir * Random.Range(90f, 150f) * scale, 12f * scale));
+            Vector2 at = pos + (dir * (44f + i * 34f) + side * (i % 2 == 0 ? 11f : -11f)) * scale;
+            StartCoroutine(Step(0.08f + i * 0.08f, at, (32f - i * 3f) * scale, facing, i % 2 == 0 ? Pink : Cream));
         }
+    }
+
+    private IEnumerator Step(float delay, Vector2 at, float size, float angle, Color color)
+    {
+        yield return new WaitForSecondsRealtime(delay);
+        StartCoroutine(Animate(Make(paw, color), at, size, angle, 0.55f, pop: true));
     }
 
     private Image Make(Sprite sprite, Color color)
@@ -77,18 +87,4 @@ public class ClickFx : MonoBehaviour
         Destroy(img.gameObject);
     }
 
-    private IEnumerator Fly(Image img, Vector2 pos, Vector2 velocity, float size)
-    {
-        RectTransform rt = img.rectTransform;
-        Color c = img.color;
-        const float duration = 0.35f;
-        for (float t = 0f; t < 1f; t += Time.unscaledDeltaTime / duration)
-        {
-            rt.position = pos + velocity * duration * (1f - (1f - t) * (1f - t));
-            rt.sizeDelta = Vector2.one * size * (1f - t * 0.6f);
-            img.color = new Color(c.r, c.g, c.b, 1f - t);
-            yield return null;
-        }
-        Destroy(img.gameObject);
-    }
 }

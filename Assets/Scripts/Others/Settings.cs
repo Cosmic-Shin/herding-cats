@@ -143,37 +143,49 @@ public class Settings : MonoBehaviour
 
         Canvas canvas = RuntimeUI.Canvas("SettingsCanvas", 600);
         canvas.transform.SetParent(transform, false);
-        Image dim = RuntimeUI.Box(canvas.transform, "Dim", Vector2.zero, Vector2.one, new Color(0.03f, 0.02f, 0.08f, 0.85f));
-        RectTransform panel = RuntimeUI.Frame(dim.transform, "Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f)).rectTransform;
-        const float rowH = 44f;
-        float height = 150f + options.Count * rowH;
+        // Cat theme: solid plum panel over a dark dim, so the menu underneath doesn't show through.
+        Image dim = RuntimeUI.Box(canvas.transform, "Dim", Vector2.zero, Vector2.one, CatTheme.DimColor);
+        RectTransform panel = CatTheme.Panel(dim.transform, "Panel", CatTheme.Style.Panel, Vector2.zero, Vector2.zero).rectTransform;
+        const float rowH = 38f; // 13 rows plus the framed footer buttons fit inside the 720-high screen
+        float height = 170f + options.Count * rowH;
         panel.sizeDelta = new Vector2(640, height);
         float top = height / 2f;
 
         RuntimeUI.Title(panel, "SETTINGS", 48f, new Vector2(0, top - 40), 600f);
 
         var rows = new List<Button>();
+        var lefts = new List<Button>();
+        var rights = new List<Button>();
         for (int i = 0; i < options.Count; i++)
         {
             Option o = options[i];
             float y = top - 95f - i * rowH;
             RuntimeUI.Outline(RuntimeUI.Text(panel, o.label, 22, new Color(0.8f, 0.84f, 0.95f), new Vector2(-130, y), new Vector2(300, rowH), TextAlignmentOptions.MidlineLeft));
-            Button left = RuntimeUI.Button(panel, "<", new Vector2(80, y), new Vector2(44, 38), () => Change(o, -1));
-            Button row = RuntimeUI.Button(panel, "", new Vector2(175, y), new Vector2(140, 38), () => Change(o, +1));
+            // "<" sits well left of the value so the selection arrow (just left of the value) doesn't cover it.
+            Button left = RuntimeUI.Button(panel, "<", new Vector2(40, y), new Vector2(44, 36), () => Change(o, -1));
+            Button row = RuntimeUI.Button(panel, "", new Vector2(175, y), new Vector2(140, 36), () => Change(o, +1));
             o.valueText = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 22, Color.white, new Vector2(175, y), new Vector2(140, rowH)));
-            Button right = RuntimeUI.Button(panel, ">", new Vector2(270, y), new Vector2(44, 38), () => Change(o, +1));
-            left.navigation = right.navigation = new Navigation { mode = Navigation.Mode.None };
+            Button right = RuntimeUI.Button(panel, ">", new Vector2(270, y), new Vector2(44, 36), () => Change(o, +1));
             rows.Add(row);
+            lefts.Add(left);
+            rights.Add(right);
         }
-        rowButtons = rows;
 
-        Button controls = RuntimeUI.Button(panel, "Controls", new Vector2(-200, -top + 38), new Vector2(200, 48), ShowControls);
-        Button back = RuntimeUI.Button(panel, "Back", new Vector2(0, -top + 38), new Vector2(180, 48), Close);
+        Button controls = RuntimeUI.Button(panel, "Controls", new Vector2(-190, -top + 42), new Vector2(150, 36), ShowControls);
+        Button back = RuntimeUI.Button(panel, "Back", new Vector2(0, -top + 42), new Vector2(140, 36), Close);
+        CatTheme.Button(controls);
+        CatTheme.Button(back);
+        // Arrows only move: left/right steps between <, the value and >; Enter / A presses whichever is selected.
         for (int i = 0; i < rows.Count; i++)
-            RuntimeUI.Nav(rows[i], up: i > 0 ? rows[i - 1] : back, down: i < rows.Count - 1 ? rows[i + 1] : back);
+        {
+            bool first = i == 0, last = i == rows.Count - 1;
+            RuntimeUI.Nav(rows[i], up: first ? back : rows[i - 1], down: last ? back : rows[i + 1], left: lefts[i], right: rights[i]);
+            RuntimeUI.Nav(lefts[i], up: first ? back : lefts[i - 1], down: last ? back : lefts[i + 1], right: rows[i]);
+            RuntimeUI.Nav(rights[i], up: first ? back : rights[i - 1], down: last ? back : rights[i + 1], left: rows[i]);
+        }
         RuntimeUI.Nav(back, up: rows[rows.Count - 1], down: rows[0], left: controls);
         RuntimeUI.Nav(controls, up: rows[rows.Count - 1], down: rows[0], right: back);
-        RuntimeUI.Text(panel, $"Esc / {Keybinds.PadLabel(GamepadButton.East)} to close", 16, new Color(0.6f, 0.64f, 0.75f), new Vector2(215, -top + 38), new Vector2(190, 30));
+        RuntimeUI.Text(panel, $"Esc / {Keybinds.PadLabel(GamepadButton.East)} to close", 16, new Color(0.6f, 0.64f, 0.75f), new Vector2(215, -top + 42), new Vector2(190, 30));
         Refresh();
         mainPanel = panel;
         mainFocus = rows[0].gameObject;
@@ -184,7 +196,6 @@ public class Settings : MonoBehaviour
     // ---- Controls page: click an action, then press the new key. ----
 
     private RectTransform mainPanel, controlsPanel;
-    private List<Button> rowButtons;
     private GameObject mainFocus;
     private Button[] keyButtons, padButtons;
     private TextMeshProUGUI[] padFixed;
@@ -206,8 +217,8 @@ public class Settings : MonoBehaviour
     private void BuildControls(Transform parent)
     {
         int n = Keybinds.Names.Length;
-        const float rowH = 52f;
-        controlsPanel = RuntimeUI.Frame(parent, "Controls", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f)).rectTransform;
+        const float rowH = 48f;
+        controlsPanel = CatTheme.Panel(parent, "Controls", CatTheme.Style.Panel, Vector2.zero, Vector2.zero).rectTransform;
         float height = 230f + n * rowH;
         controlsPanel.sizeDelta = new Vector2(780, height);
         float top = height / 2f;
@@ -231,8 +242,8 @@ public class Settings : MonoBehaviour
                 padFixed[i] = RuntimeUI.Outline(RuntimeUI.Text(controlsPanel, "", 22, head, new Vector2(270, y), new Vector2(200, 44)));
         }
         RuntimeUI.Text(controlsPanel, $"Arrow keys / stick always move.  Esc / {Keybinds.PadLabel(GamepadButton.Start)} always pause.", 16, head, new Vector2(0, -top + 88), new Vector2(740, 24));
-        RuntimeUI.Button(controlsPanel, "Reset", new Vector2(-110, -top + 38), new Vector2(180, 48), () => { Keybinds.ResetAll(); RefreshKeys(); });
-        RuntimeUI.Button(controlsPanel, "Back", new Vector2(110, -top + 38), new Vector2(180, 48), ShowMainPage);
+        CatTheme.Button(RuntimeUI.Button(controlsPanel, "Reset", new Vector2(-110, -top + 38), new Vector2(180, 44), () => { Keybinds.ResetAll(); RefreshKeys(); }));
+        CatTheme.Button(RuntimeUI.Button(controlsPanel, "Back", new Vector2(110, -top + 38), new Vector2(180, 44), ShowMainPage));
         RefreshKeys();
         controlsPanel.gameObject.SetActive(false);
     }
@@ -264,11 +275,6 @@ public class Settings : MonoBehaviour
 
     private void Update()
     {
-        if (listening < 0 && rowButtons != null && mainPanel.gameObject.activeInHierarchy && GamepadUI.NavX != 0 && EventSystem.current != null)
-        {
-            int row = rowButtons.FindIndex(b => b.gameObject == EventSystem.current.currentSelectedGameObject);
-            if (row >= 0) Change(options[row], GamepadUI.NavX);
-        }
         if (listening < 0 || Time.frameCount == listenFrame) return;
         Keyboard kb = Keyboard.current;
         Gamepad pad = Gamepad.current;

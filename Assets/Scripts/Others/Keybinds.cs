@@ -8,7 +8,8 @@ public static class Keybinds
 {
     public enum Action { Up, Down, Left, Right, Dash, Special, Combine, Pause, Interact }
 
-    public static readonly string[] Names = { "Move up", "Move down", "Move left", "Move right", "Dash", "Special", "Combine", "Pause", "Open chest/anvil" };
+    // Action.Special is the hero's ultimate; it's labelled that way so players can find it in Controls.
+    public static readonly string[] Names = { "Move up", "Move down", "Move left", "Move right", "Dash", "Ultimate", "Combine", "Pause", "Open chest/anvil" };
     private static readonly Key[] Defaults = { Key.W, Key.S, Key.A, Key.D, Key.Space, Key.F, Key.C, Key.P, Key.E };
     private static readonly Key[] keys = (Key[])Defaults.Clone();
 

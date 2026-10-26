@@ -15,7 +15,7 @@ public class MissileWeapon : Weapon
         Juice.Smoke(Pos, 0.6f, 3);
         Juice.SparksDir(Pos, Vector2.up, 50f, new Color(1f, 0.7f, 0.3f), 5, 4f, 0.14f);
 
-        EnemyHealth target = Toughest(9f);
+        EnemyHealth target = PickTarget(9f);
         int n = Count[L];
         for (int i = 0; i < n; i++)
         {
@@ -24,15 +24,22 @@ public class MissileWeapon : Weapon
         }
     }
 
-    private EnemyHealth Toughest(float range)
+    // Healers first (they undo your damage), then bosses, elites, and the toughest cat by max HP.
+    // Max HP rather than current HP, so a big cat that's already hurt stays the target.
+    private EnemyHealth PickTarget(float range)
     {
         EnemyHealth best = null;
+        int bestTier = -1;
         foreach (Collider2D c in EnemiesNear(Pos, range))
         {
-            if (c.TryGetComponent(out EnemyHealth e) && !e.IsDead && (best == null || e.CurrentHealth > best.CurrentHealth)) best = e;
+            if (!c.TryGetComponent(out EnemyHealth e) || e.IsDead) continue;
+            int tier = Tier(e);
+            if (best == null || tier > bestTier || (tier == bestTier && e.maxHealth > best.maxHealth)) { best = e; bestTier = tier; }
         }
         return best;
     }
+
+    private static int Tier(EnemyHealth e) => e.TryGetComponent(out HealerCat _) ? 3 : e.IsBoss ? 2 : e.IsElite ? 1 : 0;
 
     private void Launch(Vector2 dir, EnemyHealth target)
     {

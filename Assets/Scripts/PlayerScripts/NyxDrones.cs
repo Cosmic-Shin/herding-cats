@@ -43,8 +43,8 @@ public class NyxDrones : MonoBehaviour
     private float Fury => PlayerCollabs.Has("furyfuse") && stats.maxHealth > 0f ? 1f - Mathf.Clamp01(stats.currentHealth / stats.maxHealth) : 0f;
     // Attack speed scales her fire rate like everyone else (it used to count extra and snowballed late).
     private float Interval => fireInterval / Mathf.Max(0.1f, stats.AttackSpeed * (1f + Fury));
-    // Swarm size: 1 base + 1 per bomb upgrade (2, 3, 4, 5).
-    public int Count { get { int n = Mathf.Max(1, stats.ProjectileCount); return n + 1 + (ult != null ? ult.ExtraBombs : 0); } }
+    // Swarm size: 2 per bomb upgrade (2, 4, 6, 8 at the cap of 4).
+    public int Count { get { int n = Mathf.Max(1, stats.ProjectileCount); return 2 * n + (ult != null ? ult.ExtraBombs : 0); } }
     public float ZapRadius => zapRadius * stats.areaMultiplier * (ult != null ? ult.RadiusMultiplier : 1f) * (1f + 0.5f * Fury);
     public float ZapDamage => stats.AttackDamage * damageMultiplier * (ult != null ? ult.DamageMultiplier : 1f);
 

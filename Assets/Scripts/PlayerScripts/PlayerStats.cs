@@ -47,6 +47,9 @@ public class PlayerStats : MonoBehaviour
     public int currentExp = 0;
     public int expToNextLevel = 10;
     public float levelExpGrowth = 1.16f;
+    [Tooltip("Growth per level from lateGrowthLevel on (at 1.16 all the way, level 40 needed 3,500 XP and level-ups crawled)")]
+    public float lateExpGrowth = 1.08f;
+    public int lateGrowthLevel = 20;
 
     public event Action<float, float> OnHealthChanged;
     public event Action OnDeath;
@@ -126,7 +129,7 @@ public class PlayerStats : MonoBehaviour
     private void LevelUp()
     {
         level++;
-        expToNextLevel = Mathf.RoundToInt(expToNextLevel * levelExpGrowth);
+        expToNextLevel = Mathf.RoundToInt(expToNextLevel * (level < lateGrowthLevel ? levelExpGrowth : lateExpGrowth));
         OnLevelUp?.Invoke(level);
     }
 }

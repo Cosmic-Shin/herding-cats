@@ -91,10 +91,18 @@ public class PlayerController : MonoBehaviour
             if (Keybinds.Held(Keybinds.Action.Down) || kb.downArrowKey.isPressed) input.y -= 1;
         }
 
-        if (input == Vector2.zero) input = GamepadUI.Move();
+        // Stick: ignore small tilts so a worn or drifting stick doesn't walk the hero on its own
+        // (any tilt past the deadzone is still full speed, like the keyboard).
+        if (input == Vector2.zero)
+        {
+            Vector2 pad = GamepadUI.Move();
+            if (pad.sqrMagnitude >= StickDeadzone * StickDeadzone) input = pad;
+        }
 
         return input.normalized;
     }
+
+    private const float StickDeadzone = 0.3f;
 
     private void FixedUpdate()
     {

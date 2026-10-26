@@ -4144,6 +4144,8 @@ MonoBehaviour:
   currentExp: 0
   expToNextLevel: 10
   levelExpGrowth: 1.16
+  lateExpGrowth: 1.08
+  lateGrowthLevel: 20
 --- !u!114 &1303224332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5743,25 +5745,24 @@ MonoBehaviour:
   maxSpeedup: 4
   maxEnemies: 200
   healthGrowthPerMinute: 0.4
-  healthGrowthQuadratic: 0.05
+  healthGrowthQuadratic: 0.03
   damageGrowthPerMinute: 0.18
   lateSpawnStart: 0
-  lateSpawnRampSeconds: 150
-  lateSpawnMaxBoost: 5
-  lateMaxEnemiesBonus: 200
+  lateSpawnRampSeconds: 240
+  lateSpawnMaxBoost: 3
+  lateMaxEnemiesBonus: 100
   eliteStartTime: 120
   eliteChancePerMinute: 0.012
   eliteChanceMax: 0.1
   eliteHealth: 8
   eliteXpMultiplier: 6
-  surgeStart: 30
-  surgeHealthQuadratic: 0.1
-  surgeDamagePerMinute: 0.15
+  surgeStart: 60
+  surgeHealthQuadratic: 0.05
+  surgeDamagePerMinute: 0.1
   surgeSpeedPerMinute: 0.05
   endlessSpeedPerMinute: 0.12
   maxSpeedScale: 2.2
   powerStep: 1.2
-  firstStepTime: 600
   endlessWaveInterval: 1.5
   endlessMinWaveInterval: 0.5
   endlessRingStart: 24
@@ -5873,7 +5874,7 @@ MonoBehaviour:
     prefab: {fileID: 7467151537998725492, guid: ae719ea81b40e32468fb61abd82891a8, type: 3}
     healthMultiplier: 12
     scale: 1.5
-    power: 1.6
+    power: 1.3
     specials: 1
     tint: {r: 1, g: 0.72, b: 0.72, a: 1}
     titleOverride: Crimson Beholder

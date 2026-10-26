@@ -115,7 +115,61 @@ public class LevelUpUIController : MonoBehaviour
         if (levelUpPanel != null) RuntimeUI.Restyle(levelUpPanel.transform);
         if (titleText != null)
             levelTitle = RuntimeUI.Title(titleText.transform.parent, "LEVEL UP!", titleText.fontSize, titleText.rectTransform.anchoredPosition + new Vector2(0f, titleText.fontSize * 0.32f));
+        ApplyTheme();
         SetPanelVisible(false);
+    }
+
+    // Cat theme: jelly cards that turn gold when picked, a framed build panel, themed buttons.
+    private void ApplyTheme()
+    {
+        if (levelUpPanel == null) return;
+        bool wasActive = levelUpPanel.activeSelf;
+        levelUpPanel.SetActive(true);
+        Transform root = levelUpPanel.transform;
+
+        Image dim = FindChild<Image>(root, "blackbg");
+        if (dim != null) dim.color = CatTheme.DimColor;
+
+        // Build panel: no portrait (the HUD already shows the hero), so it can start below the HUD gear
+        // slots instead of covering them. It spans the top of card 2 to the bottom of card 4.
+        Image build = FindChild<Image>(root, "StatsPanel");
+        if (build != null)
+        {
+            CatTheme.Frame(build, CatTheme.Style.Panel);
+            build.rectTransform.anchoredPosition = new Vector2(build.rectTransform.anchoredPosition.x, -111f);
+            build.rectTransform.sizeDelta = new Vector2(build.rectTransform.sizeDelta.x, 488f);
+            Image portrait = FindChild<Image>(build.transform, "Portrait");
+            if (portrait != null) portrait.gameObject.SetActive(false);
+            TextMeshProUGUI text = FindChild<TextMeshProUGUI>(build.transform, "StatsText");
+            if (text != null)
+            {
+                text.rectTransform.offsetMin = new Vector2(26f, 22f);
+                text.rectTransform.offsetMax = new Vector2(-26f, -22f);
+            }
+        }
+
+        foreach (Button card in upgradeButtons)
+        {
+            if (card == null) continue;
+            bool on = card.gameObject.activeSelf;
+            card.gameObject.SetActive(true);
+            CatTheme.Frame(card.GetComponent<Image>(), CatTheme.Style.Panel);
+            CatTheme.Frame(FindChild<Image>(card.transform, "IconSlot"), CatTheme.Style.Slot);
+            Image key = FindChild<Image>(card.transform, "Key");
+            if (key != null && CatTheme.Load("chip") != null)
+            {
+                key.sprite = CatTheme.Load("chip");
+                key.type = Image.Type.Sliced;
+                key.pixelsPerUnitMultiplier = 1f / CatTheme.Px;
+                key.color = Color.white;
+                TextMeshProUGUI number = key.GetComponentInChildren<TextMeshProUGUI>(true);
+                if (number != null) number.color = CatTheme.Ink;
+            }
+            card.gameObject.SetActive(on);
+        }
+
+        foreach (Button b in new[] { combosButton, rerollButton, eliminateButton, skipButton }) CatTheme.Button(b, 8f);
+        levelUpPanel.SetActive(wasActive);
     }
 
     private void OnDestroy()
@@ -307,8 +361,6 @@ public class LevelUpUIController : MonoBehaviour
 
         TextMeshProUGUI statsText = FindChild<TextMeshProUGUI>(levelUpPanel.transform, "StatsText");
         if (statsText != null) statsText.text = PauseMenu.BuildStats(stats);
-        Image face = FindChild<Image>(levelUpPanel.transform, "Face"); // the build panel portrait follows the picked hero
-        if (face != null && Hero.Portrait(Hero.Current.id) is Sprite heroFace) face.sprite = heroFace;
 
         SetPanelVisible(true);
         PauseGame();
@@ -644,14 +696,13 @@ public class LevelUpUIController : MonoBehaviour
             glow.effectDistance = on ? new Vector2(6f, 6f) : new Vector2(2f, 2f);
 
             if (!looks.TryGetValue(b, out CardLook look)) continue;
-            // Selected: the card lights up in its colour, the stripe widens, and the shine sweeps every couple of seconds.
+            // Selected: gold frame and a wider stripe. The shine only sweeps once, as the cards appear.
             Image bg = b.GetComponent<Image>();
-            Color lit = Color.Lerp(look.baseColor, look.kind, 0.28f);
-            lit.a = 1f;
-            bg.color = Color.Lerp(bg.color, on ? lit : look.baseColor, k);
+            Sprite frame = CatTheme.Get(on ? CatTheme.Style.PanelGold : CatTheme.Style.Panel);
+            if (frame != null && bg.sprite != frame) bg.sprite = frame;
+            bg.color = Color.Lerp(bg.color, look.baseColor, k);
             RectTransform stripe = look.stripe.rectTransform;
             stripe.sizeDelta = new Vector2(Mathf.Lerp(stripe.sizeDelta.x, on ? 12f : 7f, k), 0f);
-            if (on && Time.unscaledTime > look.shineAt + 2.2f) look.shineAt = Time.unscaledTime;
             SweepShine(look.shine, (RectTransform)tr, look.shineAt);
         }
     }
@@ -700,16 +751,17 @@ public class LevelUpUIController : MonoBehaviour
 
             button.onClick.AddListener(() => OnCard(offer));
             Color kind = KindColor(offer.kind);
-            Color card = Color.Lerp(RuntimeUI.BackdropColor, kind, 0.1f);
-            card.a = 1f;
-            button.GetComponent<Image>().color = eliminating ? new Color(0.38f, 0.06f, 0.08f, 1f) : card;
+            Color card = Color.white; // the jelly frame keeps its own colours
+            Color doomed = new Color(1f, 0.55f, 0.6f, 1f);
+            button.GetComponent<Image>().color = eliminating ? doomed : card;
             if (!button.TryGetComponent(out Outline glow))
             {
                 glow = button.gameObject.AddComponent<Outline>();
                 button.gameObject.AddComponent<CardHover>();
             }
             glow.effectColor = kind;
-            Decorate(button, offer.kind, kind, eliminating ? new Color(0.38f, 0.06f, 0.08f, 1f) : card, i);
+            glow.enabled = false; // the gold frame shows the selection now
+            Decorate(button, offer.kind, kind, eliminating ? doomed : card, i);
         }
     }
 
@@ -734,7 +786,8 @@ public class LevelUpUIController : MonoBehaviour
             fx.SetParent(rt, false);
             fx.anchorMin = Vector2.zero;
             fx.anchorMax = Vector2.one;
-            fx.offsetMin = fx.offsetMax = Vector2.zero;
+            fx.offsetMin = Vector2.one * 9f; // inside the jelly frame's rim
+            fx.offsetMax = -Vector2.one * 9f;
             fx.SetAsFirstSibling();
 
             look.stripe = RuntimeUI.Box(fx, "Stripe", new Vector2(0f, 0f), new Vector2(0f, 1f), Color.white);
@@ -749,7 +802,7 @@ public class LevelUpUIController : MonoBehaviour
 
             look.tag = RuntimeUI.Text(rt, "", 14, Color.white, Vector2.zero, new Vector2(120f, 20f), TextAlignmentOptions.TopRight); // no outline: the panel is still hidden here
             look.tag.rectTransform.anchorMin = look.tag.rectTransform.anchorMax = look.tag.rectTransform.pivot = new Vector2(1f, 1f);
-            look.tag.rectTransform.anchoredPosition = new Vector2(-10f, -6f);
+            look.tag.rectTransform.anchoredPosition = new Vector2(-20f, -14f);
             look.tag.raycastTarget = false;
             looks[button] = look;
         }

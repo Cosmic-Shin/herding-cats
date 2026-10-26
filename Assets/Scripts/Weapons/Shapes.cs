@@ -194,6 +194,16 @@ public static class Shapes
 
     public static Sprite Plus => plus != null ? plus : plus = Make(7, (x, y, n) => (x >= 2 && x <= 4) || (y >= 2 && y <= 4));
 
+    private static Sprite heart;
+    private static readonly string[] HeartRows = { ".##.##.", "#w#####", "#######", ".#####.", "..###..", "...#..." };
+
+    // Small pink pixel heart with a shine (the cat buddy's "friend" marker).
+    public static Sprite Heart => heart != null ? heart : heart = MakeOutlined(7, 6, 26f, (x, y) =>
+    {
+        char c = HeartRows[5 - y][x]; // rows are written top-down; textures go bottom-up
+        return c == 'w' ? new Color(1f, 0.85f, 0.92f) : c == '#' ? new Color(1f, 0.36f, 0.55f) : Color.clear;
+    });
+
     public static Sprite Circle => ExplosionFx.GetCircle();
 
     public static Sprite Square => square != null ? square : square = Make(4, (x, y, n) => true, new Vector2(0f, 0.5f));

@@ -12,16 +12,17 @@ public class HUD : MonoBehaviour
     {
         public Image frame, icon;
         public TextMeshProUGUI badge, level;
+        public bool themed; // cat-theme frames (the HUD); the leaderboard keeps the old ones
     }
 
     private const float SlotSize = 64f, SlotGap = 8f, Margin = 20f;
-    private static readonly Color HpHigh = new Color(0.35f, 0.9f, 0.4f), HpLow = new Color(0.95f, 0.25f, 0.25f);
+    private static readonly Color HpHigh = new Color(0.96f, 0.46f, 0.63f), HpLow = new Color(0.95f, 0.25f, 0.3f);
     private static readonly Color ComboGlow = new Color(1f, 0.8f, 0.3f);
 
     private RectTransform hpFill, xpFill, hpChunk, playerPanel;
     private Image hpFillImage, xpFillImage, ultFill, specialFrame;
     private TextMeshProUGUI specialBadge;
-    private static readonly Color XpColor = new Color(0.3f, 0.7f, 1f);
+    private static readonly Color XpColor = new Color(0.36f, 0.75f, 0.96f);
     private Vector2 panelPos;
     private float lastHp = 1f, chunkHp = 1f, chunkDelay, panelShake;
     private float xpShown, xpPulse;
@@ -67,7 +68,9 @@ public class HUD : MonoBehaviour
         var root = (RectTransform)transform;
 
         RectTransform panel = Place(RuntimeUI.Frame(root, "PlayerPanel", Vector2.zero, Vector2.zero).rectTransform, new Vector2(0, 1), new Vector2(Margin, -Margin), new Vector2(500, 124));
-        Slot portrait = MakeSlot(panel, new Vector2(12, -12), 100f);
+        CatTheme.Frame(panel.GetComponent<Image>(), CatTheme.Style.Panel);
+        Slot portrait = MakeSlot(panel, new Vector2(12, -12), 100f, themed: true);
+        CatTheme.Frame(portrait.frame, CatTheme.Style.Slime);
         portrait.icon.sprite = stats != null && stats.TryGetComponent(out PlayerAnimator anim) && anim.spriteRenderer != null ? anim.spriteRenderer.sprite : null;
         portrait.icon.enabled = portrait.icon.sprite != null;
         portrait.frame.gameObject.AddComponent<RectMask2D>().padding = Vector4.one * 6f;
@@ -76,23 +79,24 @@ public class HUD : MonoBehaviour
         heroLabel = Label(panel, "", 26, Color.white, new Vector2(124, -10), new Vector2(200, 30), TextAlignmentOptions.TopLeft);
         levelText = Label(panel, "LV 1", 26, new Color(1f, 0.85f, 0.35f), new Vector2(124, -10), new Vector2(364, 30), TextAlignmentOptions.TopRight);
 
-        (hpFill, hpFillImage) = Bar(panel, new Vector2(124, -44), new Vector2(364, 32), new Color(0.2f, 0.04f, 0.07f));
+        (hpFill, hpFillImage) = Bar(panel, new Vector2(124, -44), new Vector2(364, 32), new Color(0.21f, 0.07f, 0.16f));
         hpChunk = RuntimeUI.Box(hpFill.parent, "Chunk", Vector2.zero, Vector2.one, new Color(1f, 0.92f, 0.85f)).rectTransform;
         hpChunk.SetSiblingIndex(0);
         hpText = Label(hpFill.parent, "100 / 100", 22, Color.white, Vector2.zero, Vector2.zero, TextAlignmentOptions.Center, stretch: true);
-        (xpFill, xpFillImage) = Bar(panel, new Vector2(124, -84), new Vector2(364, 26), new Color(0.04f, 0.07f, 0.2f));
+        (xpFill, xpFillImage) = Bar(panel, new Vector2(124, -84), new Vector2(364, 26), new Color(0.06f, 0.1f, 0.22f));
         xpFillImage.color = XpColor;
         playerPanel = panel;
         panelPos = panel.anchoredPosition;
 
         float row1 = -Margin - 124 - 12, row2 = row1 - SlotSize - SlotGap, row3 = row2 - SlotSize - SlotGap;
         weaponSlots = new Slot[PlayerWeapons.MaxWeapons + 1 + PlayerCollabs.MaxCollabs]; // weapons, buddy, main-attack combos
-        for (int i = 0; i < weaponSlots.Length; i++) weaponSlots[i] = MakeSlot(root, new Vector2(Margin + i * (SlotSize + SlotGap), row1), SlotSize);
+        for (int i = 0; i < weaponSlots.Length; i++) weaponSlots[i] = MakeSlot(root, new Vector2(Margin + i * (SlotSize + SlotGap), row1), SlotSize, themed: true);
         skillSlots = new Slot[PlayerSkills.MaxSkills];
-        for (int i = 0; i < skillSlots.Length; i++) skillSlots[i] = MakeSlot(root, new Vector2(Margin + i * (SlotSize + SlotGap), row2), SlotSize);
+        for (int i = 0; i < skillSlots.Length; i++) skillSlots[i] = MakeSlot(root, new Vector2(Margin + i * (SlotSize + SlotGap), row2), SlotSize, themed: true);
 
-        Slot special = MakeSlot(root, new Vector2(Margin, row3), SlotSize);
+        Slot special = MakeSlot(root, new Vector2(Margin, row3), SlotSize, themed: true);
         specialFrame = special.frame;
+        CatTheme.Frame(specialFrame, CatTheme.Style.Pink);
         ultFill = special.icon;
         ultFill.sprite = ExplosionFx.GetCircle();
         ultFill.type = Image.Type.Filled;
@@ -109,10 +113,14 @@ public class HUD : MonoBehaviour
         timerText = Label(root, "00:00", 60, Color.white, Vector2.zero, new Vector2(320, 70), TextAlignmentOptions.Center, anchor: new Vector2(0.5f, 1f));
         ((RectTransform)timerText.transform).anchoredPosition = new Vector2(0, -16);
         timerText.outlineWidth = 0.28f;
+        timerPlate = CatTheme.PlateBehind((RectTransform)timerText.transform, new Vector2(230f, 82f));
         RectTransform killBox = Place(RuntimeUI.Frame(root, "Kills", Vector2.zero, Vector2.zero).rectTransform, new Vector2(1, 1), new Vector2(-Margin, -Margin), new Vector2(300, 56));
+        CatTheme.Frame(killBox.GetComponent<Image>(), CatTheme.Style.Panel);
         killText = Label(killBox, "DEFEATED  0", 24, Color.white, Vector2.zero, Vector2.zero, TextAlignmentOptions.Center, stretch: true);
         scoreText = Label(root, "SCORE  0", 24, Color.white, Vector2.zero, new Vector2(320, 30), TextAlignmentOptions.Center, anchor: new Vector2(0.5f, 1f));
-        ((RectTransform)scoreText.transform).anchoredPosition = new Vector2(0, -84);
+        // Below the timer's plate (which reaches y -92), on its own smaller plate so the two don't run together.
+        ((RectTransform)scoreText.transform).anchoredPosition = new Vector2(0, -102);
+        scorePlate = CatTheme.PlateBehind((RectTransform)scoreText.transform, new Vector2(250f, 36f));
     }
 
     private static RectTransform Place(RectTransform rt, Vector2 anchor, Vector2 pos, Vector2 size)
@@ -142,20 +150,22 @@ public class HUD : MonoBehaviour
     private static (RectTransform, Image) Bar(RectTransform parent, Vector2 pos, Vector2 size, Color back)
     {
         Image frame = RuntimeUI.Box(parent, "Bar", Vector2.zero, Vector2.zero, Color.white);
-        UiIcons.Frame(frame, UiIcons.Slot);
+        CatTheme.BarFrame(frame);
         Place(frame.rectTransform, new Vector2(0, 1), pos, size);
         Image bg = RuntimeUI.Box(frame.transform, "Back", Vector2.zero, Vector2.one, back);
-        bg.rectTransform.offsetMin = new Vector2(4, 4);
-        bg.rectTransform.offsetMax = new Vector2(-4, -4);
+        bg.rectTransform.offsetMin = new Vector2(6, 6);
+        bg.rectTransform.offsetMax = new Vector2(-6, -6);
         Image fill = RuntimeUI.Box(bg.transform, "Fill", Vector2.zero, Vector2.one, Color.white);
+        CatTheme.BarFill(fill, Color.white);
         return (fill.rectTransform, fill);
     }
 
-    internal static Slot MakeSlot(RectTransform parent, Vector2 pos, float size)
+    internal static Slot MakeSlot(RectTransform parent, Vector2 pos, float size, bool themed = false)
     {
-        var s = new Slot();
+        var s = new Slot { themed = themed };
         s.frame = RuntimeUI.Box(parent, "Slot", Vector2.zero, Vector2.zero, Color.white);
         UiIcons.Frame(s.frame, UiIcons.Slot);
+        if (themed) CatTheme.Frame(s.frame, CatTheme.Style.Slot);
         Place(s.frame.rectTransform, new Vector2(0, 1), pos, new Vector2(size, size));
         s.icon = RuntimeUI.Box(s.frame.transform, "Icon", Vector2.zero, Vector2.one, Color.white);
         s.icon.rectTransform.offsetMin = Vector2.one * size * 0.14f;
@@ -172,7 +182,7 @@ public class HUD : MonoBehaviour
     {
         UiIcons.Apply(iconId, s.icon, s.badge);
         s.level.text = level;
-        s.frame.sprite = gold ? UiIcons.BoxGold : UiIcons.Slot;
+        s.frame.sprite = SlotSprite(s, gold);
         if (s.frame.TryGetComponent(out Button b)) b.interactable = true;
         s.frame.color = Color.white;
     }
@@ -182,14 +192,20 @@ public class HUD : MonoBehaviour
         s.icon.enabled = false;
         s.badge.gameObject.SetActive(false);
         s.level.text = "";
-        s.frame.sprite = UiIcons.Slot;
+        s.frame.sprite = SlotSprite(s, false);
         s.frame.color = new Color(1f, 1f, 1f, 0.45f);
         if (s.frame.TryGetComponent(out Button b)) b.interactable = false;
     }
 
+    private static Sprite SlotSprite(Slot s, bool gold)
+    {
+        Sprite themed = s.themed ? CatTheme.Get(gold ? CatTheme.Style.SlotGold : CatTheme.Style.Slot) : null;
+        return themed != null ? themed : gold ? UiIcons.BoxGold : UiIcons.Slot;
+    }
+
     private static string LevelTag(int level, int max) => level >= max ? "<color=#FFD24A>MAX</color>" : level.ToString();
 
-    private Image portraitIcon;
+    private Image portraitIcon, timerPlate, scorePlate;
     private TextMeshProUGUI heroLabel;
     private bool gearNavLive = true;
 
@@ -240,6 +256,8 @@ public class HUD : MonoBehaviour
         // The level-up title sits where the timer and score are, so hide them while it's open.
         if (levelUp == null) levelUp = FindAnyObjectByType<LevelUpUIController>();
         timerText.enabled = scoreText.enabled = levelUp == null || !levelUp.IsOpen;
+        if (timerPlate != null) timerPlate.enabled = timerText.enabled;
+        if (scorePlate != null) scorePlate.enabled = scoreText.enabled;
 
         UpdateUltimate();
         RefreshCombinable();
@@ -364,7 +382,7 @@ public class HUD : MonoBehaviour
         }
         ultWasReady = ready;
         ultPing = Mathf.Max(0f, ultPing - Time.unscaledDeltaTime * 2.5f);
-        specialFrame.sprite = ready ? UiIcons.BoxGold : UiIcons.Slot;
+        specialFrame.sprite = CatTheme.Get(ready ? CatTheme.Style.SlotGold : CatTheme.Style.Pink) ?? (ready ? UiIcons.BoxGold : UiIcons.Slot);
         specialFrame.rectTransform.localScale = Vector3.one * (1f + 0.35f * ultPing + (ready ? 0.05f * Mathf.Sin(Time.unscaledTime * 6f) : 0f));
 
         if (ult.IsActive)
@@ -418,7 +436,7 @@ public class HUD : MonoBehaviour
         for (int i = 0; i < slots.Length && i < owned.Count; i++)
         {
             if (!combinable.Contains(owned[i])) continue;
-            slots[i].frame.sprite = UiIcons.BoxGold;
+            slots[i].frame.sprite = SlotSprite(slots[i], true);
             slots[i].frame.color = Color.Lerp(Color.white, ComboGlow, pulse);
         }
     }
@@ -444,6 +462,7 @@ public class HUD : MonoBehaviour
     {
         pause = FindFirstObjectByType<PauseMenu>();
         tipBox = Place(RuntimeUI.Frame(root, "Tooltip", Vector2.zero, Vector2.zero, gold: true).rectTransform, new Vector2(0, 1), new Vector2(Margin, top), new Vector2(380, 100));
+        CatTheme.Frame(tipBox.GetComponent<Image>(), CatTheme.Style.PanelGold);
         tipText = RuntimeUI.Text(tipBox, "", 24, Color.white, Vector2.zero, Vector2.zero, TextAlignmentOptions.TopLeft);
         var rt = tipText.rectTransform;
         rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;

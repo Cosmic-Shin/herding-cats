@@ -64,11 +64,10 @@ public class EnemySpawner : MonoBehaviour
     private float lateFrom = float.PositiveInfinity;
     public void StartLateGame() => lateFrom = Mathf.Min(lateFrom, runTime);
 
-    [Header("Power steps: x enemy HP and damage at 10:00, and again when the 15:00 boss dies")]
+    // No step at 10:00: the 10-min boss already lands there, and stacking both made a difficulty cliff.
+    [Header("Power step: x enemy HP and damage when the 15:00 boss dies")]
     public float powerStep = 1.2f;
-    public float firstStepTime = 600f;
     private float stepMul = 1f;
-    private bool firstStepDone;
 
     // Called by BossTimeline when the 15-min boss dies (silently: the super-combo banner shows then).
     public void StepUp(string why)
@@ -300,7 +299,6 @@ public class EnemySpawner : MonoBehaviour
 
         runTime += Time.deltaTime;
         difficultyTimer += Time.deltaTime;
-        if (!firstStepDone && runTime >= firstStepTime) { firstStepDone = true; StepUp("10 minutes in"); }
         DamageScale = (1f + runTime / 60f * damageGrowthPerMinute) * difficulty * (1f + SurgeMinutes * surgeDamagePerMinute) * endlessDamageMul * stepMul;
         SpeedScale = Mathf.Min(maxSpeedScale, 1f + SurgeMinutes * surgeSpeedPerMinute + (Endless ? endlessSpeedStart + EndlessMinutes * endlessSpeedPerMinute : 0f));
 

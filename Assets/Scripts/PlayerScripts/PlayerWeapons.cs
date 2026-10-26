@@ -32,7 +32,7 @@ public class PlayerWeapons : MonoBehaviour
             "Damage 9 -> 10",
             "4 shurikens, 6 bounces, 12 damage" } },
         new Def { id = "missiles", name = "Homing Missiles", type = typeof(MissileWeapon), levels = new[] {
-            "Fire 2 homing missiles at the toughest enemy nearby (16 dmg blast)",
+            "Fire 2 homing missiles at the strongest enemy nearby, healers first (16 dmg blast)",
             "+1 missile",
             "Damage 16 -> 20",
             "+1 missile",

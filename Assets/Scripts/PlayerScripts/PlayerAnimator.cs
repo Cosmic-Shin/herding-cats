@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerController))]
@@ -14,6 +15,11 @@ public class PlayerAnimator : MonoBehaviour
     public Clip[] walk = new Clip[8];
     public Clip[] roll = new Clip[8];
     public Clip[] throwClips = new Clip[4];
+
+    // Optional look swap (Nyx pulls her goggles down during her ultimate): while useAlt() is true,
+    // each frame is replaced by its match in altFrames.
+    [System.NonSerialized] public Dictionary<Sprite, Sprite> altFrames;
+    [System.NonSerialized] public System.Func<bool> useAlt;
 
     private PlayerController controller;
     private Vector2 facing = Vector2.down;
@@ -120,6 +126,7 @@ public class PlayerAnimator : MonoBehaviour
             frame = f[(int)(walkTime * walkFps) % f.Length];
         }
 
+        if (frame != null && altFrames != null && useAlt != null && useAlt() && altFrames.TryGetValue(frame, out Sprite alt)) frame = alt;
         if (frame != null) spriteRenderer.sprite = frame;
 
         if (controller.IsDashing && !wasDashing) Squash(new Vector2(0.8f, 1.2f), 0.12f);

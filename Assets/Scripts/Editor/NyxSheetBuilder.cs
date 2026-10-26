@@ -8,9 +8,11 @@ using UnityEngine;
 // from her hand-drawn 4-direction walk sheet. Drawn frames are kept as-is; the rest are derived:
 // diagonal walks from the side views, rolls by rotating
 // a tucked pose, and a placeholder "gadget" attack. Re-run after editing the source sheet.
+// Two sets: Heroes/Nyx (goggles up on her forehead) and Heroes/NyxGoggles (goggles down, worn during her ultimate).
 public static class NyxSheetBuilder
 {
-    private const string Dir = "Assets/Resources/Heroes/Nyx", Source = Dir + "/pixil-frame-0.png", Template = "Assets/Resources/Heroes/Kai/Character_";
+    private const string Dir = "Assets/Resources/Heroes/Nyx", GogglesDir = "Assets/Resources/Heroes/NyxGoggles",
+                         Source = Dir + "/pixil-frame-0.png", Template = "Assets/Resources/Heroes/Kai/Character_";
     private const int Cell = 32, CellTop = 3;
 
     private static readonly int[] Palette = {
@@ -33,6 +35,16 @@ public static class NyxSheetBuilder
     [MenuItem("Tools/Build Nyx Sheets")]
     public static void Build()
     {
+        BuildSet(Dir, "Nyx_", false);
+        Directory.CreateDirectory(GogglesDir);
+        BuildSet(GogglesDir, "NyxGoggles_", true);
+        AssetDatabase.Refresh();
+        Debug.Log("Nyx sheets built.");
+    }
+
+    private static void BuildSet(string dir, string prefix, bool gogglesDown)
+    {
+        void Save(Img sheet, string name) => SaveSheet(sheet, dir, prefix, name);
         var src = new Texture2D(2, 2);
         src.LoadImage(File.ReadAllBytes(Source));
         int H = src.height;
@@ -63,6 +75,7 @@ public static class NyxSheetBuilder
                         Color32 c = Get(q[0] + x, top + y);
                         img[x, y] = c.a < 128 ? new Color32(0, 0, 0, 0) : Snap(c);
                     }
+                AddGoggles(img, facing[r], gogglesDown);
                 frames[i] = new Frame { img = img, top = top - bandTop }; // keeps the walk bob
             }
             rows[facing[r]] = frames;
@@ -108,8 +121,68 @@ public static class NyxSheetBuilder
             Blit(sheet, 4, f.img, 0, f.top);
             Save(sheet, "Slash" + d);
         }
-        AssetDatabase.Refresh();
-        Debug.Log("Nyx sheets built.");
+    }
+
+    // ---- Goggles: dark green hacker goggles pushed up on her forehead, red lenses, strap round the head ----
+    // Drawn on the source frames, so every derived sheet (diagonals, rolls, attack) and the portrait get them.
+    // Coordinates are relative to an anchor that sits in the same spot on every walk frame:
+    // front/side views use the first eye-white pixel, the back view the first headphone-red pixel.
+    private static readonly Color32 GFrame = Hex(0x123821), GShine = Hex(0x2E7D4F), Lens = Hex(0xD50000), LensGlint = Hex(0xFF8A80);
+
+    // One row per string, starting at (dx, dy) from the anchor. F frame, S frame highlight, L lens, l glint, space = untouched.
+    // Lenses sit above her eyes (x 6-7 and 11-12 in the source frame), strap out to the hair edges.
+    private static readonly (int dx, int dy, string[] rows) FrontGoggles = (-3, -5, new[] {
+        " SSSSS SSSSS ",
+        "FFlLLFFFlLLFF",
+        "FFLLLFFFLLLFF",
+        " FFFFF FFFFF ",
+    });
+    private static readonly (int dx, int dy, string[] rows) BackStrap = (1, -2, new[] {
+        "FFFFFFSFFFFFF",
+        "FFFFFFSFFFFFF",
+    });
+    // Facing left; the right-facing frames are mirror images, so this is flipped for them.
+    private static readonly (int dx, int dy, string[] rows) SideGoggles = (-4, -5, new[] {
+        " SSS",
+        "FlLFFFFFFFFFFFF",
+        "FLLFFFFFFFFFFFF",
+        " FFF",
+    });
+
+    // Goggles down (her ultimate): the same goggles over her eyes, strap at eye level.
+    private static readonly (int dx, int dy, string[] rows) FrontGogglesDown = (-3, -1, FrontGoggles.rows);
+    private static readonly (int dx, int dy, string[] rows) BackStrapDown = (1, 2, BackStrap.rows);
+    // Eye at x 4-5 in the left-facing source; the strap stops at x 14 where the back of her head narrows.
+    private static readonly (int dx, int dy, string[] rows) SideGogglesDown = (-2, -1, new[] {
+        " SSS",
+        "FlLFFFFFFFFF",
+        "FLLFFFFFFFFF",
+        " FFF",
+    });
+
+    private static void AddGoggles(Img f, string facing, bool down)
+    {
+        bool back = facing == "Up";
+        Color32 key = back ? Hex(0xD50000) : Hex(0xFFFFFF);
+        int ax = -1, ay = -1;
+        for (int y = 0; y < f.h && ay < 0; y++)
+            for (int x = 0; x < f.w; x++)
+                if (f[x, y].a > 0 && Rgb(f[x, y]) == Rgb(key)) { ax = x; ay = y; break; }
+        if (ay < 0) return;
+
+        var (dx, dy, rows) = back ? (down ? BackStrapDown : BackStrap)
+                           : facing == "Down" ? (down ? FrontGogglesDown : FrontGoggles)
+                           : (down ? SideGogglesDown : SideGoggles);
+        bool mirror = facing == "Right";
+        for (int j = 0; j < rows.Length; j++)
+            for (int i = 0; i < rows[j].Length; i++)
+            {
+                char c = rows[j][i];
+                if (c == ' ') continue;
+                int x = mirror ? ax - (dx + i) : ax + dx + i, y = ay + dy + j;
+                if (x < 0 || y < 0 || x >= f.w || y >= f.h) continue;
+                f[x, y] = c == 'S' ? GShine : c == 'L' ? Lens : c == 'l' ? LensGlint : GFrame;
+            }
     }
 
     private static Img Rot90(Img f, bool clockwise)
@@ -151,17 +224,17 @@ public static class NyxSheetBuilder
             }
     }
 
-    // Writes Nyx_<name>.png, and on first build a .meta copied from Kai's matching sheet (same slicing, new names/guid).
-    private static void Save(Img sheet, string name)
+    // Writes <prefix><name>.png, and on first build a .meta copied from Kai's matching sheet (same slicing, new names/guid).
+    private static void SaveSheet(Img sheet, string dir, string prefix, string name)
     {
         var tex = new Texture2D(sheet.w, sheet.h, TextureFormat.RGBA32, false);
         for (int y = 0; y < sheet.h; y++) for (int x = 0; x < sheet.w; x++) tex.SetPixel(x, sheet.h - 1 - y, sheet[x, y]);
-        string path = $"{Dir}/Nyx_{name}.png";
+        string path = $"{dir}/{prefix}{name}.png";
         File.WriteAllBytes(path, tex.EncodeToPNG());
         UnityEngine.Object.DestroyImmediate(tex);
         if (!File.Exists(path + ".meta"))
         {
-            string meta = File.ReadAllText(Template + name + ".png.meta").Replace("Character_", "Nyx_");
+            string meta = File.ReadAllText(Template + name + ".png.meta").Replace("Character_", prefix);
             int g = meta.IndexOf("guid: ") + 6;
             meta = meta.Substring(0, g) + Guid.NewGuid().ToString("N") + meta.Substring(g + 32);
             File.WriteAllText(path + ".meta", meta);

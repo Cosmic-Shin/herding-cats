@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -63,25 +64,43 @@ public class GameOverScreen : MonoBehaviour
         Canvas canvas = RuntimeUI.Canvas("GameOverCanvas", 200);
         screen = canvas.gameObject;
 
-        Image dim = RuntimeUI.Box(canvas.transform, "Dim", Vector2.zero, Vector2.one, new Color(0.03f, 0.02f, 0.08f, 0.8f));
-        RectTransform panel = RuntimeUI.Frame(dim.transform, "Panel", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f)).rectTransform;
-        panel.sizeDelta = new Vector2(1040, 600);
+        // Cat theme: same plum panel as pause / level-up, a slime cat sitting on top, score on a gold plate.
+        Image dim = RuntimeUI.Box(canvas.transform, "Dim", Vector2.zero, Vector2.one, CatTheme.DimColor);
+        RectTransform panel = CatTheme.Panel(dim.transform, "Panel", CatTheme.Style.Panel, new Vector2(0, -5), new Vector2(1000, 590)).rectTransform;
+        Image cat = CatTheme.Cat(panel, "white", new Vector2(-150f, -6f), 64f, new Vector2(1f, 1f));
+        cat.rectTransform.pivot = new Vector2(0.5f, 0f);
 
-        RuntimeUI.Title(panel, "GAME OVER", 64f, new Vector2(0, 250), 900f);
+        RuntimeUI.Title(panel, "GAME OVER", 64f, new Vector2(0, 214), 900f);
+
         int best = rank > 0 ? 0 : Leaderboard.RankOf(entry.name);
         string place = rank > 0 ? $"<color=#7CFF9A>Rank #{rank} on the leaderboard!</color>"
-                     : best > 0 ? $"<color=#9AA3C0>Not a new best. You're still #{best}</color>"
-                     : "<color=#9AA3C0>Not in the top 50 this time</color>";
-        TextMeshProUGUI score = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 34, Color.white, new Vector2(0, 178), new Vector2(560, 80)));
-        TextMeshProUGUI summary = RuntimeUI.Text(panel, Summary(), 22, Color.white, new Vector2(-235, -20), new Vector2(480, 300), TextAlignmentOptions.TopLeft);
-        RectTransform chart = DamageChart(panel, new Vector2(250, -20), new Vector2(440, 320), hud != null ? hud.RunTime : 0f);
-        summary.enableAutoSizing = true;
-        summary.fontSizeMin = 12;
-        summary.fontSizeMax = 22;
+                     : best > 0 ? $"<color=#968AB9>Not a new best. You're still #{best}</color>"
+                     : "<color=#968AB9>Not in the top 50 this time</color>";
+        CatTheme.Panel(panel, "ScorePlate", CatTheme.Style.PanelGold, new Vector2(0, 119), new Vector2(400, 64));
+        TextMeshProUGUI score = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 34, Color.white, new Vector2(0, 119), new Vector2(400, 56)));
+        TextMeshProUGUI placeText = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 18, Color.white, new Vector2(0, 65), new Vector2(700, 28)));
 
-        Button restart = RuntimeUI.Button(panel, "Restart", new Vector2(-100, -245), new Vector2(180, 56), Restart);
-        Button menu = RuntimeUI.Button(panel, "Main Menu", new Vector2(100, -245), new Vector2(180, 56), MainMenu.BackToMenu);
-        StartCoroutine(Reveal(dim, panel, score, entry.score, place, new Component[] { summary, chart }, new[] { restart, menu }));
+        // Left: who, where, and the run summary. Right: damage chart.
+        RectTransform left = CatTheme.Panel(panel, "RunInset", CatTheme.Style.Slot, new Vector2(-250, -90), new Vector2(420, 258)).rectTransform;
+        Image face = CatTheme.Panel(left, "Portrait", CatTheme.Style.Slime, new Vector2(-160, 82), new Vector2(64, 64));
+        face.gameObject.AddComponent<RectMask2D>().padding = Vector4.one * 6f;
+        Image hero = CatTheme.Img(face.transform, "Face", Hero.Portrait(Hero.Current.id), new Vector2(0f, -20f + Hero.Current.portraitDrop * 147f / 32f), new Vector2(147f, 147f)); // same crop as the HUD portrait
+        hero.enabled = hero.sprite != null;
+        RuntimeUI.Outline(RuntimeUI.Text(left, Hero.Current.name.ToUpper(), 30, CatTheme.Cream, new Vector2(-50, 94), new Vector2(140, 36), TextAlignmentOptions.Left));
+        RuntimeUI.Outline(RuntimeUI.Text(left, MapGenerator.Names[Mathf.Clamp(MapGenerator.Biome, 0, MapGenerator.Names.Length - 1)], 18, CatTheme.Mint, new Vector2(-50, 64), new Vector2(140, 24), TextAlignmentOptions.Left));
+        // Run stats beside the name; weapons and skills in two columns underneath, so a full build fits.
+        SummaryText(left, RunStats(), new Vector2(110, 76), new Vector2(180, 84), 14);
+        SummaryText(left, Gear(), new Vector2(-98, -48), new Vector2(190, 150), 14);
+        SummaryText(left, SkillList(), new Vector2(98, -48), new Vector2(190, 150), 14);
+
+        RectTransform right = CatTheme.Panel(panel, "DamageInset", CatTheme.Style.Slot, new Vector2(225, -90), new Vector2(470, 258)).rectTransform;
+        DamageChart(right, Vector2.zero, new Vector2(430, 226), hud != null ? hud.RunTime : 0f);
+
+        Button restart = RuntimeUI.Button(panel, "Restart", new Vector2(-130, -259), new Vector2(200, 44), Restart);
+        Button menu = RuntimeUI.Button(panel, "Main Menu", new Vector2(130, -259), new Vector2(200, 44), MainMenu.BackToMenu);
+        CatTheme.Button(restart, 10f);
+        CatTheme.Button(menu, 10f);
+        StartCoroutine(Reveal(dim, panel, score, placeText, entry.score, place, new Component[] { left, right, placeText }, new[] { restart, menu }));
     }
 
     private static CanvasGroup Group(Component c)
@@ -92,7 +111,7 @@ public class GameOverScreen : MonoBehaviour
     }
 
     // Staged reveal (unscaled time, the game is stopped): dim, panel drops in, score counts up, details fade in, buttons last.
-    private IEnumerator Reveal(Image dim, RectTransform panel, TextMeshProUGUI score, int finalScore, string place, Component[] details, Button[] buttons)
+    private IEnumerator Reveal(Image dim, RectTransform panel, TextMeshProUGUI score, TextMeshProUGUI placeText, int finalScore, string place, Component[] details, Button[] buttons)
     {
         CanvasGroup[] detailGroups = System.Array.ConvertAll(details, Group);
         CanvasGroup[] buttonGroups = System.Array.ConvertAll(buttons, b => Group(b));
@@ -118,7 +137,8 @@ public class GameOverScreen : MonoBehaviour
             if (Time.frameCount % 3 == 0) Sfx.Play(Sfx.Id.Tick, 0.25f, 1f + t);
             yield return null;
         }
-        score.text = $"<color=#FFE08A>SCORE  {finalScore:N0}</color>\n<size=60%>{place}</size>";
+        score.text = $"<color=#FFE08A>SCORE  {finalScore:N0}</color>";
+        placeText.text = place;
         Sfx.Play(Sfx.Id.Ready, 0.6f);
         for (float t = 0f; t < 0.25f; t += Time.unscaledDeltaTime)
         {
@@ -205,36 +225,52 @@ public class GameOverScreen : MonoBehaviour
         return Color.HSVToRGB(Mathf.Abs(hash % 360) / 360f, 0.5f, 1f);
     }
 
-    private string Summary()
+    private static void SummaryText(RectTransform parent, string text, Vector2 pos, Vector2 size, float maxSize)
     {
-        string Row(string label, string value) => $"<color=#9AA3C0>{label}</color><pos=48%>{value}\n";
+        TextMeshProUGUI t = RuntimeUI.Text(parent, text, maxSize, Color.white, pos, size, TextAlignmentOptions.TopLeft);
+        t.enableAutoSizing = true;
+        t.fontSizeMin = 9;
+        t.fontSizeMax = maxSize;
+    }
 
+    private string RunStats()
+    {
+        string Row(string label, string value) => $"<color=#9AA3C0>{label}</color><pos=62%>{value}\n";
         int seconds = hud != null ? (int)hud.RunTime : 0;
         var sb = new StringBuilder();
-        sb.Append(Row("Time survived", $"<color=#FFE08A>{seconds / 60:00}:{seconds % 60:00}</color>" + (EnemySpawner.Endless ? "  <color=#FF7AD9>ENDLESS</color>" : "")));
+        sb.Append(Row("Time", $"<color=#FFE08A>{seconds / 60:00}:{seconds % 60:00}</color>" + (EnemySpawner.Endless ? " <color=#FF7AD9>END</color>" : "")));
         sb.Append(Row("Level", stats.level.ToString()));
-        sb.Append(Row("Cats defeated", EnemyHealth.Kills.ToString()));
-        sb.Append(Row("Bosses defeated", EnemyHealth.BossKills.ToString()));
-        if (Companion.Instance != null) sb.Append(Row("Cat Buddy", $"Lv {Companion.Instance.Level}"));
+        sb.Append(Row("Cats", EnemyHealth.Kills.ToString("N0")));
+        sb.Append(Row("Bosses", EnemyHealth.BossKills.ToString()));
+        if (Companion.Instance != null) sb.Append(Row("Buddy", $"Lv {Companion.Instance.Level}"));
+        return sb.ToString();
+    }
 
+    // Weapons (collab and super weapons are tagged there), then collabs that aren't a weapon of their own.
+    private string Gear()
+    {
+        var sb = new StringBuilder("<color=#FFB36B>Weapons</color>\n");
         PlayerWeapons weapons = stats.GetComponent<PlayerWeapons>();
-        sb.Append("\n<color=#FFB36B>Weapons</color>\n");
         if (weapons == null || weapons.OwnedInOrder.Count == 0) sb.Append("<color=#5A6280>none</color>\n");
-        else foreach (string id in weapons.OwnedInOrder) sb.Append($"  {PlayerWeapons.Find(id).name} {WeaponTag(weapons, id)}\n");
+        else foreach (string id in weapons.OwnedInOrder) sb.Append($"{PlayerWeapons.Find(id).name} {WeaponTag(weapons, id)}\n");
 
         PlayerCollabs collabs = stats.GetComponent<PlayerCollabs>();
-        if (collabs != null && collabs.Taken.Count > 0)
+        if (collabs == null) return sb.ToString();
+        var boosts = collabs.Taken.Where(id => weapons == null || !weapons.OwnedInOrder.Contains(id)).ToList();
+        if (boosts.Count > 0)
         {
-            sb.Append("\n<color=#FFD24A>Collabs</color>\n");
-            foreach (string id in collabs.Taken) sb.Append($"  {PlayerCollabs.Find(id).name}\n");
-            if (collabs.SuperTaken != null) sb.Append($"  <color=#FF7AD9>SUPER: {PlayerCollabs.Find(collabs.SuperTaken).name}</color>\n");
+            sb.Append("\n<color=#FFD24A>Boosts</color>\n");
+            foreach (string id in boosts) sb.Append(PlayerCollabs.Find(id).name + "\n");
         }
+        return sb.ToString();
+    }
 
+    private string SkillList()
+    {
+        var sb = new StringBuilder("<color=#D7A6FF>Skills</color>\n");
         PlayerSkills skills = stats.GetComponent<PlayerSkills>();
-        sb.Append("\n<color=#D7A6FF>Skills</color>\n");
         if (skills == null || skills.OwnedInOrder.Count == 0) sb.Append("<color=#5A6280>none</color>\n");
-        else foreach (string id in skills.OwnedInOrder) sb.Append($"  {PlayerSkills.Find(id).name} <color=#9FD8FF>Lv {skills.LevelOf(id)}</color>\n");
-
+        else foreach (string id in skills.OwnedInOrder) sb.Append($"{PlayerSkills.Find(id).name} <color=#9FD8FF>Lv {skills.LevelOf(id)}</color>\n");
         return sb.ToString();
     }
 

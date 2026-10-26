@@ -33,13 +33,40 @@ public class PauseMenu : MonoBehaviour
         quitButton.GetComponentInChildren<TextMeshProUGUI>().text = "Main Menu";
         AddCombosButton();
         RuntimeUI.Restyle(panel.transform);
+        RectTransform title = null;
         foreach (TextMeshProUGUI t in panel.GetComponentsInChildren<TextMeshProUGUI>(true))
-            if (t.text.Trim() == "PAUSED") { RuntimeUI.ReplaceTitle(t, "PAUSED", t.fontSize); break; }
-        // Taller stats box (grows downward, away from the title) so the build text isn't squeezed to its minimum size.
+            if (t.text.Trim() == "PAUSED") { title = RuntimeUI.ReplaceTitle(t, "PAUSED", t.fontSize); break; }
+        // Build box on the left, button column on the right, both clear of the HUD gear slots in the
+        // top-left corner (they stay usable while paused) and of the bottom edge. Title centred over the pair.
         var box = (RectTransform)statsText.rectTransform.parent;
-        box.anchoredPosition += Vector2.down * 110f;
-        box.sizeDelta = new Vector2(box.sizeDelta.x + 40f, box.sizeDelta.y + 220f);
+        box.anchoredPosition = new Vector2(BoxX, ColumnTop - BoxH / 2f);
+        box.sizeDelta = new Vector2(BoxW, BoxH);
+        if (title != null) title.anchoredPosition = new Vector2((BoxX - BoxW / 2f + ColumnX + ColumnW / 2f) / 2f, title.anchoredPosition.y);
+        ApplyTheme(box);
         panel.SetActive(false);
+    }
+
+    // Layout (canvas units from the screen centre). The HUD slots reach about x = -440 at 16:9.
+    private const float BoxX = -80f, BoxW = 600f, BoxH = 720f;
+    private const float ColumnX = 470f, ColumnW = 440f, ColumnTop = 260f, ButtonW = 380f;
+
+    // Cat theme: framed build box, the buttons on their own panel with a cat sitting on it.
+    private void ApplyTheme(RectTransform box)
+    {
+        if (panel.TryGetComponent(out Image dim)) dim.color = CatTheme.DimColor;
+        if (box.TryGetComponent(out Image boxImage)) CatTheme.Frame(boxImage, CatTheme.Style.Panel);
+
+        Transform parent = resumeButton.transform.parent;
+        Image backing = CatTheme.Panel(parent, "ButtonColumn", CatTheme.Style.Panel, new Vector2(ColumnX, ColumnTop - 300f), new Vector2(ColumnW, 600f));
+        int first = int.MaxValue;
+        foreach (Button b in column) first = Mathf.Min(first, b.transform.GetSiblingIndex());
+        Transform hint = parent.Find("Hint");
+        if (hint != null) first = Mathf.Min(first, hint.GetSiblingIndex());
+        backing.transform.SetSiblingIndex(first);
+        Image cat = CatTheme.Cat(backing.transform, "blue", new Vector2(0f, -6f), 96f, new Vector2(0.5f, 1f));
+        cat.rectTransform.pivot = new Vector2(0.5f, 0f);
+
+        foreach (Button b in column) CatTheme.Button(b);
     }
 
     private const float StatsSplit = 0.42f; // build stats above, damage chart below
@@ -97,14 +124,14 @@ public class PauseMenu : MonoBehaviour
         Button settings = CopyOfQuit("Settings");
         settings.onClick.AddListener(() => Settings.Open(settings.gameObject));
 
-        const float top = 200f, step = 100f;
+        const float step = 100f, top = ColumnTop - 80f;
         column = new[] { resumeButton, restartButton, combos, settings, quitButton };
-        float x = ((RectTransform)quitButton.transform).anchoredPosition.x;
+        const float x = ColumnX;
         for (int i = 0; i < column.Length; i++)
         {
             var rt = (RectTransform)column[i].transform;
             rt.anchoredPosition = new Vector2(x, top - i * step);
-            rt.sizeDelta = new Vector2(rt.sizeDelta.x, 82f);
+            rt.sizeDelta = new Vector2(ButtonW, 82f);
         }
         Transform hint = quitButton.transform.parent.Find("Hint");
         if (hint != null) ((RectTransform)hint).anchoredPosition = new Vector2(x, top - column.Length * step + 30f);

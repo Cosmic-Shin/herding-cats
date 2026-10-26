@@ -53,11 +53,41 @@ public class NyxPassives : HeroPassives
         base.Awake();
         stats = GetComponent<PlayerStats>();
         EnemyHealth.MarkMultiplier = 1.5f;
+        controller = GetComponent<PlayerController>();
+        body = GetComponent<PlayerAnimator>().spriteRenderer;
+        dashTrail = HeroFx.Trail(transform, new Vector3(0f, 0.1f, 0f), 0.32f, NyxDrones.Cyan, 0.18f, 69);
+    }
+
+    // ---- Dash: a cyan data-stream trail, RGB-split glitch ghosts and flickering bits, a burst where she lands ----
+    private PlayerController controller;
+    private SpriteRenderer body;
+    private TrailRenderer dashTrail;
+    private bool wasDashing;
+    private float glitchTimer;
+
+    private void UpdateDashFx()
+    {
+        bool dashing = controller.IsDashing;
+        if (dashing && !wasDashing) { dashTrail.Clear(); HeroFx.Bits(transform.position, NyxDrones.Cyan, Magenta, 6, 3f); }
+        dashTrail.emitting = dashing;
+        if (dashing && (glitchTimer -= Time.deltaTime) <= 0f)
+        {
+            glitchTimer = 0.05f;
+            HeroFx.Glitch(body, 0.1f);
+            HeroFx.Bits(transform.position, NyxDrones.Cyan, Magenta, 2, 1.5f, 0.07f);
+        }
+        if (!dashing && wasDashing)
+        {
+            HeroFx.Bits(transform.position, NyxDrones.Cyan, Magenta, 10, 4f);
+            ExplosionFx.Ring(transform.position, 0.7f, NyxDrones.Cyan, 0.18f);
+        }
+        wasDashing = dashing;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
+        if (dashTrail != null) dashTrail.emitting = false;
         foreach (var m in marked) if (m.reticle != null) Destroy(m.reticle.gameObject);
         marked.Clear();
         hacked.Clear();
@@ -118,6 +148,7 @@ public class NyxPassives : HeroPassives
         if (drones == null) drones = GetComponent<NyxDrones>();
         UpdateHacked();
         UpdateMarks();
+        UpdateDashFx();
     }
 
     private void UpdateHacked()

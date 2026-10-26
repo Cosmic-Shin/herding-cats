@@ -87,6 +87,8 @@ public class MiraPassives : HeroPassives
         shieldEdge = MakeFx("ShieldCharge", Shapes.Ring, 7);
         slashFx = MakeFx("Slash", Shapes.Crescent, 30);
         slashFx.gameObject.SetActive(false);
+        controller = GetComponent<PlayerController>();
+        dashTrail = HeroFx.Trail(transform, new Vector3(0f, 0.1f, 0f), 0.45f, DashPink, 0.25f, 69);
         baseSlashRange = slashRange;
     }
 
@@ -131,10 +133,53 @@ public class MiraPassives : HeroPassives
         return true;
     }
 
+    // ---- Dash: a pink ribbon, bubbles drifting off behind her, and a soft bubble pop where she lands ----
+    private static readonly Color DashPink = new Color(1f, 0.55f, 0.78f), BubbleTint = new Color(0.8f, 0.95f, 1f);
+    private PlayerController controller;
+    private TrailRenderer dashTrail;
+    private bool wasDashing;
+    private float bubbleTimer;
+
+    private void UpdateDashFx()
+    {
+        bool dashing = controller.IsDashing;
+        if (dashing && !wasDashing) dashTrail.Clear();
+        dashTrail.emitting = dashing;
+        Vector2 at = transform.position;
+        if (dashing && (bubbleTimer -= Time.deltaTime) <= 0f)
+        {
+            bubbleTimer = Settings.LowParticles ? 0.08f : 0.035f;
+            DashBubble(at + Random.insideUnitCircle * 0.25f);
+        }
+        if (!dashing && wasDashing)
+        {
+            HeroFx.Pop(at, DashPink, 0.45f);
+            ExplosionFx.Ring(at, 0.8f, BubbleTint, 0.22f);
+            for (int i = 0; i < 4; i++) DashBubble(at + Random.insideUnitCircle * 0.4f);
+        }
+        wasDashing = dashing;
+    }
+
+    private static void DashBubble(Vector2 at)
+    {
+        float life = Random.Range(0.45f, 0.7f), size = Random.Range(0.2f, 0.34f);
+        Color tint = Random.value < 0.5f ? BubbleTint : Color.Lerp(DashPink, Color.white, 0.4f);
+        Shot b = Shot.Spawn(Shapes.Bubble, tint, size, at, 69);
+        b.velocity = new Vector2(Random.Range(-0.3f, 0.3f), Random.Range(0.5f, 0.9f)); // floats up
+        b.life = life;
+        b.onUpdate = shot =>
+        {
+            float k = shot.age / life;
+            shot.transform.localScale = Vector3.one * size * (1f + 0.4f * k);
+            shot.Renderer.color = new Color(tint.r, tint.g, tint.b, Settings.EffectAlpha * 0.85f * (1f - k * k));
+        };
+    }
+
     private void Update()
     {
         UpdateShield();
         UpdateSlashFx();
+        UpdateDashFx();
 
         slashTimer -= Time.deltaTime;
         if (slashTimer > 0f) return;
@@ -242,5 +287,6 @@ public class MiraPassives : HeroPassives
         if (shieldEdge != null) shieldEdge.gameObject.SetActive(false);
         if (shieldFill != null) shieldFill.gameObject.SetActive(false);
         if (slashFx != null) slashFx.gameObject.SetActive(false);
+        if (dashTrail != null) dashTrail.emitting = false;
     }
 }

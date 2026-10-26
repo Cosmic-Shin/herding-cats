@@ -57,6 +57,25 @@ public class BossTimeline : MonoBehaviour
         arrow = CreateArrow();
         if (warningText != null) warningText.gameObject.SetActive(false);
         if (bossBar != null) bossBar.SetActive(false);
+        StyleBossBar();
+    }
+
+    // Cat theme: slim jelly bar along the bottom of the screen, out of the way of the HUD panels.
+    private void StyleBossBar()
+    {
+        if (bossBar == null) return;
+        var rt = (RectTransform)bossBar.transform;
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0f);
+        rt.pivot = new Vector2(0.5f, 0f);
+        rt.anchoredPosition = new Vector2(0f, 36f);
+        if (bossBar.TryGetComponent(out UnityEngine.UI.Image frame)) CatTheme.BarFrame(frame);
+        if (bossBarFill != null)
+        {
+            bossBarFill.offsetMin = new Vector2(9f, 9f);
+            bossBarFill.offsetMax = new Vector2(-9f, -9f);
+            if (bossBarFill.TryGetComponent(out UnityEngine.UI.Image fill)) CatTheme.BarFill(fill, CatTheme.BossPurple);
+        }
+        if (bossBarName != null) bossBarName.color = new Color(0.93f, 0.75f, 1f);
     }
 
     private void Update()
