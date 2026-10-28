@@ -84,7 +84,7 @@ public class PlayerHealth : MonoBehaviour
         {
             if (skills != null) skills.OnPlayerHit();
             Juice.HitStop(0.08f);
-            Juice.Hurt(); // red pulse around the screen edges
+            Juice.Hurt();
             StartCoroutine(WhiteFlash());
             Vector2 at = transform.position;
             Juice.Sparks(at, new Color(1f, 0.3f, 0.3f), 8, 6f, 0.13f);
@@ -97,7 +97,6 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    // Getting hit: the hero goes pure white for an instant, then fades back (follows the current animation frame).
     private SpriteRenderer hitFlash;
 
     private IEnumerator WhiteFlash()
@@ -182,7 +181,6 @@ public class PlayerHealth : MonoBehaviour
         StartCoroutine(DeathFx());
     }
 
-    // Death animation (unscaled time, since the game slows to a stop): burst, fall over, grey out, ghost rises.
     private IEnumerator DeathFx()
     {
         Vector2 at = transform.position;
@@ -204,5 +202,67 @@ public class PlayerHealth : MonoBehaviour
             yield return null;
         }
         body.localRotation = start * Quaternion.Euler(0f, 0f, -90f);
+        yield return CatPile(at);
+    }
+
+    private static readonly Vector2[] PileSpots =
+        { new Vector2(-0.35f, 0f), new Vector2(0.35f, 0f), new Vector2(0f, 0.08f), new Vector2(-0.18f, 0.38f), new Vector2(0.18f, 0.38f), new Vector2(0f, 0.68f) };
+
+    private IEnumerator CatPile(Vector2 at)
+    {
+        var near = new System.Collections.Generic.List<SpriteRenderer>();
+        foreach (EnemyHealth e in FindObjectsByType<EnemyHealth>(FindObjectsSortMode.None))
+            if (!e.IsDead && e.GetComponent<BossAI>() == null && e.GetComponent<Crate>() == null && Vector2.Distance(e.transform.position, at) < 9f &&
+                e.GetComponentInChildren<SpriteRenderer>() is SpriteRenderer s && s.enabled && s.sprite != null)
+                near.Add(s);
+        near.Sort((a, b) => Vector2.Distance(a.transform.position, at).CompareTo(Vector2.Distance(b.transform.position, at)));
+        int n = Mathf.Min(near.Count, PileSpots.Length);
+        if (n == 0) yield break;
+
+        var cats = new SpriteRenderer[n];
+        var from = new Vector2[n];
+        var size = new Vector3[n];
+        for (int i = 0; i < n; i++)
+        {
+            SpriteRenderer src = near[i];
+            cats[i] = new GameObject("PileCat").AddComponent<SpriteRenderer>();
+            cats[i].sprite = src.sprite;
+            cats[i].flipX = src.flipX;
+            cats[i].color = src.color;
+            cats[i].sortingOrder = spriteRenderer.sortingOrder + 1 + i;
+            cats[i].transform.localScale = size[i] = src.transform.lossyScale;
+            cats[i].transform.position = from[i] = src.transform.position;
+            src.enabled = false;
+        }
+
+        const float Hop = 0.28f, Stagger = 0.09f;
+        var landed = new bool[n];
+        Color dust = new Color(0.85f, 0.8f, 0.7f);
+        for (float t = 0f; !landed[n - 1]; t += Time.unscaledDeltaTime)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                float k = (t - i * Stagger) / Hop;
+                if (k < 0f || landed[i]) continue;
+                Vector2 to = at + PileSpots[i] + Vector2.up * 0.1f;
+                if (k < 1f) { cats[i].transform.position = Vector2.Lerp(from[i], to, k) + Vector2.up * 1.4f * 4f * k * (1f - k); continue; }
+                landed[i] = true;
+                cats[i].transform.position = to;
+                PixelFx.Poof(to, dust, 3, 0.6f, unscaled: true);
+                Sfx.Play(i == 0 ? Sfx.Id.Meow : Sfx.Id.Pop, 0.35f, 1.1f + 0.06f * i);
+            }
+            yield return null;
+        }
+
+        for (float t = 0f; t < 2.5f; t += Time.unscaledDeltaTime)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                if (cats[i] == null) yield break;
+                float s = 0.06f * Mathf.Sin(t * 14f + i * 1.7f) * (1f - t / 2.5f);
+                cats[i].transform.localScale = Vector3.Scale(size[i], new Vector3(1f + s, 1f - s, 1f));
+            }
+            yield return null;
+        }
     }
 }

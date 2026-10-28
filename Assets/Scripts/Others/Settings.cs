@@ -143,10 +143,9 @@ public class Settings : MonoBehaviour
 
         Canvas canvas = RuntimeUI.Canvas("SettingsCanvas", 600);
         canvas.transform.SetParent(transform, false);
-        // Cat theme: solid plum panel over a dark dim, so the menu underneath doesn't show through.
         Image dim = RuntimeUI.Box(canvas.transform, "Dim", Vector2.zero, Vector2.one, CatTheme.DimColor);
         RectTransform panel = CatTheme.Panel(dim.transform, "Panel", CatTheme.Style.Panel, Vector2.zero, Vector2.zero).rectTransform;
-        const float rowH = 38f; // 13 rows plus the framed footer buttons fit inside the 720-high screen
+        const float rowH = 38f;
         float height = 170f + options.Count * rowH;
         panel.sizeDelta = new Vector2(640, height);
         float top = height / 2f;
@@ -161,7 +160,6 @@ public class Settings : MonoBehaviour
             Option o = options[i];
             float y = top - 95f - i * rowH;
             RuntimeUI.Outline(RuntimeUI.Text(panel, o.label, 22, new Color(0.8f, 0.84f, 0.95f), new Vector2(-130, y), new Vector2(300, rowH), TextAlignmentOptions.MidlineLeft));
-            // "<" sits well left of the value so the selection arrow (just left of the value) doesn't cover it.
             Button left = RuntimeUI.Button(panel, "<", new Vector2(40, y), new Vector2(44, 36), () => Change(o, -1));
             Button row = RuntimeUI.Button(panel, "", new Vector2(175, y), new Vector2(140, 36), () => Change(o, +1));
             o.valueText = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 22, Color.white, new Vector2(175, y), new Vector2(140, rowH)));
@@ -175,7 +173,6 @@ public class Settings : MonoBehaviour
         Button back = RuntimeUI.Button(panel, "Back", new Vector2(0, -top + 42), new Vector2(140, 36), Close);
         CatTheme.Button(controls);
         CatTheme.Button(back);
-        // Arrows only move: left/right steps between <, the value and >; Enter / A presses whichever is selected.
         for (int i = 0; i < rows.Count; i++)
         {
             bool first = i == 0, last = i == rows.Count - 1;
@@ -193,7 +190,6 @@ public class Settings : MonoBehaviour
         Select(mainFocus);
     }
 
-    // ---- Controls page: click an action, then press the new key. ----
 
     private RectTransform mainPanel, controlsPanel;
     private GameObject mainFocus;
@@ -202,10 +198,8 @@ public class Settings : MonoBehaviour
     private int listening = -1, busyFrame = -1, listenFrame = -1;
     private bool listeningPad;
 
-    // True while waiting for a key (or on the frame one was taken), so menus don't also treat that key as "back".
     public static bool Busy => instance != null && (instance.listening >= 0 || instance.busyFrame == Time.frameCount);
 
-    // Esc / gamepad back: cancel a rebind, then leave Controls, then close.
     public static void Back()
     {
         if (instance == null) return;
@@ -217,7 +211,7 @@ public class Settings : MonoBehaviour
     private void BuildControls(Transform parent)
     {
         int n = Keybinds.Names.Length;
-        const float rowH = 48f;
+        const float rowH = 44f;
         controlsPanel = CatTheme.Panel(parent, "Controls", CatTheme.Style.Panel, Vector2.zero, Vector2.zero).rectTransform;
         float height = 230f + n * rowH;
         controlsPanel.sizeDelta = new Vector2(780, height);
@@ -235,10 +229,10 @@ public class Settings : MonoBehaviour
             int action = i;
             float y = top - 110f - i * rowH;
             RuntimeUI.Outline(RuntimeUI.Text(controlsPanel, Keybinds.Names[i], 22, new Color(0.8f, 0.84f, 0.95f), new Vector2(-230, y), new Vector2(260, rowH), TextAlignmentOptions.MidlineLeft));
-            keyButtons[i] = RuntimeUI.Button(controlsPanel, "", new Vector2(60, y), new Vector2(200, 44), () => Listen(action, false));
+            keyButtons[i] = RuntimeUI.Button(controlsPanel, "", new Vector2(60, y), new Vector2(200, 40), () => Listen(action, false));
             if (Keybinds.PadRebindable((Keybinds.Action)i))
-                padButtons[i] = RuntimeUI.Button(controlsPanel, "", new Vector2(270, y), new Vector2(200, 44), () => Listen(action, true));
-            else // movement and pause are fixed on a pad, shown as plain text so navigation skips them
+                padButtons[i] = RuntimeUI.Button(controlsPanel, "", new Vector2(270, y), new Vector2(200, 40), () => Listen(action, true));
+            else
                 padFixed[i] = RuntimeUI.Outline(RuntimeUI.Text(controlsPanel, "", 22, head, new Vector2(270, y), new Vector2(200, 44)));
         }
         RuntimeUI.Text(controlsPanel, $"Arrow keys / stick always move.  Esc / {Keybinds.PadLabel(GamepadButton.Start)} always pause.", 16, head, new Vector2(0, -top + 88), new Vector2(740, 24));
@@ -267,10 +261,10 @@ public class Settings : MonoBehaviour
         if (listening >= 0) return;
         listening = action;
         listeningPad = forPad;
-        listenFrame = Time.frameCount; // the press that opened this must not count as the new binding
+        listenFrame = Time.frameCount;
         SetLabel(forPad ? padButtons[action] : keyButtons[action],
                  forPad ? "<color=#FFE08A>Press a button...</color>" : "<color=#FFE08A>Press a key...</color>");
-        Select(null); // so the key we're waiting for can't also "click" a button
+        Select(null);
     }
 
     private void Update()

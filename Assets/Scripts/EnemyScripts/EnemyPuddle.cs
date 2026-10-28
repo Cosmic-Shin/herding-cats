@@ -32,7 +32,6 @@ public class EnemyPuddle : MonoBehaviour
         tickTimer -= Time.deltaTime;
         age += Time.deltaTime;
 
-        // Animated pool: grows in over 0.15s, shrinks while fading out.
         sr.sprite = LavaArt.Get(variant, (int)(age * 6f), radius, LavaArt.ToxicPal);
         float fade = Mathf.Clamp01(life / FadeTime), grow = Mathf.Clamp01(age / 0.15f);
         transform.localScale = Vector3.one * radius * 2.4f * Mathf.Lerp(0.5f, 1f, grow) * Mathf.Lerp(0.7f, 1f, fade);

@@ -59,7 +59,6 @@ public static class UiIcons
     public static Sprite Icon(string id)
     {
         if (string.IsNullOrEmpty(id)) return null;
-        // Kai: "+1 swing" shows his sword, and the bomb skills use their sword-version icons.
         if (!Hero.UsesBombs && id == "stat:ProjectileCount") return Load("Icons/" + Hero.Current.weapon);
         if (Hero.Current.iconPrefix != null && id.StartsWith("skill:") && Load("Icons/" + Hero.Current.iconPrefix + id.Substring(6)) is Sprite heroSkill) return heroSkill;
         if (id.StartsWith("passive:")) return Load("Icons/passive_" + id.Substring(8));
@@ -68,7 +67,6 @@ public static class UiIcons
         if (id.StartsWith("skill:")) return Load("Icons/skill_" + id.Substring(6)) ?? Load("Icons/" + id.Substring(6));
         if (id == "stat:ProjectileCount") id = "bomb";
         PlayerCollabs.Def collab = PlayerCollabs.Find(id);
-        // Main-attack combos have a version per hero (sword/drone instead of bomb), e.g. Icons/kai_furyfuse.
         if (collab != null && collab.kind == PlayerCollabs.Kind.Bomb && Hero.Current.iconPrefix != null && Load("Icons/" + Hero.Current.iconPrefix + id) is Sprite heroCombo) return heroCombo;
         if (collab != null && Load("Icons/" + id) is Sprite own) return own;
         if (collab != null && collab.kind == PlayerCollabs.Kind.Super) return Load("Icons/" + collab.icon);

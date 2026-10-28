@@ -237,7 +237,7 @@ public class EnemyAI : MonoBehaviour, IEnemyBrain, IPoolable
     private Vector2 lookDir = Vector2.down;
     private Transform shield;
     private float shieldHit;
-    public void ShieldHit() => shieldHit = 1f; // knocked back a bit, then settles
+    public void ShieldHit() => shieldHit = 1f;
     private bool slamWarned, slammed;
 
     public bool IsArmored => armorTimer > 0f;
@@ -358,7 +358,7 @@ public class EnemyAI : MonoBehaviour, IEnemyBrain, IPoolable
         if (unstoppable) return;
         knockback = impulse;
         knockTrail = 0.15f;
-        if (impulse.sqrMagnitude > 25f) MapGenerator.Nudge(rb.position + impulse.normalized * 0.6f, 0.7f, Mathf.Min(1f, impulse.magnitude / 12f)); // sent flying into a bush or tree
+        if (impulse.sqrMagnitude > 25f) MapGenerator.Nudge(rb.position + impulse.normalized * 0.6f, 0.7f, Mathf.Min(1f, impulse.magnitude / 12f));
         if (state == State.Sleeping) SetState(State.Waking);
         else if (state == State.Chasing) SetState(State.Hurt);
     }
@@ -377,7 +377,6 @@ public class EnemyAI : MonoBehaviour, IEnemyBrain, IPoolable
         return to.sqrMagnitude > 0.36f && Vector2.Angle(lookDir, to) < 60f;
     }
 
-    // ---- Tells: small always-on cues so special cats stand out in a crowd ----
     private float tellTimer;
     private bool glinted;
 
@@ -397,7 +396,6 @@ public class EnemyAI : MonoBehaviour, IEnemyBrain, IPoolable
         Vector2 at = transform.position;
         if (sniper && state == State.Shooting)
         {
-            // Scope glint a beat before the shot.
             if (!glinted && !fired && anim.Frame >= fireFrame - 1)
             {
                 glinted = true;
@@ -413,17 +411,17 @@ public class EnemyAI : MonoBehaviour, IEnemyBrain, IPoolable
 
         if (spitPuddles)
         {
-            tellTimer = 0.35f; // toxic drool
+            tellTimer = 0.35f;
             Juice.SparksDir(at + new Vector2(Random.Range(-0.15f, 0.15f), -0.15f), Vector2.down, 25f, new Color(0.5f, 0.95f, 0.3f, 0.8f), 1, 1.2f, 0.1f);
         }
         else if (chargeLine)
         {
-            tellTimer = state == State.Leaping ? 0.06f : 0.45f; // snorting steam, a burst while winding up
+            tellTimer = state == State.Leaping ? 0.06f : 0.45f;
             Juice.SparksDir(at + Vector2.up * 0.35f, Vector2.up, 50f, new Color(0.9f, 0.9f, 0.95f, 0.6f), state == State.Leaping ? 2 : 1, 1.5f, 0.16f);
         }
         else if (sniper)
         {
-            tellTimer = 1.2f; // red scope twinkle
+            tellTimer = 1.2f;
             Juice.Sparks(at + lookDir * 0.3f + Vector2.up * 0.1f, new Color(1f, 0.3f, 0.3f), 1, 0.4f, 0.1f);
         }
         else tellTimer = 999f;
@@ -641,7 +639,7 @@ public class EnemyAI : MonoBehaviour, IEnemyBrain, IPoolable
             if (slowTimer <= 0f) slowAmount = 0f;
         }
 
-        if (MapGenerator.OnLava(rb.position) && health != null && (lavaTick -= dt) <= 0f) // cats burn in lava too
+        if (MapGenerator.OnLava(rb.position) && health != null && (lavaTick -= dt) <= 0f)
         {
             lavaTick = 0.5f;
             DamageStats.Source = "Lava";

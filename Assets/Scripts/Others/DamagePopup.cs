@@ -48,8 +48,8 @@ public class DamagePopup : MonoBehaviour
         popup.crit = true;
         popup.pop = 1.9f;
         popup.velocity.y += 1.2f;
-        popup.color = Color.white; // the gradient carries the colour
-        popup.text.enableVertexGradient = true; // gold on top, hot orange-red underneath
+        popup.color = Color.white;
+        popup.text.enableVertexGradient = true;
         popup.text.colorGradient = new VertexGradient(new Color(1f, 0.97f, 0.55f), new Color(1f, 0.97f, 0.55f), new Color(1f, 0.4f, 0.15f), new Color(1f, 0.4f, 0.15f));
         Juice.Sparks(pos + Vector2.up * 0.4f, new Color(1f, 0.85f, 0.3f), 3, 4f, 0.09f);
     }
@@ -79,7 +79,7 @@ public class DamagePopup : MonoBehaviour
         popup.text.fontSize = size;
         popup.text.enableVertexGradient = false;
         popup.color = color;
-        popup.text.color = Color.white; // flashes white, then settles to its colour
+        popup.text.color = Color.white;
         popup.crit = false;
         popup.velocity = new Vector3(Random.Range(-1.1f, 1.1f), 3.4f, 0f);
         popup.pop = 1.4f;
@@ -127,7 +127,7 @@ public class DamagePopup : MonoBehaviour
 
     private void Update()
     {
-        float dt = MainMenu.IsOpen ? Time.unscaledDeltaTime : Time.deltaTime; // the menu runs with the clock stopped
+        float dt = MainMenu.IsOpen ? Time.unscaledDeltaTime : Time.deltaTime;
         t += dt / Duration;
         transform.position += velocity * dt;
         velocity.y -= 9f * dt;
@@ -136,14 +136,13 @@ public class DamagePopup : MonoBehaviour
         text.color = t < 0.08f ? Color.white : color;
         text.alpha = t < 0.6f ? 1f : 1f - Mathf.Pow((t - 0.6f) / 0.4f, 2f);
 
-        // Scale: pop in with overshoot, hold, shrink out.
         float grow = Mathf.Clamp01(t / 0.18f);
         float scale = Mathf.LerpUnclamped(0.3f, 1f, BackOut(grow)) * Mathf.Lerp(pop, 1f, grow)
                     * (t > 0.7f ? Mathf.Lerp(1f, 0.6f, (t - 0.7f) / 0.3f) : 1f);
         transform.localScale = Vector3.one * scale;
 
         float tilt = -velocity.x * 5f;
-        if (crit && t < 0.25f) tilt += Mathf.Sin(t * 120f) * 9f * (1f - t / 0.25f); // crits shudder
+        if (crit && t < 0.25f) tilt += Mathf.Sin(t * 120f) * 9f * (1f - t / 0.25f);
         transform.rotation = Quaternion.Euler(0f, 0f, tilt);
         if (t >= 1f) Release();
     }

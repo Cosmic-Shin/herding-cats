@@ -88,7 +88,6 @@ public class LevelUpUIController : MonoBehaviour
     private readonly HashSet<string> banned = new HashSet<string>();
     private Button rerollButton, eliminateButton, skipButton, combosButton;
     public bool IsOpen => isPanelOpen;
-    // True from the level-up flash until the last queued pick is made.
     public bool Busy => isPanelOpen || celebrating || pendingLevelUps > 0;
     private bool inputReady;
     private bool isGamePaused;
@@ -119,7 +118,6 @@ public class LevelUpUIController : MonoBehaviour
         SetPanelVisible(false);
     }
 
-    // Cat theme: jelly cards that turn gold when picked, a framed build panel, themed buttons.
     private void ApplyTheme()
     {
         if (levelUpPanel == null) return;
@@ -130,8 +128,6 @@ public class LevelUpUIController : MonoBehaviour
         Image dim = FindChild<Image>(root, "blackbg");
         if (dim != null) dim.color = CatTheme.DimColor;
 
-        // Build panel: no portrait (the HUD already shows the hero), so it can start below the HUD gear
-        // slots instead of covering them. It spans the top of card 2 to the bottom of card 4.
         Image build = FindChild<Image>(root, "StatsPanel");
         if (build != null)
         {
@@ -188,23 +184,23 @@ public class LevelUpUIController : MonoBehaviour
     }
 
     private bool celebrating;
+    private static readonly Color[] Confetti = { new Color(1f, 0.85f, 0.3f), new Color(1f, 0.55f, 0.75f), Color.white, new Color(1f, 0.95f, 0.7f) };
     private IEnumerator Celebrate()
     {
         celebrating = true;
         Vector2 at = stats.transform.position;
-        ExplosionFx.Ring(at, 3f, new Color(1f, 0.92f, 0.5f), 0.4f);
-        ExplosionFx.Spawn(at, 1.2f, new Color(1f, 0.95f, 0.7f), order: 9);
-        Juice.Sparks(at, new Color(1f, 0.85f, 0.3f), 18, 8f, 0.18f);
-        Juice.SparksDir(at, Vector2.up, 12f, new Color(1f, 0.95f, 0.6f), 16, 12f, 0.16f); // light pillar
+        PixelFx.Burst(Shapes.Starburst, at, new Color(1f, 0.9f, 0.45f, 0.85f), 0.4f, 1f, 2.4f, unscaled: true);
+        PixelFx.Toss(Shapes.PawPrint, at, Confetti, 14, 9f, 0.9f, 0.9f, 14f, unscaled: true);
+        Juice.SparksDir(at, Vector2.up, 12f, new Color(1f, 0.95f, 0.6f), 16, 12f, 0.16f);
         Lighting.Flash(at, 6f, new Color(1f, 0.85f, 0.4f), 0.5f);
         CameraFollow.ZoomPunch(0.2f);
         Sfx.Play(Sfx.Id.Sparkle, 0.6f);
         DamagePopup.SpawnText(at + Vector2.up * 1f, "LEVEL UP!", new Color(1f, 0.88f, 0.35f), 7f);
         Juice.SlowMo(0.2f, 0.4f);
         yield return new WaitForSecondsRealtime(0.15f);
-        ExplosionFx.Ring(stats.transform.position, 5f, new Color(1f, 1f, 1f, 0.8f), 0.35f);
+        PixelFx.Burst(Shapes.Starburst, stats.transform.position, new Color(1f, 1f, 1f, 0.6f), 0.35f, 1.5f, 3.2f, unscaled: true);
         yield return new WaitForSecondsRealtime(0.2f);
-        while (RewardMenu.IsOpen) yield return null; // holo box / anvil owns the pause; open after it
+        while (RewardMenu.IsOpen) yield return null;
         celebrating = false;
         if (stats.currentHealth > 0f && !GameOverScreen.IsShowing && !isPanelOpen) OpenPanel(stats.level);
     }
@@ -491,7 +487,7 @@ public class LevelUpUIController : MonoBehaviour
 
             string title = string.IsNullOrEmpty(upgrade.title) ? upgrade.id : upgrade.title;
             string description = upgrade.description;
-            var own = Hero.Upgrade(upgrade.upgradeType.ToString()); // heroes without bombs word these their own way
+            var own = Hero.Upgrade(upgrade.upgradeType.ToString());
             if (own.HasValue) (title, description) = own.Value;
             UpgradeDefinition captured = upgrade;
             int score = 0;
@@ -604,7 +600,6 @@ public class LevelUpUIController : MonoBehaviour
         foreach (UpgradeDefinition u in pool) if ((roll -= UpgradeWeight(u)) <= 0f) { pick = u; break; }
         pick.Apply(stats);
         icon = "stat:" + pick.upgradeType;
-        // Use the hero's own wording (Kai's "+1 bomb" is an extra swing).
         title = Hero.Upgrade(pick.upgradeType.ToString())?.title ?? (string.IsNullOrEmpty(pick.title) ? pick.id : pick.title);
         return true;
     }
@@ -696,7 +691,6 @@ public class LevelUpUIController : MonoBehaviour
             glow.effectDistance = on ? new Vector2(6f, 6f) : new Vector2(2f, 2f);
 
             if (!looks.TryGetValue(b, out CardLook look)) continue;
-            // Selected: gold frame and a wider stripe. The shine only sweeps once, as the cards appear.
             Image bg = b.GetComponent<Image>();
             Sprite frame = CatTheme.Get(on ? CatTheme.Style.PanelGold : CatTheme.Style.Panel);
             if (frame != null && bg.sprite != frame) bg.sprite = frame;
@@ -751,7 +745,7 @@ public class LevelUpUIController : MonoBehaviour
 
             button.onClick.AddListener(() => OnCard(offer));
             Color kind = KindColor(offer.kind);
-            Color card = Color.white; // the jelly frame keeps its own colours
+            Color card = Color.white;
             Color doomed = new Color(1f, 0.55f, 0.6f, 1f);
             button.GetComponent<Image>().color = eliminating ? doomed : card;
             if (!button.TryGetComponent(out Outline glow))
@@ -760,12 +754,11 @@ public class LevelUpUIController : MonoBehaviour
                 button.gameObject.AddComponent<CardHover>();
             }
             glow.effectColor = kind;
-            glow.enabled = false; // the gold frame shows the selection now
+            glow.enabled = false;
             Decorate(button, offer.kind, kind, eliminating ? doomed : card, i);
         }
     }
 
-    // ---- Card dressing: a coloured stripe and kind tag, a shine sweep on appear, and a lit-up look when selected ----
     private class CardLook { public Image stripe, shine; public TextMeshProUGUI tag; public Color baseColor, kind; public float shineAt; }
     private readonly Dictionary<Button, CardLook> looks = new Dictionary<Button, CardLook>();
 
@@ -780,13 +773,11 @@ public class LevelUpUIController : MonoBehaviour
         {
             look = new CardLook();
             var rt = (RectTransform)button.transform;
-            // Stripe and shine live in a masked layer behind the text and icons, so they never cover them
-            // and the card itself stays unmasked (a mask on a tilting card clips its corners).
             var fx = new GameObject("CardFx", typeof(RectTransform), typeof(RectMask2D)).GetComponent<RectTransform>();
             fx.SetParent(rt, false);
             fx.anchorMin = Vector2.zero;
             fx.anchorMax = Vector2.one;
-            fx.offsetMin = Vector2.one * 9f; // inside the jelly frame's rim
+            fx.offsetMin = Vector2.one * 9f;
             fx.offsetMax = -Vector2.one * 9f;
             fx.SetAsFirstSibling();
 
@@ -800,7 +791,7 @@ public class LevelUpUIController : MonoBehaviour
             look.shine.rectTransform.localRotation = Quaternion.Euler(0f, 0f, -20f);
             look.shine.raycastTarget = false;
 
-            look.tag = RuntimeUI.Text(rt, "", 14, Color.white, Vector2.zero, new Vector2(120f, 20f), TextAlignmentOptions.TopRight); // no outline: the panel is still hidden here
+            look.tag = RuntimeUI.Text(rt, "", 14, Color.white, Vector2.zero, new Vector2(120f, 20f), TextAlignmentOptions.TopRight);
             look.tag.rectTransform.anchorMin = look.tag.rectTransform.anchorMax = look.tag.rectTransform.pivot = new Vector2(1f, 1f);
             look.tag.rectTransform.anchoredPosition = new Vector2(-20f, -14f);
             look.tag.raycastTarget = false;
@@ -811,10 +802,9 @@ public class LevelUpUIController : MonoBehaviour
         look.stripe.color = kindColor;
         look.tag.text = KindName(kind);
         look.tag.color = kindColor;
-        look.shineAt = Time.unscaledTime + 0.15f + index * 0.06f; // sweeps in just after each card pops in
+        look.shineAt = Time.unscaledTime + 0.15f + index * 0.06f;
     }
 
-    // The shine travels left to right across a card over 0.45s starting at `start`.
     private static void SweepShine(Image shine, RectTransform card, float start)
     {
         float k = (Time.unscaledTime - start) / 0.45f;

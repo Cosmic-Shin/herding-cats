@@ -1,24 +1,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Playable heroes. All share the same rig (walk/roll/slash sheets in Resources/Heroes/<id>),
-// so switching is a sprite swap by frame name plus turning on that hero's weapon and passives.
-// Only Mira throws bombs; the others get their own versions of the bomb-flavoured upgrades (text here,
-// behaviour in KaiSword / NyxDrones).
 public static class Hero
 {
     public class Def
     {
         public string id, name, blurb;
-        public string kit;               // the run-select screen: weapon, passives, special
-        public string weapon = "bomb";   // icon of the main weapon
-        public string iconPrefix;        // their skill icons, e.g. "kai_" -> Icons/kai_cluster
+        public string kit;
+        public string weapon = "bomb";
+        public string iconPrefix;
         public string maxPiece = "Max Bombs", upgradeKind = "Bomb upgrade";
         public string[] stats = { "Bomb damage", "Throws/sec", "Bombs/throw", "Blast radius" };
-        public float portraitDrop;       // HUD portrait: art pixels to shift the crop down so the face shows (big hair)
-        public Dictionary<string, (string title, string text)> upgrades; // by upgrade type
+        public float portraitDrop;
+        public Dictionary<string, (string title, string text)> upgrades;
         public Dictionary<string, (string name, string[] levels)> skills;
-        public Dictionary<string, (string name, string text)> combos;    // combos and supers
+        public Dictionary<string, (string name, string text)> combos;
     }
 
     public static readonly Def[] All =
@@ -141,14 +137,12 @@ public static class Hero
     public static (string title, string text)? Upgrade(string type) =>
         Current.upgrades != null && Current.upgrades.TryGetValue(type, out var u) ? u : ((string, string)?)null;
 
-    // Size stat for the build sheet: blast radius, sword reach or zap radius.
     public static float Range(PlayerStats stats) =>
         KaiSword.Active != null ? KaiSword.Active.Reach : NyxDrones.Active != null ? NyxDrones.Active.ZapRadius : stats.BombRadius;
 
     private static Dictionary<string, (string, string[])> bombSkills;
     private static Dictionary<string, (string, string)> bombCombos;
 
-    // Skill and combo defs are shared statics, so swap their text to the current hero's versions.
     private static void ApplyTexts()
     {
         if (bombSkills == null)
@@ -166,7 +160,7 @@ public static class Hero
             foreach (PlayerCollabs.Def d in defs)
                 (d.name, d.text) = h.combos != null && h.combos.TryGetValue(d.id, out var mine) ? mine : bombCombos[d.id];
         foreach (PlayerWeapons.Def w in PlayerWeapons.CollabDefs)
-            if (PlayerCollabs.Find(w.id) is PlayerCollabs.Def combo) w.name = combo.name; // weapon names match their combo
+            if (PlayerCollabs.Find(w.id) is PlayerCollabs.Def combo) w.name = combo.name;
     }
 
     public static void Cycle(int step)
@@ -205,7 +199,6 @@ public static class Hero
         if (anim.spriteRenderer != null && anim.spriteRenderer.sprite != null && frames.TryGetValue(Suffix(anim.spriteRenderer.sprite.name), out Sprite now))
             anim.spriteRenderer.sprite = now;
 
-        // Ultimate look: Heroes/<id>Goggles holds the same frames with goggles down (only Nyx has one).
         anim.altFrames = null;
         anim.useAlt = null;
         var alt = new Dictionary<string, Sprite>();
@@ -219,10 +212,8 @@ public static class Hero
         anim.useAlt = () => ult.IsActive;
     }
 
-    // "Mira_DownLeft_2" -> "_DownLeft_2"
     private static string Suffix(string name) => name.Substring(name.IndexOf('_'));
 
-    // Front-facing frame, for the HUD portrait and leaderboard rows.
     private static readonly Dictionary<string, Sprite> portraits = new Dictionary<string, Sprite>();
     public static Sprite Portrait(string id)
     {
@@ -232,7 +223,6 @@ public static class Hero
     }
 }
 
-// Shared leveling for a hero's three passives (level 1 at the start, up to 4 from level-ups).
 public abstract class HeroPassives : MonoBehaviour
 {
     public const int MaxPassiveLevel = 4;
@@ -240,7 +230,7 @@ public abstract class HeroPassives : MonoBehaviour
     public class Passive
     {
         public string id, name;
-        public string[] levels; // text for levels 2..4
+        public string[] levels;
     }
 
     public static HeroPassives Instance { get; private set; }

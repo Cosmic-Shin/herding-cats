@@ -11,11 +11,21 @@ public class OffscreenArrows : MonoBehaviour
     private RectTransform canvasRect;
     private Sprite arrowSprite;
 
-    public static void Track(Transform target, Color color)
+    public static void Track(Transform target, Color color, Sprite icon = null)
     {
         if (target == null) return;
         if (instance == null) instance = new GameObject("OffscreenArrows").AddComponent<OffscreenArrows>();
-        instance.tracked.Add((target, color, instance.MakeArrow(color)));
+        Image arrow = instance.MakeArrow(color);
+        if (icon != null)
+        {
+            var img = new GameObject("Icon").AddComponent<Image>();
+            img.transform.SetParent(arrow.transform, false);
+            img.sprite = icon;
+            img.raycastTarget = false;
+            img.rectTransform.anchoredPosition = new Vector2(-38f, 0f);
+            img.rectTransform.sizeDelta = new Vector2(34f, 34f);
+        }
+        instance.tracked.Add((target, color, arrow));
     }
 
     private void Awake()
@@ -72,6 +82,7 @@ public class OffscreenArrows : MonoBehaviour
             arrow.rectTransform.anchoredPosition = d * t;
             arrow.rectTransform.localRotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(d.y, d.x) * Mathf.Rad2Deg);
             arrow.rectTransform.localScale = Vector3.one * pulse;
+            if (arrow.transform.childCount > 0) arrow.transform.GetChild(0).rotation = Quaternion.identity;
         }
     }
 

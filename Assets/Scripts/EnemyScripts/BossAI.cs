@@ -121,7 +121,6 @@ public class BossAI : MonoBehaviour, IEnemyBrain
         SetState(State.Walk);
     }
 
-    // Late-game bosses: faster, attack more often, more projectiles/strikes, harder hits, enraged sooner.
     public void Empower(float power)
     {
         if (power <= 1f) return;
@@ -180,7 +179,6 @@ public class BossAI : MonoBehaviour, IEnemyBrain
         }
     }
 
-    // Enraged: a second beam pointing the opposite way.
     private float[] LaserAngles(float a) => enraged ? new[] { a, a + 180f } : new[] { a };
 
     private bool UpdateSpecial()
@@ -224,7 +222,6 @@ public class BossAI : MonoBehaviour, IEnemyBrain
             bool on = firing && i < angles.Length;
             if (beams[i].gameObject.activeSelf != on) beams[i].gameObject.SetActive(on);
             if (!on) continue;
-            // Flares wide on ignition, thins out over the last moment.
             float env = t < 0.08f ? Mathf.Lerp(2f, 1f, t / 0.08f) : Mathf.Clamp01((LaserTime - t) / 0.15f);
             float flicker = 0.85f + 0.15f * Mathf.Sin(Time.time * 40f + i);
             beams[i].transform.position = rb.position;
@@ -248,7 +245,6 @@ public class BossAI : MonoBehaviour, IEnemyBrain
 
     private static readonly Color BeamColor = new Color(0.8f, 0.4f, 1f, 0.55f);
 
-    // Same look as the player's LaserWeapon: soft glowing outer beam + bright thin core.
     private SpriteRenderer MakeBeam()
     {
         var sr = new GameObject("BossLaser").AddComponent<SpriteRenderer>();
@@ -304,8 +300,6 @@ public class BossAI : MonoBehaviour, IEnemyBrain
 
     private static Sprite[] strikeFrames;
 
-    // Zap impact animation, taken from the Beholder pack's attack sheet.
-    // Uniform 64px grid (4 rows x 12 frames); the top row's frames 3-11 hold the effect.
     private static Sprite[] StrikeFrames
     {
         get

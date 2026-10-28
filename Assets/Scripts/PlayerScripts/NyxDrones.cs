@@ -2,20 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Nyx's main attack instead of bombs: a swarm of little zapper drones orbiting her.
-// Each drone darts at a cat, zaps it (small electric blast) and flies back. "+1 bomb" upgrades add drones,
-// and the bomb skills/combos have drone versions here (Chain Zap, Packet Split, Static Field, ...).
 [RequireComponent(typeof(PlayerStats))]
 public class NyxDrones : MonoBehaviour
 {
     public const string Source = "Drones";
     public static NyxDrones Active { get; private set; }
 
-    public float fireInterval = 1.8f; // per drone at 1x attack speed
+    public float fireInterval = 1.8f;
     public float range = 6.5f;
     public float orbitRadius = 1.3f;
     public float damageMultiplier = 0.55f;
-    public float zapRadius = 1.2f; // same as a bomb blast
+    public float zapRadius = 1.2f;
 
     public static readonly Color Cyan = new Color(0.3f, 0.9f, 1f);
     private static readonly List<Collider2D> hits = new List<Collider2D>(64), near = new List<Collider2D>(64);
@@ -41,9 +38,7 @@ public class NyxDrones : MonoBehaviour
     private float orbit, volleyTimer, nextLaunch, barrageUntil;
 
     private float Fury => PlayerCollabs.Has("furyfuse") && stats.maxHealth > 0f ? 1f - Mathf.Clamp01(stats.currentHealth / stats.maxHealth) : 0f;
-    // Attack speed scales her fire rate like everyone else (it used to count extra and snowballed late).
     private float Interval => fireInterval / Mathf.Max(0.1f, stats.AttackSpeed * (1f + Fury));
-    // Swarm size: 2 per bomb upgrade (2, 4, 6, 8 at the cap of 4).
     public int Count { get { int n = Mathf.Max(1, stats.ProjectileCount); return 2 * n + (ult != null ? ult.ExtraBombs : 0); } }
     public float ZapRadius => zapRadius * stats.areaMultiplier * (ult != null ? ult.RadiusMultiplier : 1f) * (1f + 0.5f * Fury);
     public float ZapDamage => stats.AttackDamage * damageMultiplier * (ult != null ? ult.DamageMultiplier : 1f);
@@ -80,7 +75,7 @@ public class NyxDrones : MonoBehaviour
         for (int i = 0; i < drones.Count; i++)
         {
             Drone d = drones[i];
-            d.timer += dt; // reloads while flying, too
+            d.timer += dt;
             float a = (orbit + i * 360f / drones.Count) * Mathf.Deg2Rad;
             Vector2 home = me + new Vector2(Mathf.Cos(a), Mathf.Sin(a) * 0.75f) * orbitRadius + Vector2.up * (0.35f + 0.08f * Mathf.Sin(Time.time * 4f + i));
 
@@ -89,7 +84,6 @@ public class NyxDrones : MonoBehaviour
                 case State.Orbit:
                     d.pos = Vector2.Lerp(d.pos, home, dt * 10f);
 
-                    // Launches are spaced out so the swarm fires as a steady stream, not all at once.
                     if (d.timer >= interval && (Time.time >= nextLaunch || Time.time < barrageUntil) && FindTarget(d, me))
                     {
                         Launch(d);
@@ -110,16 +104,14 @@ public class NyxDrones : MonoBehaviour
             }
             Vector2 moved = d.pos - (Vector2)d.sr.transform.position;
             d.sr.transform.position = d.pos;
-            d.sr.sprite = DroneSprites[(int)(Time.time * 20f + i) % 2]; // rotors
+            d.sr.sprite = DroneSprites[(int)(Time.time * 20f + i) % 2];
             d.sr.sortingOrder = d.pos.y < me.y ? 72 : 68;
-            // Lean into the direction of travel; thruster streak only while darting.
             float lean = dt > 0f ? Mathf.Clamp(-moved.x / dt * 2.5f, -30f, 30f) : 0f;
             d.sr.transform.rotation = Quaternion.Lerp(d.sr.transform.rotation, Quaternion.Euler(0f, 0f, lean), dt * 12f);
             d.thruster.emitting = d.state != State.Orbit;
             d.halo.color = new Color(Cyan.r, Cyan.g, Cyan.b, (d.state == State.Out ? 0.3f : 0.12f) * (0.8f + 0.2f * Mathf.Sin(Time.time * 6f + i)));
         }
 
-        // Volley hooks (once per fire interval, not per drone).
         volleyTimer += dt;
         if (volleyTimer >= interval)
         {
@@ -127,7 +119,7 @@ public class NyxDrones : MonoBehaviour
             Collider2D first = Nearest(me, range);
             if (first != null)
             {
-                if (anim != null) anim.PlayThrow(first.transform.position - transform.position); // her gadget pose
+                if (anim != null) anim.PlayThrow(first.transform.position - transform.position);
                 if (SuperWeapon.Active != null) SuperWeapon.Active.OnThrow(first.transform.position);
                 if (PlayerCollabs.Has("carpet")) StartCoroutine(DroneStrike(((Vector2)first.transform.position - me).normalized));
             }
@@ -139,20 +131,19 @@ public class NyxDrones : MonoBehaviour
         var sr = new GameObject("Drone").AddComponent<SpriteRenderer>();
         sr.sprite = DroneSprites[0];
         sr.transform.position = at;
-        var halo = new GameObject("Glow").AddComponent<SpriteRenderer>(); // soft light under it
+        var halo = new GameObject("Glow").AddComponent<SpriteRenderer>();
         halo.transform.SetParent(sr.transform, false);
         halo.transform.localScale = Vector3.one * 0.5f;
         halo.sprite = Shapes.Circle;
         halo.sortingOrder = 66;
         Lighting.Glow(halo);
         TrailRenderer thruster = HeroFx.Trail(sr.transform, Vector3.zero, 0.14f, Cyan, 0.14f, 67);
-        Lighting.MakeLight("DroneLight", sr.transform, 1.3f, 0.55f, Cyan); // each drone lights the ground under it
+        Lighting.MakeLight("DroneLight", sr.transform, 1.3f, 0.55f, Cyan);
         drones.Add(new Drone { sr = sr, halo = halo, thruster = thruster, pos = at, timer = Random.value * Interval });
-        HeroFx.Bits(at, Cyan, Color.white, 6, 3f); // boots up in a burst of pixels
+        HeroFx.Bits(at, Cyan, Color.white, 6, 3f);
         Sfx.Play(Sfx.Id.Blink, 0.25f, 1.6f);
     }
 
-    // Prefer a cat no other drone is already chasing.
     private bool FindTarget(Drone d, Vector2 me)
     {
         Bomb.OverlapEnemies(me, range, near);
@@ -175,16 +166,15 @@ public class NyxDrones : MonoBehaviour
         d.aim = d.target.transform.position;
         d.t = 0f;
         d.timer = 0f;
-        if (PlayerCollabs.Has("magnetbomb")) // Tractor Drones
+        if (PlayerCollabs.Has("magnetbomb"))
             foreach (Collider2D c in Bomb.OverlapEnemies(d.aim, ZapRadius * 2.2f, hits))
                 if (c.TryGetComponent(out IEnemyBrain brain)) brain.Knockback((d.aim - (Vector2)c.transform.position) * 3f);
     }
 
-    // A zap: lightning from the drone, a small electric blast at the target.
     private void Zap(Vector2 from, Vector2 at, float damageMult, bool primary, bool exploitChain = false)
     {
         NyxPassives nyx = NyxPassives.Active;
-        bool exploit = primary && nyx != null && nyx.NextZapIsExploit(); // Backdoor: a forced crit with bonus damage
+        bool exploit = primary && nyx != null && nyx.NextZapIsExploit();
         float r = ZapRadius * (exploit ? 1.4f : 1f), damage = ZapDamage * damageMult * (exploit ? 1.6f : 1f);
         bool stunGun = PlayerCollabs.Has("concussion");
         DamageStats.Source = exploit || exploitChain ? "Backdoor" : primary ? Source : "Chain Zap";
@@ -195,7 +185,6 @@ public class NyxDrones : MonoBehaviour
             Hit(e, at, damage, stunGun ? 0.6f : 0f, exploit || exploitChain);
             if (nyx != null) nyx.TryHack(e);
         }
-        // Bolt from the drone, a white-hot core, a crisp electric ring, and data bits scattering.
         LightningFx.SpawnBetween(from, at, color, exploit ? 1f : 0.6f);
         HeroFx.Pop(at, color, r * 0.9f);
         ExplosionFx.Ring(at, r, color, 0.18f);
@@ -206,9 +195,9 @@ public class NyxDrones : MonoBehaviour
         {
             DamagePopup.SpawnText(at + Vector2.up * 0.5f, "EXPLOIT!", NyxPassives.Magenta, 4f);
             ExplosionFx.Ring(at, r * 1.7f, Color.white, 0.25f);
-            Juice.Flash(new Color(1f, 0.3f, 0.85f, 0.08f), 0.08f); // a screen glitch blink
+            Juice.Flash(new Color(1f, 0.3f, 0.85f, 0.08f), 0.08f);
             CameraFollow.Shake(0.06f, 0.08f);
-            if (nyx.ExploitChains) // jumps to the 3 nearest other cats
+            if (nyx.ExploitChains)
             {
                 var others = new List<Vector2>();
                 foreach (Collider2D c in Bomb.OverlapEnemies(at, 4f, near))
@@ -228,7 +217,6 @@ public class NyxDrones : MonoBehaviour
         if (stun > 0f && e.TryGetComponent(out EnemyAI cat)) cat.Stun(stun);
     }
 
-    // Drone versions of the bomb skills and the bomb-hooked supers.
     private void DroneSkills(Vector2 at, float r, float damage)
     {
         if (skills != null)
@@ -255,7 +243,6 @@ public class NyxDrones : MonoBehaviour
         if (SuperWeapon.Active != null) SuperWeapon.Active.OnBombBlast(at, r, damage);
     }
 
-    // Packet Split: little data packets fly to nearby cats.
     private void Packets(Vector2 from, int count, float damage)
     {
         Bomb.OverlapEnemies(from, 4f, near);
@@ -263,7 +250,6 @@ public class NyxDrones : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             Vector2 at = near.Count > 0 ? (Vector2)near[Random.Range(0, near.Count)].transform.position : from + Random.insideUnitCircle.normalized * 2f;
-            // A spinning "+" data packet with a ghost trail.
             Shot s = Shot.Spawn(Shapes.Plus, Color.white, 0.24f, from, 60);
             s.life = 0.15f;
             s.velocity = (at - from) / s.life;
@@ -282,7 +268,6 @@ public class NyxDrones : MonoBehaviour
         }
     }
 
-    // Drone Strike: a line of zaps from the sky ahead of her.
     private IEnumerator DroneStrike(Vector2 dir)
     {
         Vector2 origin = transform.position;
@@ -301,7 +286,6 @@ public class NyxDrones : MonoBehaviour
         }
     }
 
-    // EMP: a stunning electric burst (Blink's parting gift; the ultimate opens with one).
     public void Emp(Vector2 at, float damageMult)
     {
         float r = 3.2f * stats.areaMultiplier;
@@ -310,7 +294,7 @@ public class NyxDrones : MonoBehaviour
         foreach (Collider2D c in Bomb.OverlapEnemies(at, r, hits))
         {
             if (!c.TryGetComponent(out EnemyHealth e) || e.IsDead) continue;
-            if (arcs++ < 6) LightningFx.SpawnBetween(at, c.transform.position, Cyan, 0.5f); // arcs out to the first few cats
+            if (arcs++ < 6) LightningFx.SpawnBetween(at, c.transform.position, Cyan, 0.5f);
             Hit(e, at, ZapDamage * damageMult, 0.8f);
             if (c.TryGetComponent(out IEnemyBrain brain)) brain.Knockback(((Vector2)c.transform.position - at).normalized * 6f);
         }
@@ -325,12 +309,11 @@ public class NyxDrones : MonoBehaviour
         Sfx.Play(Sfx.Id.Zap, 0.7f, 0.7f);
     }
 
-    // Ultimate opener: an EMP, then every drone launches at once.
     public void Barrage()
     {
         Emp(transform.position, 2.5f);
         foreach (Drone d in drones) d.timer = float.MaxValue;
-        barrageUntil = Time.time + 0.3f; // the whole swarm goes at once
+        barrageUntil = Time.time + 0.3f;
     }
 
     private static Collider2D Nearest(Vector2 from, float range, float minDistance = 0f)
@@ -345,7 +328,6 @@ public class NyxDrones : MonoBehaviour
         return best;
     }
 
-    // Little quadcopter, two rotor frames.
     public static Sprite[] DroneSprites
     {
         get
@@ -369,7 +351,7 @@ public class NyxDrones : MonoBehaviour
                     for (int x = 0; x < 14; x++)
                     {
                         char ch = body[7 - y][x];
-                        if (y == 7 && ch == 'K' && f == 1 && (x == 2 || x == 5 || x == 8 || x == 11)) ch = '.'; // rotor blur
+                        if (y == 7 && ch == 'K' && f == 1 && (x == 2 || x == 5 || x == 8 || x == 11)) ch = '.';
                         tex.SetPixel(x, y, ch switch
                         {
                             'K' => new Color(0.08f, 0.08f, 0.1f),

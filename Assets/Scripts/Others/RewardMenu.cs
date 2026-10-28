@@ -34,7 +34,6 @@ public class RewardMenu : MonoBehaviour
 
     public static int ChestsOpened;
 
-    // Rewards wait their turn so they never share the pause with a level-up (or each other).
     private readonly Queue<System.Action> queued = new Queue<System.Action>();
     private LevelUpUIController levelUp;
 
@@ -56,7 +55,9 @@ public class RewardMenu : MonoBehaviour
 
     private int anvilUses;
     private bool anvilSecondPick;
-    private int lastRow, lastCol; // which anvil button was used, so the second pick starts there
+    private int lastRow, lastCol;
+    private RectTransform anvilBox;
+    private readonly List<RectTransform> anvilSlots = new List<RectTransform>();
 
     public static void OpenAnvil() => I.queued.Enqueue(() =>
     {
@@ -139,7 +140,7 @@ public class RewardMenu : MonoBehaviour
         while (!stopped[2])
         {
             t += Time.unscaledDeltaTime;
-            if (!skipped && t > 0.1f && SkipPressed()) { skipped = true; t = stopAt[2]; } // stop every reel now
+            if (!skipped && t > 0.1f && SkipPressed()) { skipped = true; t = stopAt[2]; }
             bool flip = t >= nextFace;
             if (flip) nextFace = t + 0.07f;
             for (int i = 0; i < 3; i++)
@@ -159,7 +160,7 @@ public class RewardMenu : MonoBehaviour
         }
 
         Destroy(skipHint.gameObject);
-        yield return new WaitForSecondsRealtime(skipped ? 0.15f : 0.3f); // short pause so the skip press can't also hit Continue
+        yield return new WaitForSecondsRealtime(skipped ? 0.15f : 0.3f);
         Button ok = RuntimeUI.Button(box, "Continue", new Vector2(0, -164), new Vector2(220, 52), Close);
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(ok.gameObject);
     }
@@ -224,8 +225,10 @@ public class RewardMenu : MonoBehaviour
         float rowHeight = 84f;
         float height = 200f + Mathf.Max(1, owned.Count) * rowHeight;
         RectTransform box = MakePanel(anvilSecondPick ? "ANVIL - SECOND PICK" : "ANVIL", new Vector2(860, height), new Color(0.85f, 0.88f, 0.95f));
+        anvilBox = box;
+        anvilSlots.Clear();
         float top = height / 2f;
-        RuntimeUI.Text(box, "Level up a weapon, or enhance a maxed one (up to +5).", 20, new Color(0.8f, 0.84f, 0.95f),
+        RuntimeUI.Text(box, "Level up a weapon, or enhance a maxed one (up to +20).", 20, new Color(0.8f, 0.84f, 0.95f),
                        new Vector2(0, top - 88), new Vector2(800, 30));
 
         var rowButtons = new List<List<Button>>();
@@ -242,6 +245,7 @@ public class RewardMenu : MonoBehaviour
             UiIcons.Frame(slot, UiIcons.Slot);
             slot.rectTransform.anchoredPosition = new Vector2(-370, y);
             slot.rectTransform.sizeDelta = new Vector2(70, 70);
+            anvilSlots.Add(slot.rectTransform);
             Image icon = RuntimeUI.Box(slot.transform, "Icon", Vector2.zero, Vector2.one, Color.white);
             icon.rectTransform.offsetMin = Vector2.one * 10;
             icon.rectTransform.offsetMax = -Vector2.one * 10;
@@ -250,7 +254,8 @@ public class RewardMenu : MonoBehaviour
             UiIcons.Apply(id, icon, badge);
 
             bool maxed = weapon.Level >= Weapon.MaxLevel;
-            string level = !maxed ? $"Lv {weapon.Level}" : weapon.Enhance > 0 ? $"MAX +{weapon.Enhance}" : "MAX";
+            string level = !maxed ? $"Lv {weapon.Level}" : (weapon.Enhance > 0 ? $"MAX +{weapon.Enhance}" : "MAX")
+                         + (maxed && weapon.Enhance < Weapon.MaxEnhance ? $"  <color=#A8B0C8>{Mathf.RoundToInt(weapon.EnhanceChance * 100)}%</color>" : "");
             RuntimeUI.Outline(RuntimeUI.Text(box, $"{PlayerWeapons.Find(id).name}\n<color=#FFD24A>{level}</color>", 22, Color.white,
                                              new Vector2(-180, y), new Vector2(280, rowHeight - 8), TextAlignmentOptions.MidlineLeft));
 
@@ -262,9 +267,9 @@ public class RewardMenu : MonoBehaviour
             }
             else if (weapon.Enhance < Weapon.MaxEnhance)
             {
-                row.Add(RuntimeUI.Button(box, "+DMG", new Vector2(120, y), new Vector2(120, 52), () => { weapon.AddEnhance(Weapon.Boost.Damage); Done(id, r, 0); }));
-                row.Add(RuntimeUI.Button(box, "+AREA", new Vector2(240, y), new Vector2(120, 52), () => { weapon.AddEnhance(Weapon.Boost.Area); Done(id, r, 1); }));
-                row.Add(RuntimeUI.Button(box, "+SPD", new Vector2(360, y), new Vector2(120, 52), () => { weapon.AddEnhance(Weapon.Boost.Speed); Done(id, r, 2); }));
+                row.Add(RuntimeUI.Button(box, "+DMG", new Vector2(120, y), new Vector2(120, 52), () => TryEnhance(weapon, Weapon.Boost.Damage, id, r, 0)));
+                row.Add(RuntimeUI.Button(box, "+AREA", new Vector2(240, y), new Vector2(120, 52), () => TryEnhance(weapon, Weapon.Boost.Area, id, r, 1)));
+                row.Add(RuntimeUI.Button(box, "+SPD", new Vector2(360, y), new Vector2(120, 52), () => TryEnhance(weapon, Weapon.Boost.Speed, id, r, 2)));
             }
             else
             {
@@ -273,7 +278,6 @@ public class RewardMenu : MonoBehaviour
             rowButtons.Add(row);
         }
 
-        // First pick: the top button. Second pick: the same row and button as before (or the nearest row that still has one).
         Button focus = null;
         for (int d = 0; d < rowButtons.Count && focus == null; d++)
             foreach (int r in new[] { lastRow + d, lastRow - d })
@@ -287,13 +291,65 @@ public class RewardMenu : MonoBehaviour
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject((focus != null ? focus : notNow).gameObject);
     }
 
-    private void Done(string id, int row, int col)
+    private void TryEnhance(Weapon weapon, Weapon.Boost boost, string id, int row, int col)
+    {
+        bool ok = Random.value < weapon.EnhanceChance;
+        if (ok) weapon.AddEnhance(boost);
+        StartCoroutine(EnhanceRoll(id, row, col, ok));
+    }
+
+    private IEnumerator EnhanceRoll(string id, int row, int col, bool ok)
+    {
+        foreach (Button b in anvilBox.GetComponentsInChildren<Button>()) b.interactable = false;
+        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
+
+        RectTransform slot = anvilSlots[row];
+        Vector2 home = slot.anchoredPosition;
+        for (int i = 0; i < 3; i++)
+        {
+            Sfx.Play(Sfx.Id.Clang, 0.5f, 0.9f + 0.15f * i);
+            for (float t = 0f; t < 0.2f; t += Time.unscaledDeltaTime)
+            {
+                float k = 1f - t / 0.2f;
+                slot.anchoredPosition = home + Random.insideUnitCircle * 6f * k;
+                slot.localScale = Vector3.one * (1f + 0.2f * k);
+                yield return null;
+            }
+        }
+        slot.anchoredPosition = home;
+        slot.localScale = Vector3.one;
+
+        Color c = ok ? new Color(1f, 0.82f, 0.29f) : new Color(1f, 0.4f, 0.4f);
+        slot.GetComponent<Image>().color = c;
+        Image strip = RuntimeUI.Box(anvilBox, "Stamp", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Color(0.05f, 0.03f, 0.1f, 0.85f));
+        strip.rectTransform.sizeDelta = new Vector2(anvilBox.sizeDelta.x, 120f);
+        RectTransform stamp = RuntimeUI.Title(anvilBox, $"<color=#{ColorUtility.ToHtmlStringRGB(c)}>{(ok ? "SUCCESS!" : "FAILED...")}</color>", 64f, Vector2.zero, 800f);
+        CanvasGroup fade = stamp.gameObject.AddComponent<CanvasGroup>();
+        if (ok) { Sfx.Play(Sfx.Id.Fanfare, 0.8f); Juice.Flash(new Color(1f, 0.85f, 0.3f, 0.35f), 0.3f); }
+        else Sfx.Play(Sfx.Id.Shatter, 0.8f, 0.7f);
+
+        Vector2 boxHome = anvilBox.anchoredPosition;
+        for (float t = 0f; t < 1.2f && !(t > 0.35f && SkipPressed()); t += Time.unscaledDeltaTime)
+        {
+            float k = Mathf.Clamp01(t / 0.18f);
+            stamp.localScale = Vector3.one * (Mathf.Lerp(2.5f, 1f, k * k) + (ok ? 0.04f * Mathf.Sin(t * 10f) : 0f));
+            fade.alpha = k;
+            if (!ok) anvilBox.anchoredPosition = boxHome + Vector2.right * Mathf.Sin(t * 60f) * 12f * Mathf.Clamp01(1f - t / 0.45f);
+            yield return null;
+        }
+        anvilBox.anchoredPosition = boxHome;
+        Done(id, row, col, !ok);
+    }
+
+    private void Done(string id, int row, int col, bool failed = false)
     {
         lastRow = row;
         lastCol = col;
         Close();
-        Sfx.Play(Sfx.Id.Clang, 0.9f);
-        DamagePopup.SpawnText((Vector2)stats.transform.position + Vector2.up * 0.8f, $"{PlayerWeapons.Find(id).name.ToUpper()} UP!", new Color(0.85f, 0.88f, 0.95f), 5f);
+        Sfx.Play(Sfx.Id.Clang, failed ? 0.4f : 0.9f);
+        DamagePopup.SpawnText((Vector2)stats.transform.position + Vector2.up * 0.8f,
+            failed ? "ENHANCE FAILED" : $"{PlayerWeapons.Find(id).name.ToUpper()} UP!",
+            failed ? new Color(0.6f, 0.62f, 0.7f) : new Color(0.85f, 0.88f, 0.95f), 5f);
         if (--anvilUses > 0 && Open()) { anvilSecondPick = true; BuildAnvil(); }
     }
 }

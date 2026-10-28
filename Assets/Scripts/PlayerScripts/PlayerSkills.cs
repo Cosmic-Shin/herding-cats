@@ -168,8 +168,6 @@ public class PlayerSkills : MonoBehaviour
         }
     }
 
-    // A combo took this skill in: it keeps working (and stays maxed, so it's never offered again)
-    // but leaves the skill bar, freeing the slot.
     public void Absorb(string id) => order.Remove(id);
     public void Unabsorb(string id) { if (owned.ContainsKey(id) && !order.Contains(id)) order.Add(id); }
 
@@ -203,13 +201,11 @@ public class PlayerSkills : MonoBehaviour
             if ((regenFx -= Time.deltaTime) <= 0f) { regenFx = 0.45f; HealPlus(); }
         }
 
-        // Berserk: red embers rise off Mira while her low-HP damage bonus is kicking in.
         if (stats.lowHealthDamageBonus > 0f && stats.currentHealth > 0f && stats.currentHealth < stats.maxHealth * 0.5f
             && !Settings.LowParticles && Random.value < Time.deltaTime * 20f * (1f - stats.currentHealth / stats.maxHealth))
             Juice.SparksDir((Vector2)transform.position + Random.insideUnitCircle * 0.4f, Vector2.up, 25f, new Color(1f, 0.25f, 0.2f), 2, 2.4f, 0.15f);
     }
 
-    // Regen tick: green plus that rises and fades.
     private void HealPlus()
     {
         const float life = 0.7f;
@@ -221,7 +217,7 @@ public class PlayerSkills : MonoBehaviour
 
     public void OnExplosion(Vector2 pos, float radius, float damage)
     {
-        if (!Hero.UsesBombs) return; // Kai and Nyx run their own versions off their weapon
+        if (!Hero.UsesBombs) return;
         int chain = LevelOf("chain");
         if (chain > 0 && Random.value < new[] { 0.15f, 0.25f, 0.35f }[chain - 1]) Chain(pos, radius, damage);
 

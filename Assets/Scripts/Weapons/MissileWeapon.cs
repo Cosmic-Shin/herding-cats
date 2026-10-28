@@ -24,8 +24,6 @@ public class MissileWeapon : Weapon
         }
     }
 
-    // Healers first (they undo your damage), then bosses, elites, and the toughest cat by max HP.
-    // Max HP rather than current HP, so a big cat that's already hurt stays the target.
     private EnemyHealth PickTarget(float range)
     {
         EnemyHealth best = null;

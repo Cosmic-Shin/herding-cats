@@ -119,7 +119,6 @@ public class Bomb : MonoBehaviour, IPoolable
             if (to.sqrMagnitude > 0.04f && c.TryGetComponent(out EnemyAI cat)) cat.Pull(to.normalized * 4f);
         }
         if (Random.value < 0.3f) Juice.Sparks(at + Random.insideUnitCircle * radius, new Color(1f, 0.55f, 0.6f), 1, 0.5f, 0.1f);
-        // Magnet Bombs: a pink ring marks the pull zone while the bomb ticks
         if ((nextPullRing -= Time.deltaTime) <= 0f) { nextPullRing = 0.3f; ExplosionFx.Ring(at, radius * 1.6f, new Color(1f, 0.45f, 0.75f, 0.6f), 0.25f); }
     }
 
@@ -147,7 +146,7 @@ public class Bomb : MonoBehaviour, IPoolable
         }
 
         ExplosionFx.Spawn(pos, radius);
-        if (concussion && !secondary) // Concussion Bombs: a blue shock ring and stun sparks
+        if (concussion && !secondary)
         {
             ExplosionFx.Ring(pos, radius * 1.25f, new Color(0.5f, 0.8f, 1f, 0.9f), 0.3f);
             Juice.Sparks(pos, new Color(1f, 0.95f, 0.5f), 6, 4f, 0.1f);

@@ -36,8 +36,8 @@ public class Burger : MonoBehaviour
     private SpriteRenderer halo, rays;
     private float age;
 
-    public const int MaxOnField = 12;
-    public const float DropRateScale = 0.75f; // global nerf on every regular cat's burgerDropChance
+    public const int MaxOnField = 15;
+    public const float DropRateScale = 0.9f;
 
     public static void Spawn(Vector2 pos)
     {
@@ -47,9 +47,8 @@ public class Burger : MonoBehaviour
         go.transform.position = pos;
         var sr = go.AddComponent<SpriteRenderer>();
         sr.sprite = GetSprite();
-        sr.sortingOrder = 8; // with the other pickups, above gems and ground effects
+        sr.sortingOrder = 8;
         var b = go.AddComponent<Burger>();
-        // A soft gold glow and slowly turning rays behind it, so burgers read through late-game clutter.
         b.halo = b.Layer("Glow", Shapes.SoftGlow);
         b.rays = b.Layer("Rays", Shapes.SoftRays);
     }
@@ -60,7 +59,7 @@ public class Burger : MonoBehaviour
         r.transform.SetParent(transform, false);
         r.sprite = s;
         r.sortingOrder = 7;
-        Lighting.Glow(r); // unlit, so it stays bright at dusk
+        Lighting.Glow(r);
         return r;
     }
 
@@ -92,11 +91,11 @@ public class Burger : MonoBehaviour
         transform.localScale = Vector3.one * Mathf.Lerp(0.4f, 1f, Mathf.Clamp01(age / 0.15f));
         float pulse = 0.5f + 0.5f * Mathf.Sin(Time.time * 5f);
         halo.transform.localScale = Vector3.one * (1.1f + 0.2f * pulse);
-        halo.color = new Color(1f, 0.78f, 0.3f, 0.75f + 0.25f * pulse); // warm gold: stands out on grass, snow and ash
+        halo.color = new Color(1f, 0.78f, 0.3f, 0.75f + 0.25f * pulse);
         rays.transform.localScale = Vector3.one * (1.7f + 0.2f * pulse);
         rays.transform.localRotation = Quaternion.Euler(0f, 0f, Time.time * 25f);
         rays.color = new Color(1f, 0.93f, 0.65f, 0.55f + 0.3f * pulse);
-        if (Random.value < Time.deltaTime * 2f) // an occasional twinkle
+        if (Random.value < Time.deltaTime * 2f)
             Juice.Sparks((Vector2)transform.position + Random.insideUnitCircle * 0.3f, new Color(1f, 0.95f, 0.7f), 1, 0.4f, 0.08f);
 
         if (player != null && Vector2.Distance(basePos, player.position) <= PickupRadius) eatTime = 0f;
@@ -123,7 +122,6 @@ public class Burger : MonoBehaviour
     {
         if (sprite != null) return sprite;
 
-        // One pixel of dark outline around the art so it reads on any ground.
         int w = Pixels[0].Length, h = Pixels.Length;
         bool Solid(int x, int row) => x >= 0 && row >= 0 && x < w && row < h && Pixels[row][x] != '.';
         var tex = new Texture2D(w + 2, h + 2) { filterMode = FilterMode.Point };
@@ -135,7 +133,7 @@ public class Burger : MonoBehaviour
                 tex.SetPixel(x + 1, h - row, c);
             }
         tex.Apply();
-        sprite = Sprite.Create(tex, new Rect(0, 0, w + 2, h + 2), new Vector2(0.5f, 0.5f), 26f); // a bit bigger than before (was 32)
+        sprite = Sprite.Create(tex, new Rect(0, 0, w + 2, h + 2), new Vector2(0.5f, 0.5f), 26f);
         return sprite;
     }
 

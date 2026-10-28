@@ -13,7 +13,6 @@ public class GamepadUI : MonoBehaviour
     public static bool Back => Pressed(g => g.buttonEast);
     public static bool Connected => Gamepad.current != null;
 
-    // -1 / +1 on the frame left or right is pressed (arrows, A/D, d-pad, stick or joystick), for rows that cycle a value.
     private static int navXFrame = -1, navX, stickXWas;
     public static int NavX
     {
@@ -44,7 +43,7 @@ public class GamepadUI : MonoBehaviour
         Joystick js = Joystick.current;
         if (js == null) return Vector2.zero;
         Vector2 s = js.stick.ReadValue();
-        return s.sqrMagnitude > 0.04f || js.hatswitch == null ? s : js.hatswitch.ReadValue(); // generic pads put the d-pad on a hat
+        return s.sqrMagnitude > 0.04f || js.hatswitch == null ? s : js.hatswitch.ReadValue();
     }
 
     private static bool AnyButton(Gamepad g) =>
@@ -70,7 +69,6 @@ public class GamepadUI : MonoBehaviour
         go.AddComponent<GamepadUI>();
     }
 
-    // Controller rumble. Strongest request wins until it runs out; stops on its own.
     private static float rumbleUntil, rumbleLow, rumbleHigh;
     public static void Rumble(float low, float high, float seconds)
     {
@@ -104,14 +102,12 @@ public class GamepadUI : MonoBehaviour
             if (Gamepad.current != null) Gamepad.current.ResetHaptics();
         }
 
-        // Hide the mouse cursor while playing on a pad; any mouse movement brings it back.
         Gamepad pad = Gamepad.current;
         if (pad != null && Cursor.visible && (Move().sqrMagnitude > 0.04f || AnyButton(pad))) Cursor.visible = false;
         else if (!Cursor.visible && Mouse.current != null && Mouse.current.delta.ReadValue().sqrMagnitude > 4f) Cursor.visible = true;
 
         EventSystem es = EventSystem.current;
         if (es == null) { UpdateFrame(null); return; }
-        // A stray click on empty space used to drop the selection and strand keyboard/pad players.
         if (es.currentInputModule is InputSystemUIInputModule ui && ui.deselectOnBackgroundClick)
         {
             ui.deselectOnBackgroundClick = false;
@@ -120,8 +116,6 @@ public class GamepadUI : MonoBehaviour
         }
 
         GameObject sel = es.currentSelectedGameObject;
-        // Arrowing off the edge of a menu could land on a button of the menu underneath (the pause menu behind the
-        // combo book), hiding the cursor. Undo any move down to a lower canvas while the menu above is still up.
         if (sel != null && sel != lastGood && Time.timeScale == 0f && Usable(lastGood) && Order(sel.transform) < Order(lastGood.transform))
         {
             es.SetSelectedGameObject(lastGood);
@@ -133,8 +127,6 @@ public class GamepadUI : MonoBehaviour
             lastSelected = sel;
         }
         bool ok = Usable(sel);
-        // The selected button got disabled under the cursor (e.g. the last reroll): Unity drops the selection, which
-        // hid the arrow and stranded keyboard/pad players. Hop to the nearest usable button right away.
         if (!ok && Time.timeScale == 0f && !Settings.Busy && lastGood != null && lastGood.activeInHierarchy && !Usable(lastGood))
         {
             Selectable near = Nearest(lastGood);
@@ -143,12 +135,11 @@ public class GamepadUI : MonoBehaviour
         if (ok) lastGood = sel;
         UpdateFrame(ok && Time.timeScale == 0f ? sel : null);
 
-        // Space selects like Enter (buttons/toggles only, so text fields still get spaces).
         if (ok && Time.timeScale == 0f && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame &&
             (sel.TryGetComponent(out Button _) || sel.TryGetComponent(out Toggle _)))
             ExecuteEvents.Execute(sel, new BaseEventData(es), ExecuteEvents.submitHandler);
 
-        if (Time.timeScale > 0f || ok || Settings.Busy) return; // Busy: waiting for a rebind press
+        if (Time.timeScale > 0f || ok || Settings.Busy) return;
         bool poked = Move().sqrMagnitude > 0.25f || Pressed(g => g.buttonSouth) || KeyPoke() ||
                      (Joystick.current != null && Joystick.current.trigger.wasPressedThisFrame);
         if (!poked) return;
@@ -166,7 +157,6 @@ public class GamepadUI : MonoBehaviour
                 bestOrder = order;
             }
         }
-        // Go back to where the player was if it's still on the top menu, else the top-left item.
         if (Usable(lastGood) && Order(lastGood.transform) >= bestOrder) es.SetSelectedGameObject(lastGood);
         else if (best != null) es.SetSelectedGameObject(best.gameObject);
     }
@@ -186,13 +176,11 @@ public class GamepadUI : MonoBehaviour
         return best;
     }
 
-    // Pixel arrow that slides to the left of whatever is selected while a menu is open.
     private RectTransform arrow;
     private bool arrowOn;
 
     private static Sprite ArrowSprite()
     {
-        // Classic RPG cursor: 5x9 triangle with a 1px dark outline (7x11 texture).
         const int w = 7, h = 11;
         var tex = new Texture2D(w, h, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
         bool Fill(int x, int y) => x >= 1 && x <= 5 && Mathf.Abs(y - 5) <= 5 - x;
@@ -230,7 +218,6 @@ public class GamepadUI : MonoBehaviour
         arrow.gameObject.SetActive(show);
         if (!show) { arrowOn = false; return; }
 
-        // Text buttons have wide boxes; point at the actual text instead.
         RectTransform rt = (RectTransform)target.transform;
         Rect local = rt.rect;
         if (target.TryGetComponent(out TMPro.TextMeshProUGUI tmp) && tmp.textBounds.size.x > 1f)
@@ -244,7 +231,7 @@ public class GamepadUI : MonoBehaviour
         Vector2 pos = new(Mathf.Min(a.x, b.x) - 18f * scale, (a.y + b.y) * 0.5f);
         float k = arrowOn ? 1f - Mathf.Exp(-Time.unscaledDeltaTime * 20f) : 1f;
         Vector2 slid = Vector2.Lerp(arrow.anchoredPosition + Vector2.right * bob, pos, k);
-        bob = -Mathf.Abs(Mathf.Sin(Time.unscaledTime * 5f)) * 8f * scale; // nudges left and back, like it's pointing
+        bob = -Mathf.Abs(Mathf.Sin(Time.unscaledTime * 5f)) * 8f * scale;
         arrow.anchoredPosition = slid - Vector2.right * bob;
         arrow.sizeDelta = new Vector2(7f, 11f) * 3.5f * scale;
         arrowOn = true;

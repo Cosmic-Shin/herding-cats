@@ -36,8 +36,6 @@ public class PauseMenu : MonoBehaviour
         RectTransform title = null;
         foreach (TextMeshProUGUI t in panel.GetComponentsInChildren<TextMeshProUGUI>(true))
             if (t.text.Trim() == "PAUSED") { title = RuntimeUI.ReplaceTitle(t, "PAUSED", t.fontSize); break; }
-        // Build box on the left, button column on the right, both clear of the HUD gear slots in the
-        // top-left corner (they stay usable while paused) and of the bottom edge. Title centred over the pair.
         var box = (RectTransform)statsText.rectTransform.parent;
         box.anchoredPosition = new Vector2(BoxX, ColumnTop - BoxH / 2f);
         box.sizeDelta = new Vector2(BoxW, BoxH);
@@ -46,11 +44,9 @@ public class PauseMenu : MonoBehaviour
         panel.SetActive(false);
     }
 
-    // Layout (canvas units from the screen centre). The HUD slots reach about x = -440 at 16:9.
     private const float BoxX = -80f, BoxW = 600f, BoxH = 720f;
     private const float ColumnX = 470f, ColumnW = 440f, ColumnTop = 260f, ButtonW = 380f;
 
-    // Cat theme: framed build box, the buttons on their own panel with a cat sitting on it.
     private void ApplyTheme(RectTransform box)
     {
         if (panel.TryGetComponent(out Image dim)) dim.color = CatTheme.DimColor;
@@ -69,7 +65,7 @@ public class PauseMenu : MonoBehaviour
         foreach (Button b in column) CatTheme.Button(b);
     }
 
-    private const float StatsSplit = 0.42f; // build stats above, damage chart below
+    private const float StatsSplit = 0.42f;
 
     private void Update()
     {
@@ -84,7 +80,6 @@ public class PauseMenu : MonoBehaviour
         else if (CanPause()) Pause();
     }
 
-    // Alt-tab / clicking away opens the pause menu, so returning players aren't hit before they're ready.
     private void OnApplicationFocus(bool focused)
     {
         if (!focused && !IsPaused && !Settings.IsOpen && !ComboBook.IsOpen && CanPause()) Pause();
@@ -100,7 +95,6 @@ public class PauseMenu : MonoBehaviour
         Juice.CancelHitStop();
         timeScaleBefore = Time.timeScale > 0f ? Time.timeScale : 1f;
         Time.timeScale = 0f;
-        // Build stats on top, damage chart below.
         statsText.text = BuildStats(stats);
         statsText.rectTransform.anchorMin = new Vector2(0f, StatsSplit);
         if (chart != null) Destroy(chart.gameObject);
@@ -110,7 +104,6 @@ public class PauseMenu : MonoBehaviour
         chart.anchorMax = new Vector2(1f, StatsSplit);
         chart.offsetMin = new Vector2(36f, 24f);
         chart.offsetMax = new Vector2(-36f, -8f);
-        // Left from the buttons jumps to the HUD gear slots (hover/select shows details).
         foreach (Button b in column) { Navigation n = b.navigation; n.selectOnLeft = hud != null ? hud.FirstGearSlot : null; b.navigation = n; }
         if (hintText != null) hintText.text = GamepadUI.Connected ? $"{Keybinds.PadLabel(UnityEngine.InputSystem.LowLevel.GamepadButton.Start)} / {Keybinds.PadLabel(UnityEngine.InputSystem.LowLevel.GamepadButton.East)} to resume" : $"Esc / {Keybinds.Label(Keybinds.Action.Pause)} to resume";
         panel.SetActive(true);

@@ -9,7 +9,8 @@ public abstract class Weapon : MonoBehaviour
     public string DisplayName = "Weapon";
     public float LastFired { get; private set; } = -10f;
 
-    public const int MaxEnhance = 5;
+    public const int MaxEnhance = 20;
+    public float EnhanceChance => Mathf.Max(0.2f, 1f - 0.15f * Mathf.Max(0, Enhance - 2));
     public int Enhance { get; private set; }
     private float bonusDamage, bonusArea, bonusSpeed;
 
@@ -19,7 +20,7 @@ public abstract class Weapon : MonoBehaviour
     {
         Enhance++;
         if (boost == Boost.Damage) bonusDamage += 0.15f;
-        else if (boost == Boost.Area) bonusArea += 0.06f; // +30% at +5; 15% each let a maxed aura cover the screen
+        else if (boost == Boost.Area) bonusArea += 0.06f;
         else bonusSpeed += 0.12f;
         OnEnhanced(boost);
     }

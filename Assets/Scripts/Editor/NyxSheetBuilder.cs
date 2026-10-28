@@ -4,11 +4,6 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-// Builds Nyx's 20 hero sheets (same layout as Mira/Kai: 32x32 cells; walk and roll 4 frames, slash 5)
-// from her hand-drawn 4-direction walk sheet. Drawn frames are kept as-is; the rest are derived:
-// diagonal walks from the side views, rolls by rotating
-// a tucked pose, and a placeholder "gadget" attack. Re-run after editing the source sheet.
-// Two sets: Heroes/Nyx (goggles up on her forehead) and Heroes/NyxGoggles (goggles down, worn during her ultimate).
 public static class NyxSheetBuilder
 {
     private const string Dir = "Assets/Resources/Heroes/Nyx", GogglesDir = "Assets/Resources/Heroes/NyxGoggles",
@@ -20,7 +15,6 @@ public static class NyxSheetBuilder
         0xD50000, 0xFFFFFF, 0x225232, 0xF44336, 0xF5F5F5, 0xBB8367, 0xD6D6D6, 0xE3E3E3 };
     private static readonly Color32 Glow = Hex(0x00E5FF), GlowCore = Hex(0xE0FFFF);
 
-    // A frame, top-origin like a paint program.
     private class Img
     {
         public readonly int w, h;
@@ -50,7 +44,6 @@ public static class NyxSheetBuilder
         int H = src.height;
         Color32 Get(int x, int y) => src.GetPixel(x, H - 1 - y);
 
-        // Frame rects from the importer (x, unityY, w, h): rows are down, up, left, right.
         int[][] rects = {
             new[]{0,78,19,25}, new[]{22,76,19,27}, new[]{44,78,19,25}, new[]{66,76,19,27},
             new[]{0,52,19,25}, new[]{22,51,19,26}, new[]{44,52,19,25}, new[]{66,51,19,26},
@@ -76,13 +69,12 @@ public static class NyxSheetBuilder
                         img[x, y] = c.a < 128 ? new Color32(0, 0, 0, 0) : Snap(c);
                     }
                 AddGoggles(img, facing[r], gogglesDown);
-                frames[i] = new Frame { img = img, top = top - bandTop }; // keeps the walk bob
+                frames[i] = new Frame { img = img, top = top - bandTop };
             }
             rows[facing[r]] = frames;
         }
         UnityEngine.Object.DestroyImmediate(src);
 
-        // Diagonals use the side views with the face showing (like Kai's up-left, which shows his eye and cheek).
         rows["DownLeft"] = rows["UpLeft"] = rows["Left"];
         rows["DownRight"] = rows["UpRight"] = rows["Right"];
         string[] eight = { "Down", "DownLeft", "DownRight", "Left", "Right", "Up", "UpLeft", "UpRight" };
@@ -94,7 +86,6 @@ public static class NyxSheetBuilder
             Save(sheet, d);
         }
 
-        // Rolls: tuck, tumble round, land upright.
         foreach (string d in eight)
         {
             bool cw = !d.Contains("Left");
@@ -107,7 +98,6 @@ public static class NyxSheetBuilder
             Save(sheet, "Roll" + d);
         }
 
-        // Attack (5 frames): lean back, push forward with a glowing gadget, settle.
         foreach (string d in new[] { "DownLeft", "DownRight", "UpLeft", "UpRight" })
         {
             Frame f = rows[d][0];
@@ -123,14 +113,8 @@ public static class NyxSheetBuilder
         }
     }
 
-    // ---- Goggles: dark green hacker goggles pushed up on her forehead, red lenses, strap round the head ----
-    // Drawn on the source frames, so every derived sheet (diagonals, rolls, attack) and the portrait get them.
-    // Coordinates are relative to an anchor that sits in the same spot on every walk frame:
-    // front/side views use the first eye-white pixel, the back view the first headphone-red pixel.
     private static readonly Color32 GFrame = Hex(0x123821), GShine = Hex(0x2E7D4F), Lens = Hex(0xD50000), LensGlint = Hex(0xFF8A80);
 
-    // One row per string, starting at (dx, dy) from the anchor. F frame, S frame highlight, L lens, l glint, space = untouched.
-    // Lenses sit above her eyes (x 6-7 and 11-12 in the source frame), strap out to the hair edges.
     private static readonly (int dx, int dy, string[] rows) FrontGoggles = (-3, -5, new[] {
         " SSSSS SSSSS ",
         "FFlLLFFFlLLFF",
@@ -141,7 +125,6 @@ public static class NyxSheetBuilder
         "FFFFFFSFFFFFF",
         "FFFFFFSFFFFFF",
     });
-    // Facing left; the right-facing frames are mirror images, so this is flipped for them.
     private static readonly (int dx, int dy, string[] rows) SideGoggles = (-4, -5, new[] {
         " SSS",
         "FlLFFFFFFFFFFFF",
@@ -149,10 +132,8 @@ public static class NyxSheetBuilder
         " FFF",
     });
 
-    // Goggles down (her ultimate): the same goggles over her eyes, strap at eye level.
     private static readonly (int dx, int dy, string[] rows) FrontGogglesDown = (-3, -1, FrontGoggles.rows);
     private static readonly (int dx, int dy, string[] rows) BackStrapDown = (1, 2, BackStrap.rows);
-    // Eye at x 4-5 in the left-facing source; the strap stops at x 14 where the back of her head narrows.
     private static readonly (int dx, int dy, string[] rows) SideGogglesDown = (-2, -1, new[] {
         " SSS",
         "FlLFFFFFFFFF",
@@ -201,7 +182,6 @@ public static class NyxSheetBuilder
         return o;
     }
 
-    // Frame centred in its cell (+dx), top at CellTop (+dy).
     private static void Blit(Img sheet, int cell, Img f, int dx, int dy)
     {
         int ox = cell * Cell + (Cell - f.w) / 2 + dx, oy = CellTop + dy;
@@ -224,7 +204,6 @@ public static class NyxSheetBuilder
             }
     }
 
-    // Writes <prefix><name>.png, and on first build a .meta copied from Kai's matching sheet (same slicing, new names/guid).
     private static void SaveSheet(Img sheet, string dir, string prefix, string name)
     {
         var tex = new Texture2D(sheet.w, sheet.h, TextureFormat.RGBA32, false);

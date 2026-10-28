@@ -76,7 +76,6 @@ public static class RuntimeUI
         for (int i = 0; i < layers.Length; i++) layers[i].text = i == layers.Length - 1 ? text : plain;
     }
 
-    // Fixed arrow/d-pad routes (null = nowhere), for rows where left/right changes a value or automatic nav jumps oddly.
     public static void Nav(Selectable s, Selectable up = null, Selectable down = null, Selectable left = null, Selectable right = null) =>
         s.navigation = new Navigation { mode = Navigation.Mode.Explicit, selectOnUp = up, selectOnDown = down, selectOnLeft = left, selectOnRight = right };
 
@@ -103,7 +102,6 @@ public static class RuntimeUI
 
     public static TextMeshProUGUI Outline(TextMeshProUGUI t, float width = 0.2f)
     {
-        // Mobile SDF shader only draws outlines with OUTLINE_ON; dilate so thin pixel strokes survive (matches "PixelFont Outline.mat").
         t.fontMaterial.EnableKeyword("OUTLINE_ON");
         t.fontMaterial.SetFloat(ShaderUtilities.ID_FaceDilate, 0.1f);
         t.outlineWidth = width;

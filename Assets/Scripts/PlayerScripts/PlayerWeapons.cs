@@ -140,7 +140,6 @@ public class PlayerWeapons : MonoBehaviour
         new Def { id = "cryobeam", name = "Brain Freeze", type = typeof(CryoBeamWeapon) },
         new Def { id = "phoenix", name = "Fire Rang", type = typeof(PhoenixRangWeapon) },
 
-        // Weapon + skill combos: the same weapon, renamed, with the combo effect switched on (see PlayerCollabs.Has).
         new Def { id = "missilechain", name = "Chain Missiles", type = typeof(MissileWeapon) },
         new Def { id = "auraguard", name = "Thick Coat", type = typeof(AuraWeapon) },
         new Def { id = "blinkmines", name = "Parting Gift", type = typeof(MineWeapon) },
@@ -235,7 +234,7 @@ public class PlayerWeapons : MonoBehaviour
         owned[collab.id] = weapon;
         order.Insert(Mathf.Clamp(slot, 0, order.Count), collab.id);
         weapon.SetLevel(Weapon.MaxLevel);
-        if (carried != null) weapon.CopyEnhance(carried); // anvil work on the first piece isn't lost
+        if (carried != null) weapon.CopyEnhance(carried);
     }
 
     public void Remove(string id)

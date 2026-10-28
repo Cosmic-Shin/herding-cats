@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Menu showcase: the picked hero stands to the right of the menu, idling, and every couple of seconds
-// shows off their attack (Mira slashes inside her bubble, Kai sweeps the greatsword, Nyx's drones zap).
-// The menu pauses the game, so this runs on unscaled time with its own renderers instead of the in-game fx.
 public class HeroPreview : MonoBehaviour
 {
     private const float Scale = 1.6f, AttackEvery = 2.4f, AttackFps = 14f;
@@ -17,7 +14,7 @@ public class HeroPreview : MonoBehaviour
     private string hero;
     private float t, attackT = -1f, nextAttack = 1f;
     private Camera cam;
-    public Vector2 screen = new Vector2(0.68f, -0.3f); // where it stands, as a fraction of the half-screen from centre
+    public Vector2 screen = new Vector2(0.68f, -0.3f);
 
     public static HeroPreview Create() => new GameObject("HeroPreview").AddComponent<HeroPreview>();
 
@@ -90,11 +87,9 @@ public class HeroPreview : MonoBehaviour
         float dt = Time.unscaledDeltaTime;
         t += dt;
 
-        // Stand to the right of the menu.
         float hh = cam.orthographicSize, hw = hh * cam.aspect;
         transform.position = new Vector3(cam.transform.position.x + hw * screen.x, cam.transform.position.y + hh * screen.y, 0f);
 
-        // Idle breathing; attack plays the slash frames.
         if ((nextAttack -= dt) <= 0f) { nextAttack = AttackEvery; attackT = 0f; }
         float breathe = 0.03f * Mathf.Sin(t * 3f);
         body.transform.localScale = new Vector3(1f - breathe * 0.5f, 1f + breathe, 1f);
@@ -120,7 +115,6 @@ public class HeroPreview : MonoBehaviour
         bubble.transform.localScale = new Vector3(1f + wob, 1f - wob, 1f) * 1.25f;
         Color tint = Color.Lerp(new Color(0.55f, 0.9f, 1f), new Color(0.85f, 0.7f, 1f), 0.5f + 0.5f * Mathf.Sin(t * 1.3f));
         bubble.color = new Color(tint.r, tint.g, tint.b, 0.45f);
-        // A quick crescent slash out to the left.
         bool on = k >= 0.08f && k < 0.3f;
         slash.enabled = on;
         if (!on) return;
@@ -133,16 +127,15 @@ public class HeroPreview : MonoBehaviour
 
     private void Kai(float k)
     {
-        // Rest: over the shoulder. Attack: wind up, then a heavy sweep across the left side with ghost blades.
         float sweep = k < 0f ? -1f : Mathf.Clamp01((k - 0.06f) / 0.2f);
         float angle;
         if (k < 0f || k > 0.45f) angle = Mathf.LerpAngle(sword.transform.localEulerAngles.z + 90f, 235f, 0.2f);
         else if (k < 0.06f) angle = 265f;
-        else angle = Mathf.LerpAngle(255f, 135f, 1f - Mathf.Pow(1f - sweep, 3f)); // low sweep across the left, stays clear of the menu
+        else angle = Mathf.LerpAngle(255f, 135f, 1f - Mathf.Pow(1f - sweep, 3f));
         bool swinging = k >= 0.06f && k <= 0.45f;
         sword.transform.localPosition = swinging ? new Vector3(0f, -0.05f, 0f) : new Vector3(-0.08f, 0.3f, 0f);
         sword.transform.localRotation = Quaternion.Euler(0f, 0f, angle - 90f);
-        sword.transform.localScale = Vector3.one; // same size relative to Kai as in game
+        sword.transform.localScale = Vector3.one;
         sword.sortingOrder = swinging ? 112 : 109;
 
         for (int i = ghosts.Length - 1; i > 0; i--) ghostAngles[i] = ghostAngles[i - 1];
@@ -165,7 +158,7 @@ public class HeroPreview : MonoBehaviour
             float a = t * 1.9f + i * Mathf.PI * 2f / drones.Count;
             Vector3 home = new Vector3(Mathf.Cos(a) * 0.95f, 0.3f + Mathf.Sin(a) * 0.35f + 0.04f * Mathf.Sin(t * 4f + i), 0f);
             Vector3 pos = home;
-            if (i == 0 && k >= 0f && k < 0.5f) // the first drone darts out to zap
+            if (i == 0 && k >= 0f && k < 0.5f)
             {
                 Vector3 target = new Vector3(-1.7f, -0.1f, 0f);
                 pos = Vector3.Lerp(home, target, Mathf.Sin(Mathf.Clamp01(k / 0.5f) * Mathf.PI));

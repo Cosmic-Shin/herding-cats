@@ -53,7 +53,7 @@ public class PlayerAutoAttack : MonoBehaviour
         dir = dir.normalized;
         float damage = stats.AttackDamage * 0.35f * (ult != null ? ult.DamageMultiplier : 1f);
         float radius = stats.BombRadius * 0.6f * (ult != null ? ult.RadiusMultiplier : 1f) * (1f + 0.5f * Fury);
-        Juice.SparksDir(firePoint.position, dir, 15f, new Color(1f, 0.8f, 0.35f), 10, 9f, 0.14f); // Carpet Bomb: a spray along the line
+        Juice.SparksDir(firePoint.position, dir, 15f, new Color(1f, 0.8f, 0.35f), 10, 9f, 0.14f);
         for (int i = 0; i < 5; i++)
         {
             DamageStats.Source = DamageStats.Bombs;
@@ -100,7 +100,7 @@ public class PlayerAutoAttack : MonoBehaviour
     private void ThrowKick()
     {
         if (anim != null) anim.Squash(new Vector2(1.15f, 0.88f), 0.1f);
-        float fury = Fury; // Fury Fuse: throws flare red, harder the lower your HP
+        float fury = Fury;
         Juice.Sparks(firePoint.position, Color.Lerp(new Color(1f, 0.75f, 0.3f), new Color(1f, 0.2f, 0.15f), fury), 4 + Mathf.RoundToInt(fury * 8f), 3f + fury * 3f, 0.1f);
         if (fury > 0.4f) ExplosionFx.Ring(firePoint.position, 0.8f + fury, new Color(1f, 0.25f, 0.2f, 0.7f), 0.2f);
     }

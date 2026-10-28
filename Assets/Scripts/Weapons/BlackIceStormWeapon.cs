@@ -65,7 +65,6 @@ public class BlackIceStormWeapon : SuperWeapon
         if (cloud.IsSame(gen)) cloud.Release();
     }
 
-    // One falling ice shard: drops from the cloud and fades as it lands.
     private static void Hail(Vector2 from)
     {
         const float life = 0.35f;

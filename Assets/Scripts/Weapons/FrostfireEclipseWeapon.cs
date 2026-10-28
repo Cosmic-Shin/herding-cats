@@ -17,7 +17,6 @@ public class FrostfireEclipseWeapon : SuperWeapon
         if (Ready(5f)) StartCoroutine(Eclipse());
     }
 
-    // The eclipse hangs just above Mira's head; the beams fan out from it.
     private Vector2 Center => Pos + Vector2.up * 1.4f;
 
     private IEnumerator Eclipse()
@@ -40,7 +39,6 @@ public class FrostfireEclipseWeapon : SuperWeapon
             gens[i] = beams[i].Generation;
         }
 
-        // The eclipse itself: the fire/ice orb spinning over a pulsing white corona.
         Shot corona = Shot.Spawn(Shapes.Circle, new Color(1f, 0.95f, 0.85f, 0.35f), 1f, Center, 47);
         corona.life = 10f;
         int coronaGen = corona.Generation;

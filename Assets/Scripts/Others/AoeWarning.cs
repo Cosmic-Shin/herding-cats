@@ -26,7 +26,6 @@ public class AoeWarning : MonoBehaviour
         innerSr.color = new Color(1f, 0.2f, 0.1f, 0.35f);
         innerSr.sortingOrder = 3;
 
-        // Crisp pulsing rim so the danger zone reads at a glance, even over busy ground.
         var rim = new GameObject("Rim").AddComponent<SpriteRenderer>();
         rim.transform.SetParent(go.transform, false);
         Lighting.Glow(rim);

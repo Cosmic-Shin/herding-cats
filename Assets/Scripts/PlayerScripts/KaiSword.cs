@@ -2,21 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Kai's main attack instead of bombs: a huge slab of a sword, carried on his back.
-// Slow, wide, heavy swings that crush through a crowd. "+1 bomb" upgrades become extra swings,
-// and the bomb skills/combos have sword versions here (Echo Slash, Shrapnel, Scorched Arc, ...).
 [RequireComponent(typeof(PlayerStats))]
 public class KaiSword : MonoBehaviour
 {
     public const string Source = "Greatsword";
     public static KaiSword Active { get; private set; }
 
-    public float swingInterval = 1.8f; // seconds between attacks at 1x attack speed
+    public float swingInterval = 1.8f;
     public float reach = 2.6f;
     public float arc = 200f;
     public float damageMultiplier = 0.85f;
-    public float followUpDamage = 0.85f; // the extra swings
-    public float push = 6f; // heavy, but not so far he knocks cats out of his own reach
+    public float followUpDamage = 0.85f;
+    public float push = 6f;
 
     private static readonly Color Edge = new Color(1f, 0.95f, 0.9f), Ember = new Color(1f, 0.35f, 0.2f);
     private static readonly List<Collider2D> hits = new List<Collider2D>(64), near = new List<Collider2D>(64);
@@ -29,7 +26,7 @@ public class KaiSword : MonoBehaviour
     private PlayerUltimate ult;
     private PlayerSkills skills;
     private SpriteRenderer blade;
-    private bool sweeping; // blade mid-sweep (the smear follows it); otherwise the smear fades out
+    private bool sweeping;
     private float timer, restAngle = 225f, echo, spinLeft, spinAngle;
     private bool swinging;
     private static readonly Color EchoBlue = new Color(0.55f, 0.8f, 1f), CritGold = new Color(1f, 0.85f, 0.35f), Steel = new Color(0.85f, 0.9f, 1f);
@@ -47,23 +44,19 @@ public class KaiSword : MonoBehaviour
         skills = GetComponent<PlayerSkills>();
         blade = new GameObject("Greatsword").AddComponent<SpriteRenderer>();
         blade.sprite = BladeSprite;
-        // Blade runs ~2.5 units up from the grip at 1x; the ribbon covers its upper half.
         BuildSmear();
     }
 
-    // ---- Swing smear: a smooth curved slash drawn behind the blade, brightest along the cutting edge,
-    // fading toward the hilt and toward the tail of the swing. Rebuilt every frame from the blade's angle,
-    // so it stays round however few frames the swing gets (a TrailRenderer came out jagged).
     private const int SmearSegments = 28;
-    private static readonly float[] SmearRadius = { 0.28f, 0.72f, 0.93f, 1f, 1.06f };    // fraction of reach
-    private static readonly float[] SmearAlpha = { 0f, 0.28f, 0.75f, 1f, 0f };           // soft inside, bright rim, soft outer edge
-    private static readonly float[] SmearWhite = { 0f, 0.1f, 0.45f, 0.85f, 0.85f };      // how far toward white each ring is
+    private static readonly float[] SmearRadius = { 0.28f, 0.72f, 0.93f, 1f, 1.06f };
+    private static readonly float[] SmearAlpha = { 0f, 0.28f, 0.75f, 1f, 0f };
+    private static readonly float[] SmearWhite = { 0f, 0.1f, 0.45f, 0.85f, 0.85f };
     private Mesh smear;
     private MeshRenderer smearRenderer;
     private Vector3[] smearVerts;
     private Color[] smearColors;
     private Color smearColor = Steel;
-    private float smearTail, smearTip, smearFade; // angles (degrees) and the leftover fade after a swing ends
+    private float smearTail, smearTip, smearFade;
 
     private void BuildSmear()
     {
@@ -92,7 +85,6 @@ public class KaiSword : MonoBehaviour
         smearRenderer.enabled = false;
     }
 
-    // Draw the smear from `tail` to `tip` (blade angles, degrees) around Kai; `alpha` fades the whole thing.
     private void DrawSmear(float tail, float tip, float alpha)
     {
         if (smear == null) return;
@@ -103,10 +95,10 @@ public class KaiSword : MonoBehaviour
         int rings = SmearRadius.Length;
         for (int s = 0; s <= SmearSegments; s++)
         {
-            float k = s / (float)SmearSegments; // 0 = tail, 1 = at the blade
+            float k = s / (float)SmearSegments;
             float ang = Mathf.Lerp(tail, tip, k) * Mathf.Deg2Rad;
             Vector2 d = new Vector2(Mathf.Cos(ang), Mathf.Sin(ang));
-            float along = k * k * (3f - 2f * k); // tail fades in smoothly
+            float along = k * k * (3f - 2f * k);
             for (int j = 0; j < rings; j++)
             {
                 int i = s * rings + j;
@@ -121,7 +113,6 @@ public class KaiSword : MonoBehaviour
         smear.RecalculateBounds();
     }
 
-    // While sweeping: the tail lags behind the blade, so it reads as a crescent rather than a full fan.
     private void SmearSweep(float from, float to, float k, Color color)
     {
         smearColor = color;
@@ -131,7 +122,6 @@ public class KaiSword : MonoBehaviour
         DrawSmear(smearTail, smearTip, 1f);
     }
 
-    // After the swing: the tail catches up to the blade and the smear fades out quickly.
     private void SmearFadeOut()
     {
         if (smearFade <= 0f) return;
@@ -187,7 +177,6 @@ public class KaiSword : MonoBehaviour
             if (spinLeft > 0f) { smearColor = Steel; smearTip = spinAngle; smearTail = spinAngle + 230f; smearFade = 1f; DrawSmear(smearTail, smearTip, 1f); }
             return;
         }
-        // Resting on his back: hilt over the shoulder, blade hanging down behind him.
         Vector2 facing = controller != null ? controller.GetFacingDirection() : Vector2.down;
         float target = facing.x >= 0f ? 235f : 305f;
         restAngle = Mathf.LerpAngle(restAngle, target, Time.deltaTime * 12f);
@@ -228,12 +217,10 @@ public class KaiSword : MonoBehaviour
         swinging = false;
     }
 
-    // Windup, then a fast heavy sweep. Each cat is hit at the moment the blade passes over it (once per swing).
     private IEnumerator Swing(Vector2 dir, float damageMult, bool clockwise, bool first, bool isEcho = false)
     {
         float center = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg, half = arc / 2f * (clockwise ? 1f : -1f);
         float from = center + half, to = center - half;
-        // Attack speed also speeds up the swing itself (otherwise long combos waste it).
         float pace = Mathf.Clamp(Mathf.Sqrt(stats.AttackSpeed * (1f + Fury)), 1f, 1.8f);
         float windup = (first ? 0.1f : 0.04f) / pace, sweep = (first ? 0.2f : 0.15f) / pace;
         if (anim != null) anim.PlayThrow(dir);
@@ -253,7 +240,6 @@ public class KaiSword : MonoBehaviour
         for (float t = 0f; t < sweep; t += Time.deltaTime)
         {
             float k = 1f - Mathf.Pow(1f - t / sweep, 3f);
-            // Plain Lerp, not LerpAngle: the arc is over 180°, and LerpAngle would take the short way round (behind him).
             SetBlade(transform.position, Mathf.Lerp(from, to, k), 72);
             SmearSweep(from, to, k, slash);
             Cut(center, from, to, prevK, k, damageMult, isEcho);
@@ -265,14 +251,13 @@ public class KaiSword : MonoBehaviour
         SmearSweep(from, to, 1f, slash);
         sweeping = false;
         if (anim != null) anim.Squash(new Vector2(1.2f, 0.85f), 0.15f);
-        for (float t = 0f; t < 0.06f / pace; t += Time.deltaTime) yield return null; // brief recovery, blade held at the end
+        for (float t = 0f; t < 0.06f / pace; t += Time.deltaTime) yield return null;
     }
 
-    private readonly HashSet<EnemyHealth> struck = new HashSet<EnemyHealth>(); // cats already hit by this swing
+    private readonly HashSet<EnemyHealth> struck = new HashSet<EnemyHealth>();
     private Vector2 biteSum;
-    private const float CatRadius = 0.35f; // how wide a cat is, so the blade edge catches it slightly early
+    private const float CatRadius = 0.35f;
 
-    // Hit every cat the blade passed over between sweep progress prevK and k (0 = start of the arc, 1 = end).
     private void Cut(float center, float from, float to, float prevK, float k, float damageMult, bool isEcho)
     {
         Vector2 pos = transform.position;
@@ -285,18 +270,16 @@ public class KaiSword : MonoBehaviour
             if (!c.TryGetComponent(out EnemyHealth e) || e.IsDead || struck.Contains(e)) continue;
             Vector2 off = (Vector2)c.transform.position - pos;
             float dist = off.magnitude;
-            // Where along the sweep this cat sits, as progress 0..1, plus a little slack for its width.
             float angle = center + Mathf.DeltaAngle(center, Mathf.Atan2(off.y, off.x) * Mathf.Rad2Deg);
             float p = (from - angle) / (from - to);
             float slack = Mathf.Rad2Deg * Mathf.Atan2(CatRadius, Mathf.Max(dist, 0.3f)) / Mathf.Abs(from - to);
-            if (p < prevK - slack || p > k + slack) continue; // blade hasn't reached it yet, or it's outside the arc
+            if (p < prevK - slack || p > k + slack) continue;
             struck.Add(e);
             biteSum += (Vector2)c.transform.position;
-            // Shove scales down toward the edge of his reach, so cats get pushed into the sweet spot, not out of range.
             float shove = push * (concussion ? 1.6f : 1f) * Mathf.Clamp01(1.1f - dist / r);
             Hit(e, pos, damage, dist > 0.01f ? off / dist : Vector2.up, shove, concussion ? 0.6f : 0f);
         }
-        if (before == 0 && struck.Count > 0) // the moment the blade connects
+        if (before == 0 && struck.Count > 0)
         {
             Sfx.Play(Sfx.Id.Clang, 0.35f, Random.Range(0.55f, 0.7f));
             GamepadUI.Rumble(0.15f, 0.35f, 0.08f);
@@ -304,7 +287,6 @@ public class KaiSword : MonoBehaviour
         }
     }
 
-    // After the sweep: shake by how much it hit, dust where a big cleave bit in, then the sword skills.
     private void SwingEnd(Vector2 dir, float damageMult, bool isEcho)
     {
         Vector2 pos = transform.position;
@@ -321,7 +303,6 @@ public class KaiSword : MonoBehaviour
         SwordSkills(pos, aim, r, SwingDamage * damageMult, isEcho);
     }
 
-    // One sword hit: crit, Heavy Blade stun/bonus, Execute, knockback. Also used by Dash Slash and the sword skills.
     public void Hit(EnemyHealth e, Vector2 from, float damage, Vector2 pushDir, float pushForce, float extraStun = 0f)
     {
         KaiPassives kai = KaiPassives.Active;
@@ -329,12 +310,11 @@ public class KaiSword : MonoBehaviour
         float bonus = kai != null && e.IsImpaired ? kai.ImpairedBonus : 1f;
         e.TakeDamage(damage * bonus * (crit ? stats.critDamage : 1f) * Random.Range(0.9f, 1.1f), from, crit);
 
-        // A bright cut across the cat (gold on crits) and sparks flying the way it's knocked.
         Vector2 at = e.transform.position;
         Vector2 away = pushDir.sqrMagnitude > 0.01f ? pushDir : (at - from).normalized;
         HeroFx.SlashMark(at, Vector2.Perpendicular(away) + away * 0.4f, crit ? CritGold : Color.white, crit ? 1.2f : 0.85f, crit ? 0.13f : 0.09f);
         Juice.SparksDir(at, away, 35f, crit ? CritGold : Steel, crit ? 5 : 3, 6f, 0.09f);
-        if (ult != null && ult.IsActive) stats.Heal(0.4f); // RAGE: every hit feeds him a little
+        if (ult != null && ult.IsActive) stats.Heal(0.4f);
         if (e.IsDead) return;
 
         if (kai != null && !e.IsBoss && e.CurrentHealth <= e.maxHealth * kai.ExecuteBelow) { Execute(e, from, kai); return; }
@@ -343,7 +323,6 @@ public class KaiSword : MonoBehaviour
         if (pushForce > 0f && e.TryGetComponent(out IEnemyBrain brain)) brain.Knockback(pushDir * pushForce);
     }
 
-    // Heavy Blade: little stars circle a stunned cat's head.
     private static void DizzyStars(Transform cat, float seconds)
     {
         if (Settings.LowParticles) return;
@@ -370,7 +349,6 @@ public class KaiSword : MonoBehaviour
         Vector2 at = e.transform.position;
         e.TakeDamage(e.CurrentHealth * 10f + 100f, from, true);
         DamageStats.Source = source;
-        // A red X cut, a flash and sparks thrown back the way the blow came.
         Vector2 back = (at - from).sqrMagnitude > 0.01f ? (at - from).normalized : Vector2.right;
         HeroFx.SlashMark(at, Quaternion.Euler(0f, 0f, 45f) * back, Ember, 1.4f, 0.16f);
         HeroFx.SlashMark(at, Quaternion.Euler(0f, 0f, -45f) * back, Ember, 1.4f, 0.16f);
@@ -385,7 +363,6 @@ public class KaiSword : MonoBehaviour
         if (kai.ExecuteHeal > 0f) stats.Heal(kai.ExecuteHeal);
     }
 
-    // Sword versions of the bomb skills and the bomb-hooked supers.
     private void SwordSkills(Vector2 pos, Vector2 dir, float r, float damage, bool isEcho)
     {
         if (skills != null)
@@ -434,7 +411,6 @@ public class KaiSword : MonoBehaviour
         }
     }
 
-    // Undertow: drag nearby cats into the blade's path before it lands.
     private void Undertow(Vector2 dir)
     {
         Vector2 sweetSpot = (Vector2)transform.position + dir * Reach * 0.6f;
@@ -442,7 +418,6 @@ public class KaiSword : MonoBehaviour
             if (c.TryGetComponent(out IEnemyBrain brain)) brain.Knockback((sweetSpot - (Vector2)c.transform.position) * 3f);
     }
 
-    // Blade Rain: a line of phantom swords drops ahead of him.
     private IEnumerator BladeRain(Vector2 dir)
     {
         Vector2 origin = transform.position;
@@ -452,7 +427,6 @@ public class KaiSword : MonoBehaviour
             yield return new WaitForSeconds(0.07f);
             Vector2 at = origin + dir * (1.6f + i) * stats.areaMultiplier;
             DamageStats.Source = "Blade Rain";
-            // A glowing phantom blade drops point-first, leaving a ghost streak.
             Shot s = Shot.Spawn(BladeSprite, new Color(0.75f, 0.85f, 1f, 0.85f), 0.6f, at + Vector2.up * 2f, 60);
             s.transform.rotation = Quaternion.Euler(0f, 0f, 180f);
             s.life = 0.12f;
@@ -474,7 +448,6 @@ public class KaiSword : MonoBehaviour
         }
     }
 
-    // Full spin around a point: the ultimate's opening move and Blink's parting slash.
     public void Spin(Vector2 at, float damageMult)
     {
         float r = Reach * 1.1f;
@@ -482,8 +455,8 @@ public class KaiSword : MonoBehaviour
         foreach (Collider2D c in Bomb.OverlapEnemies(at, r, hits))
             if (c.TryGetComponent(out EnemyHealth e) && !e.IsDead) Hit(e, at, SwingDamage * damageMult, ((Vector2)c.transform.position - at).normalized, push * 1.3f);
         bool here = Vector2.Distance(at, transform.position) < 0.5f;
-        if (here) { spinLeft = 0.3f; spinAngle = restAngle; } // the blade itself whirls round and its ribbon draws the circle
-        else for (int i = 0; i < 2; i++) SlashFx(at, Quaternion.Euler(0f, 0f, i * 180f) * Vector2.right, r, Edge); // a parting slash left behind
+        if (here) { spinLeft = 0.3f; spinAngle = restAngle; }
+        else for (int i = 0; i < 2; i++) SlashFx(at, Quaternion.Euler(0f, 0f, i * 180f) * Vector2.right, r, Edge);
         ExplosionFx.Ring(at, r, Edge, 0.3f);
         ExplosionFx.Ring(at, r * 0.6f, new Color(1f, 1f, 1f, 0.5f), 0.2f);
         HeroFx.Pop(at, Edge, 1.2f);
@@ -513,7 +486,6 @@ public class KaiSword : MonoBehaviour
         return best;
     }
 
-    // A slab of iron more than twice Kai's height: wide blunt blade, crossguard, wrapped grip. Pivot at the grip.
     public static Sprite BladeSprite
     {
         get
@@ -527,11 +499,11 @@ public class KaiSword : MonoBehaviour
                 for (int x = 0; x < w; x++)
                 {
                     Color c = Color.clear;
-                    if (y < 2) { if (x >= 5 && x <= 8) c = dark; }                                  // pommel
-                    else if (y < 10) { if (x >= 5 && x <= 8) c = (y / 2) % 2 == 0 ? wrap : wrapDark; } // grip
-                    else if (y < 13) { if (x >= 1 && x <= 12) c = y == 12 ? iron : dark; }          // crossguard
+                    if (y < 2) { if (x >= 5 && x <= 8) c = dark; }
+                    else if (y < 10) { if (x >= 5 && x <= 8) c = (y / 2) % 2 == 0 ? wrap : wrapDark; }
+                    else if (y < 13) { if (x >= 1 && x <= 12) c = y == 12 ? iron : dark; }
                     else if (y < 57) { if (x >= 2 && x <= 11) c = x == 11 ? shine : x == 2 ? dark : ((x * 7 + y * 13) % 23 == 0 ? dark : iron); }
-                    else if (x >= 2 + (y - 56) * 2 && x <= 11) c = x == 11 ? shine : iron;          // blunt slanted tip
+                    else if (x >= 2 + (y - 56) * 2 && x <= 11) c = x == 11 ? shine : iron;
                     fill[x, y] = c;
                 }
             var tex = new Texture2D(w + 2, h + 2) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };

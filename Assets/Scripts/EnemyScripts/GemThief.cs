@@ -46,7 +46,7 @@ public class GemThief : MonoBehaviour, IPoolable
         if (sack != null)
         {
             sack.gameObject.SetActive(!health.IsDead);
-            sack.localScale = Vector3.one * Mathf.Min(0.95f, 0.5f + stolen * 0.03f); // the sack fills up
+            sack.localScale = Vector3.one * Mathf.Min(0.95f, 0.5f + stolen * 0.03f);
         }
         if (health.IsDead) return;
         XPCollectorManager gems = XPCollectorManager.Instance;

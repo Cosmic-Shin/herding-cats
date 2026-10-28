@@ -13,14 +13,12 @@ public class EnemyProjectile : MonoBehaviour
     private SpriteRenderer sr;
     private float trailTimer;
     private static int trailFrame, trailCount;
-    // ponytail: flat cap of 12 trail sparks per frame so boss bullet storms stay cheap.
     private static bool TrailBudget()
     {
         if (trailFrame != Time.frameCount) { trailFrame = Time.frameCount; trailCount = 0; }
         return trailCount++ < 12;
     }
 
-    // Sniper shot: a fish skeleton that points where it flies.
     public static void SpawnNeedle(Vector2 pos, Vector2 velocity, float damage, PlayerHealth target)
     {
         EnemyProjectile p = Spawn(pos, velocity, damage, target, 0.25f, Color.white);
@@ -39,7 +37,7 @@ public class EnemyProjectile : MonoBehaviour
     {
         var go = new GameObject("CatSpit");
         go.transform.position = pos;
-        go.transform.localScale = new Vector3(size, size, 1f) * 1.35f; // glob art has a transparent margin
+        go.transform.localScale = new Vector3(size, size, 1f) * 1.35f;
         var sr = go.AddComponent<SpriteRenderer>();
         Lighting.Glow(sr);
         sr.sprite = Shapes.Glob;
@@ -113,7 +111,7 @@ public class EnemyProjectile : MonoBehaviour
             float arc = Mathf.Sin(Mathf.Clamp01(t) * Mathf.PI);
             transform.position = Vector2.Lerp(from, landAt, t) + Vector2.up * arc * 1.5f;
             transform.localScale = Vector3.one * (0.5f + 0.25f * arc);
-            transform.Rotate(0f, 0f, -540f * Time.deltaTime); // tumbling hairball
+            transform.Rotate(0f, 0f, -540f * Time.deltaTime);
             if (t >= 1f) Land();
             return;
         }
@@ -125,7 +123,7 @@ public class EnemyProjectile : MonoBehaviour
         {
             trailTimer = toxic ? 0.05f : 0.08f;
             Color c = needle ? new Color(1f, 0.95f, 0.8f, 0.6f) : new Color(sr.color.r, sr.color.g, sr.color.b, 0.6f);
-            if (toxic) Juice.SparksDir(transform.position, Vector2.down, 30f, c, 1, 1.5f, 0.12f); // drips
+            if (toxic) Juice.SparksDir(transform.position, Vector2.down, 30f, c, 1, 1.5f, 0.12f);
             else Juice.Sparks(transform.position, c, 1, 0.3f, needle ? 0.08f : 0.1f);
         }
         if (toxic && age >= ToxicRange) { Splat(); return; }

@@ -2,17 +2,10 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
-// Background life around the camera. Added by Lighting.
-// Meadow: falling leaves, petals, pollen, butterflies and dust; fireflies (with little lights) as the run gets late.
-// Winter: small far snow, big crystal flakes and ground glints. Volcano: falling ash and rising embers.
-// All: a breeze with gusts (wind streaks) and soft cloud shadows drifting over the ground.
-// Weather (started by WorldEvents): Meadow rainstorm, Winter blizzard, Volcano ash storm.
-// Endless mode turns the sky red and swaps falling things for rising embers.
 public class Ambience : MonoBehaviour
 {
     private enum Kind { Leaf, Dust, Firefly, Ember, Petal, Pollen, Butterfly, Snow, Flake, Glint, Streak, Ash, Rain, Splash }
 
-    // Weather: WorldEvents ramps Level 0..1 and back; the kind follows the map.
     public static float WeatherLevel;
     public static string WeatherName => MapGenerator.Winter ? "BLIZZARD" : MapGenerator.Volcano ? "ASH STORM" : "RAINSTORM";
 
@@ -68,13 +61,12 @@ public class Ambience : MonoBehaviour
             motes[i] = new Mote { sr = sr };
         }
 
-        // Cloud shadows: big soft dark shapes sliding over everything on the ground.
         for (int i = 0; i < clouds.Length; i++)
         {
             clouds[i] = new GameObject("CloudShadow").AddComponent<SpriteRenderer>();
             clouds[i].transform.SetParent(transform.parent, false);
             clouds[i].sprite = Shapes.Cloud;
-            clouds[i].sortingOrder = 45; // over cats and props, under explosions and the UI
+            clouds[i].sortingOrder = 45;
             PlaceCloud(i, true);
         }
         for (int i = 0; i < flyLights.Length; i++)
@@ -83,10 +75,9 @@ public class Ambience : MonoBehaviour
             flyLights[i].enabled = false;
         }
 
-        // Weather haze: a screen overlay that's thicker at the edges (rain gloom, blizzard whiteout, ash haze).
         var canvas = new GameObject("WeatherCanvas").AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = -10; // over the world, under the HUD and menus
+        canvas.sortingOrder = -10;
         haze = new GameObject("Haze").AddComponent<Image>();
         haze.transform.SetParent(canvas.transform, false);
         haze.rectTransform.anchorMin = Vector2.zero;
@@ -122,25 +113,23 @@ public class Ambience : MonoBehaviour
         return Sprite.Create(tex, new Rect(0, 0, n, n), new Vector2(0.5f, 0.5f));
     }
 
-    // Minutes into the run; fireflies fade in from 5:00 and are at full strength by 13:00.
     private float Minutes => spawner != null ? spawner.RunTime / 60f : 0f;
     private float Dusk => Mathf.Clamp01((Minutes - 5f) / 8f);
 
     private void Update()
     {
         if (cam == null) return;
-        float dt = MainMenu.IsOpen ? Time.unscaledDeltaTime : Time.deltaTime; // the world keeps drifting behind the menu
+        float dt = MainMenu.IsOpen ? Time.unscaledDeltaTime : Time.deltaTime;
         if (dt <= 0f) return;
         float rate = Settings.LowParticles ? 0.5f : 1f;
         bool endless = EnemySpawner.Endless, winter = MapGenerator.Winter, volcano = MapGenerator.Volcano;
 
-        // Breeze with the odd gust: ramps up and back down over ~3s.
         if ((gustTimer -= dt) <= 0f) { gustTimer = Random.Range(8f, 15f); gust = 3f; }
         gust = Mathf.Max(0f, gust - dt);
         float gustK = Mathf.Sin(Mathf.Clamp01(1f - gust / 3f) * Mathf.PI) * (gust > 0f ? 1f : 0f);
         float storm = endless ? 0f : WeatherLevel;
         wind = 0.3f + 2.2f * gustK + storm * (winter ? 5f : volcano ? 2f : 1.2f);
-        float busy = 1f + 2f * gustK; // gusts stir up more stuff
+        float busy = 1f + 2f * gustK;
         UpdateClouds(dt, storm);
         UpdateWeather(dt, storm, winter, volcano);
 
@@ -193,7 +182,7 @@ public class Ambience : MonoBehaviour
                     t.position += (Vector3)(m.vel + windV + new Vector2(Mathf.Sin(m.age * 2.5f + m.phase) * 0.6f, 0f)) * dt;
                     t.Rotate(0f, 0f, m.spin * (1f + gustK) * dt);
                     break;
-                case Kind.Petal: // flutters and flips
+                case Kind.Petal:
                     t.position += (Vector3)(m.vel + windV * 1.2f + new Vector2(Mathf.Sin(m.age * 3f + m.phase) * 0.5f, Mathf.Cos(m.age * 4f + m.phase) * 0.2f)) * dt;
                     t.localScale = new Vector3(m.size * Mathf.Cos(m.age * 5f + m.phase), m.size, 1f);
                     t.Rotate(0f, 0f, m.spin * dt);
@@ -202,11 +191,11 @@ public class Ambience : MonoBehaviour
                 case Kind.Snow:
                     t.position += (Vector3)(m.vel + windV * 0.8f + new Vector2(Mathf.Sin(m.age * 1.5f + m.phase) * 0.25f, 0f)) * dt;
                     break;
-                case Kind.Flake: // big crystal flakes up front: slower sway, slow spin
+                case Kind.Flake:
                     t.position += (Vector3)(m.vel + windV + new Vector2(Mathf.Sin(m.age * 1.2f + m.phase) * 0.4f, 0f)) * dt;
                     t.Rotate(0f, 0f, m.spin * dt);
                     break;
-                case Kind.Glint: // twinkle on the snow
+                case Kind.Glint:
                     float tw = Mathf.Sin(k * Mathf.PI);
                     t.localScale = Vector3.one * m.size * tw;
                     fade = tw;
@@ -216,7 +205,7 @@ public class Ambience : MonoBehaviour
                     t.position += (Vector3)(m.vel + windV * 0.5f) * dt;
                     fade *= 0.6f + 0.4f * Mathf.Sin(m.age * 4f + m.phase);
                     break;
-                case Kind.Butterfly: // crosses the screen in a bobbing line, wings flapping
+                case Kind.Butterfly:
                     t.position += (Vector3)(m.vel + new Vector2(0f, Mathf.Sin(m.age * 3f + m.phase) * 0.8f) + windV * 0.3f) * dt;
                     m.sr.sprite = Butterfly[(int)(m.age * 10f + m.phase) % 2];
                     break;
@@ -238,9 +227,9 @@ public class Ambience : MonoBehaviour
                     t.position += (Vector3)(m.vel + windV * 0.4f) * dt;
                     break;
                 case Kind.Firefly:
-                    m.vel = Quaternion.Euler(0f, 0f, Random.Range(-200f, 200f) * dt) * m.vel; // lazy wander
+                    m.vel = Quaternion.Euler(0f, 0f, Random.Range(-200f, 200f) * dt) * m.vel;
                     t.position += (Vector3)m.vel * dt;
-                    fade *= 0.35f + 0.65f * Mathf.Max(0f, Mathf.Sin(m.age * 3f + m.phase)); // blink
+                    fade *= 0.35f + 0.65f * Mathf.Max(0f, Mathf.Sin(m.age * 3f + m.phase));
                     break;
             }
             Color c = m.sr.color;
@@ -253,7 +242,6 @@ public class Ambience : MonoBehaviour
     {
         float h = cam.orthographicSize, w = h * cam.aspect;
         Vector2 c = cam.transform.position;
-        // Darker sky in a storm; a smoky brown on the volcano.
         Color tint = MapGenerator.Volcano ? new Color(0.12f, 0.05f, 0.03f) : new Color(0.05f, 0.06f, 0.12f);
         float a = (MapGenerator.Winter ? 0.1f : MapGenerator.Volcano ? 0.17f : 0.15f) * (1f + 1.2f * storm);
         for (int i = 0; i < clouds.Length; i++)
@@ -262,21 +250,20 @@ public class Ambience : MonoBehaviour
             t.position += Vector3.right * (cloudSpeed[i] + wind * 0.3f) * dt;
             float size = t.localScale.x;
             Vector2 p = t.position;
-            if (p.x - size > c.x + w || Mathf.Abs(p.y - c.y) > h + size) PlaceCloud(i, false); // drifted off: bring a new one in from the left
+            if (p.x - size > c.x + w || Mathf.Abs(p.y - c.y) > h + size) PlaceCloud(i, false);
             clouds[i].color = new Color(tint.r, tint.g, tint.b, a);
         }
     }
 
     private void UpdateWeather(float dt, float storm, bool winter, bool volcano)
     {
-        // Screen haze and daylight tint by weather.
         Color hazeColor = winter ? new Color(0.92f, 0.95f, 1f, 0.55f) : volcano ? new Color(0.35f, 0.12f, 0.05f, 0.4f) : new Color(0.12f, 0.15f, 0.22f, 0.35f);
         hazeColor.a *= storm * Settings.EffectAlpha;
         haze.color = hazeColor;
         Color tint = winter ? new Color(0.9f, 0.93f, 1f) : volcano ? new Color(1f, 0.6f, 0.5f) : new Color(0.65f, 0.7f, 0.85f);
         Lighting.WeatherTint = Color.Lerp(Color.white, tint, storm);
 
-        if (storm > 0.05f && !winter && !volcano) // rain, splashes and lightning
+        if (storm > 0.05f && !winter && !volcano)
         {
             float rate = Settings.LowParticles ? 0.5f : 1f;
             if ((rainTimer -= dt * rate * storm) <= 0f) { rainTimer = 0.012f; Spawn(Kind.Rain); }
@@ -289,11 +276,10 @@ public class Ambience : MonoBehaviour
                 LightningFx.Spawn(at, new Color(0.85f, 0.9f, 1f), 1.4f);
                 Lighting.Flash(at, 14f, new Color(0.8f, 0.85f, 1f), 0.25f);
                 Juice.Flash(new Color(0.9f, 0.95f, 1f, 0.3f * Settings.FlashScale), 0.15f);
-                Sfx.Play(Sfx.Id.Boom, 0.45f, 0.4f); // thunder
+                Sfx.Play(Sfx.Id.Boom, 0.45f, 0.4f);
             }
         }
 
-        // Fireflies carry small lights (up to 6).
         int n = 0;
         foreach (Mote m in motes)
         {
@@ -322,7 +308,7 @@ public class Ambience : MonoBehaviour
         float h = cam.orthographicSize, w = h * cam.aspect;
         Vector2 c = cam.transform.position;
         Vector2 inView = c + new Vector2(Random.Range(-w, w), Random.Range(-h, h));
-        Vector2 fromTop = c + new Vector2(Random.Range(-w * 1.3f, w * 0.7f), h + 0.5f); // skewed left: the wind blows right
+        Vector2 fromTop = c + new Vector2(Random.Range(-w * 1.3f, w * 0.7f), h + 0.5f);
         Transform t = m.sr.transform;
         m.kind = kind;
         m.age = 0f;
@@ -383,12 +369,12 @@ public class Ambience : MonoBehaviour
                 t.position = fromTop;
                 t.localScale = Vector3.one * Random.Range(0.05f, 0.1f);
                 m.sr.color = new Color(0.95f, 0.97f, 1f);
-                Lighting.Glow(m.sr); // unlit, so it stays brighter than the lit snow it falls over
+                Lighting.Glow(m.sr);
                 m.vel = new Vector2(Random.Range(0f, 0.2f), Random.Range(-0.7f, -0.4f));
                 m.life = 2f * h / -m.vel.y + 1f;
                 m.alpha = 0.7f;
                 break;
-            case Kind.Ash: // grey flakes drifting down from the smoke
+            case Kind.Ash:
                 m.sr.sprite = Random.value < 0.3f ? Leaf : Shapes.Circle;
                 t.position = fromTop;
                 t.localScale = Vector3.one * (m.sr.sprite == Leaf ? Random.Range(0.6f, 1f) : Random.Range(0.04f, 0.09f));
@@ -403,7 +389,7 @@ public class Ambience : MonoBehaviour
                 t.localScale = Vector3.one * Random.Range(0.9f, 1.6f);
                 m.sr.color = new Color(0.95f, 0.98f, 1f);
                 Lighting.Glow(m.sr);
-                m.sr.sortingOrder = 62; // in front of the action, so keep them sparse
+                m.sr.sortingOrder = 62;
                 m.vel = new Vector2(Random.Range(0.1f, 0.3f), Random.Range(-1.3f, -0.9f));
                 m.spin = Random.Range(-40f, 40f);
                 m.life = 2f * h / -m.vel.y + 1f;
@@ -415,13 +401,13 @@ public class Ambience : MonoBehaviour
                 m.size = Random.Range(1f, 1.5f);
                 t.localScale = Vector3.zero;
                 m.sr.color = Random.value < 0.5f ? Color.white : new Color(0.7f, 0.92f, 1f);
-                m.sr.sortingOrder = 4; // on the ground
+                m.sr.sortingOrder = 4;
                 Lighting.Glow(m.sr);
                 m.vel = Vector2.zero;
                 m.life = Random.Range(0.5f, 1f);
                 m.alpha = 0.9f;
                 break;
-            case Kind.Rain: // slanted streaks falling fast
+            case Kind.Rain:
                 m.sr.sprite = Shapes.Square;
                 m.vel = new Vector2(2f + wind * 0.6f, -13f);
                 t.position = c + new Vector2(Random.Range(-w * 1.3f, w), h + 0.5f);
@@ -432,7 +418,7 @@ public class Ambience : MonoBehaviour
                 m.life = 2f * h / 13f + 0.3f;
                 m.alpha = 0.45f;
                 break;
-            case Kind.Splash: // little ring where a drop lands
+            case Kind.Splash:
                 m.sr.sprite = Shapes.Ring;
                 t.position = inView;
                 m.size = Random.Range(0.25f, 0.4f);
@@ -486,7 +472,6 @@ public class Ambience : MonoBehaviour
         m.sr.gameObject.SetActive(true);
     }
 
-    // Tiny pixel sprites: '#' white, '+' light grey (so the tint shows a darker detail line).
     private static Sprite Make(params string[] rows)
     {
         int w = rows[0].Length, h = rows.Length;
@@ -495,7 +480,7 @@ public class Ambience : MonoBehaviour
             for (int x = 0; x < w; x++)
                 tex.SetPixel(x, h - 1 - y, rows[y][x] == '#' ? Color.white : rows[y][x] == '+' ? new Color(0.75f, 0.75f, 0.75f) : Color.clear);
         tex.Apply();
-        return Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), 20f); // same pixel size as the hero art
+        return Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(0.5f, 0.5f), 20f);
     }
 
     public static Sprite Leaf => leaf != null ? leaf : leaf = Make(".##..", "+++++", "..##.");
@@ -504,7 +489,7 @@ public class Ambience : MonoBehaviour
     private static Sprite Glint => glint != null ? glint : glint = Make(".#.", "###", ".#.");
     private static Sprite[] Butterfly => butterfly != null ? butterfly : butterfly = new[]
     {
-        Make("##.##", "#####", ".#+#.", "##.##"), // wings open
-        Make(".#.#.", ".###.", "..+..", ".#.#."), // wings up
+        Make("##.##", "#####", ".#+#.", "##.##"),
+        Make(".#.#.", ".###.", "..+..", ".#.#."),
     };
 }

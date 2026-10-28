@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Nyx's passives. Hack and Backdoor hook into her drone zaps (NyxDrones calls in); Mark Target runs here.
 [RequireComponent(typeof(PlayerStats))]
 public class NyxPassives : HeroPassives
 {
@@ -27,13 +26,11 @@ public class NyxPassives : HeroPassives
     public static readonly Color Magenta = new Color(1f, 0.3f, 0.85f);
     private static readonly List<Collider2D> hits = new List<Collider2D>(64);
 
-    // Hack
     private float hackChance = 0.1f, hackTime = 3f;
     private bool hackExplodes;
     private class Hacked { public EnemyHealth e; public SpriteRenderer sr; public int life; public float until, tick, glitch; }
     private readonly List<Hacked> hacked = new List<Hacked>();
 
-    // Mark Target
     private int marks = 1;
     private float markTimer;
     private bool markXp;
@@ -41,7 +38,6 @@ public class NyxPassives : HeroPassives
     private readonly List<Mark> marked = new List<Mark>();
     private static readonly Color MarkRed = new Color(1f, 0.25f, 0.3f);
 
-    // Backdoor
     private int exploitEvery = 12, zapCount;
     public bool ExploitChains { get; private set; }
 
@@ -58,7 +54,6 @@ public class NyxPassives : HeroPassives
         dashTrail = HeroFx.Trail(transform, new Vector3(0f, 0.1f, 0f), 0.32f, NyxDrones.Cyan, 0.18f, 69);
     }
 
-    // ---- Dash: a cyan data-stream trail, RGB-split glitch ghosts and flickering bits, a burst where she lands ----
     private PlayerController controller;
     private SpriteRenderer body;
     private TrailRenderer dashTrail;
@@ -116,13 +111,10 @@ public class NyxPassives : HeroPassives
 
     private float ZapDamage => drones != null ? drones.ZapDamage : stats.AttackDamage;
 
-    // Backdoor: counts primary zaps; true when this one is an exploit.
     public bool NextZapIsExploit() => ++zapCount % exploitEvery == 0;
 
-    // Hack: zapped cats sometimes stop and turn on their neighbours.
     public void TryHack(EnemyHealth e) => Hack(e, Random.value < hackChance, hackTime);
 
-    // System Override (her ultimate): hack every cat on screen at once.
     public void HackAll(float seconds)
     {
         foreach (Collider2D c in Bomb.OverlapEnemies(transform.position, 12f, new List<Collider2D>(128)))
@@ -164,12 +156,10 @@ public class NyxPassives : HeroPassives
                 continue;
             }
             Vector2 at = h.e.transform.position;
-            // Glitching: RGB-split flickers and the odd stray pixel.
             if ((h.glitch -= Time.deltaTime) <= 0f) { h.glitch = Random.Range(0.08f, 0.22f); HeroFx.Glitch(h.sr, Random.Range(0.05f, 0.12f)); }
             if (Random.value < Time.deltaTime * 6f) HeroFx.Bits(at + Random.insideUnitCircle * 0.3f, Magenta, NyxDrones.Cyan, 1, 1.5f, 0.07f);
             if ((h.tick -= Time.deltaTime) > 0f) continue;
             h.tick = 0.5f;
-            // Zap the nearest other cat.
             EnemyHealth victim = null;
             float best = float.MaxValue;
             foreach (Collider2D c in Bomb.OverlapEnemies(at, 2.5f, hits))
@@ -186,7 +176,6 @@ public class NyxPassives : HeroPassives
         }
     }
 
-    // A hacked cat crashing: small glitch explosion.
     private void Crash(Vector2 at)
     {
         float r = 1.5f * stats.areaMultiplier;
@@ -201,7 +190,6 @@ public class NyxPassives : HeroPassives
         Sfx.Play(Sfx.Id.Zap, 0.4f, 0.8f);
     }
 
-    // Mark Target: every few seconds, the toughest cats nearby get a reticle and take extra damage.
     private void UpdateMarks()
     {
         for (int i = marked.Count - 1; i >= 0; i--)
@@ -210,7 +198,7 @@ public class NyxPassives : HeroPassives
             bool same = m.e != null && m.e.Life == m.life;
             if (!same || m.e.IsDead || !m.e.IsMarked)
             {
-                if (same && m.e.IsDead) // target down: the reticle bursts
+                if (same && m.e.IsDead)
                 {
                     Vector2 p = m.reticle.transform.position;
                     ExplosionFx.Ring(p, 1f, MarkRed, 0.25f);
@@ -220,7 +208,6 @@ public class NyxPassives : HeroPassives
                 marked.RemoveAt(i);
                 continue;
             }
-            // Lock-on: swoops in big and turned, snaps tight, then breathes.
             float k = Mathf.Clamp01((Time.time - m.born) / 0.25f), ease = 1f - (1f - k) * (1f - k);
             float pulse = k < 1f ? 1f : 1f + 0.08f * Mathf.Sin(Time.time * 8f);
             m.reticle.transform.position = (Vector2)m.e.transform.position + Vector2.up * 0.05f;

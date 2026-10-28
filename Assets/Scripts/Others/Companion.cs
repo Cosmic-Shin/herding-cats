@@ -62,8 +62,6 @@ public class Companion : MonoBehaviour
 
     public void LevelUp() => Level = Mathf.Min(Level + 1, MaxLevel);
 
-    // So the buddy doesn't read as just another (gold) cat: a pink heart bobbing over its head,
-    // drawn above the crowd, and a glowing gold ring at its feet like the player's own marker.
     private SpriteRenderer heart, ring;
 
     private void AddFriendMarkers()
@@ -71,11 +69,11 @@ public class Companion : MonoBehaviour
         heart = new GameObject("Heart").AddComponent<SpriteRenderer>();
         heart.transform.SetParent(transform, false);
         heart.sprite = Shapes.Heart;
-        heart.sortingOrder = 75; // over cats and effects
+        heart.sortingOrder = 75;
         ring = new GameObject("Ring").AddComponent<SpriteRenderer>();
         ring.transform.SetParent(transform, false);
         ring.sprite = Shapes.Ring;
-        ring.sortingOrder = 3; // on the ground, like the player marker
+        ring.sortingOrder = 3;
         Lighting.Glow(ring);
     }
 
@@ -84,7 +82,7 @@ public class Companion : MonoBehaviour
         float t = Time.time;
         float top = sr.sprite != null ? sr.bounds.max.y - transform.position.y : 0.5f;
         heart.transform.localPosition = new Vector3(0f, top + 0.12f + 0.05f * Mathf.Sin(t * 4f), 0f);
-        heart.transform.localScale = Vector3.one * (1f + 0.08f * Mathf.Sin(t * 8f)); // a little heartbeat
+        heart.transform.localScale = Vector3.one * (1f + 0.08f * Mathf.Sin(t * 8f));
         float pulse = 0.5f + 0.5f * Mathf.Sin(t * 4f);
         ring.transform.localPosition = new Vector3(0f, -0.2f, 0f);
         ring.transform.localScale = new Vector3(0.8f, 0.4f, 1f) * (1f + 0.06f * pulse);

@@ -91,8 +91,6 @@ public class PlayerController : MonoBehaviour
             if (Keybinds.Held(Keybinds.Action.Down) || kb.downArrowKey.isPressed) input.y -= 1;
         }
 
-        // Stick: ignore small tilts so a worn or drifting stick doesn't walk the hero on its own
-        // (any tilt past the deadzone is still full speed, like the keyboard).
         if (input == Vector2.zero)
         {
             Vector2 pad = GamepadUI.Move();
@@ -107,10 +105,9 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Vector2 velocity = isDashing ? dashDirection * dashSpeed : moveInput * stats.MoveSpeed;
-        // On ice you keep your momentum (a dash onto ice skids on afterwards).
         if (!isDashing && MapGenerator.OnIce(rb.position)) velocity = Vector2.MoveTowards(iceVelocity, velocity, MapGenerator.IceGrip * Time.fixedDeltaTime);
         iceVelocity = velocity;
-        if (isDashing) MapGenerator.Nudge(rb.position, 0.9f, 1f); // dashing through bushes shakes them hard
+        if (isDashing) MapGenerator.Nudge(rb.position, 0.9f, 1f);
         rb.MovePosition(rb.position + Slide(rb.position, velocity * Time.fixedDeltaTime, isDashing ? dashMask : MapGenerator.ObstacleMask));
     }
 
@@ -205,7 +202,7 @@ public class PlayerController : MonoBehaviour
         transform.position = to;
         ExplosionFx.Spawn(to, 0.7f, blinkColor);
         Juice.Smoke(to, 1f, 4);
-        if (KaiPassives.Active != null) KaiPassives.Active.BlinkCut(from, to); // Dash Slash works with Blink too
+        if (KaiPassives.Active != null) KaiPassives.Active.BlinkCut(from, to);
         Juice.Sparks(to, blinkColor, 10, 5f, 0.14f);
         if (TryGetComponent(out PlayerAnimator anim)) anim.Squash(new Vector2(1.3f, 0.75f), 0.18f);
 

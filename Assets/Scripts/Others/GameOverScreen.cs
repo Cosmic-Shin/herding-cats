@@ -46,7 +46,7 @@ public class GameOverScreen : MonoBehaviour
         Juice.CancelHitStop();
         Time.timeScale = 0.3f;
         Juice.Flash(new Color(1f, 0.2f, 0.15f, 0.5f), 0.6f);
-        if (stats != null) SceneFade.FocusOn(stats.transform.position, 0.75f, slowMoTime); // the paw closes in around the fallen hero
+        if (stats != null) SceneFade.FocusOn(stats.transform.position, 0.75f, slowMoTime);
         yield return new WaitForSecondsRealtime(slowMoTime);
         Time.timeScale = 0f;
 
@@ -64,7 +64,6 @@ public class GameOverScreen : MonoBehaviour
         Canvas canvas = RuntimeUI.Canvas("GameOverCanvas", 200);
         screen = canvas.gameObject;
 
-        // Cat theme: same plum panel as pause / level-up, a slime cat sitting on top, score on a gold plate.
         Image dim = RuntimeUI.Box(canvas.transform, "Dim", Vector2.zero, Vector2.one, CatTheme.DimColor);
         RectTransform panel = CatTheme.Panel(dim.transform, "Panel", CatTheme.Style.Panel, new Vector2(0, -5), new Vector2(1000, 590)).rectTransform;
         Image cat = CatTheme.Cat(panel, "white", new Vector2(-150f, -6f), 64f, new Vector2(1f, 1f));
@@ -80,15 +79,13 @@ public class GameOverScreen : MonoBehaviour
         TextMeshProUGUI score = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 34, Color.white, new Vector2(0, 119), new Vector2(400, 56)));
         TextMeshProUGUI placeText = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 18, Color.white, new Vector2(0, 65), new Vector2(700, 28)));
 
-        // Left: who, where, and the run summary. Right: damage chart.
         RectTransform left = CatTheme.Panel(panel, "RunInset", CatTheme.Style.Slot, new Vector2(-250, -90), new Vector2(420, 258)).rectTransform;
         Image face = CatTheme.Panel(left, "Portrait", CatTheme.Style.Slime, new Vector2(-160, 82), new Vector2(64, 64));
         face.gameObject.AddComponent<RectMask2D>().padding = Vector4.one * 6f;
-        Image hero = CatTheme.Img(face.transform, "Face", Hero.Portrait(Hero.Current.id), new Vector2(0f, -20f + Hero.Current.portraitDrop * 147f / 32f), new Vector2(147f, 147f)); // same crop as the HUD portrait
+        Image hero = CatTheme.Img(face.transform, "Face", Hero.Portrait(Hero.Current.id), new Vector2(0f, -20f + Hero.Current.portraitDrop * 147f / 32f), new Vector2(147f, 147f));
         hero.enabled = hero.sprite != null;
         RuntimeUI.Outline(RuntimeUI.Text(left, Hero.Current.name.ToUpper(), 30, CatTheme.Cream, new Vector2(-50, 94), new Vector2(140, 36), TextAlignmentOptions.Left));
         RuntimeUI.Outline(RuntimeUI.Text(left, MapGenerator.Names[Mathf.Clamp(MapGenerator.Biome, 0, MapGenerator.Names.Length - 1)], 18, CatTheme.Mint, new Vector2(-50, 64), new Vector2(140, 24), TextAlignmentOptions.Left));
-        // Run stats beside the name; weapons and skills in two columns underneath, so a full build fits.
         SummaryText(left, RunStats(), new Vector2(110, 76), new Vector2(180, 84), 14);
         SummaryText(left, Gear(), new Vector2(-98, -48), new Vector2(190, 150), 14);
         SummaryText(left, SkillList(), new Vector2(98, -48), new Vector2(190, 150), 14);
@@ -110,7 +107,6 @@ public class GameOverScreen : MonoBehaviour
         return g;
     }
 
-    // Staged reveal (unscaled time, the game is stopped): dim, panel drops in, score counts up, details fade in, buttons last.
     private IEnumerator Reveal(Image dim, RectTransform panel, TextMeshProUGUI score, TextMeshProUGUI placeText, int finalScore, string place, Component[] details, Button[] buttons)
     {
         CanvasGroup[] detailGroups = System.Array.ConvertAll(details, Group);
@@ -123,7 +119,7 @@ public class GameOverScreen : MonoBehaviour
         {
             float k = t / 0.5f, back = k - 1f;
             dim.color = new Color(dimColor.r, dimColor.g, dimColor.b, dimColor.a * Mathf.Min(1f, k * 2f));
-            panel.anchoredPosition = home + Vector2.up * 700f * (1f - (back * back * (3.2f * back + 2.2f) + 1f)); // overshoot ease
+            panel.anchoredPosition = home + Vector2.up * 700f * (1f - (back * back * (3.2f * back + 2.2f) + 1f));
             yield return null;
         }
         dim.color = dimColor;
@@ -157,7 +153,6 @@ public class GameOverScreen : MonoBehaviour
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(buttons[0].gameObject);
     }
 
-    // One row per damage source: name, total · share · DPS, and a bar sized against the top source.
     public static RectTransform DamageChart(Transform parent, Vector2 pos, Vector2 size, float seconds)
     {
         var box = new GameObject("DamageChart", typeof(RectTransform)).GetComponent<RectTransform>();
@@ -179,7 +174,7 @@ public class GameOverScreen : MonoBehaviour
             return t;
         }
 
-        float rowH = 1f / Mathf.Max(rows.Count + 1, 6); // min slots so a short list doesn't stretch into giant rows
+        float rowH = 1f / Mathf.Max(rows.Count + 1, 6);
         Label($"<b><color=#FFE08A>Damage Dealt</color></b>  <color=#9AA3C0>{DamageStats.Short(total)} total</color>", 0f, 1f, 1f - rowH, 1f, TextAlignmentOptions.Left);
         if (rows.Count == 0) { Label("<color=#5A6280>no damage dealt</color>", 0f, 1f, 1f - 2f * rowH, 1f - rowH, TextAlignmentOptions.Left); return box; }
 
@@ -190,7 +185,7 @@ public class GameOverScreen : MonoBehaviour
             float value = rows[i].Value;
             float top = 1f - (i + 1) * rowH, bottom = top - rowH;
             string dps = seconds > 1f ? $"  {DamageStats.Short(value / seconds)}/s" : "";
-            const float x0 = 0.08f; // icon column
+            const float x0 = 0.08f;
             Sprite icon = SourceIcon(name);
             if (icon != null)
             {
@@ -206,7 +201,6 @@ public class GameOverScreen : MonoBehaviour
         return box;
     }
 
-    // Damage is recorded by display name; map it back to a weapon id for the icon.
     private static Sprite SourceIcon(string source)
     {
         if (source == DamageStats.Bombs || source == "Bomb Pickup") return UiIcons.Icon("bomb");
@@ -246,7 +240,6 @@ public class GameOverScreen : MonoBehaviour
         return sb.ToString();
     }
 
-    // Weapons (collab and super weapons are tagged there), then collabs that aren't a weapon of their own.
     private string Gear()
     {
         var sb = new StringBuilder("<color=#FFB36B>Weapons</color>\n");

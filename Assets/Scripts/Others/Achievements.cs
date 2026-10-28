@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Achievements : MonoBehaviour
 {
@@ -16,7 +17,6 @@ public class Achievements : MonoBehaviour
     private static PlayerCollabs collabs;
     private static PlayerWeapons weapons;
     private static EnemySpawner spawner;
-    private static BossTimeline timeline;
     private static float RunTime => hud != null ? hud.RunTime : 0f;
     private static int Level => stats != null ? stats.level : 0;
 
@@ -33,8 +33,6 @@ public class Achievements : MonoBehaviour
         return n;
     }
 
-    // "Tried" = picked at least once in any run, saved per item so it builds up across runs.
-    // Kinds: w weapon, s skill, c combo, x super combo.
     public static void MarkTried(string kind, string id)
     {
         string key = $"tried_{kind}_{id}";
@@ -81,7 +79,6 @@ public class Achievements : MonoBehaviour
         runTimeSeen = 0f;
     }
 
-    // Ids are the save keys (PlayerPrefs "ach_<id>"), so they stay as first written even where the goal was retuned later.
     public static readonly Def[] All =
     {
         new Def { id = "survive5", name = "Nine Lives", goal = "Survive 10 minutes", reward = "weapon:laser", done = () => RunTime >= 600f },
@@ -159,18 +156,60 @@ public class Achievements : MonoBehaviour
         runTimeSeen = RunTime;
         if (PlayerHealth.Hits != seenHits) { seenHits = PlayerHealth.Hits; lastHitAt = RunTime; }
         if (stats == null || stats.currentHealth <= 0f) return;
-        if (Meowl.Instance == null && MeowlUnlocked) Meowl.Join(stats.gameObject); // every run once earned, or right after unlocking
+        if (Meowl.Instance == null && MeowlUnlocked) Meowl.Join(stats.gameObject);
 
         foreach (Def d in All)
         {
             if (IsUnlocked(d) || !d.done()) continue;
             PlayerPrefs.SetInt("ach_" + d.id, 1);
             PlayerPrefs.Save();
-            if (timeline == null) timeline = FindFirstObjectByType<BossTimeline>();
-            if (timeline != null) timeline.Announce("<color=#FFD24A>ACHIEVEMENT!", $"{d.name} - unlocked {RewardText(d.reward)}");
+            StartCoroutine(Toast(d));
             Sfx.Play(Sfx.Id.LevelUp, 0.6f, 1.2f);
             nextCheck += 3f;
             return;
         }
+    }
+
+    private Canvas toastCanvas;
+    private readonly System.Collections.Generic.List<RectTransform> toasts = new System.Collections.Generic.List<RectTransform>();
+    private const float ToastW = 360f, ToastH = 88f, ToastGap = 8f, ToastMargin = 16f;
+
+    private System.Collections.IEnumerator Toast(Def d)
+    {
+        if (toastCanvas == null)
+        {
+            toastCanvas = RuntimeUI.Canvas("AchievementToasts", 500);
+            toastCanvas.transform.SetParent(transform, false);
+        }
+        Vector2 corner = new Vector2(1f, 0f);
+        RectTransform box = CatTheme.Panel(toastCanvas.transform, "Toast", CatTheme.Style.PanelGold, Vector2.zero, new Vector2(ToastW, ToastH)).rectTransform;
+        box.anchorMin = box.anchorMax = box.pivot = corner;
+        Image slot = CatTheme.Panel(box, "Icon", CatTheme.Style.SlotGold, new Vector2(14f + 32f, 0f), new Vector2(64f, 64f));
+        slot.rectTransform.anchorMin = slot.rectTransform.anchorMax = new Vector2(0f, 0.5f);
+        CatTheme.Img(slot.transform, "Cat", CatTheme.Load("cat_white"), Vector2.zero, new Vector2(48f, 48f));
+        TMPro.TextMeshProUGUI Line(string text, float size, Color color, float y)
+        {
+            TMPro.TextMeshProUGUI t = RuntimeUI.Outline(RuntimeUI.Text(box, text, size, color, new Vector2(48f, y), new Vector2(ToastW - 120f, size + 6f), TMPro.TextAlignmentOptions.Left));
+            t.rectTransform.anchorMin = t.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+            t.textWrappingMode = TMPro.TextWrappingModes.NoWrap;
+            t.overflowMode = TMPro.TextOverflowModes.Ellipsis;
+            return t;
+        }
+        Line("ACHIEVEMENT UNLOCKED", 13f, CatTheme.Faint, 24f);
+        Line(d.name, 22f, CatTheme.Gold, 2f);
+        Line(RewardText(d.reward), 14f, CatTheme.Cream, -24f);
+        toasts.Add(box);
+
+        float Slot() => ToastMargin + toasts.IndexOf(box) * (ToastH + ToastGap);
+        float t0 = Time.unscaledTime;
+        while (Time.unscaledTime - t0 < 4.5f)
+        {
+            float t = Time.unscaledTime - t0;
+            float inK = 1f - Mathf.Pow(1f - Mathf.Clamp01(t / 0.3f), 3f), outK = Mathf.Clamp01((t - 4.2f) / 0.3f);
+            box.anchoredPosition = new Vector2(-ToastMargin, Mathf.Lerp(-ToastH, Slot(), inK * (1f - outK * outK)));
+            yield return null;
+        }
+        toasts.Remove(box);
+        Destroy(box.gameObject);
     }
 }

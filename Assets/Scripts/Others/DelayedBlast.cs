@@ -1,6 +1,5 @@
 using UnityEngine;
 
-// A warned blast that hurts the player. Eruptions (volcano map) also hit cats and leave a lava puddle.
 public class DelayedBlast : MonoBehaviour
 {
     private float radius, timer, damage;
@@ -20,7 +19,7 @@ public class DelayedBlast : MonoBehaviour
 
     private void Update()
     {
-        if (eruption && Random.value < Time.deltaTime * 12f) // rumbling ground before it blows
+        if (eruption && Random.value < Time.deltaTime * 12f)
             Juice.Sparks((Vector2)transform.position + Random.insideUnitCircle * radius * 0.7f, new Color(1f, 0.5f, 0.15f), 1, 2f, 0.1f);
         if ((timer -= Time.deltaTime) > 0f) return;
         Vector2 at = transform.position;

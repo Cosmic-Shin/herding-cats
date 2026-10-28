@@ -20,7 +20,6 @@ public class EnemyHealth : MonoBehaviour, IPoolable
     public bool IsDead => isDead;
     public bool IsBoss => ai is BossAI;
 
-    // Nyx's Mark Target: marked cats take extra damage from everything.
     [System.NonSerialized] public float markedUntil;
     [System.NonSerialized] public bool markedXp;
     public static float MarkMultiplier = 1.5f;
@@ -150,11 +149,10 @@ public class EnemyHealth : MonoBehaviour, IPoolable
         Sfx.Play(Sfx.Id.Hit, crit ? 0.5f : 0.3f, crit ? 1.3f : 1f);
         currentHealth -= amount;
         DamagePopup.Spawn(transform.position, amount, crit);
+        if (crit) PixelFx.Burst(Shapes.Starburst, Vector2.MoveTowards(transform.position, sourcePos, 0.2f), new Color(1f, 0.95f, 0.6f), 0.16f, 0.5f, 1.3f);
         if (knockback)
             Juice.SparksDir(Vector2.MoveTowards(transform.position, sourcePos, 0.25f), (Vector2)transform.position - sourcePos, 35f,
                             crit ? new Color(1f, 0.9f, 0.3f) : Color.white, crit ? 7 : 4, crit ? 7f : 5f, 0.11f);
-        // Weighty hits: crits and chunky hits (a big share of the cat's HP) kick harder.
-        // Shared cooldown so a swarm of hits doesn't turn into constant stutter.
         float weight = Mathf.Min(amount / Mathf.Max(1f, maxHealth), 1f) + (crit ? 0.5f : 0f);
         if (knockback && weight >= 0.5f && Time.unscaledTime >= nextHeavyHit)
         {
@@ -264,6 +262,8 @@ public class EnemyHealth : MonoBehaviour, IPoolable
         sr.color = baseColor;
     }
 
+    private static readonly Color[] Fur = { new Color(0.55f, 0.5f, 0.5f), new Color(0.38f, 0.33f, 0.33f), new Color(1f, 0.93f, 0.82f) };
+
     private void Die()
     {
         isDead = true;
@@ -300,7 +300,6 @@ public class EnemyHealth : MonoBehaviour, IPoolable
                 Juice.Sparks(transform.position, new Color(1f, 0.85f, 0.3f), 16, 10f, 0.2f);
                 CameraFollow.Shake(0.25f, 0.3f);
             }
-            // Notable cats (elites, minibosses, specials) leave a ghost; specials burst in their own colour.
             SpriteFx.CatSkin skin = anim != null ? anim.skin : SpriteFx.CatSkin.None;
             if (IsElite || xpGemCount > 1 || skin != SpriteFx.CatSkin.None) Juice.Ghost(sr, xpGemCount > 1 ? 1.8f : 1.1f, xpGemCount > 1 ? 1.3f : 0.9f);
             if (skin != SpriteFx.CatSkin.None)
@@ -310,9 +309,9 @@ public class EnemyHealth : MonoBehaviour, IPoolable
                 ExplosionFx.Ring(transform.position, 1.3f, c, 0.25f);
             }
             Juice.CatPuff(transform.position, new Color(1f, 0.93f, 0.82f));
+            PixelFx.Toss(Shapes.FurTuft, transform.position, Fur, 2, 4f, 0.6f, 1f, 10f);
             if (anim != null) anim.Flash(0.12f);
             Juice.Sparks(transform.position, new Color(1f, 0.85f, 0.55f), 5, 5f, 0.12f);
-            if (!Settings.LowParticles) ExplosionFx.Ring(transform.position, 0.9f, new Color(1f, 0.97f, 0.9f, 0.8f), 0.2f);
             Juice.CatTalk(transform.position, Juice.Talk.Death, 0.12f);
             if (Time.time < burningUntil) PlayerCollabs.BurningDeath(transform.position);
             if (xpGemCount <= 1) Pickup.TryCatDrop(transform.position);

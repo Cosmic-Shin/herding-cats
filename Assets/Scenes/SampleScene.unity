@@ -5738,9 +5738,9 @@ MonoBehaviour:
     special: 1
   minSpawnRadius: 11
   maxSpawnRadius: 13
-  difficulty: 0.61
+  difficulty: 0.5
   difficultyRampInterval: 30
-  difficultyMultiplierStep: 0.93
+  difficultyMultiplierStep: 0.85
   minSpawnInterval: 0.15
   maxSpeedup: 4
   maxEnemies: 200
@@ -5872,7 +5872,7 @@ MonoBehaviour:
     startsLateGame: 0
   - time: 600
     prefab: {fileID: 7467151537998725492, guid: ae719ea81b40e32468fb61abd82891a8, type: 3}
-    healthMultiplier: 12
+    healthMultiplier: 10
     scale: 1.5
     power: 1.3
     specials: 1
@@ -5882,9 +5882,9 @@ MonoBehaviour:
     startsLateGame: 1
   - time: 900
     prefab: {fileID: 7467151537998725492, guid: ae719ea81b40e32468fb61abd82891a8, type: 3}
-    healthMultiplier: 35
+    healthMultiplier: 20
     scale: 1.7
-    power: 2
+    power: 1.75
     specials: 2
     tint: {r: 0.7, g: 0.82, b: 1, a: 1}
     titleOverride: Elder Beholder
@@ -5892,9 +5892,9 @@ MonoBehaviour:
     startsLateGame: 0
   - time: 1200
     prefab: {fileID: 7467151537998725492, guid: ae719ea81b40e32468fb61abd82891a8, type: 3}
-    healthMultiplier: 90
+    healthMultiplier: 30
     scale: 2
-    power: 2.5
+    power: 2
     specials: 7
     tint: {r: 0.85, g: 0.6, b: 1, a: 1}
     titleOverride: Ancient Tyrant
@@ -5902,7 +5902,7 @@ MonoBehaviour:
     startsLateGame: 0
   warningLead: 3
   spawnDistance: 11
-  bossHealth: 0.72
+  bossHealth: 0.6
   companionCat: {fileID: 7379834125354533024, guid: f7b955d1e1e673c49928ec87a61b1ae7, type: 3}
   warningText: {fileID: 1203662809}
   bossBar: {fileID: 1178962212}

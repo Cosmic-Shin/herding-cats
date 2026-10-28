@@ -14,9 +14,9 @@ public class Pickup : MonoBehaviour
     private static void ResetStatics() { AnvilChanceMultiplier = 1f; HoloBoxCount = AnvilCount = 0; }
     public static int HoloBoxCount { get; private set; }
     public static int AnvilCount { get; private set; }
-    public const int MaxHoloBoxes = 5, MaxAnvils = 5; // on the field at once; extra drops are skipped
+    public const int MaxHoloBoxes = 5, MaxAnvils = 5;
     private const float InteractRadius = 1.5f;
-    private static int claimedFrame = -1; // one chest/anvil per press, even when two are in reach
+    private static int claimedFrame = -1;
     private TMPro.TextMeshPro prompt;
 
     private void OnDestroy()
@@ -25,7 +25,6 @@ public class Pickup : MonoBehaviour
         if (prompt != null) Destroy(prompt.gameObject);
     }
 
-    // "[E] Open" floating above a chest/anvil while the hero is close enough to open it.
     private void ShowPrompt(bool show)
     {
         if (!show) { if (prompt != null) prompt.gameObject.SetActive(false); return; }
@@ -148,7 +147,6 @@ public class Pickup : MonoBehaviour
 
         if (!Small)
         {
-            // Chests and anvils wait for the player, so a crowded late game doesn't keep pausing on every touch.
             bool near = canAct && dist <= InteractRadius;
             ShowPrompt(near);
             if (!near || claimedFrame == Time.frameCount) return;
@@ -167,6 +165,7 @@ public class Pickup : MonoBehaviour
     }
 
     private const float HopTime = 0.35f, OpenTime = 0.45f;
+    private static readonly Color[] Loot = { new Color(1f, 0.85f, 0.3f), new Color(1f, 0.95f, 0.6f), Color.white, new Color(0.6f, 0.9f, 1f) };
     private float opening = -1f;
 
     private void UpdateOpening()
@@ -179,9 +178,12 @@ public class Pickup : MonoBehaviour
         if (opening < OpenTime) return;
 
         Vector2 at = transform.position;
-        ExplosionFx.Spawn(at, 1.5f, new Color(1f, 0.95f, 0.7f), order: 9);
-        ExplosionFx.Ring(at, 4f, glowColor, 0.5f);
-        Juice.Sparks(at, new Color(1f, 0.85f, 0.25f), 24, 9f, 0.18f);
+        PixelFx.Burst(Shapes.Starburst, at, new Color(1f, 0.9f, 0.45f, 0.85f), 0.45f, 1.3f, 3f, unscaled: true);
+        for (int i = 0; i < 14; i++)
+            PixelFx.Emit(Shapes.Sparkle, at + new Vector2(Random.Range(-0.25f, 0.25f), 0f), Vector2.up * Random.Range(6f, 14f),
+                         Color.Lerp(glowColor, Color.white, Random.value * 0.6f), Random.Range(0.4f, 0.7f), Random.Range(0.8f, 1.3f), 0f, 0.6f, true);
+        PixelFx.Toss(Shapes.Sparkle, at, Loot, 12, 8f, 1f, 1.1f, 14f, unscaled: true);
+        PixelFx.Toss(Shapes.PawPrint, at, Loot, 4, 7f, 1f, 0.9f, 14f, unscaled: true);
         Juice.Sparks(at, Color.white, 10, 6f, 0.12f);
         Juice.Flash(new Color(1f, 0.95f, 0.75f, 0.4f), 0.3f);
         CameraFollow.Shake(0.15f, 0.2f);

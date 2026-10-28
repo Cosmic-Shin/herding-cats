@@ -1,9 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// Run-select screen: a little live window of the picked map: its sky and ground, with that map's ambience
-// drifting through (meadow leaves and petals, winter snow and flakes, volcano embers, ash and a glowing lava strip).
-// The menu pauses the game, so this runs on unscaled time.
 public class MapPreviewUI : MonoBehaviour
 {
     private class Mote { public RectTransform rt; public Image img; public Vector2 vel; public float age, life, spin, phase; }
@@ -28,7 +25,6 @@ public class MapPreviewUI : MonoBehaviour
         p.sky = Fill(rt, "Sky", Vector2.zero, Vector2.one);
         p.ground = Fill(rt, "Ground", Vector2.zero, new Vector2(1f, 0.3f));
         p.lava = Fill(rt, "Lava", new Vector2(0.15f, 0.06f), new Vector2(0.55f, 0.18f));
-        // A few tree silhouettes on the horizon (the map's own tree art, tinted per map).
         MapGenerator map = FindFirstObjectByType<MapGenerator>();
         float[] xs = { -190f, -95f, 120f, 205f };
         for (int i = 0; map != null && map.trees != null && map.trees.Length > 0 && i < xs.Length; i++)
@@ -107,7 +103,6 @@ public class MapPreviewUI : MonoBehaviour
         }
     }
 
-    // `alt` is the second kind per map: petals / big flakes / ash.
     private void Spawn(bool alt, float w, float h)
     {
         Mote m = System.Array.Find(motes, x => !x.img.gameObject.activeSelf);
@@ -117,7 +112,7 @@ public class MapPreviewUI : MonoBehaviour
         m.rt.localRotation = Quaternion.identity;
         m.spin = Random.Range(-120f, 120f);
         Vector2 top = new Vector2(Random.Range(-w * 0.6f, w * 0.45f), h / 2f + 10f);
-        if (biome == 2 && !alt) // embers rise from the lava
+        if (biome == 2 && !alt)
         {
             m.img.sprite = Shapes.Circle;
             m.rt.sizeDelta = Vector2.one * Random.Range(4f, 7f);
@@ -138,7 +133,7 @@ public class MapPreviewUI : MonoBehaviour
                 m.vel = new Vector2(Random.Range(10f, 30f), Random.Range(-45f, -25f));
                 if (!alt) m.spin = 0f;
             }
-            else if (biome == 2) // ash
+            else if (biome == 2)
             {
                 m.img.sprite = Shapes.Circle;
                 m.rt.sizeDelta = Vector2.one * Random.Range(3f, 6f);

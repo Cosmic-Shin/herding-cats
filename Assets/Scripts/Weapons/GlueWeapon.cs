@@ -24,7 +24,7 @@ public class GlueWeapon : Weapon
 
     private void Lob(Vector2 at)
     {
-        Color glue = PlayerCollabs.Has("gluemagnet") ? new Color(1f, 0.45f, 0.8f) : new Color(0.55f, 1f, 0.35f); // Sticky Magnet: pink
+        Color glue = PlayerCollabs.Has("gluemagnet") ? new Color(1f, 0.45f, 0.8f) : new Color(0.55f, 1f, 0.35f);
         Shot s = Shot.Spawn(Shapes.Art("Icons/glue"), Color.white, 0.5f, Pos);
         s.trail = glue;
         s.spin = 360f;
@@ -35,7 +35,6 @@ public class GlueWeapon : Weapon
         float tick = Dmg(Sting[L]);
         s.onExpire = shot =>
         {
-            // Splat: a squelch, a ring of goo and droplets flung outward.
             ExplosionFx.Spawn(shot.Position, radius * 0.5f, glue);
             ExplosionFx.Ring(shot.Position, radius * 0.9f, new Color(0.7f, 1f, 0.5f, 0.8f), 0.25f);
             Juice.Sparks(shot.Position, glue, 10, 7f, 0.16f);

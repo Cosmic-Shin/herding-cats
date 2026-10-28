@@ -4,14 +4,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// "Herding Cats" UI skin: plum jelly panels and gold for whatever is selected. Decoration is kept to
-// one cat touch per screen (a cat on a panel, or ears on the picked hero). Sprites live in Resources/UI/Theme.
-// Used by the HUD, level-up, pause, run select and game over. The main menu keeps the old look.
 public static class CatTheme
 {
     public enum Style { Panel, PanelGold, Slot, SlotGold, Pink, Slime, Dim }
 
-    // Each sprite pixel is drawn this many UI units wide (same as UiIcons.Frame).
     public const float Px = 3f;
 
     public static readonly Color Ink = new Color32(20, 14, 32, 255);
@@ -49,12 +45,11 @@ public static class CatTheme
         _ => "panel",
     });
 
-    // Turn an existing Image into a sliced theme frame.
     public static Image Frame(Image img, Style style)
     {
         if (img == null) return null;
         Sprite s = Get(style);
-        if (s == null) return img; // sprites missing: leave the old look rather than a white box
+        if (s == null) return img;
         img.sprite = s;
         img.type = Image.Type.Sliced;
         img.pixelsPerUnitMultiplier = 1f / Px;
@@ -62,7 +57,6 @@ public static class CatTheme
         return img;
     }
 
-    // Bars: a thin frame plus a shaded fill that is tinted per bar.
     public static void BarFrame(Image img)
     {
         Sprite s = Load("bar_frame");
@@ -100,7 +94,6 @@ public static class CatTheme
         return img;
     }
 
-    // A new framed panel (centre-anchored).
     public static Image Panel(Transform parent, string name, Style style, Vector2 pos, Vector2 size)
     {
         Image img = Img(parent, name, null, pos, size);
@@ -109,7 +102,6 @@ public static class CatTheme
         return img;
     }
 
-    // Two cat ears standing on the top corners of a panel (the picked hero card).
     public static void Ears(RectTransform panel, string sprite)
     {
         Sprite s = Load(sprite);
@@ -126,7 +118,6 @@ public static class CatTheme
         }
     }
 
-    // Dark rounded plate placed just behind a title (as the sibling before it).
     public static Image PlateBehind(RectTransform title, Vector2 size)
     {
         Image plate = Img(title.parent, "TitlePlate", Load("plate"), title.anchoredPosition, size);
@@ -137,19 +128,15 @@ public static class CatTheme
         rt.anchorMin = title.anchorMin;
         rt.anchorMax = title.anchorMax;
         rt.pivot = new Vector2(0.5f, 0.5f);
-        // Centre the plate on the title's centre, whatever the title's pivot.
         Vector2 centre = title.anchoredPosition + Vector2.Scale(new Vector2(0.5f, 0.5f) - title.pivot, title.sizeDelta);
         rt.anchoredPosition = centre;
         plate.transform.SetSiblingIndex(title.GetSiblingIndex());
         return plate;
     }
 
-    // A slime cat picture (a frame copied into Resources/UI/Theme so menus can show one).
     public static Image Cat(Transform parent, string which, Vector2 pos, float size, Vector2? anchor = null) =>
         Img(parent, "Cat", Load("cat_" + which), pos, new Vector2(size, size), anchor);
 
-    // Theme a button: a jelly frame that turns gold while selected.
-    // Works for scene buttons (they have their own Image) and RuntimeUI.TextButton (text only: a frame is added behind).
     public static void Button(Button b, float pad = 18f)
     {
         if (b == null || b.GetComponent<ThemeButton>() != null) return;
@@ -162,7 +149,6 @@ public static class CatTheme
         }
         else
         {
-            // Text-only button: the frame is a sibling just behind it that follows its rect.
             var rt = (RectTransform)b.transform;
             Image frame = Img(rt.parent, b.name + "Frame", Get(Style.Panel), Vector2.zero, Vector2.zero);
             frame.preserveAspect = false;
@@ -178,7 +164,6 @@ public static class CatTheme
     public static bool IsSelected(GameObject go) => EventSystem.current != null && EventSystem.current.currentSelectedGameObject == go;
 }
 
-// Keeps a themed button's frame gold while it is selected, grey when it can't be used.
 public class ThemeButton : MonoBehaviour
 {
     public Button button;
@@ -194,7 +179,6 @@ public class ThemeButton : MonoBehaviour
     }
 }
 
-// Frame behind a text-only button: copies its rect every frame and hides with it.
 public class ThemeFollow : MonoBehaviour
 {
     public RectTransform target;

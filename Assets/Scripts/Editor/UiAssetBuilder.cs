@@ -273,7 +273,6 @@ public static class UiAssetBuilder
             "....KYYKKYYK....", "...KYYK..KYYK...", "..KYYK....KYYK..", "..KKK......KKK..",
             ".......KK.......", "......KOOK......", ".....KOOOOK.....", "....KOOKKOOK....",
             "...KOOK..KOOK...", "..KOOK....KOOK..", "..KKK......KKK..", "................" } },
-        // Kai (greatsword hero)
         { "sword", new[] {
             "..........KKKKK.", ".........KSSSWK.", "........KSSSWDK.", ".......KSSSWDK..",
             "......KSSSWDK...", ".....KSSSWDK....", "....KSSSWDK.....", "...KSSSWDK......",
@@ -309,7 +308,6 @@ public static class UiAssetBuilder
             "...YORRROYYOROY.", "...ORRRRRORRRRO.", "..KKKKKKKKKKKKK.", "..KSSSSSSSSSSWK.",
             "..KDDDDDDDDDDDK.", "..KKKKKKKKKKKKK.", "................", "................",
             "................", "................", "................", "................" } },
-        // Nyx (drone hacker)
         { "drone", new[] {
             "................", "................", ".KKKK......KKKK.", "KSSSSK....KSSSSK",
             ".KKKK......KKKK.", "...KK......KK...", "....KKKKKKKK....", "...KDDDDDDDDK...",
@@ -347,7 +345,6 @@ public static class UiAssetBuilder
             "....KNNNNNNK....", "..KKKKKKKKKKKK..", "................", "................" } },
     };
 
-    // Builds just the named icons (BuildIcons rewrites every icon).
     public static void BuildIcons(params string[] names)
     {
         Directory.CreateDirectory(IconDir);

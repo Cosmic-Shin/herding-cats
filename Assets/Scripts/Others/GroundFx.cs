@@ -1,7 +1,5 @@
 using UnityEngine;
 
-// Marks the hero leaves on the ground, per map: fading footprints in snow, ash prints and puffs on the volcano,
-// and grass flicking up in the meadow. Called from the hero's footstep.
 public class GroundFx : MonoBehaviour
 {
     private const int Max = 48;
@@ -32,7 +30,7 @@ public class GroundFx : MonoBehaviour
         else
         {
             instance.Print(at, dir, new Color(0.22f, 0.38f, 0.14f), 0.3f, 1.5f);
-            Juice.SparksDir(feet, Vector2.up, 55f, new Color(0.45f, 0.75f, 0.3f), 2, 1.8f, 0.07f); // grass flicks up
+            Juice.SparksDir(feet, Vector2.up, 55f, new Color(0.45f, 0.75f, 0.3f), 2, 1.8f, 0.07f);
         }
     }
 
@@ -45,7 +43,7 @@ public class GroundFx : MonoBehaviour
             prints[i] = new GameObject("Print").AddComponent<SpriteRenderer>();
             prints[i].transform.SetParent(transform, false);
             prints[i].sprite = PrintSprite;
-            prints[i].sortingOrder = -95; // on the ground, under decor and props
+            prints[i].sortingOrder = -95;
         }
         SpriteRenderer sr = prints[i];
         sr.transform.SetPositionAndRotation(at, Quaternion.Euler(0f, 0f, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f));
@@ -71,7 +69,6 @@ public class GroundFx : MonoBehaviour
         }
     }
 
-    // A small oval print (3x4 px, same pixel size as the hero art).
     private static Sprite PrintSprite
     {
         get

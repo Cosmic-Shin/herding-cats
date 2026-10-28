@@ -39,7 +39,7 @@ public class KamikazeCat : MonoBehaviour, IPoolable
         {
             if (!ai.IsAsleep && (fuseSpark -= Time.deltaTime) <= 0f)
             {
-                fuseSpark = 0.12f; // lit fuse on its head, so you can spot it coming
+                fuseSpark = 0.12f;
                 Juice.SparksDir((Vector2)transform.position + new Vector2(0.15f, 0.35f), Vector2.up, 60f, new Color(1f, 0.75f, 0.25f), 1, 2f, 0.08f);
             }
             if (ai.IsAsleep || Vector2.Distance(player.position, transform.position) > triggerRange) return;

@@ -26,8 +26,6 @@ public class EarthshakerWeapon : SuperWeapon
         CameraFollow.Shake(0.07f, 0.12f);
     }
 
-    // Zig-zag crack made of beam segments (dark edge + orange core), thinner toward the tip.
-    // Spawns one shorter side branch off the main crack.
     private static void Fissure(Vector2 from, Vector2 dir, float length, float width, bool branch = true)
     {
         const int Segments = 6;

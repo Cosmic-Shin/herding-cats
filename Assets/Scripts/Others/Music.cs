@@ -29,7 +29,7 @@ public class Music : MonoBehaviour
     {
         var s = gameObject.AddComponent<AudioSource>();
         s.loop = true;
-        s.priority = 0; // never lose the voice to sfx spam
+        s.priority = 0;
         s.playOnAwake = false;
         s.ignoreListenerPause = true;
         s.volume = 0f;
@@ -58,11 +58,9 @@ public class Music : MonoBehaviour
             current = want;
             (a, b) = (b, a);
             AudioClip clip = want != null ? Resources.Load<AudioClip>("Music/" + want) : null;
-            // This source may still hold the clip from an earlier switch but be stopped (e.g. back to "run" after a boss).
             if (clip != null && (a.clip != clip || !a.isPlaying)) { a.clip = clip; a.Play(); }
             else if (clip == null) a.Stop();
         }
-        // Audio device changes (headphones, Bluetooth) stop every source; pick the track back up.
         else if (current != null && a.clip != null && !a.isPlaying) a.Play();
 
         float step = Time.unscaledDeltaTime / FadeTime;

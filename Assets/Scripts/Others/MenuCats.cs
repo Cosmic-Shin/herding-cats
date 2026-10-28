@@ -136,7 +136,6 @@ public class MenuCats : MonoBehaviour
 
     private static readonly string[] PetLines = { "mrrp!", "purr~", "nya!", "mew!" };
 
-    // Click a menu cat: it hops and meows.
     private void PetOnClick()
     {
         if (cats == null || !MainMenu.IsOpen || Mouse.current == null || !Mouse.current.leftButton.wasPressedThisFrame || Camera.main == null) return;

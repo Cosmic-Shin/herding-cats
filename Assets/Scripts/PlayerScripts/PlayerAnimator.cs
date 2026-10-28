@@ -16,8 +16,6 @@ public class PlayerAnimator : MonoBehaviour
     public Clip[] roll = new Clip[8];
     public Clip[] throwClips = new Clip[4];
 
-    // Optional look swap (Nyx pulls her goggles down during her ultimate): while useAlt() is true,
-    // each frame is replaced by its match in altFrames.
     [System.NonSerialized] public Dictionary<Sprite, Sprite> altFrames;
     [System.NonSerialized] public System.Func<bool> useAlt;
 
@@ -40,14 +38,12 @@ public class PlayerAnimator : MonoBehaviour
         if (spriteRenderer == null) spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         SpriteFx.AddShadow(spriteRenderer, 0.55f);
         baseScale = transform.localScale;
-        // Draw Mira above weapon effects (explosions 50-52, lightning 60) so she never gets lost in a fight.
-        // Set after the shadow so it stays on the ground.
         spriteRenderer.sortingOrder = 70;
 
         marker = new GameObject("Marker").AddComponent<SpriteRenderer>();
         marker.transform.SetParent(transform, false);
         marker.sprite = Shapes.Ring;
-        marker.sortingOrder = 3; // on the ground: over puddles, under cats
+        marker.sortingOrder = 3;
         Lighting.Glow(marker);
     }
 
@@ -150,7 +146,7 @@ public class PlayerAnimator : MonoBehaviour
             Vector2 feet = (Vector2)transform.position + Vector2.down * 0.3f;
             if (!MapGenerator.Winter) Juice.Smoke(feet, 0.3f, 1);
             GroundFx.Step(feet, facing, stepLeft = !stepLeft);
-            MapGenerator.Nudge(feet, 0.5f, 0.3f); // brushing past bushes
+            MapGenerator.Nudge(feet, 0.5f, 0.3f);
             Sfx.Play(Sfx.Id.Step, 0.25f, Random.Range(0.9f, 1.15f));
         }
 

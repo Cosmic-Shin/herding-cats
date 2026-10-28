@@ -16,7 +16,6 @@ public class BlackHole : MonoBehaviour
     private float artFill = ArtFill;
     public float PullRadius => pullRadius;
 
-    // Swap the purple void for another look (core art, mote + pop colour, how much of the pull radius the art covers).
     public void Skin(Sprite art, Color color, float fill)
     {
         core.sprite = art;

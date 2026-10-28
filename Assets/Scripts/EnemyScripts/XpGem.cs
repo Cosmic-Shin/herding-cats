@@ -39,7 +39,6 @@ public class XPGem : MonoBehaviour, IPoolable
         if (TryGetComponent(out sr))
         {
             Lighting.Glow(sr);
-            // Fish treats instead of gems; keep roughly the old on-screen size.
             float before = sr.sprite != null ? sr.sprite.bounds.size.x : 1f;
             sr.sprite = Shapes.Fish;
             baseScale *= before * 1.2f / sr.sprite.bounds.size.x;
@@ -150,7 +149,6 @@ public class XPGem : MonoBehaviour, IPoolable
         float distance = Vector2.Distance(transform.position, playerTransform.position);
         if (!isBeingCollected)
         {
-            // Idle: small wiggle and pulse.
             float t = Time.time * 5f + phase;
             transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Sin(t) * 14f);
             if (sr != null) sr.flipY = false;
@@ -173,7 +171,7 @@ public class XPGem : MonoBehaviour, IPoolable
                 float speed = flySpeed + (pullTime - HopTime) * 30f;
                 trail.emitting = true;
                 transform.position = Vector2.MoveTowards(transform.position, playerTransform.position, speed * Time.deltaTime);
-                transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(toPlayer.y, toPlayer.x) * Mathf.Rad2Deg); // swims nose-first
+                transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(toPlayer.y, toPlayer.x) * Mathf.Rad2Deg);
                 if (sr != null) sr.flipY = toPlayer.x < 0f;
                 if (Random.value < 0.4f) Juice.Sparks(transform.position, new Color(tierColor.r, tierColor.g, tierColor.b, 0.7f), 1, 0.2f, 0.1f);
             }
@@ -203,7 +201,8 @@ public class XPGem : MonoBehaviour, IPoolable
         chain = Time.time - lastCollect < 0.35f ? chain + 1 : 0;
         lastCollect = Time.time;
         Sfx.Play(Sfx.Id.Xp, 0.3f, 1f + Mathf.Min(chain, 24) * 0.03f + Mathf.Min(expValue, 20) * 0.02f);
-        ExplosionFx.Spawn(playerStats.transform.position, 0.25f + 0.05f * Mathf.Min(expValue, 10), tierColor);
+        PixelFx.Burst(Shapes.Sparkle, (Vector2)playerStats.transform.position + Random.insideUnitCircle * 0.3f,
+                      Color.Lerp(tierColor, Color.white, 0.3f), 0.22f, 0.8f + 0.06f * Mathf.Min(expValue, 10), 1.6f);
 
         if (XPCollectorManager.Instance != null)
         {

@@ -12,7 +12,7 @@ public class HUD : MonoBehaviour
     {
         public Image frame, icon;
         public TextMeshProUGUI badge, level;
-        public bool themed; // cat-theme frames (the HUD); the leaderboard keeps the old ones
+        public bool themed;
     }
 
     private const float SlotSize = 64f, SlotGap = 8f, Margin = 20f;
@@ -52,6 +52,7 @@ public class HUD : MonoBehaviour
 
     private void Start()
     {
+        instance = this;
         if (stats == null) stats = FindFirstObjectByType<PlayerStats>();
         if (stats != null)
         {
@@ -89,7 +90,7 @@ public class HUD : MonoBehaviour
         panelPos = panel.anchoredPosition;
 
         float row1 = -Margin - 124 - 12, row2 = row1 - SlotSize - SlotGap, row3 = row2 - SlotSize - SlotGap;
-        weaponSlots = new Slot[PlayerWeapons.MaxWeapons + 1 + PlayerCollabs.MaxCollabs]; // weapons, buddy, main-attack combos
+        weaponSlots = new Slot[PlayerWeapons.MaxWeapons + 1 + PlayerCollabs.MaxCollabs];
         for (int i = 0; i < weaponSlots.Length; i++) weaponSlots[i] = MakeSlot(root, new Vector2(Margin + i * (SlotSize + SlotGap), row1), SlotSize, themed: true);
         skillSlots = new Slot[PlayerSkills.MaxSkills];
         for (int i = 0; i < skillSlots.Length; i++) skillSlots[i] = MakeSlot(root, new Vector2(Margin + i * (SlotSize + SlotGap), row2), SlotSize, themed: true);
@@ -118,9 +119,75 @@ public class HUD : MonoBehaviour
         CatTheme.Frame(killBox.GetComponent<Image>(), CatTheme.Style.Panel);
         killText = Label(killBox, "DEFEATED  0", 24, Color.white, Vector2.zero, Vector2.zero, TextAlignmentOptions.Center, stretch: true);
         scoreText = Label(root, "SCORE  0", 24, Color.white, Vector2.zero, new Vector2(320, 30), TextAlignmentOptions.Center, anchor: new Vector2(0.5f, 1f));
-        // Below the timer's plate (which reaches y -92), on its own smaller plate so the two don't run together.
         ((RectTransform)scoreText.transform).anchoredPosition = new Vector2(0, -102);
         scorePlate = CatTheme.PlateBehind((RectTransform)scoreText.transform, new Vector2(250f, 36f));
+
+        Button speed = RuntimeUI.Button(root, "", Vector2.zero, new Vector2(230, 44), () =>
+        {
+            CycleSpeed();
+            if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
+        });
+        speed.navigation = new Navigation { mode = Navigation.Mode.None };
+        speedText = (TextMeshProUGUI)speed.targetGraphic;
+        Place(speedText.rectTransform, new Vector2(1, 1), new Vector2(-Margin - 5, -Margin - 56 - 12), new Vector2(230, 44));
+        CatTheme.PlateBehind(speedText.rectTransform, new Vector2(240f, 48f)).raycastTarget = false;
+    }
+
+    private class Buff { public Slot slot; public Image clock; public float end, length; }
+    private readonly List<Buff> buffs = new List<Buff>();
+    private static HUD instance;
+
+    public static void ShowBuff(Sprite icon, Color color, float seconds)
+    {
+        if (instance == null) return;
+        Slot s = MakeSlot((RectTransform)instance.transform, Vector2.zero, SlotSize, themed: true);
+        s.frame.color = Color.Lerp(color, Color.white, 0.35f);
+        s.icon.sprite = icon;
+        s.icon.color = color;
+        s.icon.enabled = true;
+        Image clock = RuntimeUI.Box(s.frame.transform, "Clock", Vector2.zero, Vector2.one, new Color(0f, 0f, 0f, 0.55f));
+        clock.sprite = ExplosionFx.GetCircle();
+        clock.type = Image.Type.Filled;
+        clock.fillMethod = Image.FillMethod.Radial360;
+        clock.fillOrigin = (int)Image.Origin360.Top;
+        clock.rectTransform.offsetMin = Vector2.one * 6f;
+        clock.rectTransform.offsetMax = -Vector2.one * 6f;
+        s.level.transform.SetAsLastSibling();
+        instance.buffs.Add(new Buff { slot = s, clock = clock, end = Time.time + seconds, length = seconds });
+    }
+
+    private void UpdateBuffs()
+    {
+        for (int i = buffs.Count - 1; i >= 0; i--)
+            if (Time.time >= buffs[i].end) { Destroy(buffs[i].slot.frame.gameObject); buffs.RemoveAt(i); }
+        for (int i = 0; i < buffs.Count; i++)
+        {
+            Buff b = buffs[i];
+            float left = b.end - Time.time;
+            Place(b.slot.frame.rectTransform, new Vector2(0, 1), new Vector2(Margin + 500 + 12 + i * (SlotSize + SlotGap), -Margin), Vector2.one * SlotSize);
+            b.clock.fillAmount = 1f - left / b.length;
+            b.slot.level.text = Mathf.CeilToInt(left).ToString();
+            b.slot.frame.gameObject.SetActive(left > 3f || Mathf.Repeat(left, 0.4f) > 0.15f);
+        }
+    }
+
+    public static float Speed = 1f;
+    private TextMeshProUGUI speedText;
+
+    private void UpdateSpeed()
+    {
+        if (!MainMenu.Started) return;
+        if (Time.timeScale > 0f && !RewardMenu.IsOpen &&
+            (Keybinds.Pressed(Keybinds.Action.GameSpeed) || Keybinds.PadPressed(Keybinds.Action.GameSpeed))) CycleSpeed();
+        float ts = Time.timeScale;
+        if (ts != Speed && (ts == 1f || ts == 1.5f || ts == 2f)) Time.timeScale = Speed;
+        speedText.text = $"[{Keybinds.Prompt(Keybinds.Action.GameSpeed)}] SPEED " + Speed.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture) + "X";
+    }
+
+    private static void CycleSpeed()
+    {
+        Speed = Speed >= 2f ? 1f : Speed + 0.5f;
+        Sfx.Play(Sfx.Id.Click, 0.6f, 0.8f + 0.2f * Speed);
     }
 
     private static RectTransform Place(RectTransform rt, Vector2 anchor, Vector2 pos, Vector2 size)
@@ -209,8 +276,6 @@ public class HUD : MonoBehaviour
     private TextMeshProUGUI heroLabel;
     private bool gearNavLive = true;
 
-    // The gear slots are selectable so the pause menu can show their details. Anywhere else (level-up, rewards,
-    // combine) they'd just be dead stops for the d-pad, so they're taken out of navigation unless paused.
     private void UpdateGearNavigation()
     {
         bool live = Paused;
@@ -220,23 +285,25 @@ public class HUD : MonoBehaviour
             foreach (Slot s in set)
                 if (s != null && s.frame.TryGetComponent(out Button b))
                     b.navigation = new Navigation { mode = live ? Navigation.Mode.Automatic : Navigation.Mode.None };
-        if (!live && EventSystem.current != null && EventSystem.current.currentSelectedGameObject is GameObject sel && sel.GetComponent<SlotTip>() != null)
-            EventSystem.current.SetSelectedGameObject(null); // don't leave the cursor parked on a slot
+        if (!live && EventSystem.current != null && EventSystem.current.currentSelectedGameObject is GameObject sel && sel != null && sel.GetComponent<SlotTip>() != null)
+            EventSystem.current.SetSelectedGameObject(null);
     }
 
     private void Update()
     {
         if (stats == null || hpFill == null) return;
         UpdateGearNavigation();
-        string hero = Hero.Current.name.ToUpper(); // the menu can switch heroes after the HUD is built
+        UpdateSpeed();
+        UpdateBuffs();
+        string hero = Hero.Current.name.ToUpper();
         if (heroLabel.text != hero)
         {
             heroLabel.text = hero;
-            portraitIcon.sprite = Hero.Portrait(Hero.Current.id); // always the front-facing frame, so the face shows
+            portraitIcon.sprite = Hero.Portrait(Hero.Current.id);
             portraitIcon.rectTransform.anchoredPosition = new Vector2(0f, 34f + Hero.Current.portraitDrop * 230f / 32f);
             portraitIcon.enabled = portraitIcon.sprite != null;
         }
-        string special = Keybinds.Prompt(Keybinds.Action.Special); // may be rebound, or a pad plugged in
+        string special = Keybinds.Prompt(Keybinds.Action.Special);
         if (specialBadge.text != special) specialBadge.text = special;
 
         if (stats.currentHealth > 0f) runTime += Time.deltaTime;
@@ -253,7 +320,6 @@ public class HUD : MonoBehaviour
         timerText.text = $"{seconds / 60:00}:{seconds % 60:00}";
         killText.text = $"DEFEATED  <color=#FFD24A>{EnemyHealth.Kills:N0}</color>";
         scoreText.text = $"SCORE  <color=#FFE08A>{Leaderboard.Score(runTime, stats.level):N0}</color>";
-        // The level-up title sits where the timer and score are, so hide them while it's open.
         if (levelUp == null) levelUp = FindAnyObjectByType<LevelUpUIController>();
         timerText.enabled = scoreText.enabled = levelUp == null || !levelUp.IsOpen;
         if (timerPlate != null) timerPlate.enabled = timerText.enabled;
@@ -314,7 +380,6 @@ public class HUD : MonoBehaviour
             if (super) weaponSlots[i].frame.color = new Color(1f, 0.6f, 0.95f);
         }
 
-        // After the weapons: the buddy, then combos on the main attack, packed left with no gaps.
         int next = PlayerWeapons.MaxWeapons;
         extraCombos.Clear();
         if (buddy != null) { extraCombos.Add(null); Fill(weaponSlots[next++], "buddy", LevelTag(buddy.Level, Companion.MaxLevel), gold: true); }
@@ -441,7 +506,6 @@ public class HUD : MonoBehaviour
         }
     }
 
-    // ---- Pause tooltips: hover (or gamepad-select) a weapon/skill slot for its details ----
     private RectTransform tipBox;
     private TextMeshProUGUI tipText;
     private SlotTip tipFor;
@@ -484,7 +548,7 @@ public class HUD : MonoBehaviour
 
     private void AddTip(Slot s, System.Func<string> text)
     {
-        s.frame.gameObject.AddComponent<Button>().transition = Selectable.Transition.None; // makes it gamepad-selectable
+        s.frame.gameObject.AddComponent<Button>().transition = Selectable.Transition.None;
         SlotTip tip = s.frame.gameObject.AddComponent<SlotTip>();
         tip.hud = this;
         tip.text = text;
@@ -499,7 +563,7 @@ public class HUD : MonoBehaviour
         tipText.text = text;
         tipBox.gameObject.SetActive(true);
         tipBox.SetParent(tipBox.GetComponentInParent<Canvas>().transform, true);
-        tipBox.SetAsLastSibling(); // above the pause panel, which shares this canvas
+        tipBox.SetAsLastSibling();
         tipText.ForceMeshUpdate();
         tipBox.sizeDelta = new Vector2(tipBox.sizeDelta.x, tipText.preferredHeight + 26f);
     }
@@ -533,7 +597,7 @@ public class HUD : MonoBehaviour
         return Tip(def.name, lv + enhance, body + PairLine(id), level < def.levels.Length ? def.levels[level] : null, def.name);
     }
 
-    private readonly List<string> extraCombos = new List<string>(); // what each slot after the weapons shows (null = buddy)
+    private readonly List<string> extraCombos = new List<string>();
 
     private static string ComboTip(string id, string enhance)
     {
@@ -553,7 +617,6 @@ public class HUD : MonoBehaviour
         if (s == null) return "";
         int level = skills.LevelOf(id);
         string lv = level >= s.levels.Length ? "<color=#FFD24A>MAX</color>" : $"Lv {level}/{s.levels.Length}";
-        // Each level line after the first is an upgrade; show everything earned so far.
         string body = string.Join("\n", s.levels, 0, Mathf.Clamp(level, 1, s.levels.Length));
         return Tip(s.name, lv, body + PairLine(id), level < s.levels.Length ? s.levels[level] : null, null);
     }

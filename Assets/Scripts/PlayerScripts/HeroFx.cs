@@ -1,14 +1,10 @@
 using UnityEngine;
 
-// Small visual building blocks for Kai's and Nyx's effects: ribbon trails, impact slash marks,
-// digital "data bit" bursts, glitch ghosts, a quick bright flash core and a lock-on reticle sprite.
 public static class HeroFx
 {
     private static Sprite reticle, shard;
     private static readonly System.Collections.Generic.Dictionary<Sprite, Sprite> silhouettes = new System.Collections.Generic.Dictionary<Sprite, Sprite>();
 
-    // A pure-white copy of a sprite (same shape, pivot and size), for hit flashes. Works on unreadable textures
-    // by copying through the GPU; cached per frame sprite.
     public static Sprite Silhouette(Sprite s)
     {
         if (s == null) return null;
@@ -18,7 +14,7 @@ public static class HeroFx
         Graphics.Blit(src, rt);
         RenderTexture prev = RenderTexture.active;
         RenderTexture.active = rt;
-        Rect r = s.rect; // the frame's full cell (whole pixels; textureRect can be fractional for tight sprites)
+        Rect r = s.rect;
         var tex = new Texture2D((int)r.width, (int)r.height, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
         tex.ReadPixels(new Rect(r.x, r.y, r.width, r.height), 0, 0);
         RenderTexture.active = prev;
@@ -31,7 +27,6 @@ public static class HeroFx
         return silhouettes[s] = Sprite.Create(tex, new Rect(0, 0, r.width, r.height), pivot, s.pixelsPerUnit);
     }
 
-    // A ribbon trail (Unity TrailRenderer, unlit) fading from `color` to clear. Starts off; toggle `emitting`.
     public static TrailRenderer Trail(Transform parent, Vector3 localPos, float width, Color color, float time, int order)
     {
         var go = new GameObject("Trail");
@@ -58,24 +53,22 @@ public static class HeroFx
         return g;
     }
 
-    // A thin bright cut across a hit point that flares and thins out.
     public static void SlashMark(Vector2 at, Vector2 dir, Color color, float length = 0.9f, float thickness = 0.09f)
     {
         const float life = 0.16f;
         dir = dir.sqrMagnitude > 0.0001f ? dir.normalized : Vector2.right;
         Shot s = Shot.Spawn(Shapes.Square, color, 1f, at - dir * length * 0.5f, 66);
         s.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
-        s.transform.localScale = new Vector3(length * 0.6f, thickness, 1f); // set now: Shot only applies onUpdate from next frame
+        s.transform.localScale = new Vector3(length * 0.6f, thickness, 1f);
         s.life = life;
         s.onUpdate = shot =>
         {
             float k = shot.age / life;
-            shot.transform.localScale = new Vector3(length * (0.6f + 0.6f * k), thickness * (1f - k), 1f); // Shapes sprites are 1 unit
+            shot.transform.localScale = new Vector3(length * (0.6f + 0.6f * k), thickness * (1f - k), 1f);
             shot.Renderer.color = new Color(color.r, color.g, color.b, Settings.EffectAlpha * (1f - k * k));
         };
     }
 
-    // Little square "data bits" that burst out and shrink.
     public static void Bits(Vector2 at, Color a, Color b, int count, float speed = 4f, float size = 0.09f)
     {
         if (Settings.LowParticles) count = Mathf.Max(1, count / 2);
@@ -91,16 +84,13 @@ public static class HeroFx
                 float k = shot.age / life;
                 shot.velocity *= 1f - 4f * Time.deltaTime;
                 shot.transform.localScale = Vector3.one * s0 * (1f - k);
-                // flicker like a bad signal
                 shot.Renderer.color = new Color(c.r, c.g, c.b, Settings.EffectAlpha * (Random.value < 0.15f ? 0.2f : 1f));
             };
         }
     }
 
-    // A bright core that pops and shrinks (the centre of a zap or impact).
     public static void Pop(Vector2 at, Color color, float size)
     {
-        // A soft tinted glow with a small white-hot centre, both fading out.
         const float life = 0.14f;
         Color glow = Color.Lerp(color, Color.white, 0.3f);
         Shot s = Shot.Spawn(Shapes.SoftGlow, glow, size * 1.8f, at, 63);
@@ -116,7 +106,6 @@ public static class HeroFx
         c.onUpdate = shot => shot.Renderer.color = new Color(1f, 1f, 1f, Settings.EffectAlpha * (1f - shot.age / (life * 0.7f)));
     }
 
-    // RGB-split glitch: two tinted copies of a sprite jittered sideways for a frame or two.
     public static void Glitch(SpriteRenderer src, float offset = 0.07f)
     {
         if (src == null || src.sprite == null || Settings.LowParticles) return;
@@ -129,7 +118,6 @@ public static class HeroFx
         }
     }
 
-    // Lock-on crosshair: four corner brackets and a centre dot. White, so it can be tinted.
     public static Sprite Reticle
     {
         get
@@ -152,7 +140,6 @@ public static class HeroFx
         }
     }
 
-    // A small steel shard (Kai's Shrapnel).
     public static Sprite Shard
     {
         get

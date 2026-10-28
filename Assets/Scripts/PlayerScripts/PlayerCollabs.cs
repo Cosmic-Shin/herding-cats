@@ -16,7 +16,6 @@ public class PlayerCollabs : MonoBehaviour
         public Kind kind;
     }
 
-    // Mira 6 bombs; Kai 4 swings (each is a full heavy sweep); Nyx 4, i.e. 5 drones.
     public static int MaxBombsPerThrow => Hero.Current.id == "Kai" || Hero.Current.id == "Nyx" ? 4 : 6;
     public const int MaxCollabs = 4;
 
@@ -131,7 +130,6 @@ public class PlayerCollabs : MonoBehaviour
     private PlayerSkills skills;
 
     public IReadOnlyList<string> Taken => taken;
-    // Combos on the hero's own attack (bombs/sword/drones + a skill). They have no weapon, so the HUD lists them after the weapons.
     public List<string> MainCombos => taken.FindAll(id => Find(id).kind == Kind.Bomb);
 
     public static bool Has(string id) => instance != null && (instance.taken.Contains(id) || instance.superTaken == id);
@@ -320,7 +318,6 @@ public class PlayerCollabs : MonoBehaviour
         return result;
     }
 
-    // "Regeneration -> Campfire, ..." for combos this piece can still go into, or null.
     public static string PairHint(string pieceId, int max = 2)
     {
         if (instance == null) return null;
@@ -351,8 +348,6 @@ public class PlayerCollabs : MonoBehaviour
         taken.Add(d.id);
         used.Add(d.kind == Kind.Bomb ? "bombs" : d.a);
         used.Add(d.b);
-        // Weapon + skill combos become a weapon of their own (the skill keeps working but frees its slot);
-        // main-weapon combos just free the skill slot and show next to the weapons.
         if (d.kind != Kind.Bomb) weapons.Merge(d.a, d.b, PlayerWeapons.Find(d.id));
         if (d.kind != Kind.Merge) skills.Absorb(d.b);
 
@@ -410,7 +405,7 @@ public class PlayerCollabs : MonoBehaviour
     private IEnumerator DelayedBlast(Vector2 pos)
     {
         yield return new WaitForSeconds(0.1f);
-        float r = 1.3f * stats.areaMultiplier; // Firebomb: burning cats go up in a fireball
+        float r = 1.3f * stats.areaMultiplier;
         ExplosionFx.Ring(pos, r * 1.3f, new Color(1f, 0.45f, 0.1f, 0.9f), 0.3f);
         Juice.SparksDir(pos, Vector2.up, 40f, new Color(1f, 0.6f, 0.15f), 8, 6f, 0.15f);
         Lighting.Flash(pos, r * 2f, new Color(1f, 0.5f, 0.15f), 0.25f);

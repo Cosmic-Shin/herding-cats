@@ -60,16 +60,13 @@ public class EnemySpawner : MonoBehaviour
     public float maxSpeedScale = 2.2f;
     private float SurgeMinutes => Mathf.Max(0f, (runTime - lateFrom - surgeStart) / 60f);
 
-    // Late spawn boost and surge stay off until this is called (BossTimeline, on the late-game boss kill).
     private float lateFrom = float.PositiveInfinity;
     public void StartLateGame() => lateFrom = Mathf.Min(lateFrom, runTime);
 
-    // No step at 10:00: the 10-min boss already lands there, and stacking both made a difficulty cliff.
     [Header("Power step: x enemy HP and damage when the 15:00 boss dies")]
     public float powerStep = 1.2f;
     private float stepMul = 1f;
 
-    // Called by BossTimeline when the 15-min boss dies (silently: the super-combo banner shows then).
     public void StepUp(string why)
     {
         stepMul *= powerStep;
@@ -95,7 +92,7 @@ public class EnemySpawner : MonoBehaviour
     public float endlessHordeStart = 3f;
     public float endlessHordePerMinute = 0.5f;
     public float endlessHordeMax = 8f;
-    public int endlessBigCatRoom = 120; // regular cats stop at endlessMaxAlive minus this, so the big-cat rings still fit
+    public int endlessBigCatRoom = 120;
     public float endlessSpeedStart = 0.35f;
     public static bool Endless { get; private set; }
     private float endlessStart, endlessTimer;
@@ -107,7 +104,7 @@ public class EnemySpawner : MonoBehaviour
     {
         Endless = false;
         SpeedScale = 1f;
-        gameObject.AddComponent<WorldEvents>(); // golden hour, meteor showers, shrines
+        gameObject.AddComponent<WorldEvents>();
     }
 
     public void StartEndless()
@@ -115,7 +112,7 @@ public class EnemySpawner : MonoBehaviour
         if (Endless) return;
         Endless = true;
         endlessStart = runTime;
-        StartLateGame(); // in case the late-game boss was never killed
+        StartLateGame();
         endlessTimer = 2.5f;
         StartCoroutine(EndlessShockwave());
         BossTimeline timeline = FindFirstObjectByType<BossTimeline>();
@@ -196,7 +193,7 @@ public class EnemySpawner : MonoBehaviour
         int ring = Mathf.Min(endlessRingMax, endlessRingStart + Mathf.FloorToInt(minutes * endlessRingPerMinute));
         ring = Mathf.Min(ring, endlessMaxAlive - EnemyAI.AliveCount);
         float turn = Random.Range(0f, 360f);
-        float health = endlessHealthStart + minutes * endlessHealthPerMinute; // endlessHealthMul is already in HealthMultiplier
+        float health = endlessHealthStart + minutes * endlessHealthPerMinute;
         for (int i = 0; i < ring; i++)
         {
             float angle = (turn + i * 360f / ring + Random.Range(-6f, 6f)) * Mathf.Deg2Rad;
@@ -310,7 +307,6 @@ public class EnemySpawner : MonoBehaviour
 
         if (Endless) UpdateEndless();
 
-        // Endless (HoloCure style): a flood of regular cats on top of the big-cat rings.
         float lateBoost = LateBoost * (Endless ? Mathf.Min(endlessHordeMax, endlessHordeStart + EndlessMinutes * endlessHordePerMinute) * endlessWaveRate : 1f);
         int cap = Endless ? endlessMaxAlive - endlessBigCatRoom : AliveCap;
 
@@ -334,7 +330,7 @@ public class EnemySpawner : MonoBehaviour
             }
         }
 
-        if (Endless) return; // timed minibosses, swarms, mice and events belong to the main run
+        if (Endless) return;
 
         foreach (MiniBoss m in miniBosses)
         {
@@ -377,7 +373,7 @@ public class EnemySpawner : MonoBehaviour
         }
         if (unstoppable && boss.TryGetComponent(out EnemyHealth loot))
         {
-            loot.dropsHoloBox = false; // endless rings spawn dozens; guaranteed chests/burgers flooded the map
+            loot.dropsHoloBox = false;
             loot.burgerDropChance = 0.02f;
         }
         if (boss.TryGetComponent(out EnemyHealth health))
@@ -510,7 +506,6 @@ public class EnemySpawner : MonoBehaviour
 
     public void SpawnNow(GameObject prefab) => SpawnEnemy(prefab);
 
-    // Boss summon: a ring of awake cats around a point.
     public void SpawnAround(Vector2 center, int count, float radius)
     {
         count = Mathf.Min(count, AliveCap - EnemyAI.AliveCount);

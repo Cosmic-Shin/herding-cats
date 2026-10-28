@@ -26,7 +26,7 @@ public class ExplosionFx : MonoBehaviour
 
     public static void Spawn(Vector2 pos, float radius, Color? tint = null, int order = 50)
     {
-        if (radius >= 1f) MapGenerator.Nudge(pos, radius, 0.8f); // blasts rattle nearby bushes and trees
+        if (radius >= 1f) MapGenerator.Nudge(pos, radius, 0.8f);
         if (tint != null)
         {
             Layer(pos, radius * 2f, GetCircle(), tint, 0.25f, 0.8f, order);
@@ -46,7 +46,6 @@ public class ExplosionFx : MonoBehaviour
     public static void Ring(Vector2 pos, float radius, Color color, float duration = 0.35f) =>
         Layer(pos, radius * 2f, Shapes.Ring, color, duration, 0.9f, 51);
 
-    // Crosses popping up at random spots inside a heal circle.
     public static void Crosses(Vector2 pos, float radius, Color color, int count, float duration = 0.6f)
     {
         for (int i = 0; i < count; i++)

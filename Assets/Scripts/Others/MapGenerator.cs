@@ -49,7 +49,6 @@ public class MapGenerator : MonoBehaviour
     public static int ObstacleMask { get; private set; }
     public static int TallMask { get; private set; }
     public const float WallPad = 1.2f;
-    // Map picked on the run-select screen. Read once per scene load; Play reloads the scene first if it changed.
     public static readonly string[] Names = { "Meadow", "Winter", "Volcano" };
     public static readonly string[] Blurbs =
     {
@@ -58,12 +57,10 @@ public class MapGenerator : MonoBehaviour
         "<color=#FF7326>HARD</color>\nAsh fields and bubbling lava.\nLava burns you and cats alike, and eruptions rain down near you more and more often.",
     };
     public static int Choice => Mathf.Clamp(PlayerPrefs.GetInt("map", 0), 0, Names.Length - 1);
-    public static int Biome { get; private set; } // index into Names
+    public static int Biome { get; private set; }
     public static bool Winter => Biome == 1;
     public static bool Volcano => Biome == 2;
 
-    // Winter ponds freeze (anything on them keeps its momentum; grip = how fast velocity can change, units/s²).
-    // Volcano ponds are lava: walkable, but they burn.
     public const float IceGrip = 9f;
     private static bool[] ice;
     private static int iceMin, iceN;
@@ -206,7 +203,7 @@ public class MapGenerator : MonoBehaviour
                     else if (!edge && lilies.Length > 0 && R() < 0.14f && Biome == 0) overlayTiles[i] = TileFor(Pick(lilies));
                     else if (!edge && glints.Length > 0 && R() < (Winter ? 0.1f : 0.06f)) overlayTiles[i] = TileFor(Pick(glints));
                 }
-            if (Biome != 0) { if (Volcano) LavaGlow(r); continue; } // frozen or molten: walkable, no collider
+            if (Biome != 0) { if (Volcano) LavaGlow(r); continue; }
             WaterShimmer(r);
             var go = new GameObject("Pond");
             go.layer = tallLayer;
@@ -387,9 +384,6 @@ public class MapGenerator : MonoBehaviour
         return t;
     }
 
-    // Winter and Volcano: the meadow art recoloured on the CPU.
-    // Winter: green -> snow, water -> ice, the rest a little colder. Volcano: green -> charred ash, water -> lava, the rest scorched.
-    // ponytail: whole-texture recolour at load (a few frames on first load of a biome); a palette shader if load time ever matters.
     private static readonly Dictionary<(Texture2D, int), Texture2D> snowTextures = new Dictionary<(Texture2D, int), Texture2D>();
     private readonly Dictionary<Sprite, Sprite> snowSprites = new Dictionary<Sprite, Sprite>();
 
@@ -406,7 +400,7 @@ public class MapGenerator : MonoBehaviour
     private static Texture2D Recolor(Texture2D src)
     {
         Texture2D copy = ReadableCopy(src);
-        var tex = copy == src ? Object.Instantiate(src) : copy; // never recolour the source asset itself
+        var tex = copy == src ? Object.Instantiate(src) : copy;
         Color32[] px = tex.GetPixels32();
         for (int i = 0; i < px.Length; i++) if (px[i].a > 0) px[i] = Volcano ? Ash(px[i]) : Snow(px[i]);
         tex.SetPixels32(px);
@@ -418,11 +412,11 @@ public class MapGenerator : MonoBehaviour
     {
         float r = c.r / 255f, g = c.g / 255f, b = c.b / 255f, lum = 0.3f * r + 0.59f * g + 0.11f * b;
         Color o;
-        if (b > r * 1.25f && b > g * 0.85f) // water -> pale ice
+        if (b > r * 1.25f && b > g * 0.85f)
             o = Color.Lerp(new Color(0.5f, 0.74f, 0.95f), new Color(0.78f, 0.93f, 1f), Mathf.Clamp01((lum - 0.2f) / 0.5f));
-        else if (g > r * 1.05f && g > b * 1.05f) // leaves and grass -> snow, darker greens become blue shadow
+        else if (g > r * 1.05f && g > b * 1.05f)
             o = Color.Lerp(new Color(0.52f, 0.6f, 0.76f), new Color(0.86f, 0.9f, 0.96f), Mathf.Clamp01((lum - 0.18f) / 0.42f));
-        else // bark, rock, dirt: keep, just colder
+        else
             o = Color.Lerp(new Color(r, g, b), new Color(lum * 0.95f, lum, lum * 1.1f), 0.25f);
         Color32 result = o;
         result.a = c.a;
@@ -433,19 +427,17 @@ public class MapGenerator : MonoBehaviour
     {
         float r = c.r / 255f, g = c.g / 255f, b = c.b / 255f, lum = 0.3f * r + 0.59f * g + 0.11f * b;
         Color o;
-        if (b > r * 1.25f && b > g * 0.85f) // water -> lava: bright highlights become yellow-hot
+        if (b > r * 1.25f && b > g * 0.85f)
             o = Color.Lerp(new Color(0.75f, 0.16f, 0.05f), new Color(1f, 0.78f, 0.25f), Mathf.Clamp01((lum - 0.25f) / 0.45f));
-        else if (g > r * 1.05f && g > b * 1.05f) // leaves and grass -> charred ash
+        else if (g > r * 1.05f && g > b * 1.05f)
             o = Color.Lerp(new Color(0.13f, 0.11f, 0.11f), new Color(0.4f, 0.35f, 0.33f), Mathf.Clamp01((lum - 0.15f) / 0.45f));
-        else // bark, rock, dirt: darker and scorched
+        else
             o = new Color(r * 0.6f + 0.05f, g * 0.48f + 0.02f, b * 0.42f + 0.02f);
         Color32 result = o;
         result.a = c.a;
         return result;
     }
 
-    // Lava pools: the shared animated lava blobs (as used by fire puddles) tile the inside of each pool,
-    // under a soft pulsing glow, so they bubble and read as hot even in the dim volcano light.
     private readonly List<SpriteRenderer> lavaGlows = new List<SpriteRenderer>();
     private readonly List<(SpriteRenderer sr, int variant, float phase)> lavaBlobs = new List<(SpriteRenderer, int, float)>();
 
@@ -474,14 +466,12 @@ public class MapGenerator : MonoBehaviour
         Lighting.Glow(sr);
         lavaGlows.Add(sr);
 
-        // The pool lights up everything around it (warm, flickering).
         lavaLights.Add(Lighting.MakeLight("LavaLight", sr.transform, 1f, 0.7f, new Color(1f, 0.45f, 0.15f)));
         lavaLights[lavaLights.Count - 1].pointLightOuterRadius = Mathf.Max(r.width, r.height) * 0.9f + 1.5f;
     }
 
     private readonly List<UnityEngine.Rendering.Universal.Light2D> lavaLights = new List<UnityEngine.Rendering.Universal.Light2D>();
 
-    // ---- Props that react: bushes and trees sway when the hero brushes or dashes through them, or a cat or blast hits them ----
     private class Swayer { public Transform t; public Vector2 anchor, top; public Vector3 scale; public bool tree; public float shake, amp, cooldown, phase; }
     private readonly List<Swayer> swayers = new List<Swayer>();
     private readonly Dictionary<Vector2Int, List<Swayer>> swayCells = new Dictionary<Vector2Int, List<Swayer>>();
@@ -500,7 +490,6 @@ public class MapGenerator : MonoBehaviour
         list.Add(s);
     }
 
-    // Shake any bush/tree near a point. strength ~0.3 for a brush past, 1 for a dash or big hit.
     public static void Nudge(Vector2 pos, float radius, float strength)
     {
         if (instance == null) return;
@@ -523,7 +512,6 @@ public class MapGenerator : MonoBehaviour
                     s.shake = 0.5f;
                     if (s.cooldown > 0f) continue;
                     s.cooldown = 0.35f;
-                    // Something falls off: leaves, snow or ash.
                     Color bit = Winter ? Color.white : Volcano ? new Color(0.4f, 0.37f, 0.35f) : new Color(0.4f, 0.7f, 0.28f);
                     Juice.Sparks(s.top + Random.insideUnitCircle * 0.3f, bit, Mathf.RoundToInt(2 + 4 * strength), 2.5f, 0.09f);
                 }
@@ -545,7 +533,6 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    // ---- Moving water (meadow ponds): drifting highlight streaks, and ripples where the hero walks along the edge ----
     private readonly List<(SpriteRenderer sr, RectInt pond, float speed, float phase)> shimmers = new List<(SpriteRenderer, RectInt, float, float)>();
     private readonly List<RectInt> waterPonds = new List<RectInt>();
     private float nextRipple;
@@ -574,7 +561,7 @@ public class MapGenerator : MonoBehaviour
         {
             Vector3 p = sr.transform.localPosition;
             p.x += speed * dt;
-            if (p.x > pond.xMax - 1.2f) p.x = pond.xMin + 0.6f; // wrap back to the far side
+            if (p.x > pond.xMax - 1.2f) p.x = pond.xMin + 0.6f;
             sr.transform.localPosition = p;
             float a = 0.15f + Mathf.Max(0f, Mathf.Sin(t * 1.3f + phase)) * 0.4f;
             sr.color = new Color(0.85f, 0.95f, 1f, a);
@@ -597,8 +584,6 @@ public class MapGenerator : MonoBehaviour
     private int nextCell;
     private readonly Dictionary<Texture2D, Color32[]> srcPixels = new Dictionary<Texture2D, Color32[]>();
 
-    // Each ground tile gets its edge pixels repeated around it so tiles don't show seams.
-    // Done on the CPU: GPU CopyTexture silently did nothing in the web build, leaving the ground grey.
     private Sprite Padded(Sprite s)
     {
         if (nextCell >= CellsPerRow * CellsPerRow) return s;
@@ -622,7 +607,6 @@ public class MapGenerator : MonoBehaviour
         return Sprite.Create(padded, new Rect(dx + Pad, dy + Pad, w, h), new Vector2(0.5f, 0.5f), s.pixelsPerUnit, 0, SpriteMeshType.FullRect);
     }
 
-    // CPU-readable copy of any texture (GPU round trip, so it works on textures that aren't marked readable).
     private static Texture2D ReadableCopy(Texture2D src)
     {
         if (src.isReadable && src.format == TextureFormat.RGBA32) return src;
@@ -675,11 +659,11 @@ public class MapGenerator : MonoBehaviour
 
     private void Update()
     {
-        for (int i = 0; i < lavaGlows.Count; i++) // slow molten pulse (unscaled so it moves behind the menu too)
+        for (int i = 0; i < lavaGlows.Count; i++)
             lavaGlows[i].color = new Color(1f, 0.45f, 0.1f, 0.18f + 0.1f * Mathf.Sin(Time.unscaledTime * 1.8f + i * 1.3f));
         foreach (var (sr, variant, phase) in lavaBlobs)
             sr.sprite = LavaArt.Get(variant, (int)((Time.unscaledTime + phase) * 5f), 1f);
-        for (int i = 0; i < lavaLights.Count; i++) // lava light flickers
+        for (int i = 0; i < lavaLights.Count; i++)
             if (lavaLights[i] != null) lavaLights[i].intensity = 1.15f + 0.2f * Mathf.Sin(Time.unscaledTime * 3.1f + i * 1.7f) + 0.08f * Mathf.Sin(Time.unscaledTime * 11f + i);
         UpdateSway(Time.deltaTime);
         if (menuMap) { UpdateWater(Time.unscaledDeltaTime, null); return; }
@@ -708,7 +692,6 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    // Volcano: standing in lava burns, and eruptions rain down near the player (cats get hit too).
     private float lavaTick, eruptionTimer = 20f, runClock;
     private PlayerHealth playerHealth;
     public const float LavaDamage = 4f;
@@ -725,7 +708,7 @@ public class MapGenerator : MonoBehaviour
         }
         if ((eruptionTimer -= Time.deltaTime) > 0f) return;
         eruptionTimer = Random.Range(7f, 11f);
-        int count = 1 + Mathf.Min(2, (int)(runClock / 240f)); // one more every 4 minutes, up to 3
+        int count = 1 + Mathf.Min(2, (int)(runClock / 240f));
         for (int i = 0; i < count; i++)
         {
             Vector2 at = ClampInside(pos + Random.insideUnitCircle.normalized * Random.Range(i == 0 ? 1.5f : 3f, 7f), WallPad);

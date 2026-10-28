@@ -27,7 +27,6 @@ public static class DamageStats
     public static float Of(string source) => totals.TryGetValue(source, out float v) ? v : 0f;
     public static List<KeyValuePair<string, float>> Top(int n) => totals.OrderByDescending(kv => kv.Value).Take(n).ToList();
 
-    // Balance check: damage per second by source over the run, biggest first.
     public static string Report(string hero, float seconds)
     {
         seconds = Mathf.Max(1f, seconds);

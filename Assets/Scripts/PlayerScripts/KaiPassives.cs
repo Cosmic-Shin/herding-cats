@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Kai's passives. Heavy Blade and Execute are read by KaiSword on every sword hit; Dash Slash runs here.
 [RequireComponent(typeof(PlayerStats))]
 public class KaiPassives : HeroPassives
 {
@@ -25,7 +24,6 @@ public class KaiPassives : HeroPassives
 
     public static KaiPassives Active => Instance as KaiPassives;
 
-    // Read by the sword.
     public float StunTime { get; private set; } = 0.3f;
     public float ImpairedBonus { get; private set; } = 1f;
     public float ExecuteBelow { get; private set; } = 0.15f;
@@ -40,7 +38,7 @@ public class KaiPassives : HeroPassives
     private PlayerController controller;
     private KaiSword sword;
     private bool wasDashing;
-    private TrailRenderer dashTrail; // a white wind streak while dash-slashing
+    private TrailRenderer dashTrail;
 
     protected override void Awake()
     {
@@ -86,7 +84,6 @@ public class KaiPassives : HeroPassives
         wasDashing = dashing;
     }
 
-    // Blink replaces the dash, so it cuts along the jump instead.
     public void BlinkCut(Vector2 from, Vector2 to)
     {
         if (!enabled) return;

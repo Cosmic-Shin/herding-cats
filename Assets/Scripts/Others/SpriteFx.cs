@@ -50,8 +50,6 @@ public static class SpriteFx
         return Sprite.Create(tex, new Rect(0, 0, W, H), pivot, s.pixelsPerUnit);
     }
 
-    // ---- Cat skins: recolour a (white) cat frame and paint an accessory into it ----
-    // The cat art is a third-party pack (see CREDITS.md); these variants are made in code at runtime.
     public enum CatSkin { None, Shield, Sniper, Toxic, Charger, Splitter, Kamikaze, Thief, Healer, Mama }
 
     private static readonly Dictionary<(Sprite, CatSkin), Sprite> skinned = new Dictionary<(Sprite, CatSkin), Sprite>();
@@ -59,7 +57,7 @@ public static class SpriteFx
     private static Color Hex(string h) { ColorUtility.TryParseHtmlString("#" + h, out Color c); return c; }
 
     private static readonly Dictionary<CatSkin, Color[]> Ramps = new Dictionary<CatSkin, Color[]>
-    {   // shadow, mid, light
+    {
         { CatSkin.Shield,   new[] { Hex("4A5570"), Hex("8A96B0"), Hex("C8D2E6") } },
         { CatSkin.Sniper,   new[] { Hex("2C2340"), Hex("5A4A7A"), Hex("8E7CB8") } },
         { CatSkin.Toxic,    new[] { Hex("2E6B2A"), Hex("6CC24A"), Hex("B6F06A") } },
@@ -92,7 +90,7 @@ public static class SpriteFx
                 x0 = Mathf.Min(x0, x); x1 = Mathf.Max(x1, x); y0 = Mathf.Min(y0, y); y1 = Mathf.Max(y1, y);
                 Color.RGBToHSV(c, out _, out float sat, out float val);
                 float lum = c.r * 0.3f + c.g * 0.59f + c.b * 0.11f;
-                if (lum < 0.3f || (sat > 0.3f && val > 0.5f)) continue; // keep line work, eyes and pink cheeks
+                if (lum < 0.3f || (sat > 0.3f && val > 0.5f)) continue;
                 float t = Mathf.InverseLerp(0.3f, 1f, lum);
                 Color n = t < 0.6f ? Color.Lerp(ramp[0], ramp[1], t / 0.6f) : Color.Lerp(ramp[1], ramp[2], (t - 0.6f) / 0.4f);
                 n.a = c.a;
@@ -103,56 +101,55 @@ public static class SpriteFx
 
         var tex = new Texture2D(w, h, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
         tex.SetPixels(p);
-        tex.Apply(false, false); // stays readable so Outlined/Flash can bake from it
+        tex.Apply(false, false);
         return skinned[(s, skin)] = Sprite.Create(tex, new Rect(0, 0, w, h), new Vector2(s.pivot.x / w, s.pivot.y / h), s.pixelsPerUnit);
     }
 
-    // Paints a small accessory relative to the cat's bounding box (front-facing blob cats: ears at the top, eyes mid-way).
     private static void Accessory(Color[] p, int w, int h, CatSkin skin, int cx, int bottom, int top)
     {
         void P(int x, int y, Color c) { if (x >= 0 && y >= 0 && x < w && y < h) p[y * w + x] = c; }
         void Box(int xa, int ya, int xb, int yb, Color c) { for (int y = ya; y <= yb; y++) for (int x = xa; x <= xb; x++) P(x, y, c); }
         Color ink = new Color(0.08f, 0.05f, 0.12f);
-        int eye = bottom + (top - bottom) * 45 / 100; // eye row
-        int dip = top - 3;                            // between the ears
+        int eye = bottom + (top - bottom) * 45 / 100;
+        int dip = top - 3;
 
         switch (skin)
         {
-            case CatSkin.Shield: // knight helmet with a red plume
+            case CatSkin.Shield:
                 Box(cx - 5, dip - 2, cx + 5, dip + 1, Hex("C8D2E6")); Box(cx - 5, dip - 2, cx + 5, dip - 2, Hex("4A5570"));
                 Box(cx - 4, dip + 1, cx + 4, dip + 1, Hex("EEF3FF")); Box(cx - 1, dip + 2, cx, dip + 4, Hex("E8402E"));
                 break;
-            case CatSkin.Sniper: // beret + red monocle
+            case CatSkin.Sniper:
                 Box(cx - 4, dip, cx + 3, dip + 1, Hex("3A5A30")); Box(cx - 3, dip + 2, cx + 2, dip + 2, Hex("3A5A30")); P(cx, dip + 3, Hex("3A5A30"));
                 for (int dx = -1; dx <= 1; dx++) for (int dy = -1; dy <= 1; dy++) if (dx != 0 || dy != 0) P(cx + 4 + dx, eye - 2 + dy, Hex("E8402E"));
                 P(cx + 4, eye - 2, Hex("FFD940"));
                 break;
-            case CatSkin.Toxic: // purple blotches
+            case CatSkin.Toxic:
                 foreach (var (dx, dy) in new[] { (-6, -3), (4, -5), (-2, 2), (5, 1) }) Box(cx + dx, eye + dy, cx + dx + 1, eye + dy + 1, Hex("7A3AA0"));
                 break;
-            case CatSkin.Charger: // bone horns
+            case CatSkin.Charger:
                 foreach (int side in new[] { -1, 1 })
                 {
                     P(cx + side * 3, dip + 1, Hex("F0E6D0")); P(cx + side * 4, dip + 1, Hex("F0E6D0"));
                     P(cx + side * 4, dip + 2, Hex("F0E6D0")); P(cx + side * 5, dip + 3, Hex("D8CCB0"));
                 }
                 break;
-            case CatSkin.Splitter: // stitched seam down the middle
+            case CatSkin.Splitter:
                 for (int y = bottom + 2; y <= dip; y++) { P(cx, y, ink); if ((y - bottom) % 2 == 0) { P(cx - 1, y, ink); P(cx + 1, y, ink); } }
                 break;
-            case CatSkin.Kamikaze: // bomb hat with a fuse
+            case CatSkin.Kamikaze:
                 Box(cx - 2, dip, cx + 2, dip + 3, Hex("38384D")); Box(cx - 1, dip + 4, cx + 1, dip + 4, Hex("38384D")); P(cx - 1, dip + 3, Hex("8A8AA0"));
                 P(cx + 1, dip + 5, Hex("996133")); P(cx + 2, dip + 6, Hex("FFD940"));
                 break;
-            case CatSkin.Thief: // bandit mask with eye holes
+            case CatSkin.Thief:
                 Box(cx - 7, eye - 1, cx + 7, eye + 1, ink); P(cx - 8, eye + 1, ink); P(cx + 8, eye + 1, ink);
                 P(cx - 3, eye, Color.white); P(cx + 3, eye, Color.white);
                 break;
-            case CatSkin.Healer: // nurse cap with a red cross
+            case CatSkin.Healer:
                 Box(cx - 3, dip, cx + 3, dip + 3, Color.white); Box(cx - 3, dip, cx + 3, dip, Hex("D8DEF0"));
                 Box(cx - 1, dip + 2, cx + 1, dip + 2, Hex("E8402E")); P(cx, dip + 1, Hex("E8402E")); P(cx, dip + 3, Hex("E8402E"));
                 break;
-            case CatSkin.Mama: // pink bow
+            case CatSkin.Mama:
                 Box(cx - 4, dip, cx - 2, dip + 2, Hex("FF7AD9")); Box(cx + 2, dip, cx + 4, dip + 2, Hex("FF7AD9"));
                 Box(cx - 1, dip + 1, cx + 1, dip + 1, Hex("E040A0")); P(cx - 3, dip + 2, Hex("FFB0E8")); P(cx + 3, dip + 2, Hex("FFB0E8"));
                 break;

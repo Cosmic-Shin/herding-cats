@@ -38,7 +38,6 @@ public class GlacierQuakeWeapon : Weapon
         CameraFollow.Shake(0.1f, 0.15f);
     }
 
-    // Ice spike: pops up, holds, then shrinks and fades.
     private static void Spike(Vector2 at, float delay)
     {
         const float life = 0.75f, size = 0.9f;

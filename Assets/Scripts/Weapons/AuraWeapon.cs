@@ -50,8 +50,8 @@ public class AuraWeapon : Weapon
 
     protected float CurrentRadius => Area(Radius[L]);
     protected virtual Color FillTint =>
-        PlayerCollabs.Has("sanctuary") ? new Color(0.5f, 1f, 0.6f)      // Purr Therapy: healing green
-        : PlayerCollabs.Has("auraguard") ? new Color(0.8f, 0.86f, 0.95f) // Thick Coat: steel
+        PlayerCollabs.Has("sanctuary") ? new Color(0.5f, 1f, 0.6f)
+        : PlayerCollabs.Has("auraguard") ? new Color(0.8f, 0.86f, 0.95f)
         : new Color(0.72f, 0.66f, 1f);
 
     private static Sprite field;

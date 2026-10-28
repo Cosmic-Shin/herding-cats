@@ -3,7 +3,6 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerStats))]
 public class MiraPassives : HeroPassives
 {
-    // The active Mira, or null when another hero is picked.
     public static MiraPassives Active => Instance as MiraPassives;
 
     [Header("Blade Dancer")]
@@ -122,7 +121,6 @@ public class MiraPassives : HeroPassives
             }
             ExplosionFx.Ring(pos, 2.8f * stats.areaMultiplier, new Color(0.6f, 0.9f, 1f), 0.3f);
         }
-        // Pop: the bubble bursts into droplets.
         Vector2 at = transform.position;
         ExplosionFx.Ring(at, 1.3f, new Color(0.7f, 0.95f, 1f), 0.25f);
         ExplosionFx.Spawn(at, 1.2f, new Color(0.55f, 0.85f, 1f));
@@ -133,7 +131,6 @@ public class MiraPassives : HeroPassives
         return true;
     }
 
-    // ---- Dash: a pink ribbon, bubbles drifting off behind her, and a soft bubble pop where she lands ----
     private static readonly Color DashPink = new Color(1f, 0.55f, 0.78f), BubbleTint = new Color(0.8f, 0.95f, 1f);
     private PlayerController controller;
     private TrailRenderer dashTrail;
@@ -165,7 +162,7 @@ public class MiraPassives : HeroPassives
         float life = Random.Range(0.45f, 0.7f), size = Random.Range(0.2f, 0.34f);
         Color tint = Random.value < 0.5f ? BubbleTint : Color.Lerp(DashPink, Color.white, 0.4f);
         Shot b = Shot.Spawn(Shapes.Bubble, tint, size, at, 69);
-        b.velocity = new Vector2(Random.Range(-0.3f, 0.3f), Random.Range(0.5f, 0.9f)); // floats up
+        b.velocity = new Vector2(Random.Range(-0.3f, 0.3f), Random.Range(0.5f, 0.9f));
         b.life = life;
         b.onUpdate = shot =>
         {
@@ -207,7 +204,6 @@ public class MiraPassives : HeroPassives
 
         float k = ShieldUp ? 1f : 1f - shieldTimer / shieldCooldown;
         shieldPop = Mathf.Max(0f, shieldPop - Time.deltaTime * 3f);
-        // Shield up: wobble + slow hue shift, pops in when it comes back. Shield down: ring fills as it recharges.
         float wob = 0.035f * Mathf.Sin(Time.time * 5f);
         float spring = 1f + 0.35f * shieldPop * Mathf.Sin(shieldPop * Mathf.PI * 3f);
         shieldFill.transform.localScale = new Vector3(1f + wob, 1f - wob, 1f) * 2f * spring;

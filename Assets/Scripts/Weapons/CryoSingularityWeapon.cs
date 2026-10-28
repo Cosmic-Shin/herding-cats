@@ -18,7 +18,6 @@ public class CryoSingularityWeapon : SuperWeapon
         core.spin = 180f;
         int coreGen = core.Generation;
 
-        // Shards orbit inward during the charge.
         const int ShardCount = 8;
         var shards = new Shot[ShardCount];
         var shardGens = new int[ShardCount];

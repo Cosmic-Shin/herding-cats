@@ -60,7 +60,6 @@ public class BossTimeline : MonoBehaviour
         StyleBossBar();
     }
 
-    // Cat theme: slim jelly bar along the bottom of the screen, out of the way of the HUD panels.
     private void StyleBossBar()
     {
         if (bossBar == null) return;
@@ -119,7 +118,6 @@ public class BossTimeline : MonoBehaviour
     public void Advance(float seconds) => runTime += seconds;
     public void AdminSpawn(BossEvent e) => Spawn(e);
 
-    // Endless milestone: the final boss returns, tougher each time, with every signature attack.
     public void SpawnEndlessBoss(int milestone)
     {
         BossEvent last = null;
@@ -224,7 +222,7 @@ public class BossTimeline : MonoBehaviour
         if (warningText == null) return;
         warningText.text = $"{title}\n<size=45%>{subtitle.ToUpper()}</size>";
         warningText.gameObject.SetActive(true);
-        RuntimeUI.Outline(warningText, 0.22f); // set here, not Awake: TMP resets it during its own init
+        RuntimeUI.Outline(warningText, 0.22f);
         warningTimer = warningLead + 1f;
         Sfx.Play(Sfx.Id.Alert, 0.8f);
     }
@@ -242,7 +240,7 @@ public class BossTimeline : MonoBehaviour
     {
         if (bossBar == null) return;
 
-        bool show = alive.Count > 0 && Time.timeScale > 0f; // hide behind pause / level-up titles
+        bool show = alive.Count > 0 && Time.timeScale > 0f;
         if (bossBar.activeSelf != show) bossBar.SetActive(show);
         if (!show) return;
 

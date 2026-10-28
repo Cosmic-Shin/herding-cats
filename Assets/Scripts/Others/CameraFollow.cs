@@ -105,7 +105,7 @@ public class CameraFollow : MonoBehaviour
             float k = Time.unscaledDeltaTime * 8f;
             bool paused = Time.timeScale == 0f;
             bool ultOn = ult != null && ult.IsActive;
-            colorAdjust.saturation.value = Mathf.Lerp(colorAdjust.saturation.value, paused ? -70f : -45f * Juice.LowHpLevel, k); // the world drains of colour near death
+            colorAdjust.saturation.value = Mathf.Lerp(colorAdjust.saturation.value, paused ? -70f : -45f * Juice.LowHpLevel, k);
             colorAdjust.postExposure.value = Mathf.Lerp(colorAdjust.postExposure.value, paused ? -0.8f : 0f, k);
             colorAdjust.colorFilter.value = Color.Lerp(colorAdjust.colorFilter.value, ultOn ? new Color(1f, 0.95f, 0.87f) : Color.white, k);
         }

@@ -2,11 +2,6 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// The special (ultimate). All heroes get bigger, harder hits and extra bombs/swings/drones while it's active;
-// each also has their own opener, look and extra:
-//   Mira  - SPECIAL:  bomb burst all around her.
-//   Kai   - RAGE:     a full spin; red aura, swings 40% faster, heals a little on every sword hit.
-//   Nyx   - OVERRIDE: an EMP that hacks every cat on screen; drones fire 50% faster.
 [RequireComponent(typeof(PlayerAutoAttack))]
 public class PlayerUltimate : MonoBehaviour
 {
@@ -44,8 +39,8 @@ public class PlayerUltimate : MonoBehaviour
     private PlayerAutoAttack attack;
     private PlayerStats stats;
     private SpriteRenderer aura, body;
-    private SpriteRenderer ring, ripple; // Kai/Nyx ground rings (aura is the soft glow under them)
-    private readonly SpriteRenderer[] dataBits = new SpriteRenderer[6]; // Nyx: cubes orbiting her
+    private SpriteRenderer ring, ripple;
+    private readonly SpriteRenderer[] dataBits = new SpriteRenderer[6];
     private float trailTimer, flameTimer, appliedSpeed;
     private Color? moodBefore;
     private Style active;
@@ -64,7 +59,7 @@ public class PlayerUltimate : MonoBehaviour
 
     private void OnDisable()
     {
-        if (IsActive) End(false); // no effects while the scene is tearing down
+        if (IsActive) End(false);
     }
 
     private void Update()
@@ -74,7 +69,6 @@ public class PlayerUltimate : MonoBehaviour
             ActiveRemaining -= Time.deltaTime;
             Style s = active ?? Current;
             UpdateField(s);
-            // While active: tinted afterimages + rising sparks (and a glitch flicker for Nyx).
             if ((trailTimer -= Time.deltaTime) <= 0f)
             {
                 trailTimer = 0.07f;
@@ -134,7 +128,6 @@ public class PlayerUltimate : MonoBehaviour
     {
         ActiveRemaining = 0f;
         CooldownRemaining = cooldown;
-        // Power down: Kai's fire gutters out in smoke, Nyx's field drops in a burst of bits.
         if (fx && active == Kai) { Juice.Smoke(transform.position, 0.6f, 5); Juice.SparksDir(transform.position, Vector2.up, 50f, new Color(1f, 0.45f, 0.2f), 6, 3f, 0.1f); }
         else if (fx && active == Nyx) { HeroFx.Bits(transform.position, Nyx.main, NyxPassives.Magenta, 12, 4f); HeroFx.Glitch(body, 0.15f); }
         HideField();
@@ -144,7 +137,6 @@ public class PlayerUltimate : MonoBehaviour
         active = null;
     }
 
-    // ---- Kai/Nyx field: soft glow + ground rings (+ Nyx's orbiting data cubes). Mira keeps the plain aura disc.
 
     private SpriteRenderer FieldPart(string name, Sprite sprite)
     {
@@ -187,12 +179,11 @@ public class PlayerUltimate : MonoBehaviour
         aura.sortingOrder = ring.sortingOrder = ripple.sortingOrder = under;
         aura.transform.localScale = new Vector3(3.4f, 2.2f, 1f) * (1f + 0.06f * pulse);
         aura.color = new Color(s.main.r, s.main.g, s.main.b, (0.4f + 0.15f * pulse) * a);
-        Vector3 flat = new Vector3(2.3f, 1.15f, 1f); // rings lie flat on the ground
+        Vector3 flat = new Vector3(2.3f, 1.15f, 1f);
         float sweep = Mathf.Repeat(t * 1.4f, 1f);
 
         if (s == Kai)
         {
-            // A heartbeat-throbbing ring, heat ripples rolling off it, and flames licking up from his feet.
             float beat = Mathf.Pow(Mathf.Abs(Mathf.Sin(t * 4f)), 6f);
             ring.transform.localScale = flat * (1f + 0.12f * beat);
             ring.color = new Color(1f, 0.28f, 0.18f, (0.45f + 0.45f * beat) * a);
@@ -202,7 +193,6 @@ public class PlayerUltimate : MonoBehaviour
             return;
         }
 
-        // Nyx: a flickering ring, radar pings sweeping out, and data cubes orbiting her.
         ring.transform.localScale = flat * 1.05f;
         ring.color = new Color(s.main.r, s.main.g, s.main.b, (Random.value < 0.07f ? 0.15f : 0.7f) * a);
         ripple.transform.localScale = flat * (0.3f + 0.9f * sweep);
@@ -213,13 +203,12 @@ public class PlayerUltimate : MonoBehaviour
             SpriteRenderer b = dataBits[i];
             b.transform.localPosition = new Vector3(Mathf.Cos(ang) * 0.9f - 0.06f, 0.3f + sin * 0.3f, 0f);
             b.transform.localScale = Vector3.one * (0.17f + 0.03f * Mathf.Sin(t * 9f + i));
-            b.sortingOrder = body != null ? body.sortingOrder + (sin < 0f ? 1 : -1) : 11; // passes in front, then behind
+            b.sortingOrder = body != null ? body.sortingOrder + (sin < 0f ? 1 : -1) : 11;
             Color c = i % 2 == 0 ? s.main : NyxPassives.Magenta;
             b.color = new Color(c.r, c.g, c.b, Random.value < 0.06f ? 0.2f : 1f);
         }
     }
 
-    // Fire colour over a flame's life: white-hot yellow, orange, deep red, gone.
     private static Color Fire(float k)
     {
         Color orange = new Color(1f, 0.5f, 0.1f);
@@ -228,7 +217,6 @@ public class PlayerUltimate : MonoBehaviour
         return c;
     }
 
-    // One flame tongue rising from Kai's feet, swaying as it climbs (left behind as he runs, so it trails).
     private void Flame()
     {
         Vector2 at = (Vector2)transform.position + new Vector2(Random.Range(-0.45f, 0.45f), Random.Range(-0.45f, -0.2f));
@@ -247,7 +235,6 @@ public class PlayerUltimate : MonoBehaviour
         };
     }
 
-    // A little pixel flame tongue (white, tinted per frame), crisp like the rest of the art.
     private static Sprite flameSprite;
     private static Sprite FlameSprite
     {
@@ -275,7 +262,6 @@ public class PlayerUltimate : MonoBehaviour
         }
     }
 
-    // RAGE opener: the ground cracks, a ring of fire jets bursts out, and a short dark-red flash.
     private void KaiOpener(Vector2 at)
     {
         StompFx.Spawn(at, 2.6f, MapGenerator.Winter);
@@ -290,7 +276,7 @@ public class PlayerUltimate : MonoBehaviour
             jet.onUpdate = shot =>
             {
                 float k = shot.age / life;
-                shot.velocity *= 1f - 4f * Time.deltaTime; // slows as it spreads
+                shot.velocity *= 1f - 4f * Time.deltaTime;
                 shot.transform.localScale = Vector3.one * size * (1f + 0.8f * k);
                 shot.Renderer.color = Fire(k);
             };
@@ -300,7 +286,6 @@ public class PlayerUltimate : MonoBehaviour
         Juice.Flash(new Color(0.55f, 0.03f, 0.03f, 0.35f), 0.3f);
     }
 
-    // OVERRIDE opener: a cyan-then-magenta glitch flash, scan-lines sweeping the screen, and data crosses.
     private IEnumerator NyxOpener(Vector2 at)
     {
         Juice.Flash(new Color(0.3f, 0.9f, 1f, 0.3f), 0.12f);
@@ -314,7 +299,6 @@ public class PlayerUltimate : MonoBehaviour
         HeroFx.Glitch(body, 0.18f);
     }
 
-    // A thin bright line sweeping down across the whole view, like a screen refresh.
     private void ScanLine(Vector2 at, Color color, float delay)
     {
         Camera cam = Camera.main;

@@ -20,7 +20,7 @@ public class MainMenu : MonoBehaviour
     {
         Started = false;
         Time.timeScale = 1f;
-        SceneFade.Reload(); // paw wipe closes, reloads, opens
+        SceneFade.Reload();
     }
 
     private const int RowsPerPage = 10, Pages = Leaderboard.Size / RowsPerPage, BuildIcons = PlayerWeapons.MaxWeapons + PlayerSkills.MaxSkills;
@@ -49,7 +49,6 @@ public class MainMenu : MonoBehaviour
 
     private void OnDestroy() => Leaderboard.Changed -= OnBoardChanged;
 
-    // Online scores can land while the board is open; redraw in place.
     private void OnBoardChanged()
     {
         if (boardPage == null || !boardPage.activeSelf) return;
@@ -64,7 +63,7 @@ public class MainMenu : MonoBehaviour
         IsOpen = true;
         Time.timeScale = 0f;
         Build();
-        if (autoStart) { autoStart = false; TryStart(true); } // came back from a reload for the chosen map (still behind the wipe)
+        if (autoStart) { autoStart = false; TryStart(true); }
     }
 
     private void Update()
@@ -79,7 +78,7 @@ public class MainMenu : MonoBehaviour
         if (mainPage != null && mainPage.activeSelf && !Settings.IsOpen && nameField.isFocused &&
             (GamepadUI.Move().sqrMagnitude > 0.25f || GamepadUI.Pressed(g => g.buttonSouth)))
         {
-            if (TypedName == "") nameField.text = "Cat" + Random.Range(1000, 10000); // can't type on a pad; unique-ish so pad players don't share one leaderboard row
+            if (TypedName == "") nameField.text = "Cat" + Random.Range(1000, 10000);
             nameField.DeactivateInputField();
             Select(startButton.gameObject);
             return;
@@ -90,14 +89,12 @@ public class MainMenu : MonoBehaviour
         if (Settings.IsOpen) { if (back && !Settings.Busy) Settings.Back(); return; }
         if ((achPage != null && achPage.activeSelf) || (creditsPage != null && creditsPage.activeSelf)) { if (back) ShowMain(); return; }
         if (selectPage != null && selectPage.activeSelf && back) { ShowMain(); return; }
-        // Arrows only move the cursor. Selectors (hero, map, filters) change with Enter / A / a click.
         if (!boardPage.activeSelf) return;
         if (back) { boardBack(); return; }
         if (GamepadUI.Pressed(g => g.leftShoulder)) SetPage(page - 1);
         else if (GamepadUI.Pressed(g => g.rightShoulder)) SetPage(page + 1);
     }
 
-    // Leaderboard filters: -1 = all, otherwise an index into Hero.All / MapGenerator.Names.
     private int heroFilter = -1, mapFilter = -1;
     private Button heroFilterButton, mapFilterButton;
     private string HeroFilter => heroFilter < 0 ? null : Hero.All[heroFilter].id;
@@ -130,7 +127,7 @@ public class MainMenu : MonoBehaviour
         root = canvas.gameObject;
         RuntimeUI.Box(canvas.transform, "Dim", Vector2.zero, Vector2.one, new Color(0.03f, 0.02f, 0.08f, 0.85f));
         BuildBoard(canvas.transform);
-        heroFilter = mapFilter = -1; // the rank is on the full board
+        heroFilter = mapFilter = -1;
         heroFilterButton.gameObject.SetActive(false);
         mapFilterButton.gameObject.SetActive(false);
         SetTitle(boardTitle, rank == 1 ? "NEW HIGH SCORE!  <color=#7CFF9A>RANK #1</color>" : $"YOU MADE THE BOARD!  <color=#7CFF9A>RANK #{rank}</color>");
@@ -181,7 +178,6 @@ public class MainMenu : MonoBehaviour
 #if !UNITY_WEBGL || UNITY_EDITOR
         TextButton(list, "Quit", -310, Quit);
 #endif
-        // The name field sits off-center, so automatic nav skipped Start.
         Navigation startNav = startButton.navigation; startNav.mode = Navigation.Mode.Explicit;
         startNav.selectOnUp = nameField; startNav.selectOnDown = board;
         startButton.navigation = startNav;
@@ -208,7 +204,6 @@ public class MainMenu : MonoBehaviour
     }
     private TextMeshProUGUI nameLabel;
 
-    // ---- Run select: Start opens this; pick a hero and a map, read what they do, then Play. ----
     private GameObject selectPage;
     private Button heroButton, mapButton, playButton;
     private TextMeshProUGUI heroText, mapText;
@@ -216,11 +211,10 @@ public class MainMenu : MonoBehaviour
     private MapPreviewUI mapPreview;
     private HeroPreview preview;
     private int pendingMap;
-    private static bool autoStart; // set when Play has to reload the scene for a different map
+    private static bool autoStart;
 
     private static readonly Color[] MapSwatches = { new Color(0.45f, 0.75f, 0.35f), new Color(0.75f, 0.88f, 1f), new Color(0.95f, 0.4f, 0.12f) };
 
-    // Cat theme: one card per hero (the picked one turns gold and gets ears), the kit underneath, the map on its own panel.
     private Image[] heroCards, heroSlots;
     private TextMeshProUGUI[] heroNames;
 
@@ -230,7 +224,6 @@ public class MainMenu : MonoBehaviour
         RectTransform panel = Container(selectPage.transform, new Vector2(1200, 680));
         BuildTitle(panel, "CHOOSE YOUR RUN", 56f, 296f);
 
-        // Left: a card per hero. Click one, or Enter / A on the hero row.
         int n = Hero.All.Length;
         heroCards = new Image[n];
         heroSlots = new Image[n];
@@ -241,7 +234,7 @@ public class MainMenu : MonoBehaviour
             Hero.Def h = Hero.All[i];
             float x = left + cardW / 2f + i * (cardW + gap);
             Image card = CatTheme.Panel(panel, "HeroCard", CatTheme.Style.Panel, new Vector2(x, 52f), new Vector2(cardW, 336f));
-            CatTheme.Ears(card.rectTransform, "ear_gold"); // only shown on the picked hero
+            CatTheme.Ears(card.rectTransform, "ear_gold");
             card.raycastTarget = true;
             int index = i;
             Button pick = card.gameObject.AddComponent<Button>();
@@ -267,7 +260,6 @@ public class MainMenu : MonoBehaviour
         heroButton = TextButton(panel, "Hero", -142, () => CycleHero(1), -195, 26);
         CatTheme.Button(heroButton, 14f);
 
-        // The picked hero's kit.
         CatTheme.Panel(panel, "Kit", CatTheme.Style.Dim, new Vector2(-210, -232), new Vector2(720, 124));
         heroText = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 16, Color.white, new Vector2(-210, -232), new Vector2(690, 104), TextAlignmentOptions.TopLeft));
         heroText.textWrappingMode = TextWrappingModes.Normal;
@@ -275,8 +267,6 @@ public class MainMenu : MonoBehaviour
         heroText.fontSizeMin = 10;
         heroText.fontSizeMax = 16;
 
-        // Right: map.
-        // Top level with the hero cards, bottom level with the hero row button.
         CatTheme.Panel(panel, "MapPanel", CatTheme.Style.Panel, new Vector2(380, 27.5f), new Vector2(380, 385));
         mapButton = TextButton(panel, "Map", 180, () => CycleMap(1), 380, 28);
         CatTheme.Button(mapButton, 10f);
@@ -297,14 +287,11 @@ public class MainMenu : MonoBehaviour
         mapText.fontSizeMin = 11;
         mapText.fontSizeMax = 17;
 
-        // Same width as the map panel, same height as the kit box beside it (the frame adds 48 x 14).
         playButton = TextButton(panel, "Play", -232, Play, 380, 38);
         ((RectTransform)playButton.transform).sizeDelta = new Vector2(332f, 110f);
         CatTheme.Button(playButton, 24f);
         Button back = TextButton(panel, "Back", -322, ShowMain, -505, 22);
         CatTheme.Button(back, 8f);
-        // Arrows follow the layout: Hero row (bottom left), Map (top right), Play (bottom right), Back (corner).
-        // Enter / A on Hero or Map changes it; arrows never do.
         RuntimeUI.Nav(heroButton, up: mapButton, down: back, left: back, right: playButton);
         RuntimeUI.Nav(mapButton, up: playButton, down: playButton, left: heroButton);
         RuntimeUI.Nav(playButton, up: mapButton, down: mapButton, left: heroButton);
@@ -321,7 +308,6 @@ public class MainMenu : MonoBehaviour
         Select(heroButton.gameObject);
     }
 
-    // Gold frame, ears and blue portrait slot on the picked hero's card.
     private void RefreshHeroCards()
     {
         if (heroCards == null) return;
@@ -336,7 +322,6 @@ public class MainMenu : MonoBehaviour
         }
     }
 
-    // Start: check the name, then on to picking the hero and map.
     private void ShowSelect()
     {
         Validate();
@@ -357,10 +342,9 @@ public class MainMenu : MonoBehaviour
         if (step != 0) { Hero.Cycle(step); Sfx.Play(Sfx.Id.Click, 0.5f); }
         heroButton.GetComponent<TextMeshProUGUI>().text = $"<  {Hero.Current.name.ToUpper()}  >";
         heroText.text = $"<color=#FFF0AA>{Hero.Current.name.ToUpper()} STARTS WITH</color>\n{Hero.Current.kit}";
-        RefreshHeroCards(); // the cards show the heroes now, so no world-drawn preview here
+        RefreshHeroCards();
     }
 
-    // Just a choice here; the map is built when the scene loads, so Play reloads first if it changed.
     private void CycleMap(int step)
     {
         int n = MapGenerator.Names.Length;
@@ -377,8 +361,8 @@ public class MainMenu : MonoBehaviour
     {
         PlayerPrefs.SetInt("map", pendingMap);
         PlayerPrefs.Save();
-        if (pendingMap != MapGenerator.Biome) { autoStart = true; BackToMenu(); return; } // rebuild the world for that map, then go
-        SceneFade.Close(() => { TryStart(true); SceneFade.Open(); }); // paw wipe into the run
+        if (pendingMap != MapGenerator.Biome) { autoStart = true; BackToMenu(); return; }
+        SceneFade.Close(() => { TryStart(true); SceneFade.Open(); });
     }
 
     private static Button TextButton(Transform parent, string label, float y, UnityEngine.Events.UnityAction onClick, float x = 0f, float size = 32f) =>
@@ -408,7 +392,6 @@ public class MainMenu : MonoBehaviour
         placeholder.alignment = TextAlignmentOptions.MidlineLeft;
         field.caretColor = Color.white;
         field.onValueChanged.AddListener(_ => Validate());
-        // Acts like a button: Enter starts editing, Enter again confirms. It never starts the run.
         field.shouldActivateOnSelect = false;
         return field;
     }
@@ -437,7 +420,7 @@ public class MainMenu : MonoBehaviour
         foreach (Canvas c in hiddenUi) if (c != null) c.enabled = true;
         hiddenUi.Clear();
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
-        if (instant) { Destroy(root); root = null; } // hidden behind the paw wipe: just go
+        if (instant) { Destroy(root); root = null; }
         else StartCoroutine(FadeOut());
     }
 
@@ -484,7 +467,7 @@ public class MainMenu : MonoBehaviour
             bool on = EventSystem.current != null && EventSystem.current.currentSelectedGameObject == nameField.gameObject;
             nameLabel.color = on ? Gold : ItemColor;
             nameField.textComponent.color = on ? Gold : Color.white;
-            if (startButton.interactable) // valid name, so the hint line is free (errors keep it otherwise)
+            if (startButton.interactable)
                 nameHint.text = nameField.isFocused ? "<color=#C9D2F0>Press Enter to confirm</color>" : "";
         }
 
@@ -505,7 +488,7 @@ public class MainMenu : MonoBehaviour
         creditsPage.SetActive(false);
         if (selectPage != null) selectPage.SetActive(false);
         Select(nameField.gameObject);
-        if (TypedName == "") nameField.ActivateInputField(); // first run: let them type straight away
+        if (TypedName == "") nameField.ActivateInputField();
     }
 
     private void BuildBoard(Transform parent)
@@ -550,7 +533,6 @@ public class MainMenu : MonoBehaviour
             rim.effectColor = new Color(0.04f, 0.03f, 0.1f, 0.9f);
             rim.effectDistance = new Vector2(2, -2);
             row.rank = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 24, Color.white, new Vector2(-530, y), new Vector2(70, 40)));
-            // Hero portrait with a little map badge, then the name.
             row.hero = RuntimeUI.Box(panel, "Hero", new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Color.white);
             row.hero.rectTransform.anchoredPosition = new Vector2(-452, y + 2);
             row.hero.rectTransform.sizeDelta = new Vector2(40, 40);
@@ -579,24 +561,21 @@ public class MainMenu : MonoBehaviour
         nextButton = TextButton(panel, "Next >", -292, () => SetPage(page + 1), 210, 28);
         backLabel = TextButton(panel, "Back", -292, () => boardBack(), -480, 28).GetComponent<TextMeshProUGUI>();
         foreach (Button b in new[] { prevButton, nextButton, backLabel.GetComponent<Button>() }) { Width(b, 170f); CatTheme.Button(b, 10f); }
-        // One legend line under the buttons (it used to be squeezed into the corner).
         TextMeshProUGUI legend = RuntimeUI.Outline(RuntimeUI.Text(panel, $"<color=#FF7AD9>pink time</color> = endless    dot = map: <color=#73D959>meadow</color> <color=#B3E6FF>winter</color> <color=#FF7326>volcano</color>    {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.LeftShoulder)} / {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.RightShoulder)} pages    Esc / {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.East)} back", 16, CatTheme.Faint, new Vector2(0, -334), new Vector2(1150, 24)));
-        CatTheme.PlateBehind(legend.rectTransform, new Vector2(1000f, 30f)); // readable over the grass
+        CatTheme.PlateBehind(legend.rectTransform, new Vector2(1000f, 30f));
     }
 
-    // Text buttons default to 11 characters wide; themed frames follow the rect, so narrow it to fit.
     private static void Width(Button b, float w)
     {
         var rt = (RectTransform)b.transform;
         rt.sizeDelta = new Vector2(w, rt.sizeDelta.y);
     }
 
-    // Leaderboard names come from other players: drop characters the pixel font can't draw (they showed as boxes).
     private static string Printable(TextMeshProUGUI t, string s)
     {
         if (t.font == null) return s;
         var sb = new System.Text.StringBuilder(s.Length);
-        foreach (char c in s) if (t.font.HasCharacter(c, true, true)) sb.Append(c); // tryAdd: dynamic fonts add glyphs on first use
+        foreach (char c in s) if (t.font.HasCharacter(c, true, true)) sb.Append(c);
         return sb.Length > 0 ? sb.ToString() : "?";
     }
 
@@ -625,8 +604,6 @@ public class MainMenu : MonoBehaviour
         pageText.text = $"Page {page + 1} / {pages}";
         SetEnabled(prevButton, page > 0);
         SetEnabled(nextButton, page < pages - 1);
-        // Arrows follow the layout: filters on the top row, Back / Prev / Next on the bottom row (disabled ones skipped).
-        // Enter / A on a filter changes it; shoulder buttons also turn pages.
         var bottom = new List<Selectable> { backLabel.GetComponent<Button>() };
         if (prevButton.interactable) bottom.Add(prevButton);
         if (nextButton.interactable) bottom.Add(nextButton);
@@ -650,7 +627,6 @@ public class MainMenu : MonoBehaviour
             row.rank.color = mine && !medal ? Gold : Color.white;
             row.name.color = mine ? CatTheme.GoldHi : Color.white;
             bool justMade = rank == LastRank && !Filtered;
-            // Your rows get a soft gold tint (stronger for the run you just finished); the rest alternate stripes.
             row.bg.color = justMade ? new Color(1f, 0.85f, 0.3f, 0.22f) : mine ? new Color(1f, 0.85f, 0.3f, 0.1f)
                          : i % 2 == 0 ? new Color(1f, 1f, 1f, 0.05f) : Color.clear;
             row.shine.gameObject.SetActive(justMade && e != null);
@@ -686,7 +662,6 @@ public class MainMenu : MonoBehaviour
         BuildTitle(panel, "ACHIEVEMENTS", 60f, 292f);
         CatTheme.Panel(panel, "Panel", CatTheme.Style.Panel, new Vector2(0, 0), new Vector2(1180, 550));
 
-        // A table: status dot, name, goal (with progress), reward. One striped row per achievement.
         int n = Achievements.All.Length;
         const float top = 205f, bottom = -215f, headerY = 240f;
         float rowH = (top - bottom) / Mathf.Max(1, n - 1);
@@ -738,7 +713,6 @@ public class MainMenu : MonoBehaviour
             AchRow r = achRows[i];
             bool on = Achievements.IsUnlocked(d);
             if (on) done++;
-            // Earned: green dot, gold name. Locked: dim dot, faded reward, progress if there is any.
             r.dot.sprite = Shapes.Circle;
             r.dot.color = on ? CatTheme.Mint : new Color(0.35f, 0.3f, 0.5f);
             r.name.text = d.name;
@@ -755,7 +729,6 @@ public class MainMenu : MonoBehaviour
 
     private Button creditsBack;
 
-    // Keep in sync with CREDITS.md.
     private const string CreditsText =
         "<color=#FFE08A><b>Music</b></color>\n" +
         "Kevin MacLeod (incompetech.com)\n" +
@@ -776,7 +749,7 @@ public class MainMenu : MonoBehaviour
         RectTransform panel = Container(creditsPage.transform, new Vector2(1200, 680));
         BuildTitle(panel, "CREDITS", 60f, 292f);
         CatTheme.Panel(panel, "Panel", CatTheme.Style.Panel, Vector2.zero, new Vector2(1180, 540));
-        Image cat = CatTheme.Cat(panel, "black", new Vector2(470f, 264f), 72f); // a cat sitting on the panel's edge
+        Image cat = CatTheme.Cat(panel, "black", new Vector2(470f, 264f), 72f);
         cat.rectTransform.pivot = new Vector2(0.5f, 0f);
         TextMeshProUGUI text = RuntimeUI.Outline(RuntimeUI.Text(panel, CreditsText, 22, Color.white, Vector2.zero, new Vector2(1100, 500), TextAlignmentOptions.Center));
         text.enableAutoSizing = true;

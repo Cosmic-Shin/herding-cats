@@ -39,7 +39,6 @@ public class CombineMenu : MonoBehaviour
         RectTransform rt = b.GetComponent<RectTransform>();
         rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f);
         rt.anchoredPosition = new Vector2(0, -118);
-        // Opened by its key or a click; as a nav stop it sat on the top canvas and trapped the pad/arrow cursor.
         b.navigation = new Navigation { mode = Navigation.Mode.None };
         bannerText = b.GetComponentInChildren<TextMeshProUGUI>();
         banner = b.gameObject;

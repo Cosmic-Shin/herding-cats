@@ -23,7 +23,6 @@ public static class LavaArt
         new Color(0.04f, 0.02f, 0.02f), new Color(0.1f, 0.06f, 0.04f), new Color(0.17f, 0.1f, 0.06f), new Color(0.26f, 0.14f, 0.07f),
         new Color(0.36f, 0.19f, 0.08f), new Color(0.95f, 0.4f, 0.07f), new Color(1f, 0.72f, 0.25f),
     };
-    // Enemy poison puddles. Purple rim so they don't look like the player's glue.
     private static readonly Color[] Toxic =
     {
         new Color(0.2f, 0.06f, 0.24f), new Color(0.36f, 0.12f, 0.4f), new Color(0.2f, 0.36f, 0.12f), new Color(0.42f, 0.72f, 0.1f),

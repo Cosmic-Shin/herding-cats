@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class Sfx
 {
-    public enum Id { Boom, Hit, Pop, Xp, LevelUp, Hurt, Pickup, Alert, Crate, Heartbeat, Ready, Swish, Zap, Crackle, Whoosh, Shatter, Step, Meow, Dash, Click, Tick, Clang, Chest, Blink, GameOver, Sparkle, Fanfare }
+    public enum Id { Boom, Hit, Pop, Xp, LevelUp, Hurt, Pickup, Alert, Crate, Heartbeat, Ready, Swish, Zap, Crackle, Whoosh, Shatter, Step, Meow, Dash, Click, Tick, Clang, Chest, Blink, GameOver, Sparkle, Fanfare, Hum }
 
     public static float Volume = 0.5f;
 
@@ -63,6 +63,8 @@ public static class Sfx
         }
     }
 
+    public static AudioClip GetClip(Id id) => Clip(id);
+
     private static AudioClip Clip(Id id)
     {
         if (clips.TryGetValue(id, out AudioClip c) && c != null) return c;
@@ -107,10 +109,10 @@ public static class Sfx
             }),
             Id.Chest => Make(id, 0.7f, (t, s) => Noise(s, 0.3f) * Decay(t, 35f) * 0.7f
                                                  + (t > 0.12f ? Square(new[] { 784f, 988f, 1175f, 1568f }[Mathf.Min(3, (int)((t - 0.12f) / 0.07f))], t) * Decay(t - 0.12f, 4f) * 0.18f : 0f)),
-            // Rising glissando with a shimmer on top: the level-up flash.
+            Id.Hum => Make(id, 1f, (t, s) => (Mathf.Sin(2f * Mathf.PI * 110f * t) * 0.5f + Mathf.Sin(2f * Mathf.PI * 165f * t) * 0.3f
+                                              + Mathf.Sin(2f * Mathf.PI * 220f * t) * 0.15f) * (0.75f + 0.25f * Mathf.Sin(2f * Mathf.PI * 2f * t)) * 0.4f),
             Id.Sparkle => Make(id, 0.45f, (t, s) => (Mathf.Sin(2f * Mathf.PI * Mathf.Lerp(600f, 1800f, Mathf.Sqrt(t / 0.45f)) * t) * 0.6f
                                                     + Square(2400f + 600f * Mathf.Sin(t * 70f), t) * 0.08f) * Mathf.Sin(Mathf.PI * Mathf.Min(1f, t / 0.45f)) * 0.45f),
-            // Arpeggio into a held major chord: combines, supers, maxed weapons.
             Id.Fanfare => Make(id, 1.1f, (t, s) =>
             {
                 float[] notes = { 523f, 659f, 784f, 1047f };
@@ -148,7 +150,7 @@ public static class Sfx
         for (int i = 0; i < n; i++)
         {
             float t = i / (float)Rate;
-            float fade = Mathf.Clamp01((n - i) / (Rate * 0.005f));
+            float fade = id == Id.Hum ? 1f : Mathf.Clamp01((n - i) / (Rate * 0.005f));
             data[i] = Mathf.Clamp(wave(t, i), -1f, 1f) * fade;
         }
         AudioClip clip = AudioClip.Create("sfx_" + id, n, 1, Rate, false);

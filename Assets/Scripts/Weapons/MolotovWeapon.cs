@@ -14,7 +14,7 @@ public class MolotovWeapon : Weapon
         Sfx.Play(Sfx.Id.Swish, 0.3f, 0.7f);
 
         bool campfire = PlayerCollabs.Has("campfire");
-        if (campfire) Lob(Pos + Random.insideUnitCircle * 0.3f); // Campfire: one always lands at your feet, so there's somewhere to heal
+        if (campfire) Lob(Pos + Random.insideUnitCircle * 0.3f);
         for (int i = 0; i < Count[L]; i++)
         {
             Transform target = RandomEnemy(7f);

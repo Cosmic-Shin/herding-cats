@@ -77,12 +77,7 @@ public class Juice : MonoBehaviour
         flash.color = Color.clear;
     }
 
-    public static void CatPuff(Vector2 pos, Color tint)
-    {
-        for (int i = 0; i < 7; i++)
-            Emit(pos, Random.Range(1.5f, 3.5f), Random.Range(0.12f, 0.28f), Random.Range(0.25f, 0.45f),
-                 Color.Lerp(tint, Color.white, Random.Range(0.2f, 0.7f)));
-    }
+    public static void CatPuff(Vector2 pos, Color tint) => PixelFx.Poof(pos, Color.Lerp(tint, Color.white, 0.3f), 5);
 
     public static void Sparks(Vector2 pos, Color color, int count, float speed, float size)
     {
@@ -122,7 +117,6 @@ public class Juice : MonoBehaviour
         I.puffs.Emit(p, 1);
     }
 
-    // A pale copy of the sprite floats up, wobbling, and fades. Unscaled time so it also plays during the death slow-mo.
     public static void Ghost(SpriteRenderer src, float rise = 1.2f, float duration = 1f)
     {
         if (src == null || src.sprite == null) return;
@@ -194,9 +188,7 @@ public class Juice : MonoBehaviour
             DamagePopup.SpawnText((Vector2)player.transform.position + Vector2.up * 0.9f, "!", new Color(1f, 0.25f, 0.2f), 7f);
         wasLow = low;
 
-        // How close to death, 0 (just under the threshold) .. 1 (nearly dead). The camera desaturates by this too.
         LowHpLevel = low ? 1f - player.currentHealth / (player.maxHealth * LowHpFraction) : 0f;
-        // The edge throbs on each heartbeat, and the heart beats faster the lower you are.
         beat = Mathf.MoveTowards(beat, 0f, Time.unscaledDeltaTime * 2.5f);
         hurt = Mathf.MoveTowards(hurt, 0f, Time.unscaledDeltaTime * 3.5f);
         if (low && Time.timeScale > 0f && Time.unscaledTime >= nextBeat)
@@ -206,14 +198,13 @@ public class Juice : MonoBehaviour
             Sfx.Play(Sfx.Id.Heartbeat, 0.6f);
         }
         float a = low ? 0.16f + 0.12f * LowHpLevel + 0.22f * beat * beat : 0f;
-        a = Mathf.Max(a, 0.4f * hurt); // a hit flashes the edges red
+        a = Mathf.Max(a, 0.4f * hurt);
         vignette.color = a > 0f ? new Color(0.9f, 0.05f, 0.05f, a * Settings.FlashScale) : Color.clear;
     }
 
     public static float LowHpLevel { get; private set; }
     private float beat, hurt;
 
-    // Taking a hit: a quick red pulse around the screen edges.
     public static void Hurt()
     {
         if (I != null) I.hurt = 1f;
@@ -241,7 +232,7 @@ public class Juice : MonoBehaviour
             for (int x = 0; x < n; x++)
             {
                 float d = new Vector2(x - n / 2f + 0.5f, y - n / 2f + 0.5f).magnitude / (n / 2f);
-                tex.SetPixel(x, y, new Color(1f, 1f, 1f, Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.75f, 1.3f, d)))); // a thin band at the edges
+                tex.SetPixel(x, y, new Color(1f, 1f, 1f, Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.75f, 1.3f, d))));
             }
         tex.Apply();
         return Sprite.Create(tex, new Rect(0, 0, n, n), new Vector2(0.5f, 0.5f));

@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-// Paw stamp, ring and a short trail of paw prints on mouse click. Runs on unscaled time so it works in paused menus.
 public class ClickFx : MonoBehaviour
 {
     private static readonly Color Pink = new Color(1f, 0.55f, 0.68f);
@@ -25,7 +24,7 @@ public class ClickFx : MonoBehaviour
         var canvas = new GameObject("ClickFxCanvas").AddComponent<Canvas>();
         canvas.transform.SetParent(transform, false);
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = 1000; // above every menu
+        canvas.sortingOrder = 1000;
         root = (RectTransform)canvas.transform;
         paw = Resources.Load<Sprite>("UI/paw");
     }
@@ -40,9 +39,8 @@ public class ClickFx : MonoBehaviour
     {
         float scale = Screen.height / 1080f;
 
-        // A big stamp and a ring, then a little cat walks off: small prints stepping away, left-right-left.
         Vector2 dir = Quaternion.Euler(0f, 0f, Random.Range(0f, 360f)) * Vector2.up;
-        float facing = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f; // the paw sprite's toes point up
+        float facing = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
         StartCoroutine(Animate(Make(paw, Color.white), pos, 46f * scale, facing, 0.45f, pop: true));
         StartCoroutine(Animate(Make(Shapes.Ring, Pink), pos, 70f * scale, 0f, 0.3f, pop: false));
         Vector2 side = Vector2.Perpendicular(dir);
@@ -69,7 +67,6 @@ public class ClickFx : MonoBehaviour
         return img;
     }
 
-    // Pop: overshoot then settle (the stamp). Otherwise: grow outward (the ring). Both fade out.
     private IEnumerator Animate(Image img, Vector2 pos, float size, float angle, float duration, bool pop)
     {
         RectTransform rt = img.rectTransform;

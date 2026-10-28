@@ -26,7 +26,6 @@ public class Lighting : MonoBehaviour
         if (instance != null) instance.StartFlash(pos, radius, color, duration);
     }
 
-    // A temporary colour wash over the whole scene (e.g. Golden Hour). Null = normal daylight. Endless mode overrides it.
     public static Color? Mood;
 
     private Light2D global, playerLight;
@@ -51,6 +50,9 @@ public class Lighting : MonoBehaviour
 
     [Tooltip("Ambient light multiplier reached at 15:00")]
     [Range(0.5f, 1f)] public float duskDim = 0.8f;
+    [Tooltip("Daylight is multiplied toward this warm sunset color by 15:00")]
+    public Color duskTint = new Color(1f, 0.8f, 0.76f);
+    private Color DuskColor => spawner != null ? Color.Lerp(ambientColor, ambientColor * duskTint, spawner.RunTime / 900f) : ambientColor;
     private EnemySpawner spawner;
 
     private void Start()
@@ -58,8 +60,8 @@ public class Lighting : MonoBehaviour
         cam = GetComponent<Camera>();
         spawner = FindFirstObjectByType<EnemySpawner>();
         gameObject.AddComponent<Ambience>();
-        if (MapGenerator.Winter) ambientColor = new Color(0.8f, 0.88f, 1f); // cold daylight
-        if (MapGenerator.Volcano) ambientColor = new Color(1f, 0.66f, 0.55f); // smoky red light
+        if (MapGenerator.Winter) ambientColor = new Color(0.8f, 0.88f, 1f);
+        if (MapGenerator.Volcano) ambientColor = new Color(1f, 0.66f, 0.55f);
         foreach (Light2D l in FindObjectsByType<Light2D>(FindObjectsSortMode.None))
             if (l.lightType == Light2D.LightType.Global) global = l;
         if (global != null)
@@ -96,7 +98,6 @@ public class Lighting : MonoBehaviour
         }
     }
 
-    // A small point light for world things (lava, drones, fireflies). Off when the Lights setting is off.
     public static Light2D MakeLight(string name, Transform parent, float radius, float intensity, Color color)
     {
         Light2D l = PointLight(name, parent);
@@ -108,7 +109,6 @@ public class Lighting : MonoBehaviour
         return l;
     }
 
-    // Weather darkens/tints the daylight on top of whatever else is going on (1 = no change).
     public static Color WeatherTint = Color.white;
 
     private static Light2D PointLight(string name, Transform parent)
@@ -150,12 +150,11 @@ public class Lighting : MonoBehaviour
             else flashes[i].intensity = flashPeak[i] * flashTime[i] / flashLength[i];
         }
 
-        // Dusk: the world dims a little over the first 15 minutes (fireflies come out, see Ambience).
         if (global != null && spawner != null) global.intensity = Mathf.Lerp(ambient, ambient * duskDim, spawner.RunTime / 900f);
 
         if (!EnemySpawner.Endless)
         {
-            if (global != null) global.color = Color.Lerp(global.color, (Mood ?? ambientColor) * WeatherTint, Time.deltaTime * 2f);
+            if (global != null) global.color = Color.Lerp(global.color, (Mood ?? DuskColor) * WeatherTint, Time.deltaTime * 2f);
             return;
         }
         float k = Time.deltaTime * 0.6f;

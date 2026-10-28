@@ -104,7 +104,6 @@ public class CryoBeamWeapon : Weapon
             Frost(Pos + dir * Random.Range(0.8f, length) + Vector2.Perpendicular(dir) * Random.Range(-0.5f, 0.5f) * width, Random.value < 0.3f);
     }
 
-    // Frost crystal or star that appears on the beam and fades.
     private static void Frost(Vector2 at, bool twinkle)
     {
         const float life = 0.45f;
