@@ -136,7 +136,7 @@ public class RewardMenu : MonoBehaviour
         bool[] stopped = new bool[3];
         float t = 0f, nextFace = 0f;
         bool skipped = false;
-        TextMeshProUGUI skipHint = RuntimeUI.Outline(RuntimeUI.Text(box, $"[{SkipLabel}] skip", 18, new Color(0.6f, 0.65f, 0.8f), new Vector2(0, -164), new Vector2(300, 30)));
+        TextMeshProUGUI skipHint = RuntimeUI.Outline(RuntimeUI.Text(box, TouchControls.On ? "tap to skip" : $"[{SkipLabel}] skip", 18, new Color(0.6f, 0.65f, 0.8f), new Vector2(0, -164), new Vector2(300, 30)));
         while (!stopped[2])
         {
             t += Time.unscaledDeltaTime;
@@ -173,6 +173,7 @@ public class RewardMenu : MonoBehaviour
         var m = UnityEngine.InputSystem.Mouse.current;
         return (k != null && (k.enterKey.wasPressedThisFrame || k.spaceKey.wasPressedThisFrame || k[Keybinds.Get(Keybinds.Action.Interact)].wasPressedThisFrame))
             || (m != null && m.leftButton.wasPressedThisFrame)
+            || (UnityEngine.InputSystem.Touchscreen.current != null && UnityEngine.InputSystem.Touchscreen.current.primaryTouch.press.wasPressedThisFrame)
             || GamepadUI.Pressed(g => g.buttonSouth) || Keybinds.PadPressed(Keybinds.Action.Interact)
             || (UnityEngine.InputSystem.Joystick.current != null && UnityEngine.InputSystem.Joystick.current.trigger.wasPressedThisFrame);
     }

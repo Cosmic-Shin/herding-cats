@@ -91,6 +91,7 @@ public class PlayerController : MonoBehaviour
             if (Keybinds.Held(Keybinds.Action.Down) || kb.downArrowKey.isPressed) input.y -= 1;
         }
 
+        if (input == Vector2.zero) input = TouchControls.Move;
         if (input == Vector2.zero)
         {
             Vector2 pad = GamepadUI.Move();

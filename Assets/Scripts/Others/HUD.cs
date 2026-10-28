@@ -181,7 +181,7 @@ public class HUD : MonoBehaviour
             (Keybinds.Pressed(Keybinds.Action.GameSpeed) || Keybinds.PadPressed(Keybinds.Action.GameSpeed))) CycleSpeed();
         float ts = Time.timeScale;
         if (ts != Speed && (ts == 1f || ts == 1.5f || ts == 2f)) Time.timeScale = Speed;
-        speedText.text = $"[{Keybinds.Prompt(Keybinds.Action.GameSpeed)}] SPEED " + Speed.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture) + "X";
+        speedText.text = (TouchControls.On ? "SPEED " : $"[{Keybinds.Prompt(Keybinds.Action.GameSpeed)}] SPEED ") + Speed.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture) + "X";
     }
 
     private static void CycleSpeed()

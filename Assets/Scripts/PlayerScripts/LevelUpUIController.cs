@@ -468,6 +468,8 @@ public class LevelUpUIController : MonoBehaviour
         }
     }
 
+    private static string Hotkey(GamepadButton pad, string key) => TouchControls.On ? "" : $"[{(GamepadUI.Connected ? Keybinds.PadLabel(pad) : key)}] ";
+
     private string ComboHint(string pieceId)
     {
         PlayerCollabs collabs = GetComponent<PlayerCollabs>();
@@ -936,10 +938,10 @@ public class LevelUpUIController : MonoBehaviour
     private void RefreshActions()
     {
         if (rerollButton == null) return;
-        SetAction(rerollButton, $"[{(GamepadUI.Connected ? Keybinds.PadLabel(GamepadButton.West) : "R")}] Reroll ({rerolls})", rerolls > 0);
-        SetAction(eliminateButton, eliminating ? "Pick a card..." : $"[{(GamepadUI.Connected ? Keybinds.PadLabel(GamepadButton.North) : "E")}] Eliminate ({eliminates})", eliminates > 0);
-        SetAction(skipButton, $"[{(GamepadUI.Connected ? Keybinds.PadLabel(GamepadButton.RightShoulder) : "X")}] Skip (+10% HP)", true);
-        SetAction(combosButton, $"[{(GamepadUI.Connected ? Keybinds.PadLabel(GamepadButton.LeftShoulder) : "Q")}] Combos", true);
+        SetAction(rerollButton, $"{Hotkey(GamepadButton.West, "R")}Reroll ({rerolls})", rerolls > 0);
+        SetAction(eliminateButton, eliminating ? "Pick a card..." : $"{Hotkey(GamepadButton.North, "E")}Eliminate ({eliminates})", eliminates > 0);
+        SetAction(skipButton, $"{Hotkey(GamepadButton.RightShoulder, "X")}Skip (+10% HP)", true);
+        SetAction(combosButton, $"{Hotkey(GamepadButton.LeftShoulder, "Q")}Combos", true);
 
         var row = new List<Button>();
         foreach (Button b in new[] { combosButton, rerollButton, eliminateButton, skipButton }) if (b.interactable) row.Add(b);

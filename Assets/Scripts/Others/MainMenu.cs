@@ -176,7 +176,7 @@ public class MainMenu : MonoBehaviour
         settings = TextButton(list, "Settings", -218, () => Settings.Open(settings.gameObject));
         TextButton(list, "Credits", -264, ShowCredits);
 #if !UNITY_WEBGL || UNITY_EDITOR
-        TextButton(list, "Quit", -310, Quit);
+        if (!TouchControls.On) TextButton(list, "Quit", -310, Quit);
 #endif
         Navigation startNav = startButton.navigation; startNav.mode = Navigation.Mode.Explicit;
         startNav.selectOnUp = nameField; startNav.selectOnDown = board;
@@ -296,7 +296,7 @@ public class MainMenu : MonoBehaviour
         RuntimeUI.Nav(mapButton, up: playButton, down: playButton, left: heroButton);
         RuntimeUI.Nav(playButton, up: mapButton, down: mapButton, left: heroButton);
         RuntimeUI.Nav(back, up: heroButton, right: heroButton);
-        RuntimeUI.Outline(RuntimeUI.Text(panel, $"Enter / {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.South)} on Hero or Map to change it   Esc / {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.East)} back", 15, CatTheme.Faint, new Vector2(-60, -322), new Vector2(620, 30)));
+        RuntimeUI.Outline(RuntimeUI.Text(panel, TouchControls.On ? "Tap Hero or Map to change it" : $"Enter / {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.South)} on Hero or Map to change it   Esc / {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.East)} back", 15, CatTheme.Faint, new Vector2(-60, -322), new Vector2(620, 30)));
     }
 
     private static Color RoleColor(int i) => (i % 3) switch { 0 => CatTheme.Pink, 1 => CatTheme.Gold, _ => CatTheme.Slime };
@@ -561,7 +561,7 @@ public class MainMenu : MonoBehaviour
         nextButton = TextButton(panel, "Next >", -292, () => SetPage(page + 1), 210, 28);
         backLabel = TextButton(panel, "Back", -292, () => boardBack(), -480, 28).GetComponent<TextMeshProUGUI>();
         foreach (Button b in new[] { prevButton, nextButton, backLabel.GetComponent<Button>() }) { Width(b, 170f); CatTheme.Button(b, 10f); }
-        TextMeshProUGUI legend = RuntimeUI.Outline(RuntimeUI.Text(panel, $"<color=#FF7AD9>pink time</color> = endless    dot = map: <color=#73D959>meadow</color> <color=#B3E6FF>winter</color> <color=#FF7326>volcano</color>    {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.LeftShoulder)} / {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.RightShoulder)} pages    Esc / {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.East)} back", 16, CatTheme.Faint, new Vector2(0, -334), new Vector2(1150, 24)));
+        TextMeshProUGUI legend = RuntimeUI.Outline(RuntimeUI.Text(panel, $"<color=#FF7AD9>pink time</color> = endless    dot = map: <color=#73D959>meadow</color> <color=#B3E6FF>winter</color> <color=#FF7326>volcano</color>" + (TouchControls.On ? "" : $"    {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.LeftShoulder)} / {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.RightShoulder)} pages    Esc / {Pad(UnityEngine.InputSystem.LowLevel.GamepadButton.East)} back"), 16, CatTheme.Faint, new Vector2(0, -334), new Vector2(1150, 24)));
         CatTheme.PlateBehind(legend.rectTransform, new Vector2(1000f, 30f));
     }
 

@@ -38,7 +38,8 @@ public static class Keybinds
     public static GamepadButton GetPad(Action a) => pad[(int)a];
 
     public static string Prompt(Action a) =>
-        Gamepad.current != null ? PadLabel(GetPad(a))
+        TouchControls.On ? a switch { Action.Special => "ULT", Action.Interact => "USE", Action.Dash => "DASH", _ => a.ToString().ToUpperInvariant() }
+        : Gamepad.current != null ? PadLabel(GetPad(a))
         : Joystick.current != null && JoystickButton(a) is string b ? (b == "trigger" ? "Btn 1" : "Btn " + b.Substring(6))
         : Label(a);
 
@@ -73,7 +74,7 @@ public static class Keybinds
     }
 
     public static bool Held(Action a) => Keyboard.current != null && Keyboard.current[Get(a)].isPressed;
-    public static bool Pressed(Action a) => Keyboard.current != null && Keyboard.current[Get(a)].wasPressedThisFrame;
+    public static bool Pressed(Action a) => TouchControls.Pressed(a) || (Keyboard.current != null && Keyboard.current[Get(a)].wasPressedThisFrame);
     public static bool PadPressed(Action a) =>
         Gamepad.current != null ? Gamepad.current[GetPad(a)].wasPressedThisFrame
         : JoystickButton(a) is string b && Joystick.current?.TryGetChildControl<UnityEngine.InputSystem.Controls.ButtonControl>(b) is { } c && c.wasPressedThisFrame;

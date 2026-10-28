@@ -105,7 +105,7 @@ public class PauseMenu : MonoBehaviour
         chart.offsetMin = new Vector2(36f, 24f);
         chart.offsetMax = new Vector2(-36f, -8f);
         foreach (Button b in column) { Navigation n = b.navigation; n.selectOnLeft = hud != null ? hud.FirstGearSlot : null; b.navigation = n; }
-        if (hintText != null) hintText.text = GamepadUI.Connected ? $"{Keybinds.PadLabel(UnityEngine.InputSystem.LowLevel.GamepadButton.Start)} / {Keybinds.PadLabel(UnityEngine.InputSystem.LowLevel.GamepadButton.East)} to resume" : $"Esc / {Keybinds.Label(Keybinds.Action.Pause)} to resume";
+        if (hintText != null) hintText.text = TouchControls.On ? "" : GamepadUI.Connected ? $"{Keybinds.PadLabel(UnityEngine.InputSystem.LowLevel.GamepadButton.Start)} / {Keybinds.PadLabel(UnityEngine.InputSystem.LowLevel.GamepadButton.East)} to resume" : $"Esc / {Keybinds.Label(Keybinds.Action.Pause)} to resume";
         panel.SetActive(true);
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(resumeButton.gameObject);
     }

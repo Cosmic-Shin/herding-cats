@@ -27,6 +27,7 @@ public class Pickup : MonoBehaviour
 
     private void ShowPrompt(bool show)
     {
+        if (show) NearFrame = Time.frameCount;
         if (!show) { if (prompt != null) prompt.gameObject.SetActive(false); return; }
         if (prompt == null)
         {
@@ -44,6 +45,7 @@ public class Pickup : MonoBehaviour
         prompt.transform.position = new Vector3(transform.position.x, baseY + 1.5f + 0.06f * Mathf.Sin(age * 5f), 0f);
         prompt.color = Color.Lerp(glowColor, Color.white, 0.5f + 0.5f * Mathf.Sin(age * 6f));
     }
+    public static int NearFrame = -10;
     private static readonly List<Collider2D> hits = new List<Collider2D>(256);
 
     private Kind kind;

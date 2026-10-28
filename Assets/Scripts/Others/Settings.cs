@@ -38,7 +38,7 @@ public class Settings : MonoBehaviour
         Shake = Mathf.Clamp(PlayerPrefs.GetInt("set_shake_level", B("set_shake", true) ? 2 : 0), 0, 2);
         VSync = B("set_vsync", true);
         Fullscreen = B("set_fullscreen", Screen.fullScreen);
-        FpsCap = Mathf.Clamp(PlayerPrefs.GetInt("set_fps", 3), 0, FpsCaps.Length - 1);
+        FpsCap = Mathf.Clamp(PlayerPrefs.GetInt("set_fps", TouchControls.On ? 1 : 3), 0, FpsCaps.Length - 1);
         Volume = Mathf.Clamp(PlayerPrefs.GetInt("set_volume", 5), 0, 10);
         MusicVolume = Mathf.Clamp(PlayerPrefs.GetInt("set_music", 6), 0, 10);
         Flashes = Mathf.Clamp(PlayerPrefs.GetInt("set_flashes", 2), 0, 2);
@@ -72,7 +72,8 @@ public class Settings : MonoBehaviour
         Application.targetFrameRate = -1;
 #else
         QualitySettings.vSyncCount = VSync ? 1 : 0;
-        Application.targetFrameRate = FpsCaps[FpsCap];
+        // Phones treat -1 as a 30 FPS cap, so "unlimited" means the display's refresh rate there.
+        Application.targetFrameRate = FpsCaps[FpsCap] < 0 && TouchControls.On ? Mathf.RoundToInt((float)Screen.currentResolution.refreshRateRatio.value) : FpsCaps[FpsCap];
         if (Screen.fullScreen != Fullscreen) Screen.fullScreen = Fullscreen;
 #endif
         CameraFollow.SetPostProcessing(PostProcessing);
@@ -173,6 +174,7 @@ public class Settings : MonoBehaviour
         Button back = RuntimeUI.Button(panel, "Back", new Vector2(0, -top + 42), new Vector2(140, 36), Close);
         CatTheme.Button(controls);
         CatTheme.Button(back);
+        controls.gameObject.SetActive(!TouchControls.On);
         for (int i = 0; i < rows.Count; i++)
         {
             bool first = i == 0, last = i == rows.Count - 1;
@@ -180,9 +182,9 @@ public class Settings : MonoBehaviour
             RuntimeUI.Nav(lefts[i], up: first ? back : lefts[i - 1], down: last ? back : lefts[i + 1], right: rows[i]);
             RuntimeUI.Nav(rights[i], up: first ? back : rights[i - 1], down: last ? back : rights[i + 1], left: rows[i]);
         }
-        RuntimeUI.Nav(back, up: rows[rows.Count - 1], down: rows[0], left: controls);
+        RuntimeUI.Nav(back, up: rows[rows.Count - 1], down: rows[0], left: TouchControls.On ? null : controls);
         RuntimeUI.Nav(controls, up: rows[rows.Count - 1], down: rows[0], right: back);
-        RuntimeUI.Text(panel, $"Esc / {Keybinds.PadLabel(GamepadButton.East)} to close", 16, new Color(0.6f, 0.64f, 0.75f), new Vector2(215, -top + 42), new Vector2(190, 30));
+        if (!TouchControls.On) RuntimeUI.Text(panel, $"Esc / {Keybinds.PadLabel(GamepadButton.East)} to close", 16, new Color(0.6f, 0.64f, 0.75f), new Vector2(215, -top + 42), new Vector2(190, 30));
         Refresh();
         mainPanel = panel;
         mainFocus = rows[0].gameObject;
