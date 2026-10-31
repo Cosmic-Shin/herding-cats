@@ -60,10 +60,16 @@ public abstract class Weapon : MonoBehaviour
     protected Vector2 Pos => transform.position;
     protected Vector2 Facing => controller.GetFacingDirection().normalized;
 
-    protected float Dmg(float baseDamage) =>
-        baseDamage * (stats.AttackDamage / stats.baseAttackDamage) * (ult != null ? ult.DamageMultiplier : 1f) * (1f + bonusDamage);
+    // Big area weapons are drawn and hit 25% smaller so late game isn't clogged, with +15% damage to compensate.
+    protected virtual bool Big => false;
 
-    protected float Area(float radius) => radius * stats.areaMultiplier * (1f + bonusArea);
+    // Per-weapon damage tuning; super combos set this on themselves and the weapons they absorb.
+    [System.NonSerialized] public float Power = 1f;
+
+    protected float Dmg(float baseDamage) =>
+        baseDamage * (stats.AttackDamage / stats.baseAttackDamage) * (ult != null ? ult.DamageMultiplier : 1f) * (1f + bonusDamage) * (Big ? 1.15f : 1f) * Power;
+
+    protected float Area(float radius) => radius * stats.areaMultiplier * (1f + bonusArea) * (Big ? 0.75f : 1f);
 
     protected bool Ready(float baseCooldown)
     {

@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class StompWeapon : Weapon
 {
+    protected override bool Big => true;
     private static readonly float[] Cooldown = { 3f, 3f, 2.8f, 2.6f, 2.4f, 2.2f, 2f };
     private static readonly float[] Radius = { 3f, 3.3f, 3.3f, 3.7f, 4f, 4f, 4.8f };
     private static readonly float[] Damage = { 16, 20, 23, 23, 28, 33, 42 };

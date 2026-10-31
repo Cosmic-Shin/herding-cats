@@ -8,6 +8,7 @@ public class Music : MonoBehaviour
     private AudioSource a, b;
     private string current;
     private bool stingPlayed;
+    private float reached; // furthest point heard in the current clip
     private EnemySpawner spawner;
     private BossTimeline bosses;
 
@@ -28,12 +29,23 @@ public class Music : MonoBehaviour
     private AudioSource Source()
     {
         var s = gameObject.AddComponent<AudioSource>();
-        s.loop = true;
+        s.loop = false;
         s.priority = 0;
         s.playOnAwake = false;
         s.ignoreListenerPause = true;
         s.volume = 0f;
         return s;
+    }
+
+    // Tracks are grouped by name: "run", "run_2", "run_3"... A random one plays, then a different one when it ends.
+    private static AudioClip[] tracks;
+
+    private static AudioClip Pick(string group, AudioClip avoid)
+    {
+        tracks ??= Resources.LoadAll<AudioClip>("Music");
+        AudioClip[] list = System.Array.FindAll(tracks, c => c.name == group || c.name.StartsWith(group + "_"));
+        if (list.Length > 1) list = System.Array.FindAll(list, c => c != avoid);
+        return list.Length > 0 ? list[Random.Range(0, list.Length)] : null;
     }
 
     private string Wanted()
@@ -57,11 +69,18 @@ public class Music : MonoBehaviour
         {
             current = want;
             (a, b) = (b, a);
-            AudioClip clip = want != null ? Resources.Load<AudioClip>("Music/" + want) : null;
+            reached = 0f;
+            AudioClip clip = want != null ? Pick(want, null) : null;
             if (clip != null && (a.clip != clip || !a.isPlaying)) { a.clip = clip; a.Play(); }
             else if (clip == null) a.Stop();
         }
-        else if (current != null && a.clip != null && !a.isPlaying) a.Play();
+        else if (current != null && a.clip != null && !a.isPlaying)
+        {
+            // Not playing: either the song ended, or it is still loading / paused. Only move on if it got near the end.
+            if (reached > a.clip.length - 1f) { a.clip = Pick(current, a.clip); reached = 0f; }
+            a.Play();
+        }
+        if (a.isPlaying) reached = Mathf.Max(reached, a.time);
 
         float step = Time.unscaledDeltaTime / FadeTime;
         a.volume = a.clip != null && a.isPlaying ? Mathf.MoveTowards(a.volume, Volume, step) : 0f;

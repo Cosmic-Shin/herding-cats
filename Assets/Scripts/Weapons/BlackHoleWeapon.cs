@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class BlackHoleWeapon : Weapon
 {
+    protected override bool Big => true;
     private static readonly float[] Cooldown = { 6f, 6f, 5.5f, 5.5f, 5f, 5f, 4f };
     private static readonly float[] PullRadius = { 4f, 4f, 4.5f, 4.5f, 5f, 5f, 6.5f };
     private static readonly float[] PopDamage = { 30, 36, 36, 44, 50, 58, 75 };

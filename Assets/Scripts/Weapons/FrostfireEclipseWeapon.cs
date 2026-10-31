@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FrostfireEclipseWeapon : SuperWeapon
 {
+    protected override float Tune => 1.78f;
     private const int PerSide = 4;
     private const float Duration = 1.8f;
     private static readonly Color Ice = new Color(0.55f, 0.88f, 1f);

@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class GlacierQuakeWeapon : Weapon
 {
+    protected override bool Big => true;
     private const float Cooldown = 2f;
     private const float Radius = 5f;
     private const float Damage = 45f;

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class LaserDiscsWeapon : SuperWeapon
 {
+    protected override float Tune => 2.15f;
     private const int Discs = 4;
     private static readonly Color Magenta = new Color(1f, 0.35f, 0.75f);
 

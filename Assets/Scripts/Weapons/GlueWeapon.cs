@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class GlueWeapon : Weapon
 {
+    protected override bool Big => true;
     private static readonly int[] Count = { 2, 2, 2, 3, 3, 3, 4 };
     private static readonly float[] Radius = { 2f, 2f, 2.4f, 2.4f, 2.8f, 2.8f, 3.4f };
     private static readonly float[] SlowAmount = { 0.5f, 0.55f, 0.55f, 0.6f, 0.6f, 0.65f, 0.75f };

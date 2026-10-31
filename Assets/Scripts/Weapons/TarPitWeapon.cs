@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class TarPitWeapon : Weapon
 {
+    protected override bool Big => true;
     private const int Count = 4;
     private const float Radius = 3.2f;
     private const float Duration = 6f;

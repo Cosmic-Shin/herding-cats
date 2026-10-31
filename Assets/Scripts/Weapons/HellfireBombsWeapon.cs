@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class HellfireBombsWeapon : SuperWeapon
 {
+    protected override float Tune => 1.41f;
     private static readonly Color Hellfire = new Color(1f, 0.3f, 0.15f);
     private float nextRing;
 

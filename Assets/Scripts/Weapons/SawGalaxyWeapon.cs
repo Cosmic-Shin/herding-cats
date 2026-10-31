@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class SawGalaxyWeapon : SuperWeapon
 {
+    protected override float Tune => 2.4f;
     private const int Arms = 3, SawsPerArm = 6;
     private static readonly Color Violet = new Color(0.8f, 0.55f, 1f);
 

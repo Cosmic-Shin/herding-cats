@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class EarthshakerWeapon : SuperWeapon
 {
+    protected override float Tune => 10f;
     private static readonly Color Crack = new Color(1f, 0.7f, 0.35f);
     private float nextCrack;
 

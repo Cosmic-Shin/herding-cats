@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class CryoSingularityWeapon : SuperWeapon
 {
+    protected override float Tune => 1.33f;
     private static readonly Color Ice = new Color(0.6f, 0.9f, 1f);
 
     private void Update()

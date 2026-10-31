@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class DivineJudgmentWeapon : SuperWeapon
 {
+    protected override float Tune => 3.8f;
     private static readonly Color Holy = new Color(1f, 0.85f, 0.35f);
 
     private void Update()

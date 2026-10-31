@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class ArmageddonWeapon : SuperWeapon
 {
+    protected override float Tune => 1.32f;
     private float nextStrike;
 
     public override void OnThrow(Vector2 target)

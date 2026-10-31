@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class BlackIceStormWeapon : SuperWeapon
 {
+    protected override float Tune => 0.47f;
     private static readonly Color IceBolt = new Color(0.45f, 0.75f, 1f);
 
     private void Update()

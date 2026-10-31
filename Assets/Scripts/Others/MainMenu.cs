@@ -733,7 +733,7 @@ public class MainMenu : MonoBehaviour
         "<color=#FFE08A><b>Music</b></color>\n" +
         "Kevin MacLeod (incompetech.com)\n" +
         "Licensed under Creative Commons: By Attribution 4.0\n" +
-        "<color=#9AA3C0>Itty Bitty 8 Bit, Pixelland, Pixel Peeker Polka,\nVolatile Reaction, Exit the Premises</color>\n\n" +
+        "<color=#9AA3C0>Itty Bitty 8 Bit, Pixelland, Pixel Peeker Polka, Volatile Reaction,\nExit the Premises, Fluffing a Duck, Monkeys Spinning Monkeys,\n8bit Dungeon Level, 8bit Dungeon Boss, Run Amok, Blip Stream,\nCyborg Ninja, Mega Hyper Ultrastorm, Ouroboros</color>\n\n" +
         "<color=#FFE08A><b>Art</b></color>\n" +
         "Cats  -  Slime Cat Mega Pack by ToffeeCraft  <color=#9AA3C0>(toffeecraft.itch.io)</color>\n" +
         "Beholder bosses  -  CraftPix.net\n" +

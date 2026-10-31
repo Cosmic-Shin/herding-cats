@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class HaloWeapon : OrbsWeapon
 {
+    protected override bool Big => true;
     private const float PulseEvery = 1f;
     private const float PulseRadius = 3.6f;
     private const float PulseDamage = 14f;

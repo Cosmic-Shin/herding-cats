@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class AuraWeapon : Weapon
 {
+    protected override bool Big => true;
     private static readonly float[] Radius = { 2.2f, 2.5f, 2.5f, 2.8f, 3.1f, 3.1f, 3.8f };
     private static readonly float[] Damage = { 5, 5, 6, 6, 8, 9, 12 };
     private static readonly float[] Slow = { 0.15f, 0.15f, 0.15f, 0.2f, 0.2f, 0.25f, 0.35f };

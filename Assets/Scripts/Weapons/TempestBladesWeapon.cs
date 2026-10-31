@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class TempestBladesWeapon : SuperWeapon
 {
+    protected override float Tune => 1.32f;
     private const int Blades = 6;
     private static readonly Color Storm = new Color(0.55f, 0.85f, 1f);
 

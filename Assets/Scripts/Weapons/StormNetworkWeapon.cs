@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class StormNetworkWeapon : SuperWeapon
 {
+    protected override float Tune => 3.2f;
     private const int Pylons = 5;
     private static readonly Color Arc = new Color(0.45f, 0.85f, 1f);
 

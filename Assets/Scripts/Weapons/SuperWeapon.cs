@@ -3,6 +3,11 @@ using UnityEngine;
 
 public abstract class SuperWeapon : Weapon
 {
+    protected override bool Big => true;
+
+    // Damage multiplier tuned so every super lands around 25-30k DPS in the 60-cat test.
+    protected virtual float Tune => 1f;
+
     public static SuperWeapon Active { get; private set; }
 
     public static readonly Color SuperPink = new Color(1f, 0.45f, 0.85f);
@@ -10,10 +15,12 @@ public abstract class SuperWeapon : Weapon
 
     public void Adopt(IEnumerable<Weapon> weapons)
     {
+        Power = Tune;
         foreach (Weapon w in weapons)
         {
             if (w == null) continue;
             w.DisplayName = DisplayName;
+            w.Power = Tune;
             w.AddEnhance(Boost.Damage);
             w.AddEnhance(Boost.Damage);
             parts.Add(w);

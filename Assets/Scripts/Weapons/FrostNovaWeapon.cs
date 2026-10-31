@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class FrostNovaWeapon : Weapon
 {
+    protected override bool Big => true;
     private static readonly float[] Cooldown = { 3f, 3f, 2.7f, 2.7f, 2.4f, 2.4f, 2f };
     private static readonly float[] Radius = { 3.5f, 3.5f, 4f, 4f, 4.5f, 4.5f, 5.5f };
     private static readonly float[] Damage = { 12, 15, 15, 19, 19, 24, 30 };

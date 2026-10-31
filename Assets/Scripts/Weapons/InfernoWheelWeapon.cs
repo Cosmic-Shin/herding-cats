@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class InfernoWheelWeapon : SuperWeapon
 {
+    protected override float Tune => 1.33f;
     private const int Wheels = 2;
     private static readonly Color Fire = new Color(1f, 0.45f, 0.12f);
 

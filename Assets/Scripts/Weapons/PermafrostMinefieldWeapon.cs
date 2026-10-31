@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PermafrostMinefieldWeapon : SuperWeapon
 {
+    protected override float Tune => 9.8f;
     private const int MaxMines = 24;
     private static readonly Color Frost = new Color(0.55f, 0.9f, 1f);
     private readonly List<(Shot shot, int gen)> mines = new List<(Shot, int)>();

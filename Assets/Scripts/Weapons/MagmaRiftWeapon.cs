@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class MagmaRiftWeapon : SuperWeapon
 {
+    protected override float Tune => 4.3f;
     private const int Fissures = 6;
     private static readonly Color Lava = new Color(1f, 0.45f, 0.1f);
 
