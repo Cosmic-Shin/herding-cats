@@ -204,7 +204,7 @@ public class GameOverScreen : MonoBehaviour
     private static Sprite SourceIcon(string source)
     {
         if (source == DamageStats.Bombs || source == "Bomb Pickup") return UiIcons.Icon("bomb");
-        if (source == KaiSword.Source) return UiIcons.Icon("sword");
+        if (source == JinSword.Source) return UiIcons.Icon("sword");
         if (source == NyxDrones.Source) return UiIcons.Icon("drone");
         PlayerWeapons.Def d = System.Array.Find(PlayerWeapons.All, w => w.name == source) ?? System.Array.Find(PlayerWeapons.CollabDefs, w => w.name == source);
         return d != null ? UiIcons.Icon(d.id) : null;

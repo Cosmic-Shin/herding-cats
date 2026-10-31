@@ -31,6 +31,7 @@ public class TouchControls : MonoBehaviour
     private CanvasGroup group;
     private TouchButton dash, ult, use;
     private Image ultFill, dashShade;
+    private Sprite ultNormal, ultReady, useNormal, useActive;
     private PlayerController player;
     private PlayerUltimate ultimate;
     private Rect safe;
@@ -45,31 +46,41 @@ public class TouchControls : MonoBehaviour
         root.GetComponent<Image>().raycastTarget = false;
 
         Image zone = RuntimeUI.Box(root, "StickZone", Vector2.zero, new Vector2(0.45f, 0.6f), Color.clear);
-        stickBase = CatTheme.Panel(root, "Stick", CatTheme.Style.Slot, Vector2.zero, new Vector2(240, 240)).rectTransform;
+        stickBase = Art(CatTheme.Panel(root, "Stick", CatTheme.Style.Slot, Vector2.zero, new Vector2(240, 240)), "joystick_base").rectTransform;
         stickBase.anchorMin = stickBase.anchorMax = Vector2.zero;
-        knob = CatTheme.Panel(stickBase, "Knob", CatTheme.Style.Pink, Vector2.zero, new Vector2(108, 108)).rectTransform;
-        CatTheme.Ears(knob, "ear_gold");
+        knob = Art(CatTheme.Panel(stickBase, "Knob", CatTheme.Style.Pink, Vector2.zero, new Vector2(108, 108)), "joystick_knob").rectTransform;
         zone.gameObject.AddComponent<TouchStick>().Init(this);
         RestStick();
 
-        dash = MakeButton("DASH", CatTheme.Style.Slime, Keybinds.Action.Dash, new Vector2(-Margin - 20, Margin + 20), 200);
+        dash = MakeButton("DASH", CatTheme.Style.Slime, Keybinds.Action.Dash, new Vector2(-Margin - 20, Margin + 20), 200, "dash");
         dashShade = RuntimeUI.Box(dash.transform, "Cooldown", Vector2.zero, Vector2.one, new Color(0.05f, 0.03f, 0.1f, 0.6f));
         dashShade.raycastTarget = false;
-        dashShade.transform.SetSiblingIndex(0);
+        dashShade.sprite = dash.normal; // shade takes the cat-head shape, not a square
+        dashShade.preserveAspect = true;
+        dashShade.type = Image.Type.Filled;
+        dashShade.fillMethod = Image.FillMethod.Vertical;
 
-        ult = MakeButton("ULT", CatTheme.Style.Pink, Keybinds.Action.Special, new Vector2(-Margin - 250, Margin + 20), 150);
-        ultFill = RuntimeUI.Box(ult.transform, "Charge", Vector2.zero, Vector2.one, Color.white);
+        ult = MakeButton("ULT", CatTheme.Style.Pink, Keybinds.Action.Special, new Vector2(-Margin - 250, Margin + 20), 150, "ult");
+        ultNormal = ult.normal;
+        ultReady = Mobile("ult_ready");
+        // Charge halo: a sibling drawn just before the button so it sits behind the art.
+        ultFill = RuntimeUI.Box(root, "Charge", Vector2.zero, Vector2.one, Color.white);
         ultFill.raycastTarget = false;
         ultFill.sprite = ExplosionFx.GetCircle();
         ultFill.type = Image.Type.Filled;
         ultFill.fillMethod = Image.FillMethod.Radial360;
         ultFill.fillOrigin = (int)Image.Origin360.Top;
-        ultFill.rectTransform.offsetMin = Vector2.one * 14f;
-        ultFill.rectTransform.offsetMax = -Vector2.one * 14f;
-        ultFill.transform.SetSiblingIndex(0);
+        var ring = ultFill.rectTransform;
+        ring.anchorMin = ring.anchorMax = new Vector2(1f, 0f);
+        ring.pivot = new Vector2(0.5f, 0.5f);
+        ring.sizeDelta = Vector2.one * 178f;
+        ring.anchoredPosition = new Vector2(-Margin - 250 - 75, Margin + 20 + 75);
+        ultFill.transform.SetSiblingIndex(ult.transform.GetSiblingIndex());
 
-        use = MakeButton("USE", CatTheme.Style.PanelGold, Keybinds.Action.Interact, new Vector2(-Margin - 50, Margin + 250), 140);
-        CatTheme.Ears((RectTransform)use.transform, "ear_gold");
+        use = MakeButton("USE", CatTheme.Style.PanelGold, Keybinds.Action.Interact, new Vector2(-Margin - 50, Margin + 250), 140, "use");
+        useNormal = use.normal;
+        useActive = Mobile("use_active");
+        if (useNormal == null) CatTheme.Ears((RectTransform)use.transform, "ear_gold");
 
         TouchButton pause = MakeButton("II", CatTheme.Style.Panel, Keybinds.Action.Pause, Vector2.zero, 84);
         var prt = (RectTransform)pause.transform;
@@ -77,18 +88,39 @@ public class TouchControls : MonoBehaviour
         prt.anchoredPosition = new Vector2(-24, -150);
     }
 
-    private TouchButton MakeButton(string label, CatTheme.Style style, Keybinds.Action action, Vector2 pos, float size)
+    private TouchButton MakeButton(string label, CatTheme.Style style, Keybinds.Action action, Vector2 pos, float size, string art = null)
     {
         Image img = CatTheme.Panel(root, label + "Button", style, Vector2.zero, new Vector2(size, size));
         img.raycastTarget = true;
         var rt = img.rectTransform;
         rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(1f, 0f);
         rt.anchoredPosition = pos;
-        TextMeshProUGUI t = RuntimeUI.Outline(RuntimeUI.Text(rt, label, size * 0.24f, CatTheme.Cream, Vector2.zero, new Vector2(size, size)), 0.25f);
-        t.fontStyle = FontStyles.Bold;
         var b = img.gameObject.AddComponent<TouchButton>();
         b.action = action;
+        if (art != null && Art(img, art + "_normal").sprite != null)
+        {
+            b.normal = img.sprite;
+            b.pressed = Mobile(art + "_pressed");
+            return b; // label is baked into the art
+        }
+        TextMeshProUGUI t = RuntimeUI.Outline(RuntimeUI.Text(rt, label, size * 0.24f, CatTheme.Cream, Vector2.zero, new Vector2(size, size)), 0.25f);
+        t.fontStyle = FontStyles.Bold;
         return b;
+    }
+
+    // First sprite in Resources/UI/Mobile/<name>; LoadAll works whether the texture is Single or Multiple sprite mode.
+    private static Sprite Mobile(string name) { var s = Resources.LoadAll<Sprite>("UI/Mobile/" + name); return s.Length > 0 ? s[0] : null; }
+
+    // Swaps a themed panel for its pixel-art sprite from Resources/UI/Mobile; keeps the panel if the sprite is missing.
+    private static Image Art(Image img, string name)
+    {
+        Sprite s = Mobile(name);
+        if (s == null) return img;
+        img.sprite = s;
+        img.type = Image.Type.Simple;
+        img.preserveAspect = true;
+        foreach (Transform c in img.transform) Destroy(c.gameObject); // drop panel frame decorations
+        return img;
     }
 
     internal void StickDown(Vector2 local) { stickBase.anchoredPosition = local; knob.anchoredPosition = Vector2.zero; Move = Vector2.zero; }
@@ -133,7 +165,7 @@ public class TouchControls : MonoBehaviour
         if (!playing) { RestStick(); return; }
 
         stickBase.GetComponent<Image>().color = new Color(1f, 1f, 1f, Move == Vector2.zero ? 0.55f : 0.9f);
-        dashShade.rectTransform.anchorMax = new Vector2(1f, player.CooldownTotal > 0f ? Mathf.Clamp01(player.CooldownRemaining / player.CooldownTotal) : 0f);
+        dashShade.fillAmount = player.CooldownTotal > 0f ? Mathf.Clamp01(player.CooldownRemaining / player.CooldownTotal) : 0f;
 
         if (ultimate != null)
         {
@@ -142,24 +174,40 @@ public class TouchControls : MonoBehaviour
                                : ready ? 1f : 1f - ultimate.CooldownRemaining / ultimate.cooldown;
             ultFill.color = ultimate.IsActive ? new Color(1f, 0.55f, 0.15f, 0.8f) : ready ? new Color(1f, 0.82f, 0.3f, 0.8f) : new Color(0.45f, 0.5f, 0.65f, 0.6f);
             ult.transform.localScale = Vector3.one * (ready ? 1f + 0.05f * Mathf.Sin(Time.unscaledTime * 6f) : 1f);
-            ult.GetComponent<Image>().sprite = CatTheme.Get(ready ? CatTheme.Style.SlotGold : CatTheme.Style.Pink);
+            if (ultNormal != null) ult.normal = ready && ultReady != null ? ultReady : ultNormal;
+            else ult.GetComponent<Image>().sprite = CatTheme.Get(ready ? CatTheme.Style.SlotGold : CatTheme.Style.Pink);
         }
 
-        use.gameObject.SetActive(Pickup.NearFrame >= Time.frameCount - 2);
+        bool near = Pickup.NearFrame >= Time.frameCount - 2;
+        if (useNormal != null) use.normal = near && useActive != null ? useActive : useNormal; // art button stays up, lights when something is in reach
+        else use.gameObject.SetActive(near);
     }
 }
 
 public class TouchButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public Keybinds.Action action;
+    public Sprite normal, pressed;
+    private bool held;
+    private Image img;
 
     public void OnPointerDown(PointerEventData e)
     {
         TouchControls.Queue(action);
+        held = true;
         transform.localScale = new Vector3(1.08f, 0.9f, 1f);
     }
 
-    public void OnPointerUp(PointerEventData e) => transform.localScale = Vector3.one;
+    public void OnPointerUp(PointerEventData e) { held = false; transform.localScale = Vector3.one; }
+
+    private void OnDisable() => held = false;
+
+    private void LateUpdate()
+    {
+        if (normal == null) return;
+        if (img == null) img = GetComponent<Image>();
+        img.sprite = held && pressed != null ? pressed : normal;
+    }
 }
 
 public class TouchStick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler

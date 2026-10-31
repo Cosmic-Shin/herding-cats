@@ -171,7 +171,7 @@ public class PlayerHealth : MonoBehaviour
 
         if (controller != null) controller.enabled = false;
         if (TryGetComponent(out PlayerAutoAttack attack)) attack.enabled = false;
-        if (TryGetComponent(out KaiSword sword)) sword.enabled = false;
+        if (TryGetComponent(out JinSword sword)) sword.enabled = false;
         if (TryGetComponent(out NyxDrones drones)) drones.enabled = false;
         if (TryGetComponent(out PlayerAnimator anim)) anim.enabled = false;
         if (TryGetComponent(out PlayerUltimate ult)) ult.enabled = false;

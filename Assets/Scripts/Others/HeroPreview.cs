@@ -43,7 +43,7 @@ public class HeroPreview : MonoBehaviour
         attack = new Sprite[5];
         for (int i = 0; i < 5; i++) frames.TryGetValue("_SlashDownLeft_" + i, out attack[i]);
 
-        Color tint = id == "Kai" ? new Color(1f, 0.35f, 0.3f) : id == "Nyx" ? NyxDrones.Cyan : new Color(1f, 0.6f, 0.85f);
+        Color tint = id == "Jin" ? new Color(1f, 0.35f, 0.3f) : id == "Nyx" ? NyxDrones.Cyan : new Color(1f, 0.6f, 0.85f);
         glow = Part("Glow", Shapes.Circle, 100);
         glow.transform.localPosition = new Vector3(0f, -0.6f, 0f);
         glow.transform.localScale = new Vector3(1.15f, 0.38f, 1f);
@@ -61,12 +61,12 @@ public class HeroPreview : MonoBehaviour
             slash = Part("Slash", Shapes.Crescent, 113);
             slash.enabled = false;
         }
-        else if (id == "Kai")
+        else if (id == "Jin")
         {
-            sword = Part("Sword", KaiSword.BladeSprite, 109, false);
+            sword = Part("Sword", JinSword.BladeSprite, 109, false);
             for (int i = 0; i < ghosts.Length; i++)
             {
-                ghosts[i] = Part("Ghost", KaiSword.BladeSprite, 108);
+                ghosts[i] = Part("Ghost", JinSword.BladeSprite, 108);
                 ghosts[i].enabled = false;
             }
         }
@@ -105,7 +105,7 @@ public class HeroPreview : MonoBehaviour
         glow.color = new Color(glow.color.r, glow.color.g, glow.color.b, 0.28f + 0.08f * Mathf.Sin(t * 2f));
 
         if (hero == "Mira") Mira(k);
-        else if (hero == "Kai") Kai(k);
+        else if (hero == "Jin") Jin(k);
         else if (hero == "Nyx") Nyx(k, dt);
     }
 
@@ -125,7 +125,7 @@ public class HeroPreview : MonoBehaviour
         slash.color = new Color(1f, 1f, 1f, 0.9f * (1f - a));
     }
 
-    private void Kai(float k)
+    private void Jin(float k)
     {
         float sweep = k < 0f ? -1f : Mathf.Clamp01((k - 0.06f) / 0.2f);
         float angle;

@@ -54,7 +54,7 @@ public static class Leaderboard
 
     public static int Score(float seconds, int level) => (int)seconds * 10 + EnemyHealth.KillScore + level * 100;
 
-    public static string HeroOf(Entry e) => string.IsNullOrEmpty(e.hero) ? "Mira" : e.hero;
+    public static string HeroOf(Entry e) => string.IsNullOrEmpty(e.hero) ? "Mira" : e.hero == "Kai" ? "Jin" : e.hero; // Kai was renamed to Jin
     public static string MapOf(Entry e) => string.IsNullOrEmpty(e.map) ? "Meadow" : e.map;
 
     public static List<Entry> Load() => Load(null, null);

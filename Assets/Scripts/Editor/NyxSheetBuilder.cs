@@ -7,7 +7,7 @@ using UnityEngine;
 public static class NyxSheetBuilder
 {
     private const string Dir = "Assets/Resources/Heroes/Nyx", GogglesDir = "Assets/Resources/Heroes/NyxGoggles",
-                         Source = Dir + "/pixil-frame-0.png", Template = "Assets/Resources/Heroes/Kai/Character_";
+                         Source = Dir + "/pixil-frame-0.png", Template = "Assets/Resources/Heroes/Jin/Jin_";
     private const int Cell = 32, CellTop = 3;
 
     private static readonly int[] Palette = {
@@ -213,7 +213,7 @@ public static class NyxSheetBuilder
         UnityEngine.Object.DestroyImmediate(tex);
         if (!File.Exists(path + ".meta"))
         {
-            string meta = File.ReadAllText(Template + name + ".png.meta").Replace("Character_", prefix);
+            string meta = File.ReadAllText(Template + name + ".png.meta").Replace("Jin_", prefix);
             int g = meta.IndexOf("guid: ") + 6;
             meta = meta.Substring(0, g) + Guid.NewGuid().ToString("N") + meta.Substring(g + 32);
             File.WriteAllText(path + ".meta", meta);

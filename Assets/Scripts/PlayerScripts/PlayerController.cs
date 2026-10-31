@@ -194,7 +194,7 @@ public class PlayerController : MonoBehaviour
         if (blinkLevel >= 3)
         {
             DamageStats.Source = "Blink";
-            if (KaiSword.Active != null) KaiSword.Active.Spin(from, 2f);
+            if (JinSword.Active != null) JinSword.Active.Spin(from, 2f);
             else if (NyxDrones.Active != null) NyxDrones.Active.Emp(from, 2f);
             else Bomb.Blast(from, 1.8f, stats.AttackDamage * 2f, stats.critChance, stats.critDamage, secondary: true);
         }
@@ -203,7 +203,7 @@ public class PlayerController : MonoBehaviour
         transform.position = to;
         ExplosionFx.Spawn(to, 0.7f, blinkColor);
         Juice.Smoke(to, 1f, 4);
-        if (KaiPassives.Active != null) KaiPassives.Active.BlinkCut(from, to);
+        if (JinPassives.Active != null) JinPassives.Active.BlinkCut(from, to);
         Juice.Sparks(to, blinkColor, 10, 5f, 0.14f);
         if (TryGetComponent(out PlayerAnimator anim)) anim.Squash(new Vector2(1.3f, 0.75f), 0.18f);
 

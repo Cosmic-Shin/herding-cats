@@ -28,12 +28,11 @@ public static class Hero
         },
         new Def
         {
-            id = "Kai", name = "Kai", blurb = "Swordsman: a huge slab of a sword that stuns, executes, and cuts through dashes.",
+            id = "Jin", name = "Jin", blurb = "Swordsman: a huge slab of a sword that stuns, executes, and cuts through dashes.",
             kit = Kit("Greatsword: slow, huge wide cleaves that shove cats back. Strong up close.",
                       "Heavy Blade: every hit stuns", "Execute: cats left under 15% HP die on the spot", "Dash Slash: dashing cuts through every cat in the way",
                       "RAGE: a full spin, then faster, bigger swings that heal him on every hit"),
-            weapon = "sword", iconPrefix = "kai_", maxPiece = "Max Swings", upgradeKind = "Sword upgrade",
-            portraitDrop = 5f,
+            weapon = "sword", iconPrefix = "jin_", maxPiece = "Max Swings", upgradeKind = "Sword upgrade",
             stats = new[] { "Damage", "Attack speed", "Swings/attack", "Sword reach" },
             upgrades = new Dictionary<string, (string, string)>
             {
@@ -138,7 +137,7 @@ public static class Hero
         Current.upgrades != null && Current.upgrades.TryGetValue(type, out var u) ? u : ((string, string)?)null;
 
     public static float Range(PlayerStats stats) =>
-        KaiSword.Active != null ? KaiSword.Active.Reach : NyxDrones.Active != null ? NyxDrones.Active.ZapRadius : stats.BombRadius;
+        JinSword.Active != null ? JinSword.Active.Reach : NyxDrones.Active != null ? NyxDrones.Active.ZapRadius : stats.BombRadius;
 
     private static Dictionary<string, (string, string[])> bombSkills;
     private static Dictionary<string, (string, string)> bombCombos;
@@ -182,10 +181,10 @@ public static class Hero
     {
         string id = Current.id;
         if (player.TryGetComponent(out MiraPassives mira)) mira.enabled = id == "Mira";
-        Toggle<KaiPassives>(player, id == "Kai");
+        Toggle<JinPassives>(player, id == "Jin");
         Toggle<NyxPassives>(player, id == "Nyx");
         if (player.TryGetComponent(out PlayerAutoAttack bombs)) bombs.enabled = id == "Mira";
-        Toggle<KaiSword>(player, id == "Kai");
+        Toggle<JinSword>(player, id == "Jin");
         Toggle<NyxDrones>(player, id == "Nyx");
         ApplyTexts();
 

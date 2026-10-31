@@ -29,12 +29,12 @@ public class PlayerUltimate : MonoBehaviour
 
     private class Style { public string name, shout; public Color main, light; public float speedBonus; public Color? mood; }
     private static readonly Style Mira = new Style { name = "SPECIAL", shout = "ULTIMATE!", main = new Color(1f, 0.6f, 0.15f), light = new Color(1f, 0.85f, 0.4f) };
-    private static readonly Style Kai = new Style { name = "RAGE", shout = "RAGE!", main = new Color(0.95f, 0.12f, 0.1f), light = new Color(1f, 0.45f, 0.35f), speedBonus = 0.4f, mood = new Color(1f, 0.6f, 0.55f) };
+    private static readonly Style Jin = new Style { name = "RAGE", shout = "RAGE!", main = new Color(0.95f, 0.12f, 0.1f), light = new Color(1f, 0.45f, 0.35f), speedBonus = 0.4f, mood = new Color(1f, 0.6f, 0.55f) };
     private static readonly Style Nyx = new Style { name = "OVERRIDE", shout = "SYSTEM OVERRIDE!", main = new Color(0.3f, 0.9f, 1f), light = new Color(0.75f, 1f, 1f), speedBonus = 0.5f, mood = new Color(0.7f, 0.88f, 1f) };
-    private static Style Current => Hero.Current.id == "Kai" ? Kai : Hero.Current.id == "Nyx" ? Nyx : Mira;
+    private static Style Current => Hero.Current.id == "Jin" ? Jin : Hero.Current.id == "Nyx" ? Nyx : Mira;
 
     public string Name => Current.name;
-    public static readonly Color RageRed = Kai.main;
+    public static readonly Color RageRed = Jin.main;
 
     private PlayerAutoAttack attack;
     private PlayerStats stats;
@@ -73,7 +73,7 @@ public class PlayerUltimate : MonoBehaviour
             {
                 trailTimer = 0.07f;
                 if (body != null && !Settings.LowParticles) AfterImage.Spawn(body, new Color(s.light.r, s.light.g, s.light.b, 0.85f));
-                Juice.SparksDir((Vector2)transform.position + Random.insideUnitCircle * 0.5f, Vector2.up, 30f, s == Kai ? new Color(1f, 0.6f, 0.2f) : s.main, s == Kai ? 1 : 2, 2.5f, 0.1f);
+                Juice.SparksDir((Vector2)transform.position + Random.insideUnitCircle * 0.5f, Vector2.up, 30f, s == Jin ? new Color(1f, 0.6f, 0.2f) : s.main, s == Jin ? 1 : 2, 2.5f, 0.1f);
                 if (s == Nyx && Random.value < 0.45f) HeroFx.Glitch(body, 0.08f);
             }
             if (!IsActive) End();
@@ -95,7 +95,7 @@ public class PlayerUltimate : MonoBehaviour
         Style s = active = Current;
         ActiveRemaining = duration;
         ShowField(s);
-        if (TryGetComponent(out KaiSword sword) && sword.enabled) sword.Spin(transform.position, 2.5f);
+        if (TryGetComponent(out JinSword sword) && sword.enabled) sword.Spin(transform.position, 2.5f);
         else if (TryGetComponent(out NyxDrones drones) && drones.enabled)
         {
             drones.Barrage();
@@ -111,7 +111,7 @@ public class PlayerUltimate : MonoBehaviour
         ExplosionFx.Spawn(at, 2.5f, s.main);
         CameraFollow.Shake(0.2f, 0.3f);
         DamagePopup.SpawnText(at + Vector2.up * 0.5f, s.shout, s.light, 6f);
-        if (s == Kai) KaiOpener(at);
+        if (s == Jin) JinOpener(at);
         else if (s == Nyx) StartCoroutine(NyxOpener(at));
         else Juice.Flash(new Color(s.main.r, s.main.g, s.main.b, 0.45f), 0.35f);
         Juice.HitStop(0.1f);
@@ -128,7 +128,7 @@ public class PlayerUltimate : MonoBehaviour
     {
         ActiveRemaining = 0f;
         CooldownRemaining = cooldown;
-        if (fx && active == Kai) { Juice.Smoke(transform.position, 0.6f, 5); Juice.SparksDir(transform.position, Vector2.up, 50f, new Color(1f, 0.45f, 0.2f), 6, 3f, 0.1f); }
+        if (fx && active == Jin) { Juice.Smoke(transform.position, 0.6f, 5); Juice.SparksDir(transform.position, Vector2.up, 50f, new Color(1f, 0.45f, 0.2f), 6, 3f, 0.1f); }
         else if (fx && active == Nyx) { HeroFx.Bits(transform.position, Nyx.main, NyxPassives.Magenta, 12, 4f); HeroFx.Glitch(body, 0.15f); }
         HideField();
         stats.attackSpeedMultiplier -= appliedSpeed;
@@ -182,7 +182,7 @@ public class PlayerUltimate : MonoBehaviour
         Vector3 flat = new Vector3(2.3f, 1.15f, 1f);
         float sweep = Mathf.Repeat(t * 1.4f, 1f);
 
-        if (s == Kai)
+        if (s == Jin)
         {
             float beat = Mathf.Pow(Mathf.Abs(Mathf.Sin(t * 4f)), 6f);
             ring.transform.localScale = flat * (1f + 0.12f * beat);
@@ -262,7 +262,7 @@ public class PlayerUltimate : MonoBehaviour
         }
     }
 
-    private void KaiOpener(Vector2 at)
+    private void JinOpener(Vector2 at)
     {
         StompFx.Spawn(at, 2.6f, MapGenerator.Winter);
         for (int i = 0; i < 18; i++)
@@ -282,7 +282,7 @@ public class PlayerUltimate : MonoBehaviour
             };
         }
         Juice.SparksDir(at, Vector2.up, 70f, new Color(1f, 0.6f, 0.2f), 16, 7f, 0.13f);
-        Lighting.Flash(at, 7f, Kai.main, 0.6f);
+        Lighting.Flash(at, 7f, Jin.main, 0.6f);
         Juice.Flash(new Color(0.55f, 0.03f, 0.03f, 0.35f), 0.3f);
     }
 

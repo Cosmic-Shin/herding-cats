@@ -77,7 +77,7 @@ public class Meowl : MonoBehaviour
         bool crit = Random.value < stats.critChance;
         if (crit) damage *= stats.critDamage;
         DamageStats.Source = "Meowl";
-        KaiPassives kai = KaiPassives.Active;
+        JinPassives jin = JinPassives.Active;
         NyxPassives nyx = NyxPassives.Active;
         int stunned = 0;
         foreach (Collider2D c in Bomb.OverlapEnemies(at, BlastRadius, hits))
@@ -85,7 +85,7 @@ public class Meowl : MonoBehaviour
             if (!c.TryGetComponent(out EnemyHealth h)) continue;
             h.TakeDamage(damage, at, crit);
             if (h.IsDead) continue;
-            if (kai != null && c.TryGetComponent(out EnemyAI cat)) { cat.Stun(StunTime); stunned++; }
+            if (jin != null && c.TryGetComponent(out EnemyAI cat)) { cat.Stun(StunTime); stunned++; }
             if (nyx != null) nyx.TryHack(h);
         }
         if (stunned > 0) Juice.Sparks(at + Vector2.up * 0.3f, new Color(1f, 0.85f, 0.35f), 6, 4f, 0.1f);

@@ -16,7 +16,7 @@ public class PlayerCollabs : MonoBehaviour
         public Kind kind;
     }
 
-    public static int MaxBombsPerThrow => Hero.Current.id == "Kai" || Hero.Current.id == "Nyx" ? 4 : 6;
+    public static int MaxBombsPerThrow => Hero.Current.id == "Jin" || Hero.Current.id == "Nyx" ? 4 : 6;
     public const int MaxCollabs = 4;
 
     public static readonly Def[] All =

@@ -736,12 +736,11 @@ public class MainMenu : MonoBehaviour
         "<color=#9AA3C0>Itty Bitty 8 Bit, Pixelland, Pixel Peeker Polka,\nVolatile Reaction, Exit the Premises</color>\n\n" +
         "<color=#FFE08A><b>Art</b></color>\n" +
         "Cats  -  Slime Cat Mega Pack by ToffeeCraft  <color=#9AA3C0>(toffeecraft.itch.io)</color>\n" +
-        "Kai  -  8-direction Top Down Character by Gamekrazzy  <color=#9AA3C0>(gamekrazzy.itch.io)</color>\n" +
         "Beholder bosses  -  CraftPix.net\n" +
         "Map tiles, trees and rocks  -  Topdown RPG 32x32 Nature by Mixel\n\n" +
         "<color=#FFE08A><b>Font</b></color>\n" +
         "Perfect DOS VGA 437 by Zeh Fernando\n\n" +
-        "<color=#9AA3C0>Mira, Nyx, special cat outfits, icons and effects made for Herding Cats.</color>";
+        "<color=#9AA3C0>Mira, Jin, Nyx, special cat outfits, icons and effects made for Herding Cats.</color>";
 
     private void BuildCredits(Transform parent)
     {
