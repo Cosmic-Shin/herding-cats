@@ -453,8 +453,8 @@ public class HUD : MonoBehaviour
         if (ult.IsActive)
         {
             ultFill.fillAmount = ult.ActiveRemaining / ult.duration;
-            ultFill.color = new Color(1f, 0.55f, 0.15f);
-            ultText.text = $"{ult.Name}\n<color=#FFB040>ACTIVE {Mathf.CeilToInt(ult.ActiveRemaining)}s</color>";
+            ultFill.color = ult.MainColor;
+            ultText.text = $"{ult.Name}\n<color=#{ColorUtility.ToHtmlStringRGB(ult.LightColor)}>ACTIVE {Mathf.CeilToInt(ult.ActiveRemaining)}s</color>";
         }
         else if (ult.IsReady)
         {

@@ -10,12 +10,12 @@ public static class CatTheme
 
     public const float Px = 3f;
 
-    public static readonly Color Ink = new Color32(20, 14, 32, 255);
-    public static readonly Color Plum = new Color32(38, 27, 62, 255);
-    public static readonly Color Lilac = new Color32(170, 142, 224, 255);
-    public static readonly Color LilacHi = new Color32(222, 204, 255, 255);
+    public static readonly Color Ink = new Color32(30, 18, 10, 255);
+    public static readonly Color Plum = new Color32(64, 42, 28, 255);   // walnut (name kept so nothing else changes)
+    public static readonly Color Lilac = new Color32(214, 170, 110, 255);   // tan
+    public static readonly Color LilacHi = new Color32(255, 230, 186, 255);
     public static readonly Color Cream = new Color32(255, 244, 228, 255);
-    public static readonly Color Faint = new Color32(150, 136, 186, 255);
+    public static readonly Color Faint = new Color32(190, 162, 124, 255);
     public static readonly Color Pink = new Color32(246, 118, 160, 255);
     public static readonly Color PinkHi = new Color32(255, 184, 208, 255);
     public static readonly Color Slime = new Color32(92, 192, 244, 255);
@@ -24,7 +24,7 @@ public static class CatTheme
     public static readonly Color GoldHi = new Color32(255, 240, 170, 255);
     public static readonly Color Mint = new Color32(124, 255, 154, 255);
     public static readonly Color BossPurple = new Color32(198, 84, 255, 255);
-    public static readonly Color DimColor = new Color(0.055f, 0.03f, 0.11f, 0.86f);
+    public static readonly Color DimColor = new Color(0.08f, 0.05f, 0.03f, 0.86f);
 
     private static readonly Dictionary<string, Sprite> cache = new Dictionary<string, Sprite>();
 

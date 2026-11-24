@@ -202,10 +202,10 @@ public class RewardMenu : MonoBehaviour
                 if (skills.LevelOf(id) >= s.levels.Length || (id == "secondwind" && skills.ReviveUsed)) continue;
                 options.Add(() => { skills.LevelUp(s); return ("skill:" + s.id, $"{s.name}\n{Lv(skills.LevelOf(s.id))}"); });
             }
-        HeroPassives mira = HeroPassives.Instance;
-        if (mira != null)
-            foreach (HeroPassives.Passive p in mira.Offerable())
-                options.Add(() => { mira.LevelUp(p.id); return ("passive:" + p.id, $"{p.name}\n{Lv(mira.LevelOf(p.id))}"); });
+        HeroPassives passives = HeroPassives.Instance;
+        if (passives != null)
+            foreach (HeroPassives.Passive p in passives.Offerable())
+                options.Add(() => { passives.LevelUp(p.id); return ("passive:" + p.id, $"{p.name}\n{Lv(passives.LevelOf(p.id))}"); });
         LevelUpUIController levelUp = stats.GetComponent<LevelUpUIController>();
         if (levelUp != null)
             for (int i = 0; i < 2; i++)

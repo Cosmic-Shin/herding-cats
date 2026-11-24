@@ -19,6 +19,8 @@ public class BossTimeline : MonoBehaviour
         public bool unlocksSupers;
         [Tooltip("Killing this boss starts the spawner's late-game ramp")]
         public bool startsLateGame;
+        [Tooltip("-1 = every map, else only on this MapGenerator.Biome (0 Meadow, 1 Winter, 2 Volcano). A map event replaces the every-map event at the same time.")]
+        public int map = -1;
         [System.NonSerialized] public bool warned, spawned;
     }
 
@@ -27,6 +29,8 @@ public class BossTimeline : MonoBehaviour
     public float spawnDistance = 11f;
     [Tooltip("x boss HP on top of each event's multiplier (bosses skip the spawner's difficulty dial)")]
     [Range(0.5f, 1.5f)] public float bossHealth = 0.72f;
+    [Tooltip("x every boss's size on top of each event's scale (attack areas grow with it)")]
+    [Range(1f, 2f)] public float bossSize = 1.3f;
 
     [Header("Companion")]
     public EnemyAnimator companionCat;
@@ -85,6 +89,7 @@ public class BossTimeline : MonoBehaviour
         foreach (BossEvent e in events)
         {
             if (EnemySpawner.Endless) break;
+            if (!Active(e)) continue;
             if (!e.warned && runTime >= e.time - warningLead)
             {
                 e.warned = true;
@@ -116,12 +121,12 @@ public class BossTimeline : MonoBehaviour
     }
 
     public void Advance(float seconds) => runTime += seconds;
-    public void AdminSpawn(BossEvent e) => Spawn(e);
+    public void AdminSpawn(BossEvent e) { ShowWarning(DisplayName(e)); Spawn(e); }
 
     public void SpawnEndlessBoss(int milestone)
     {
         BossEvent last = null;
-        foreach (BossEvent e in events) if (last == null || e.time > last.time) last = e;
+        foreach (BossEvent e in events) if (Active(e) && (last == null || e.time > last.time)) last = e;
         if (last == null) return;
         Spawn(new BossEvent
         {
@@ -175,9 +180,16 @@ public class BossTimeline : MonoBehaviour
         return e.prefab != null && e.prefab.TryGetComponent(out BossAI ai) ? ai.bossName : "Boss";
     }
 
+    // Runs on this map: its own map events, plus every-map events no map event replaces.
+    private bool Active(BossEvent e)
+    {
+        if (e.map >= 0) return e.map == MapGenerator.Biome;
+        return !events.Exists(o => o.map == MapGenerator.Biome && Mathf.Approximately(o.time, e.time));
+    }
+
     private bool IsFinal(BossEvent e)
     {
-        foreach (BossEvent other in events) if (other.time > e.time) return false;
+        foreach (BossEvent other in events) if (Active(other) && other.time > e.time) return false;
         return true;
     }
 
@@ -195,10 +207,16 @@ public class BossTimeline : MonoBehaviour
         float angle = Random.Range(0f, Mathf.PI * 2f);
         Vector2 pos = (Vector2)player.position + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * spawnDistance;
         GameObject boss = Instantiate(e.prefab, pos, Quaternion.identity);
-        boss.transform.localScale *= e.scale;
+        float size = e.scale * bossSize;
+        boss.transform.localScale *= size;
+        // entrance: shake, dark flash and a shockwave where it lands
+        CameraFollow.Shake(0.45f, 0.6f);
+        Juice.Flash(new Color(0.35f, 0f, 0.3f, 0.35f), 0.4f);
+        ExplosionFx.Ring(pos, 5f * size, new Color(0.85f, 0.3f, 1f), 0.6f);
+        StompFx.Spawn(pos, 3f * size);
         if (boss.TryGetComponent(out BossAI ai))
         {
-            ai.contactRange *= e.scale;
+            ai.contactRange *= size;
             ai.Empower(e.power);
             ai.specials = e.specials;
             if (!string.IsNullOrEmpty(e.titleOverride)) ai.bossName = e.titleOverride;

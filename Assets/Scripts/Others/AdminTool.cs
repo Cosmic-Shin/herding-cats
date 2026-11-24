@@ -19,7 +19,7 @@ public class AdminTool : MonoBehaviour
     private PlayerSkills skills;
     private PlayerCollabs collabs;
     private PlayerUltimate ult;
-    private MiraPassives passives;
+    private LilacPassives passives;
     private EnemySpawner spawner;
     private BossTimeline bosses;
     private HUD hud;
@@ -39,7 +39,7 @@ public class AdminTool : MonoBehaviour
             skills = stats.GetComponent<PlayerSkills>();
             collabs = stats.GetComponent<PlayerCollabs>();
             ult = stats.GetComponent<PlayerUltimate>();
-            passives = stats.GetComponent<MiraPassives>();
+            passives = stats.GetComponent<LilacPassives>();
         }
         spawner = FindFirstObjectByType<EnemySpawner>();
         bosses = FindFirstObjectByType<BossTimeline>();

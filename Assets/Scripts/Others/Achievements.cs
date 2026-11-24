@@ -108,7 +108,7 @@ public class Achievements : MonoBehaviour
 
     public static bool IsUnlocked(Def d) => PlayerPrefs.GetInt("ach_" + d.id, 0) == 1;
 
-    public static bool IsLocked(string reward) => System.Array.Exists(All, d => d.reward == reward && !IsUnlocked(d));
+    public static bool IsLocked(string reward) => Shop.WeaponLocked(reward) || System.Array.Exists(All, d => d.reward == reward && !IsUnlocked(d));
 
     public static int Count(string reward) => System.Array.FindAll(All, d => d.reward == reward && IsUnlocked(d)).Length;
 

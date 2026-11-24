@@ -66,12 +66,21 @@ public static class UiIcons
         if (id.StartsWith("stat:") && id != "stat:ProjectileCount") return Load("Icons/stat_" + id.Substring(5));
         if (id.StartsWith("skill:")) return Load("Icons/skill_" + id.Substring(6)) ?? Load("Icons/" + id.Substring(6));
         if (id == "stat:ProjectileCount") id = "bomb";
+        if (id == "bomb" && Hero.Current.iconPrefix != null && Load("Icons/" + Hero.Current.iconPrefix + "bomb") is Sprite heroBomb) return heroBomb;
         PlayerCollabs.Def collab = PlayerCollabs.Find(id);
         if (collab != null && collab.kind == PlayerCollabs.Kind.Bomb && Hero.Current.iconPrefix != null && Load("Icons/" + Hero.Current.iconPrefix + id) is Sprite heroCombo) return heroCombo;
         if (collab != null && Load("Icons/" + id) is Sprite own) return own;
         if (collab != null && collab.kind == PlayerCollabs.Kind.Super) return Load("Icons/" + collab.icon);
         if (collab != null && collab.kind == PlayerCollabs.Kind.Merge) id = collab.a;
         return Load("Icons/" + id);
+    }
+
+    // A specific hero's icon for a combo, regardless of who is equipped.
+    public static Sprite ComboIcon(PlayerCollabs.Def d, Hero.Def h)
+    {
+        if (h.iconPrefix != null && Load("Icons/" + h.iconPrefix + d.id) is Sprite mine) return mine;
+        if (Load("Icons/" + d.id) is Sprite own) return own;
+        return d.kind == PlayerCollabs.Kind.Super ? Load("Icons/" + d.icon) : null;
     }
 
     private static Sprite Load(string path)

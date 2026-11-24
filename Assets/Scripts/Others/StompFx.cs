@@ -37,17 +37,19 @@ public class StompFx : MonoBehaviour
 
         fx.crack = Layer(fx.transform, (ice ? iceCracks : cracks)[Random.Range(0, CrackVariants)], -84, radius * 2f * 0.85f);
         fx.crack.transform.rotation = Quaternion.Euler(0f, 0f, 90f * Random.Range(0, 4));
-        fx.wave = Layer(fx.transform, ice ? iceRing : ring, 9, 0.1f);
+        bool combo = PlayerCollabs.IsComboName(DamageStats.Source);
+        int order = combo ? 4 : 9; // combo slams draw under the cats
+        fx.wave = Layer(fx.transform, ice ? iceRing : ring, order, 0.1f);
         if (ice) Lighting.Glow(fx.wave);
 
         int n = ice ? 0 : Mathf.RoundToInt(8 + radius * 2f);
-        if (Settings.LowParticles) n /= 2;
+        if (Settings.LowParticles || combo) n /= 2;
         for (int i = 0; i < n; i++)
         {
             Vector2 dir = Quaternion.Euler(0f, 0f, i * 360f / n + Random.Range(-15f, 15f)) * Vector2.right;
             var c = new Chunk
             {
-                sr = Layer(fx.transform, chunks[Random.Range(0, chunks.Length)], 9, Random.Range(0.18f, 0.3f)),
+                sr = Layer(fx.transform, chunks[Random.Range(0, chunks.Length)], order, Random.Range(0.18f, 0.3f)),
                 pos = pos + dir * Random.Range(0.2f, 0.6f),
                 vel = dir * Random.Range(radius * 0.9f, radius * 1.6f),
                 vz = Random.Range(2.5f, 4.5f),

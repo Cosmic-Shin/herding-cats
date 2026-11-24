@@ -65,8 +65,25 @@ public class Shot : MonoBehaviour
         s.ghost = Color.clear;
         s.age = 0f;
         s.source = DamageStats.Source;
+        s.combo = PlayerCollabs.IsComboName(s.source);
         s.Generation++;
         return s;
+    }
+
+    private bool combo;
+    private const float BigArea = 1.2f, BigLength = 2.5f, BigAlpha = 0.45f; // BigLength catches thin beams/lasers
+    private const int EnemyOrder = 5; // Cat_Base sprite order
+
+    // Combo/super visuals bigger than a projectile sit under the cats and stay see-through, so the horde stays readable.
+    // Min-clamps are idempotent, so this is safe every frame whether or not onUpdate rewrites the color.
+    private void KeepEnemiesVisible()
+    {
+        Vector3 sc = transform.localScale;
+        if (Mathf.Abs(sc.x * sc.y) < BigArea && Mathf.Max(Mathf.Abs(sc.x), Mathf.Abs(sc.y)) < BigLength) return;
+        if (Renderer.sortingOrder >= EnemyOrder) Renderer.sortingOrder = EnemyOrder - 1;
+        Color c = Renderer.color;
+        float max = BigAlpha * Settings.EffectAlpha;
+        if (c.a > max) { c.a = max; Renderer.color = c; }
     }
 
     public bool HasHit(EnemyHealth e) => hitAlready.Contains(e);
@@ -91,6 +108,7 @@ public class Shot : MonoBehaviour
 
         onUpdate?.Invoke(this);
         if (!Alive) return;
+        if (combo) KeepEnemiesVisible();
 
         transform.position += (Vector3)(velocity * dt);
         if (spin != 0f) transform.Rotate(0f, 0f, spin * dt);

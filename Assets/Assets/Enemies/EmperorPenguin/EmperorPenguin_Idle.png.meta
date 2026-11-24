@@ -1,0 +1,1378 @@
+fileFormatVersion: 2
+guid: 162be37206e804b120ba1f52f869dc03
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4382361700582930125
+    second: EmperorPenguin_Idle_r0_c0
+  - first:
+      213: -4240021898764611531
+    second: EmperorPenguin_Idle_r0_c1
+  - first:
+      213: 3555576885708434686
+    second: EmperorPenguin_Idle_r0_c2
+  - first:
+      213: -706456336330201710
+    second: EmperorPenguin_Idle_r0_c3
+  - first:
+      213: -644520183641802827
+    second: EmperorPenguin_Idle_r0_c4
+  - first:
+      213: -669886530308314436
+    second: EmperorPenguin_Idle_r0_c5
+  - first:
+      213: 978052053985590930
+    second: EmperorPenguin_Idle_r0_c6
+  - first:
+      213: -725935795955277444
+    second: EmperorPenguin_Idle_r0_c7
+  - first:
+      213: 1252427314331831034
+    second: EmperorPenguin_Idle_r0_c8
+  - first:
+      213: -6037236861787153
+    second: EmperorPenguin_Idle_r0_c9
+  - first:
+      213: -2493630606298024392
+    second: EmperorPenguin_Idle_r0_c10
+  - first:
+      213: -3527582550333629166
+    second: EmperorPenguin_Idle_r0_c11
+  - first:
+      213: -445577164365075636
+    second: EmperorPenguin_Idle_r1_c0
+  - first:
+      213: 350702189669658087
+    second: EmperorPenguin_Idle_r1_c1
+  - first:
+      213: -2352951899796314463
+    second: EmperorPenguin_Idle_r1_c2
+  - first:
+      213: -2329000036444513191
+    second: EmperorPenguin_Idle_r1_c3
+  - first:
+      213: -1486101050008450492
+    second: EmperorPenguin_Idle_r1_c4
+  - first:
+      213: 2192967885781117485
+    second: EmperorPenguin_Idle_r1_c5
+  - first:
+      213: -2761925825932911635
+    second: EmperorPenguin_Idle_r1_c6
+  - first:
+      213: 1766870276400649996
+    second: EmperorPenguin_Idle_r1_c7
+  - first:
+      213: 3222128701295491708
+    second: EmperorPenguin_Idle_r1_c8
+  - first:
+      213: -956207898251186251
+    second: EmperorPenguin_Idle_r1_c9
+  - first:
+      213: 2485269971855778474
+    second: EmperorPenguin_Idle_r1_c10
+  - first:
+      213: 193932093339941171
+    second: EmperorPenguin_Idle_r1_c11
+  - first:
+      213: 3424609410190809865
+    second: EmperorPenguin_Idle_r2_c0
+  - first:
+      213: -2825455669603405510
+    second: EmperorPenguin_Idle_r2_c1
+  - first:
+      213: 4604811932607114117
+    second: EmperorPenguin_Idle_r2_c2
+  - first:
+      213: 1725031818964204860
+    second: EmperorPenguin_Idle_r2_c3
+  - first:
+      213: -1063435413745570742
+    second: EmperorPenguin_Idle_r2_c4
+  - first:
+      213: -1651202712300962669
+    second: EmperorPenguin_Idle_r2_c5
+  - first:
+      213: 3414871730942248852
+    second: EmperorPenguin_Idle_r2_c6
+  - first:
+      213: 531959906387996017
+    second: EmperorPenguin_Idle_r2_c7
+  - first:
+      213: 3219228531745294571
+    second: EmperorPenguin_Idle_r2_c8
+  - first:
+      213: 2516741945844766502
+    second: EmperorPenguin_Idle_r2_c9
+  - first:
+      213: 4468639174208015773
+    second: EmperorPenguin_Idle_r2_c10
+  - first:
+      213: 2405586871947070466
+    second: EmperorPenguin_Idle_r2_c11
+  - first:
+      213: 1123883380741358712
+    second: EmperorPenguin_Idle_r3_c0
+  - first:
+      213: -4412391064059977649
+    second: EmperorPenguin_Idle_r3_c1
+  - first:
+      213: -2225795374451695771
+    second: EmperorPenguin_Idle_r3_c2
+  - first:
+      213: 2328327466709001967
+    second: EmperorPenguin_Idle_r3_c3
+  - first:
+      213: 2375960243202578938
+    second: EmperorPenguin_Idle_r3_c4
+  - first:
+      213: -2208848503152452381
+    second: EmperorPenguin_Idle_r3_c5
+  - first:
+      213: -833586310674633506
+    second: EmperorPenguin_Idle_r3_c6
+  - first:
+      213: 3580189807307206936
+    second: EmperorPenguin_Idle_r3_c7
+  - first:
+      213: 1460510819825306442
+    second: EmperorPenguin_Idle_r3_c8
+  - first:
+      213: 2767059094648294241
+    second: EmperorPenguin_Idle_r3_c9
+  - first:
+      213: -1889301290268190128
+    second: EmperorPenguin_Idle_r3_c10
+  - first:
+      213: 4142330142565418034
+    second: EmperorPenguin_Idle_r3_c11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 20
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r0_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d64cc4ebf05c10e5f4df1d9642998a2
+      internalID: 4382361700582930125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r0_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65bc5b040040869744b2a0318bbe57b8
+      internalID: -4240021898764611531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r0_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 674a91c64b9454a6fe6a204b81fe268b
+      internalID: 3555576885708434686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r0_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e3ce844b52c8c756626e9d9d97d6e63
+      internalID: -706456336330201710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r0_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c24e1c95f3822c748d82322bc1f57a4
+      internalID: -644520183641802827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r0_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4339a5bc6d034aa7cac51120d2aa795
+      internalID: -669886530308314436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r0_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5144d7872e9cc5c946faddcf810dbf15
+      internalID: 978052053985590930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r0_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8558841bca0ebc17f7a8bfa15e2a1d7
+      internalID: -725935795955277444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r0_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8da0e16d138a17e940b7fabd603b6ad
+      internalID: 1252427314331831034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r0_c9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cda6cb2fc7d2e19075b09abd9a354c99
+      internalID: -6037236861787153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r0_c10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8baaeccd0420901ee79c0ca4e5cd152
+      internalID: -2493630606298024392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r0_c11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e231846a877c3bc6015bd043ab7e9ce6
+      internalID: -3527582550333629166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r1_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7e37bfe0af418656528c8ea3bddafed
+      internalID: -445577164365075636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r1_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0f4b0c13507013238d2238b5ad3c6c5
+      internalID: 350702189669658087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r1_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 680e2b12a024059484ee9ad22b8c7d54
+      internalID: -2352951899796314463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r1_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33c77aaf0392f43c3a4bfa90c4c83b82
+      internalID: -2329000036444513191
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r1_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9271af279b1d58988dc44651d5d2454
+      internalID: -1486101050008450492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r1_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1c3f09595a0f7c79d8bff16a521414b
+      internalID: 2192967885781117485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r1_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cec8a5d71666c259b2970366032ada84
+      internalID: -2761925825932911635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r1_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: add73e8fdd3568e32f295bc5f91409ec
+      internalID: 1766870276400649996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r1_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2f42eab08be2591f870f3aa6e15f127
+      internalID: 3222128701295491708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r1_c9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4009454c1be91b648b7da041d132f0c
+      internalID: -956207898251186251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r1_c10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3be503cfbe7aaabd2552a294c57a4dbd
+      internalID: 2485269971855778474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r1_c11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd740a525dc2106c7453818c548e29c1
+      internalID: 193932093339941171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r2_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e7ae96fda574f7d74bf27cf5ba0e2e5
+      internalID: 3424609410190809865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r2_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 853585e5ad5eae47f9504d6d13f40757
+      internalID: -2825455669603405510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r2_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54e207a6475472c23bfcbfb440be5a8e
+      internalID: 4604811932607114117
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r2_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 942d911427c3cf2c34285e0da1a836c9
+      internalID: 1725031818964204860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r2_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b2db3ce2545fc5d76562592dd5b7082
+      internalID: -1063435413745570742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r2_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef35dbc106ef8eeea3cf64abbc491338
+      internalID: -1651202712300962669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r2_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a5c0dbe7f95a53e39d95ab2edff6dd9
+      internalID: 3414871730942248852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r2_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 212ace850c3698b25c08c2a45dcf2a32
+      internalID: 531959906387996017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r2_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03e2c87e166248986e0590d9d320d94f
+      internalID: 3219228531745294571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r2_c9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a4623b4d3a744e68585ca63f07443fe
+      internalID: 2516741945844766502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r2_c10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4846ca89dc688559becbd7928935172
+      internalID: 4468639174208015773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r2_c11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 286f2c6ee9c831e56dc29d4016e82b13
+      internalID: 2405586871947070466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r3_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60a9857cd9ae26c4a65130b6d47dac6b
+      internalID: 1123883380741358712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r3_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3300335b2b9d7941581c5f774b119682
+      internalID: -4412391064059977649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r3_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15c4ca9a86566e12c35f2604a4d25c51
+      internalID: -2225795374451695771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r3_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a091d000a0eaf17a4c67a47c582bf6d
+      internalID: 2328327466709001967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r3_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea63bb0368cddc17a2b53fe561438641
+      internalID: 2375960243202578938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r3_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bad5585ef539260e1ab7da894856ef5f
+      internalID: -2208848503152452381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r3_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dc111ec933f05346362a2abd2fa4461
+      internalID: -833586310674633506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r3_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a04a4d1e6ee4d6f5e282186b95ca14ff
+      internalID: 3580189807307206936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r3_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ea7f74a852a69ed2fb8ce1ee60fca87
+      internalID: 1460510819825306442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r3_c9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db5d46ea22a5dfa3767c3fdaad47f5a5
+      internalID: 2767059094648294241
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r3_c10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc17e9a7f4f707c2d8985eb529e0dca7
+      internalID: -1889301290268190128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Idle_r3_c11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2aa015518ef7a5212f21603feee93c3f
+      internalID: 4142330142565418034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      EmperorPenguin_Idle_r0_c0: 4382361700582930125
+      EmperorPenguin_Idle_r0_c1: -4240021898764611531
+      EmperorPenguin_Idle_r0_c2: 3555576885708434686
+      EmperorPenguin_Idle_r0_c3: -706456336330201710
+      EmperorPenguin_Idle_r0_c4: -644520183641802827
+      EmperorPenguin_Idle_r0_c5: -669886530308314436
+      EmperorPenguin_Idle_r0_c6: 978052053985590930
+      EmperorPenguin_Idle_r0_c7: -725935795955277444
+      EmperorPenguin_Idle_r0_c8: 1252427314331831034
+      EmperorPenguin_Idle_r0_c9: -6037236861787153
+      EmperorPenguin_Idle_r0_c10: -2493630606298024392
+      EmperorPenguin_Idle_r0_c11: -3527582550333629166
+      EmperorPenguin_Idle_r1_c0: -445577164365075636
+      EmperorPenguin_Idle_r1_c1: 350702189669658087
+      EmperorPenguin_Idle_r1_c2: -2352951899796314463
+      EmperorPenguin_Idle_r1_c3: -2329000036444513191
+      EmperorPenguin_Idle_r1_c4: -1486101050008450492
+      EmperorPenguin_Idle_r1_c5: 2192967885781117485
+      EmperorPenguin_Idle_r1_c6: -2761925825932911635
+      EmperorPenguin_Idle_r1_c7: 1766870276400649996
+      EmperorPenguin_Idle_r1_c8: 3222128701295491708
+      EmperorPenguin_Idle_r1_c9: -956207898251186251
+      EmperorPenguin_Idle_r1_c10: 2485269971855778474
+      EmperorPenguin_Idle_r1_c11: 193932093339941171
+      EmperorPenguin_Idle_r2_c0: 3424609410190809865
+      EmperorPenguin_Idle_r2_c1: -2825455669603405510
+      EmperorPenguin_Idle_r2_c2: 4604811932607114117
+      EmperorPenguin_Idle_r2_c3: 1725031818964204860
+      EmperorPenguin_Idle_r2_c4: -1063435413745570742
+      EmperorPenguin_Idle_r2_c5: -1651202712300962669
+      EmperorPenguin_Idle_r2_c6: 3414871730942248852
+      EmperorPenguin_Idle_r2_c7: 531959906387996017
+      EmperorPenguin_Idle_r2_c8: 3219228531745294571
+      EmperorPenguin_Idle_r2_c9: 2516741945844766502
+      EmperorPenguin_Idle_r2_c10: 4468639174208015773
+      EmperorPenguin_Idle_r2_c11: 2405586871947070466
+      EmperorPenguin_Idle_r3_c0: 1123883380741358712
+      EmperorPenguin_Idle_r3_c1: -4412391064059977649
+      EmperorPenguin_Idle_r3_c2: -2225795374451695771
+      EmperorPenguin_Idle_r3_c3: 2328327466709001967
+      EmperorPenguin_Idle_r3_c4: 2375960243202578938
+      EmperorPenguin_Idle_r3_c5: -2208848503152452381
+      EmperorPenguin_Idle_r3_c6: -833586310674633506
+      EmperorPenguin_Idle_r3_c7: 3580189807307206936
+      EmperorPenguin_Idle_r3_c8: 1460510819825306442
+      EmperorPenguin_Idle_r3_c9: 2767059094648294241
+      EmperorPenguin_Idle_r3_c10: -1889301290268190128
+      EmperorPenguin_Idle_r3_c11: 4142330142565418034
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

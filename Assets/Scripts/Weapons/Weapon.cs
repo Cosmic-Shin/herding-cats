@@ -10,7 +10,7 @@ public abstract class Weapon : MonoBehaviour
     public float LastFired { get; private set; } = -10f;
 
     public const int MaxEnhance = 20;
-    public float EnhanceChance => Mathf.Max(0.2f, 1f - 0.15f * Mathf.Max(0, Enhance - 2));
+    public float EnhanceChance => Mathf.Max(0.25f, 1f - 0.15f * Mathf.Max(0, Enhance - 2));
     public int Enhance { get; private set; }
     private float bonusDamage, bonusArea, bonusSpeed;
 
@@ -84,8 +84,19 @@ public abstract class Weapon : MonoBehaviour
     protected void Hit(EnemyHealth enemy, float damage, Vector2 from, bool knockback = true)
     {
         DamageStats.Source = DisplayName;
-        bool crit = Random.value < stats.critChance || MiraPassives.AutoCrit(enemy);
-        enemy.TakeDamage(damage * (crit ? stats.critDamage * MiraPassives.CritBonus(enemy) : 1f) * Random.Range(0.9f, 1.1f), from, crit, knockback);
+        bool crit = Random.value < stats.critChance || LilacPassives.AutoCrit(enemy);
+        enemy.TakeDamage(damage * (crit ? stats.critDamage * LilacPassives.CritBonus(enemy) : 1f) * Random.Range(0.9f, 1.1f), from, crit, knockback);
+    }
+
+    // Combo/super beams (own renderers, not Shots) go under the cats and half see-through. Call after setting the beam color each frame.
+    protected void SinkIfCombo(SpriteRenderer beam)
+    {
+        if (!PlayerCollabs.IsComboName(DisplayName)) return;
+        beam.sortingOrder = 3;
+        Color c = beam.color; c.a *= 0.5f; beam.color = c;
+        if (beam.transform.childCount == 0 || !beam.transform.GetChild(0).TryGetComponent(out SpriteRenderer core)) return;
+        core.sortingOrder = 4;
+        Color k = core.color; k.a = Mathf.Min(k.a, 0.5f); core.color = k;
     }
 
     protected void Explode(Vector2 pos, float radius, float damage)

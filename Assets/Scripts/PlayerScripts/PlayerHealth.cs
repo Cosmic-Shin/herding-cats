@@ -58,7 +58,7 @@ public class PlayerHealth : MonoBehaviour
             return;
         }
 
-        if (MiraPassives.Active != null && MiraPassives.Active.TryBlock())
+        if (LilacPassives.Active != null && LilacPassives.Active.TryBlock())
         {
             StartCoroutine(ShieldGrace());
             GamepadUI.Rumble(0.1f, 0.4f, 0.1f);
@@ -73,6 +73,11 @@ public class PlayerHealth : MonoBehaviour
         if (stats.currentHealth - amount <= 0f && skills != null && skills.TryRevive())
         {
             StartCoroutine(InvincibilityFrames());
+            return;
+        }
+        if (stats.currentHealth - amount <= 0f && Shop.TryRevive())
+        {
+            ShopRevive();
             return;
         }
 
@@ -96,6 +101,27 @@ public class PlayerHealth : MonoBehaviour
             StartCoroutine(InvincibilityFrames());
         }
     }
+
+    // Nine Lives (shop): back to full HP once per run, and the cats around you get blown back.
+    private void ShopRevive()
+    {
+        stats.Heal(stats.maxHealth);
+        Vector2 at = transform.position;
+        Color gold = new Color(1f, 0.85f, 0.35f);
+        DamagePopup.SpawnText(at + Vector2.up * 0.8f, "NINE LIVES!", gold, 7f);
+        Sfx.Play(Sfx.Id.Fanfare, 0.8f);
+        Juice.Flash(new Color(1f, 0.9f, 0.5f, 0.45f), 0.5f);
+        Juice.HitStop(0.2f);
+        Lighting.Flash(at, 8f, gold, 0.6f);
+        ExplosionFx.Ring(at, 5f, gold, 0.5f);
+        CameraFollow.Shake(0.3f, 0.3f);
+        DamageStats.Source = "Nine Lives";
+        foreach (Collider2D hit in Bomb.OverlapEnemies(at, 5f, reviveHits))
+            if (hit.TryGetComponent(out EnemyAI cat)) cat.Knockback(((Vector2)hit.transform.position - at).normalized * 14f);
+        StartCoroutine(InvincibilityFrames());
+    }
+
+    private static readonly System.Collections.Generic.List<Collider2D> reviveHits = new System.Collections.Generic.List<Collider2D>(64);
 
     private SpriteRenderer hitFlash;
 

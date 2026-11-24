@@ -1,0 +1,962 @@
+fileFormatVersion: 2
+guid: 88ba67df4b908501c4c0d9280000f953
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -365174363414522603
+    second: EmperorPenguin_Walk_r0_c0
+  - first:
+      213: 2559935705372843334
+    second: EmperorPenguin_Walk_r0_c1
+  - first:
+      213: 1737005489558114099
+    second: EmperorPenguin_Walk_r0_c2
+  - first:
+      213: 2146608511374194228
+    second: EmperorPenguin_Walk_r0_c3
+  - first:
+      213: -1428402337003385929
+    second: EmperorPenguin_Walk_r0_c4
+  - first:
+      213: 4348514755387786796
+    second: EmperorPenguin_Walk_r0_c5
+  - first:
+      213: -1880154140523084832
+    second: EmperorPenguin_Walk_r0_c6
+  - first:
+      213: -3106792402290638616
+    second: EmperorPenguin_Walk_r0_c7
+  - first:
+      213: 4175340136983117270
+    second: EmperorPenguin_Walk_r1_c0
+  - first:
+      213: 1121616909323474272
+    second: EmperorPenguin_Walk_r1_c1
+  - first:
+      213: 2275995092185389061
+    second: EmperorPenguin_Walk_r1_c2
+  - first:
+      213: 1036807309646247865
+    second: EmperorPenguin_Walk_r1_c3
+  - first:
+      213: -3628825404444248892
+    second: EmperorPenguin_Walk_r1_c4
+  - first:
+      213: -4190021226447827912
+    second: EmperorPenguin_Walk_r1_c5
+  - first:
+      213: 4459872342888555211
+    second: EmperorPenguin_Walk_r1_c6
+  - first:
+      213: -2376070421340452001
+    second: EmperorPenguin_Walk_r1_c7
+  - first:
+      213: -4401625496598996324
+    second: EmperorPenguin_Walk_r2_c0
+  - first:
+      213: -4503435695574897540
+    second: EmperorPenguin_Walk_r2_c1
+  - first:
+      213: -4524778232581370089
+    second: EmperorPenguin_Walk_r2_c2
+  - first:
+      213: -2389541656900386583
+    second: EmperorPenguin_Walk_r2_c3
+  - first:
+      213: 3517674068405989612
+    second: EmperorPenguin_Walk_r2_c4
+  - first:
+      213: -555996061288985310
+    second: EmperorPenguin_Walk_r2_c5
+  - first:
+      213: 3763225996516561781
+    second: EmperorPenguin_Walk_r2_c6
+  - first:
+      213: 865504992950034902
+    second: EmperorPenguin_Walk_r2_c7
+  - first:
+      213: 1924698986059080486
+    second: EmperorPenguin_Walk_r3_c0
+  - first:
+      213: 1867974815248499908
+    second: EmperorPenguin_Walk_r3_c1
+  - first:
+      213: 2251127306956982172
+    second: EmperorPenguin_Walk_r3_c2
+  - first:
+      213: -1660717275938797936
+    second: EmperorPenguin_Walk_r3_c3
+  - first:
+      213: -3572437980440602946
+    second: EmperorPenguin_Walk_r3_c4
+  - first:
+      213: -3191306700936417210
+    second: EmperorPenguin_Walk_r3_c5
+  - first:
+      213: 3490873995900886464
+    second: EmperorPenguin_Walk_r3_c6
+  - first:
+      213: 3859814672163301210
+    second: EmperorPenguin_Walk_r3_c7
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 20
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r0_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92c184e55991fa46cf724a3eee3d42d9
+      internalID: -365174363414522603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r0_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed5e01ae568bcdb3fe727b50d122a31c
+      internalID: 2559935705372843334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r0_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3851d5075ea652e8b87011b8f5a1a2b
+      internalID: 1737005489558114099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r0_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea7b53cf351b1fa5fe598b63edb47134
+      internalID: 2146608511374194228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r0_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a19f97c0bed07c94c1d66b83712e459
+      internalID: -1428402337003385929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r0_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61245652e98c61889b4023716aee324c
+      internalID: 4348514755387786796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r0_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 181db2cf14eff0c89cdaa5ae38c4ff05
+      internalID: -1880154140523084832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r0_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 805179e6cd977ab7ea8a35891649caa8
+      internalID: -3106792402290638616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r1_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab7c3432406517ae4eb1c7a07004e019
+      internalID: 4175340136983117270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r1_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 835f8b60c82cc84d245a95cc93b3bba7
+      internalID: 1121616909323474272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r1_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5ee3136f1123a0dc0ec172077bcec72
+      internalID: 2275995092185389061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r1_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e29de7b69aa4ab39e6a90c1d74903358
+      internalID: 1036807309646247865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r1_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76c3c3bfef395564c87ed463656fd4b7
+      internalID: -3628825404444248892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r1_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e63c852c1b424dadfa9512af81dc5d1f
+      internalID: -4190021226447827912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r1_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05eb86a43f1572d17a01241a005c943c
+      internalID: 4459872342888555211
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r1_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3dfbd08c16a6cd86df9b480e564f222
+      internalID: -2376070421340452001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r2_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f80c8eab41eba44b1c5b7a86e2ec0859
+      internalID: -4401625496598996324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r2_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9606f705bcfbb7e81b03f93b0b69128e
+      internalID: -4503435695574897540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r2_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69f9a17bcf3b6baa7efc17d42043d677
+      internalID: -4524778232581370089
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r2_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ca98b645d2c8533f1e781d49e24963b
+      internalID: -2389541656900386583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r2_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ee4205a9294fcec75cd79509312fb11
+      internalID: 3517674068405989612
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r2_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 467ae0905928dbac6e3545320f7d827d
+      internalID: -555996061288985310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r2_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 890f8aa14f43d5fb946976648484baaf
+      internalID: 3763225996516561781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r2_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8328fdce0bd890e10c786eca11fbc428
+      internalID: 865504992950034902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r3_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1301f0d0295cf76e3356436ed2a3848c
+      internalID: 1924698986059080486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r3_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59f9f5f30cedb0d3a23ceabe0edd0683
+      internalID: 1867974815248499908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r3_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5d9c71bf2a120e7dc8b172d2a47d7e9
+      internalID: 2251127306956982172
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r3_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87fec1cba6ac761daf3409ac2209357b
+      internalID: -1660717275938797936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r3_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a2670bbc7c24af251c5811a02767e0d
+      internalID: -3572437980440602946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r3_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c9dd143df04491af95d1e1a79ad6d26
+      internalID: -3191306700936417210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r3_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 343c219fe9d752dc9ba031cef6aa3472
+      internalID: 3490873995900886464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Walk_r3_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5dcec8e4d97d1f133aafe6990088ca9
+      internalID: 3859814672163301210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      EmperorPenguin_Walk_r0_c0: -365174363414522603
+      EmperorPenguin_Walk_r0_c1: 2559935705372843334
+      EmperorPenguin_Walk_r0_c2: 1737005489558114099
+      EmperorPenguin_Walk_r0_c3: 2146608511374194228
+      EmperorPenguin_Walk_r0_c4: -1428402337003385929
+      EmperorPenguin_Walk_r0_c5: 4348514755387786796
+      EmperorPenguin_Walk_r0_c6: -1880154140523084832
+      EmperorPenguin_Walk_r0_c7: -3106792402290638616
+      EmperorPenguin_Walk_r1_c0: 4175340136983117270
+      EmperorPenguin_Walk_r1_c1: 1121616909323474272
+      EmperorPenguin_Walk_r1_c2: 2275995092185389061
+      EmperorPenguin_Walk_r1_c3: 1036807309646247865
+      EmperorPenguin_Walk_r1_c4: -3628825404444248892
+      EmperorPenguin_Walk_r1_c5: -4190021226447827912
+      EmperorPenguin_Walk_r1_c6: 4459872342888555211
+      EmperorPenguin_Walk_r1_c7: -2376070421340452001
+      EmperorPenguin_Walk_r2_c0: -4401625496598996324
+      EmperorPenguin_Walk_r2_c1: -4503435695574897540
+      EmperorPenguin_Walk_r2_c2: -4524778232581370089
+      EmperorPenguin_Walk_r2_c3: -2389541656900386583
+      EmperorPenguin_Walk_r2_c4: 3517674068405989612
+      EmperorPenguin_Walk_r2_c5: -555996061288985310
+      EmperorPenguin_Walk_r2_c6: 3763225996516561781
+      EmperorPenguin_Walk_r2_c7: 865504992950034902
+      EmperorPenguin_Walk_r3_c0: 1924698986059080486
+      EmperorPenguin_Walk_r3_c1: 1867974815248499908
+      EmperorPenguin_Walk_r3_c2: 2251127306956982172
+      EmperorPenguin_Walk_r3_c3: -1660717275938797936
+      EmperorPenguin_Walk_r3_c4: -3572437980440602946
+      EmperorPenguin_Walk_r3_c5: -3191306700936417210
+      EmperorPenguin_Walk_r3_c6: 3490873995900886464
+      EmperorPenguin_Walk_r3_c7: 3859814672163301210
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

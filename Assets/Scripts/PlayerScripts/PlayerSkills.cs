@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerSkills : MonoBehaviour
 {
-    public const int MaxSkills = 6;
+    public const int MaxSkills = 7;
 
     public class Skill
     {

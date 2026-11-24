@@ -17,7 +17,7 @@ public class PlayerCollabs : MonoBehaviour
     }
 
     public static int MaxBombsPerThrow => Hero.Current.id == "Jin" || Hero.Current.id == "Nyx" ? 4 : 6;
-    public const int MaxCollabs = 4;
+    public const int MaxCollabs = 5;
 
     public static readonly Def[] All =
     {
@@ -55,6 +55,16 @@ public class PlayerCollabs : MonoBehaviour
         new Def { id = "phoenix", kind = Kind.Merge, a = "boomerang", b = "molotov", name = "Fire Rang",
                   text = "3 flaming boomerangs. Leave fire behind, explode where they turn" },
 
+        // Shop weapon combos (Hairball Cannon, Sardine Rain)
+        new Def { id = "furball", kind = Kind.Merge, a = "hairball", b = "glue", name = "Furball Glob",
+                  text = "Huge sticky hairballs plow through every cat, glue them in place and leave big gluey puddles" },
+        new Def { id = "hairvolley", kind = Kind.Merge, a = "hairball", b = "missiles", name = "Hairball Volley",
+                  text = "4 homing hairballs, each chasing its own cat, burst into slime puddles" },
+        new Def { id = "fishtraps", kind = Kind.Merge, a = "sardine", b = "mines", name = "Fish Traps",
+                  text = "Every other sardine that lands stays behind as a mine" },
+        new Def { id = "grilled", kind = Kind.Merge, a = "sardine", b = "molotov", name = "Grilled Sardines",
+                  text = "2 extra sardines, and every other splash leaves a patch of fire" },
+
         new Def { id = "missilechain", kind = Kind.Boost, a = "missiles", b = "chain", name = "Chain Missiles",
                   text = "Every missile blast sets off a chain reaction" },
         new Def { id = "auraguard", kind = Kind.Boost, a = "aura", b = "thickskin", name = "Thick Coat",
@@ -72,6 +82,11 @@ public class PlayerCollabs : MonoBehaviour
                   text = "Black holes pop in a wider blast and scatter 8 mini bombs" },
         new Def { id = "repulsor", kind = Kind.Boost, a = "orbs", b = "shockwave", name = "Shoo!",
                   text = "Orbs hurl cats away and stun them for 0.4s" },
+
+        new Def { id = "deadeye", kind = Kind.Boost, a = "hairball", b = "sharpshooter", name = "Deadeye Hairball",
+                  text = "Hairballs fly almost twice as fast, plow through everything and deal 50% more damage" },
+        new Def { id = "fishfeast", kind = Kind.Boost, a = "sardine", b = "gourmet", name = "Fish Feast",
+                  text = "Each splash heals 0.5 HP per cat hit (up to 3 HP) and sometimes drops a snack" },
 
         new Def { id = "concussion", kind = Kind.Bomb, b = "shockwave", name = "Concussion Bombs",
                   text = "Bomb blasts stun everything they hit for 0.6s" },
@@ -113,9 +128,27 @@ public class PlayerCollabs : MonoBehaviour
                   text = "Every throw marks 5 spots for falling meteors" },
         new Def { id = "frostfire", kind = Kind.Super, a = "cryobeam", b = "phoenix", icon = "frost", name = "Hot & Cold",
                   text = "Ice and fire beams spin opposite ways. Cats hit by both take big damage" },
+        new Def { id = "hairpocalypse", kind = Kind.Super, a = "furball", b = "barrage", icon = "hairball", name = "Hairball Apocalypse",
+                  text = "Giant glue hairballs fall on the crowd, explode, leave a glue pool and scatter mines" },
+        new Def { id = "tidalwave", kind = Kind.Super, a = "grilled", b = "thunderstorm", icon = "sardine", name = "Tidal Wave",
+                  text = "A wall of sardines sweeps across the screen, shoving cats along. Lightning strikes some on the way" },
         new Def { id = "infernowheel", kind = Kind.Super, a = "phoenix", b = "horizon", icon = "boomerang", name = "Spin Cycle",
                   text = "2 burning wheels fly out and back, pulling cats in and trailing fire" },
     };
+
+    private static HashSet<string> comboNames;
+    // True when a damage/FX source is a combo or super combo (their weapons carry the combo's name).
+    public static bool IsComboName(string source)
+    {
+        if (string.IsNullOrEmpty(source)) return false;
+        if (comboNames == null)
+        {
+            comboNames = new HashSet<string>();
+            foreach (Def d in All) comboNames.Add(d.name);
+            foreach (Def d in Supers) comboNames.Add(d.name);
+        }
+        return comboNames.Contains(source);
+    }
 
     public static Def FindSuper(string id) => System.Array.Find(Supers, d => d.id == id);
 

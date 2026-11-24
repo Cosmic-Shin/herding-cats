@@ -119,6 +119,23 @@ public class PlayerWeapons : MonoBehaviour
             "Bigger puddles, 4 damage",
             "Slow 65%, lasts longer",
             "4 huge puddles, 75% slow, 6 damage" } },
+        // Shop weapons: locked until bought with fish coins (Shop.Weapons).
+        new Def { id = "hairball", name = "Hairball Cannon", type = typeof(HairballWeapon), levels = new[] {
+            "Fire a heavy hairball that plows through 3 cats and splats into a slowing slime puddle (18 dmg)",
+            "Damage 18 -> 22",
+            "+1 hairball",
+            "Damage 22 -> 27, plows through 4",
+            "Bigger slime puddles",
+            "+1 hairball, 32 damage, plows through 5",
+            "3 hairballs that plow through everything, 40 damage, huge puddles" } },
+        new Def { id = "sardine", name = "Sardine Rain", type = typeof(SardineRainWeapon), levels = new[] {
+            "3 sardines drop from the sky onto cats and splash everything nearby (14 dmg)",
+            "Damage 14 -> 17",
+            "+1 sardine",
+            "Bigger splashes, 21 damage",
+            "+1 sardine",
+            "+1 sardine, 25 damage, bigger splashes",
+            "8 sardines every 2s, 32 damage, huge splashes" } },
     };
 
     public static readonly Def[] CollabDefs =
@@ -140,6 +157,12 @@ public class PlayerWeapons : MonoBehaviour
         new Def { id = "cryobeam", name = "Brain Freeze", type = typeof(CryoBeamWeapon) },
         new Def { id = "phoenix", name = "Fire Rang", type = typeof(PhoenixRangWeapon) },
 
+        new Def { id = "furball", name = "Furball Glob", type = typeof(HairballWeapon) },
+        new Def { id = "hairvolley", name = "Hairball Volley", type = typeof(HairballWeapon) },
+        new Def { id = "fishtraps", name = "Fish Traps", type = typeof(SardineRainWeapon) },
+        new Def { id = "grilled", name = "Grilled Sardines", type = typeof(SardineRainWeapon) },
+        new Def { id = "deadeye", name = "Deadeye Hairball", type = typeof(HairballWeapon) },
+        new Def { id = "fishfeast", name = "Fish Feast", type = typeof(SardineRainWeapon) },
         new Def { id = "missilechain", name = "Chain Missiles", type = typeof(MissileWeapon) },
         new Def { id = "auraguard", name = "Thick Coat", type = typeof(AuraWeapon) },
         new Def { id = "blinkmines", name = "Parting Gift", type = typeof(MineWeapon) },
@@ -163,6 +186,8 @@ public class PlayerWeapons : MonoBehaviour
         new Def { id = "armageddon", name = "Catastrophe", type = typeof(ArmageddonWeapon) },
         new Def { id = "frostfire", name = "Hot & Cold", type = typeof(FrostfireEclipseWeapon) },
         new Def { id = "infernowheel", name = "Spin Cycle", type = typeof(InfernoWheelWeapon) },
+        new Def { id = "hairpocalypse", name = "Hairball Apocalypse", type = typeof(HairballApocalypseWeapon) },
+        new Def { id = "tidalwave", name = "Tidal Wave", type = typeof(TidalWaveWeapon) },
     };
 
     public static bool IsSuper(string id) => PlayerCollabs.FindSuper(id) != null;
@@ -204,6 +229,30 @@ public class PlayerWeapons : MonoBehaviour
         int before = weapon.Level;
         weapon.SetLevel(weapon.Level + 1);
         if (before < Weapon.MaxLevel && weapon.Level == Weapon.MaxLevel) { MaxBurst(def.name); PlayerCollabs.MaxHint(def.id, transform.position); }
+        else if (weapon.Level > before) LevelPop(def, weapon.Level);
+    }
+
+    // Small version of MaxBurst: the weapon's icon bounces up above you with its new level.
+    private void LevelPop(Def def, int level)
+    {
+        const float life = 0.7f, size = 0.55f;
+        Vector2 at = (Vector2)transform.position + Vector2.up * 1.2f;
+        Color gold = new Color(1f, 0.88f, 0.4f);
+        Sprite icon = UiIcons.Icon(def.id);
+        if (icon != null)
+        {
+            Shot s = Shot.Spawn(icon, Color.white, size, at, 70);
+            s.life = life;
+            s.velocity = Vector2.up * 1.2f;
+            s.onUpdate = shot =>
+            {
+                float k = shot.age / life;
+                shot.transform.localScale = Vector3.one * size * (1f + 0.4f * Mathf.Sin(Mathf.Min(1f, k * 3f) * Mathf.PI));
+                shot.Renderer.color = new Color(1f, 1f, 1f, 1f - k * k);
+            };
+        }
+        DamagePopup.SpawnText(at + Vector2.up * 0.5f, level == 1 ? "NEW!" : "Lv " + level, gold, 3f);
+        Juice.Sparks(at, gold, 5, 3f, 0.1f);
     }
 
     private void MaxBurst(string name)

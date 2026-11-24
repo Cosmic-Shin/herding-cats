@@ -54,6 +54,7 @@ public class ExplosionFx : MonoBehaviour
 
     private static void Layer(Vector2 pos, float size, Sprite sprite, Color? tint, float duration, float alpha, int order)
     {
+        if (order > 0 && PlayerCollabs.IsComboName(DamageStats.Source)) { order = 4; alpha *= 0.5f; } // combo blasts sit under the cats
         ExplosionFx fx = Get();
         fx.transform.position = pos;
         fx.transform.localScale = Vector3.zero;

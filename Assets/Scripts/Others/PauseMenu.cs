@@ -162,6 +162,7 @@ public class PauseMenu : MonoBehaviour
 
     private void Restart()
     {
+        Shop.PayOut();
         Time.timeScale = 1f;
         SceneFade.Reload();
     }

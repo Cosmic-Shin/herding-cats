@@ -1,0 +1,1378 @@
+fileFormatVersion: 2
+guid: 809bf4c86b3d5ea19391d3958b644090
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 790256220974679358
+    second: MagmaSlugKing_Idle_r0_c0
+  - first:
+      213: 1098047185606154359
+    second: MagmaSlugKing_Idle_r0_c1
+  - first:
+      213: -1287809630949101808
+    second: MagmaSlugKing_Idle_r0_c2
+  - first:
+      213: -3372659445035424944
+    second: MagmaSlugKing_Idle_r0_c3
+  - first:
+      213: -170314883251822649
+    second: MagmaSlugKing_Idle_r0_c4
+  - first:
+      213: 907968303708309280
+    second: MagmaSlugKing_Idle_r0_c5
+  - first:
+      213: 1116867222734072467
+    second: MagmaSlugKing_Idle_r0_c6
+  - first:
+      213: -1775877804348340897
+    second: MagmaSlugKing_Idle_r0_c7
+  - first:
+      213: -2152482795224585847
+    second: MagmaSlugKing_Idle_r0_c8
+  - first:
+      213: 1019189806259129227
+    second: MagmaSlugKing_Idle_r0_c9
+  - first:
+      213: 2030986667149996282
+    second: MagmaSlugKing_Idle_r0_c10
+  - first:
+      213: -4556950462559168298
+    second: MagmaSlugKing_Idle_r0_c11
+  - first:
+      213: 1686983475987819972
+    second: MagmaSlugKing_Idle_r1_c0
+  - first:
+      213: 586783954337755450
+    second: MagmaSlugKing_Idle_r1_c1
+  - first:
+      213: -4039624485088943662
+    second: MagmaSlugKing_Idle_r1_c2
+  - first:
+      213: -3368449073780292569
+    second: MagmaSlugKing_Idle_r1_c3
+  - first:
+      213: 4374514314164128228
+    second: MagmaSlugKing_Idle_r1_c4
+  - first:
+      213: -1000130524467032221
+    second: MagmaSlugKing_Idle_r1_c5
+  - first:
+      213: 1385426888943689003
+    second: MagmaSlugKing_Idle_r1_c6
+  - first:
+      213: -431721882474805736
+    second: MagmaSlugKing_Idle_r1_c7
+  - first:
+      213: 1525684370401676614
+    second: MagmaSlugKing_Idle_r1_c8
+  - first:
+      213: -2134402315284625689
+    second: MagmaSlugKing_Idle_r1_c9
+  - first:
+      213: 1134440947670426686
+    second: MagmaSlugKing_Idle_r1_c10
+  - first:
+      213: 1743227612054965843
+    second: MagmaSlugKing_Idle_r1_c11
+  - first:
+      213: -3287504733998084397
+    second: MagmaSlugKing_Idle_r2_c0
+  - first:
+      213: -158554097341192021
+    second: MagmaSlugKing_Idle_r2_c1
+  - first:
+      213: 1289598346988826174
+    second: MagmaSlugKing_Idle_r2_c2
+  - first:
+      213: -3095526373241119203
+    second: MagmaSlugKing_Idle_r2_c3
+  - first:
+      213: -710762013155813467
+    second: MagmaSlugKing_Idle_r2_c4
+  - first:
+      213: -3351539412513082660
+    second: MagmaSlugKing_Idle_r2_c5
+  - first:
+      213: 2822712684481566004
+    second: MagmaSlugKing_Idle_r2_c6
+  - first:
+      213: -783072228683099957
+    second: MagmaSlugKing_Idle_r2_c7
+  - first:
+      213: -1178982073262062766
+    second: MagmaSlugKing_Idle_r2_c8
+  - first:
+      213: -2237679127907541908
+    second: MagmaSlugKing_Idle_r2_c9
+  - first:
+      213: 2880766362419534630
+    second: MagmaSlugKing_Idle_r2_c10
+  - first:
+      213: 123142028946650918
+    second: MagmaSlugKing_Idle_r2_c11
+  - first:
+      213: -3047060678500986789
+    second: MagmaSlugKing_Idle_r3_c0
+  - first:
+      213: 4511975398662927602
+    second: MagmaSlugKing_Idle_r3_c1
+  - first:
+      213: -2376184754872225376
+    second: MagmaSlugKing_Idle_r3_c2
+  - first:
+      213: 2381862415014647586
+    second: MagmaSlugKing_Idle_r3_c3
+  - first:
+      213: 2244336683617424262
+    second: MagmaSlugKing_Idle_r3_c4
+  - first:
+      213: -2327438451753971597
+    second: MagmaSlugKing_Idle_r3_c5
+  - first:
+      213: -1705065115224503109
+    second: MagmaSlugKing_Idle_r3_c6
+  - first:
+      213: -4080374804982736438
+    second: MagmaSlugKing_Idle_r3_c7
+  - first:
+      213: 1521018951168774911
+    second: MagmaSlugKing_Idle_r3_c8
+  - first:
+      213: -1435147485117690771
+    second: MagmaSlugKing_Idle_r3_c9
+  - first:
+      213: 2803000833600788827
+    second: MagmaSlugKing_Idle_r3_c10
+  - first:
+      213: -2626148083402043016
+    second: MagmaSlugKing_Idle_r3_c11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 20
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r0_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdf84edfd5a71e8d6c3046771c89fca2
+      internalID: 790256220974679358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r0_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b12724c57a7b56f3bfe4b696be93eb28
+      internalID: 1098047185606154359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r0_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12fa1cdaa5b1355f540997a5ab7ba0c0
+      internalID: -1287809630949101808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r0_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd2ba73e6e12815815c795b79c851313
+      internalID: -3372659445035424944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r0_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab465523bd3ba44ed48d8c352053fbe3
+      internalID: -170314883251822649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r0_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 841cc11a0af6c8c1ac1b651fb087922c
+      internalID: 907968303708309280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r0_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da92bc0126466bd1ca88953eba37e73d
+      internalID: 1116867222734072467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r0_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88e758259f6b91365f7a6a0ddc38ff41
+      internalID: -1775877804348340897
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r0_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9bb48cf9660078742c6424321109c56
+      internalID: -2152482795224585847
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r0_c9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1949bdb8389d575edc4f678ac97dc22
+      internalID: 1019189806259129227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r0_c10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 023877972b2be88213208d54aba97479
+      internalID: 2030986667149996282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r0_c11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6712e72fa906982a5d07181c6a0681d2
+      internalID: -4556950462559168298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r1_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90effc2bf54823a263eaba1e489cfd09
+      internalID: 1686983475987819972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r1_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4e5139048aabd3418d1abde43f66932
+      internalID: 586783954337755450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r1_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2e04f91c01f7a71da364ee103b70b33
+      internalID: -4039624485088943662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r1_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d801d9dc40518d495f705dd89ec96bbd
+      internalID: -3368449073780292569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r1_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7bd4d4a7d7f89bc44feacc5fb240b4e1
+      internalID: 4374514314164128228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r1_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0947f548a46116f37f28f78f9b6d55a1
+      internalID: -1000130524467032221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r1_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86bdeabcee3038eddb330d037f79a2bf
+      internalID: 1385426888943689003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r1_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 735e1f34c7141121cced4321ec884547
+      internalID: -431721882474805736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r1_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 133627751b6536905d2859f5453d865f
+      internalID: 1525684370401676614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r1_c9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cec804f60507a5fd31319752d461436f
+      internalID: -2134402315284625689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r1_c10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ecdae4f17ed0b2ca732e1689ad502b35
+      internalID: 1134440947670426686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r1_c11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5bc488563e2c39819f1ace8c49a4dadb
+      internalID: 1743227612054965843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r2_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ade29f41edac6f814820dd906a4ed435
+      internalID: -3287504733998084397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r2_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6827a1b7edc1ed5aa9931458dbfb35d
+      internalID: -158554097341192021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r2_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d1c8668927c7a867d5c788169b0fc26
+      internalID: 1289598346988826174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r2_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc02fd9b03c12e023b5b417a084b6fce
+      internalID: -3095526373241119203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r2_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75662b4a4c77b3edb947610a490e603c
+      internalID: -710762013155813467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r2_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45e900134d2c6a9b76f6f6da9d182147
+      internalID: -3351539412513082660
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r2_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb80045777dd0ff93ef05a8c8b15c77a
+      internalID: 2822712684481566004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r2_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36ed228d5aadee9687948f2293130865
+      internalID: -783072228683099957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r2_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7eb68d34124d3e2775d70faa24f831d0
+      internalID: -1178982073262062766
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r2_c9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94905ae8b34a0d718ab3b8f8fb95a1cf
+      internalID: -2237679127907541908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r2_c10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb63c38746591914590d3772e85a585e
+      internalID: 2880766362419534630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r2_c11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9796a3682aa26ea2fcc9b21c4fb729f2
+      internalID: 123142028946650918
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r3_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b876ad109ec4071b15c4e090ad5aa772
+      internalID: -3047060678500986789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r3_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49ead1a3d54ccef0e65f85070bf69724
+      internalID: 4511975398662927602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r3_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f730e06fb51351b40a7bf1b19dfb496f
+      internalID: -2376184754872225376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r3_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36aa60f13a99548b03be487c549b27fe
+      internalID: 2381862415014647586
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r3_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 927d66bdecec45ed089fc9e0d905e7a5
+      internalID: 2244336683617424262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r3_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 606f9b01e1813be847a4790e5b677e83
+      internalID: -2327438451753971597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r3_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3347c9ea5f225acb3aaa49e3259adb1a
+      internalID: -1705065115224503109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r3_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f95d1be0d5af357fd1c971bab1c6af95
+      internalID: -4080374804982736438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r3_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de17d37419cd4af15ce3ef179e78e3bd
+      internalID: 1521018951168774911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r3_c9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3d710cf35dd5a5c425e9b0ef71d81bf
+      internalID: -1435147485117690771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r3_c10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e6d8d4c936e560d9581771a6bccba0e
+      internalID: 2803000833600788827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Idle_r3_c11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4065b559dc1d0e50261eda0b87528dc3
+      internalID: -2626148083402043016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      MagmaSlugKing_Idle_r0_c0: 790256220974679358
+      MagmaSlugKing_Idle_r0_c1: 1098047185606154359
+      MagmaSlugKing_Idle_r0_c2: -1287809630949101808
+      MagmaSlugKing_Idle_r0_c3: -3372659445035424944
+      MagmaSlugKing_Idle_r0_c4: -170314883251822649
+      MagmaSlugKing_Idle_r0_c5: 907968303708309280
+      MagmaSlugKing_Idle_r0_c6: 1116867222734072467
+      MagmaSlugKing_Idle_r0_c7: -1775877804348340897
+      MagmaSlugKing_Idle_r0_c8: -2152482795224585847
+      MagmaSlugKing_Idle_r0_c9: 1019189806259129227
+      MagmaSlugKing_Idle_r0_c10: 2030986667149996282
+      MagmaSlugKing_Idle_r0_c11: -4556950462559168298
+      MagmaSlugKing_Idle_r1_c0: 1686983475987819972
+      MagmaSlugKing_Idle_r1_c1: 586783954337755450
+      MagmaSlugKing_Idle_r1_c2: -4039624485088943662
+      MagmaSlugKing_Idle_r1_c3: -3368449073780292569
+      MagmaSlugKing_Idle_r1_c4: 4374514314164128228
+      MagmaSlugKing_Idle_r1_c5: -1000130524467032221
+      MagmaSlugKing_Idle_r1_c6: 1385426888943689003
+      MagmaSlugKing_Idle_r1_c7: -431721882474805736
+      MagmaSlugKing_Idle_r1_c8: 1525684370401676614
+      MagmaSlugKing_Idle_r1_c9: -2134402315284625689
+      MagmaSlugKing_Idle_r1_c10: 1134440947670426686
+      MagmaSlugKing_Idle_r1_c11: 1743227612054965843
+      MagmaSlugKing_Idle_r2_c0: -3287504733998084397
+      MagmaSlugKing_Idle_r2_c1: -158554097341192021
+      MagmaSlugKing_Idle_r2_c2: 1289598346988826174
+      MagmaSlugKing_Idle_r2_c3: -3095526373241119203
+      MagmaSlugKing_Idle_r2_c4: -710762013155813467
+      MagmaSlugKing_Idle_r2_c5: -3351539412513082660
+      MagmaSlugKing_Idle_r2_c6: 2822712684481566004
+      MagmaSlugKing_Idle_r2_c7: -783072228683099957
+      MagmaSlugKing_Idle_r2_c8: -1178982073262062766
+      MagmaSlugKing_Idle_r2_c9: -2237679127907541908
+      MagmaSlugKing_Idle_r2_c10: 2880766362419534630
+      MagmaSlugKing_Idle_r2_c11: 123142028946650918
+      MagmaSlugKing_Idle_r3_c0: -3047060678500986789
+      MagmaSlugKing_Idle_r3_c1: 4511975398662927602
+      MagmaSlugKing_Idle_r3_c2: -2376184754872225376
+      MagmaSlugKing_Idle_r3_c3: 2381862415014647586
+      MagmaSlugKing_Idle_r3_c4: 2244336683617424262
+      MagmaSlugKing_Idle_r3_c5: -2327438451753971597
+      MagmaSlugKing_Idle_r3_c6: -1705065115224503109
+      MagmaSlugKing_Idle_r3_c7: -4080374804982736438
+      MagmaSlugKing_Idle_r3_c8: 1521018951168774911
+      MagmaSlugKing_Idle_r3_c9: -1435147485117690771
+      MagmaSlugKing_Idle_r3_c10: 2803000833600788827
+      MagmaSlugKing_Idle_r3_c11: -2626148083402043016
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

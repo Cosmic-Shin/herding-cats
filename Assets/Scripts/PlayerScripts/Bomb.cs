@@ -139,9 +139,9 @@ public class Bomb : MonoBehaviour, IPoolable
         foreach (Collider2D hit in OverlapEnemies(pos, radius, hits))
         {
             if (!hit.TryGetComponent(out EnemyHealth enemy)) continue;
-            bool crit = Random.value < critChance || MiraPassives.AutoCrit(enemy);
+            bool crit = Random.value < critChance || LilacPassives.AutoCrit(enemy);
             if (crit) crits++;
-            enemy.TakeDamage(damage * (crit ? critMultiplier * MiraPassives.CritBonus(enemy) : 1f) * Random.Range(0.9f, 1.1f), pos, crit);
+            enemy.TakeDamage(damage * (crit ? critMultiplier * LilacPassives.CritBonus(enemy) : 1f) * Random.Range(0.9f, 1.1f), pos, crit);
             if (concussion && hit.TryGetComponent(out EnemyAI stunned)) stunned.Stun(0.6f);
         }
 

@@ -17,9 +17,9 @@ public class CompanionPickup : MonoBehaviour
         go.transform.position = at;
         var p = go.AddComponent<CompanionPickup>();
         p.sr = go.AddComponent<SpriteRenderer>();
-        p.sr.color = Companion.Gold;
+        p.sr.color = Color.white;
         p.sr.sortingOrder = 8;
-        p.sleep = catSprites.sleep;
+        p.sleep = BuddySprites.Get(0, "Idle") ?? catSprites.sleep; // the kitten waiting to be found
         p.walk = catSprites.walk;
         p.idle = catSprites.idle;
         p.basePos = at;

@@ -13,7 +13,7 @@ public class DamagePopup : MonoBehaviour
     private Color color;
     private bool crit;
 
-    private const int MaxDamageNumbers = 40;
+    private const int MaxDamageNumbers = 30;
     private static int activeDamageNumbers;
     private bool countsTowardCap;
 
@@ -24,6 +24,8 @@ public class DamagePopup : MonoBehaviour
     private static void ResetStatics()
     {
         activeDamageNumbers = 0;
+        lastBanner = -10f;
+        bannerStack = 0;
         free.Clear();
         sharedOutlineMaterial = null;
     }
@@ -38,15 +40,15 @@ public class DamagePopup : MonoBehaviour
     public static void Spawn(Vector2 pos, float amount, bool crit)
     {
         if (!Settings.DamageNumbers) return;
-        if (!crit && activeDamageNumbers >= MaxDamageNumbers) return;
+        if (activeDamageNumbers >= MaxDamageNumbers) return;
         activeDamageNumbers++;
-        float size = (crit ? 5.2f : 4.2f) * Mathf.Clamp(0.85f + Mathf.Log10(Mathf.Max(1f, amount)) * 0.2f, 0.85f, 1.6f);
+        float size = (crit ? 3.6f : 3f) * Mathf.Clamp(0.85f + Mathf.Log10(Mathf.Max(1f, amount)) * 0.12f, 0.85f, 1.25f);
         string number = Mathf.RoundToInt(amount).ToString();
         DamagePopup popup = SpawnText(pos, crit ? number + "!" : number, crit ? new Color(1f, 0.85f, 0.2f) : SourceColor(DamageStats.Source), size);
         popup.countsTowardCap = true;
         if (!crit) return;
         popup.crit = true;
-        popup.pop = 1.9f;
+        popup.pop = 1.4f;
         popup.velocity.y += 1.2f;
         popup.color = Color.white;
         popup.text.enableVertexGradient = true;
@@ -60,10 +62,10 @@ public class DamagePopup : MonoBehaviour
         if (string.IsNullOrEmpty(source)) return Color.white;
         if (sourceColors.TryGetValue(source, out Color c)) return c;
         bool Has(params string[] words) => System.Array.Exists(words, w => source.Contains(w));
-        c = Has("Molotov", "Tar", "Firebomb", "Fire", "Hot", "Spicy", "Spin Cycle") ? new Color(1f, 0.6f, 0.25f)
-          : Has("Frost", "Glacier", "Cold", "Snow", "Brain Freeze") ? new Color(0.6f, 0.9f, 1f)
+        c = Has("Molotov", "Tar", "Firebomb", "Fire", "Hot", "Spicy", "Spin Cycle", "Grilled") ? new Color(1f, 0.6f, 0.25f)
+          : Has("Frost", "Glacier", "Cold", "Snow", "Brain Freeze", "Sardine", "Fish", "Tidal") ? new Color(0.6f, 0.9f, 1f)
           : Has("Lightning", "Thunder", "Static", "Hiss", "Cat-egory") ? new Color(1f, 0.95f, 0.45f)
-          : Has("Glue", "Sticky") ? new Color(0.55f, 1f, 0.45f)
+          : Has("Glue", "Sticky", "Hairball", "Furball") ? new Color(0.55f, 1f, 0.45f)
           : Has("Laser") ? new Color(1f, 0.55f, 0.65f)
           : Has("Black Hole", "Litter Box", "Yarn") ? new Color(0.8f, 0.6f, 1f)
           : Has("Aura", "Kneading", "Purr", "Halo") ? new Color(0.85f, 0.78f, 1f)
@@ -71,8 +73,20 @@ public class DamagePopup : MonoBehaviour
         return sourceColors[source] = c;
     }
 
+    private const float BannerSize = 5f, BannerGap = 1.6f, BannerWindow = 0.9f;
+    private static float lastBanner = -10f;
+    private static int bannerStack;
+
     public static DamagePopup SpawnText(Vector2 pos, string message, Color color, float size)
     {
+        // Big banners (LEVEL UP!, MEOWL JOINED!...) that pop close together stack upward instead of overlapping.
+        if (size >= BannerSize)
+        {
+            float now = Time.unscaledTime;
+            bannerStack = now - lastBanner < BannerWindow ? Mathf.Min(bannerStack + 1, 2) : 0; // at most 3 lines high
+            lastBanner = now;
+            pos.y += bannerStack * BannerGap;
+        }
         DamagePopup popup = Get();
         popup.transform.position = pos + new Vector2(Random.Range(-0.2f, 0.2f), 0.4f);
         popup.text.text = message;

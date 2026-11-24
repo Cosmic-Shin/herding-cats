@@ -11,6 +11,9 @@ public class EnemySpawner : MonoBehaviour
         public float spawnInterval = 2f;
         public float timeToUnlock = 0f;
         public bool special;
+        [Tooltip("-1 = every map, else only on this MapGenerator.Biome (0 Meadow, 1 Winter, 2 Volcano)")]
+        public int map = -1;
+        public bool OnThisMap => map < 0 || map == MapGenerator.Biome;
     }
 
     [Header("References")]
@@ -79,21 +82,22 @@ public class EnemySpawner : MonoBehaviour
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStatics() => DamageScale = SpeedScale = 1f;
 
-    [Header("Endless (HoloCure 30-min style): when the final boss (BossTimeline, 20:00) dies, every enemy vanishes and only minibosses come")]
-    public float endlessWaveInterval = 2.2f;
-    public float endlessMinWaveInterval = 0.9f;
-    public int endlessRingStart = 14;
-    public int endlessRingPerMinute = 4;
-    public int endlessRingMax = 36;
-    public int endlessMaxAlive = 500;
-    public float endlessHealthStart = 1f;
-    public float endlessHealthPerMinute = 0.4f;
-    [Tooltip("Regular waves keep spawning in endless, this many times faster (grows per minute, capped)")]
+    [Header("Endless: after the final boss (BossTimeline, 20:00) the run never ends. The normal horde keeps coming and keeps scaling")]
+    [Tooltip("Hard cap on living enemies in endless (performance)")]
+    public int endlessAliveCap = 400;
+    [Tooltip("Extra enemy HP per endless minute (+x per minute)")]
+    public float endlessHpPerMinute = 0.6f;
+    [Tooltip("Extra enemy damage per endless minute (+x per minute)")]
+    public float endlessDamagePerMinute = 0.08f;
+    [Tooltip("Elite chance added to every spawn as soon as endless starts")]
+    public float endlessEliteBase = 0.04f;
+    [Tooltip("Regular waves spawn this many times faster in endless (grows per minute, capped)")]
     public float endlessHordeStart = 3f;
     public float endlessHordePerMinute = 0.5f;
     public float endlessHordeMax = 8f;
-    public int endlessBigCatRoom = 120;
     public float endlessSpeedStart = 0.35f;
+    [Tooltip("Seconds between single big cats walking in")]
+    public float endlessBigCatInterval = 20f;
     public static bool Endless { get; private set; }
     private float endlessStart, endlessTimer;
 
@@ -113,43 +117,13 @@ public class EnemySpawner : MonoBehaviour
         Endless = true;
         endlessStart = runTime;
         StartLateGame();
-        endlessTimer = 2.5f;
-        StartCoroutine(EndlessShockwave());
-        BossTimeline timeline = FindFirstObjectByType<BossTimeline>();
-        if (timeline != null) timeline.Announce("ENDLESS MODE", "here come the big cats");
-    }
-
-    private System.Collections.IEnumerator EndlessShockwave()
-    {
-        const float speed = 22f, maxRadius = 26f;
-        Color red = new Color(1f, 0.25f, 0.3f);
-        Vector2 center = player.position;
-        Juice.Flash(new Color(1f, 0.3f, 0.3f, 0.6f), 0.8f);
-        Juice.SlowMo(0.3f, 0.6f);
-        CameraFollow.Shake(0.35f, 0.6f);
-        CameraFollow.ZoomPunch(0.8f);
+        endlessTimer = endlessBigCatInterval;
+        endlessEliteChance = endlessEliteBase;
+        Juice.Flash(new Color(1f, 0.3f, 0.3f, 0.5f), 0.6f);
+        CameraFollow.Shake(0.25f, 0.4f);
         Sfx.Play(Sfx.Id.Boom, 1f, 0.5f);
-        ExplosionFx.Ring(center, maxRadius, red, maxRadius / speed);
-        ExplosionFx.Ring(center, maxRadius * 0.6f, Color.white, maxRadius / speed * 0.7f);
-        Lighting.Flash(center, 14f, red, 1f);
-
-        var targets = new List<EnemyHealth>();
-        foreach (EnemyHealth e in FindObjectsByType<EnemyHealth>(FindObjectsSortMode.None))
-            if (!e.IsDead && !e.TryGetComponent(out Crate _)) targets.Add(e);
-
-        for (float radius = 0f; targets.Count > 0; radius += speed * Time.unscaledDeltaTime)
-        {
-            for (int i = targets.Count - 1; i >= 0; i--)
-            {
-                EnemyHealth e = targets[i];
-                if (e == null || !e.gameObject.activeInHierarchy || e.IsDead) { targets.RemoveAt(i); continue; }
-                if (radius < maxRadius && Vector2.Distance(center, e.transform.position) > radius) continue;
-                Juice.CatPuff(e.transform.position, new Color(1f, 0.6f, 0.6f));
-                Pool.Despawn(e.gameObject);
-                targets.RemoveAt(i);
-            }
-            yield return null;
-        }
+        BossTimeline timeline = FindFirstObjectByType<BossTimeline>();
+        if (timeline != null) timeline.Announce("ENDLESS MODE", "the horde never stops");
     }
 
     [Header("Endless milestones: every N minutes a boss returns and a new twist kicks in")]
@@ -166,7 +140,7 @@ public class EnemySpawner : MonoBehaviour
         string twist;
         switch (milestone)
         {
-            case 1: endlessEliteChance = 0.25f; twist = "big cats can now be elite"; break;
+            case 1: endlessEliteChance += 0.08f; twist = "elites are more common"; break;
             case 2: endlessWaveRate = 2f; twist = "waves come twice as fast"; break;
             case 3: endlessDamageMul = 2f; twist = "cats hit twice as hard"; break;
             default: endlessHealthMul *= 2f; endlessDamageMul *= 1.25f; twist = "the cats got tougher. again"; break;
@@ -186,25 +160,10 @@ public class EnemySpawner : MonoBehaviour
     private void UpdateEndless()
     {
         CheckMilestone();
-        if (miniBosses.Count == 0 || (endlessTimer -= Time.deltaTime) > 0f) return;
-        float minutes = EndlessMinutes;
-        endlessTimer = Mathf.Max(endlessMinWaveInterval, endlessWaveInterval - minutes * 0.25f) / endlessWaveRate;
-
-        int ring = Mathf.Min(endlessRingMax, endlessRingStart + Mathf.FloorToInt(minutes * endlessRingPerMinute));
-        ring = Mathf.Min(ring, endlessMaxAlive - EnemyAI.AliveCount);
-        float turn = Random.Range(0f, 360f);
-        float health = endlessHealthStart + minutes * endlessHealthPerMinute;
-        for (int i = 0; i < ring; i++)
-        {
-            float angle = (turn + i * 360f / ring + Random.Range(-6f, 6f)) * Mathf.Deg2Rad;
-            Vector2 at = (Vector2)player.position + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * Random.Range(minSpawnRadius, maxSpawnRadius);
-            GameObject cat = SpawnMiniBoss(miniBosses[Random.Range(0, miniBosses.Count)], at, health, unstoppable: true);
-            if (cat != null && Random.value < endlessEliteChance && cat.TryGetComponent(out EnemyHealth h) && cat.TryGetComponent(out EnemyAI ai))
-            {
-                h.MakeElite(2f, 2);
-                ai.MakeElite();
-            }
-        }
+        if ((endlessTimer -= Time.deltaTime) > 0f) return;
+        endlessTimer = endlessBigCatInterval / endlessWaveRate;
+        List<MiniBoss> picks = miniBosses.FindAll(x => x.OnThisMap && x.prefab != null);
+        if (picks.Count > 0) SpawnMiniBoss(picks[Random.Range(0, picks.Count)]);
     }
 
     private float LateBoost => 1f + Mathf.Clamp(runTime - lateFrom - lateSpawnStart, 0f, lateSpawnRampSeconds * (lateSpawnMaxBoost - 1f)) / lateSpawnRampSeconds;
@@ -216,6 +175,9 @@ public class EnemySpawner : MonoBehaviour
         public GameObject prefab;
         public float scale = 3f;
         public float healthMultiplier = 1f;
+        [Tooltip("-1 = every map, else only on this MapGenerator.Biome (0 Meadow, 1 Winter, 2 Volcano)")]
+        public int map = -1;
+        public bool OnThisMap => map < 0 || map == MapGenerator.Biome;
         [System.NonSerialized] public bool spawned;
     }
 
@@ -277,7 +239,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void Prewarm()
     {
-        foreach (var wave in enemyWaves) Pool.Prewarm(wave.enemyPrefab, wave.special ? 6 : 40);
+        foreach (var wave in enemyWaves) if (wave.OnThisMap) Pool.Prewarm(wave.enemyPrefab, wave.special ? 6 : 40);
         if (mousePrefab != null) Pool.Prewarm(mousePrefab, mousePackSizeMax);
 
         if (player != null && player.TryGetComponent(out PlayerAutoAttack attack)) Pool.Prewarm(attack.bombPrefab, 40);
@@ -286,7 +248,7 @@ public class EnemySpawner : MonoBehaviour
 
         DamagePopup.Prewarm(40);
         ExplosionFx.Prewarm(30);
-        LavaArt.Prewarm();
+        StartCoroutine(LavaArt.WarmUp());
         StompFx.Prewarm();
     }
 
@@ -296,7 +258,7 @@ public class EnemySpawner : MonoBehaviour
 
         runTime += Time.deltaTime;
         difficultyTimer += Time.deltaTime;
-        DamageScale = (1f + runTime / 60f * damageGrowthPerMinute) * difficulty * (1f + SurgeMinutes * surgeDamagePerMinute) * endlessDamageMul * stepMul;
+        DamageScale = (1f + runTime / 60f * damageGrowthPerMinute) * difficulty * (1f + SurgeMinutes * surgeDamagePerMinute) * endlessDamageMul * stepMul * (1f + EndlessMinutes * endlessDamagePerMinute);
         SpeedScale = Mathf.Min(maxSpeedScale, 1f + SurgeMinutes * surgeSpeedPerMinute + (Endless ? endlessSpeedStart + EndlessMinutes * endlessSpeedPerMinute : 0f));
 
         if ((crateTimer -= Time.deltaTime) <= 0f)
@@ -308,7 +270,7 @@ public class EnemySpawner : MonoBehaviour
         if (Endless) UpdateEndless();
 
         float lateBoost = LateBoost * (Endless ? Mathf.Min(endlessHordeMax, endlessHordeStart + EndlessMinutes * endlessHordePerMinute) * endlessWaveRate : 1f);
-        int cap = Endless ? endlessMaxAlive - endlessBigCatRoom : AliveCap;
+        int cap = AliveCap;
 
         if (difficultyTimer >= difficultyRampInterval)
         {
@@ -318,7 +280,7 @@ public class EnemySpawner : MonoBehaviour
 
         foreach (var wave in enemyWaves)
         {
-            if (runTime < wave.timeToUnlock) continue;
+            if (runTime < wave.timeToUnlock || !wave.OnThisMap) continue;
 
             spawnTimers[wave] += Time.deltaTime;
             float effectiveInterval = Mathf.Max(minSpawnInterval, wave.spawnInterval / maxSpeedup, wave.spawnInterval * difficultyMultiplier) / lateBoost;
@@ -330,11 +292,9 @@ public class EnemySpawner : MonoBehaviour
             }
         }
 
-        if (Endless) return;
-
         foreach (MiniBoss m in miniBosses)
         {
-            if (m.spawned || runTime < m.time) continue;
+            if (Endless || m.spawned || runTime < m.time || !m.OnThisMap) continue;
             m.spawned = true;
             SpawnMiniBoss(m);
         }
@@ -500,16 +460,16 @@ public class EnemySpawner : MonoBehaviour
 
     private GameObject RandomUnlockedPrefab()
     {
-        var unlocked = enemyWaves.FindAll(w => w.enemyPrefab != null && !w.special && runTime >= w.timeToUnlock);
+        var unlocked = enemyWaves.FindAll(w => w.enemyPrefab != null && !w.special && w.OnThisMap && runTime >= w.timeToUnlock);
         return unlocked.Count > 0 ? unlocked[Random.Range(0, unlocked.Count)].enemyPrefab : null;
     }
 
     public void SpawnNow(GameObject prefab) => SpawnEnemy(prefab);
 
-    public void SpawnAround(Vector2 center, int count, float radius)
+    public void SpawnAround(Vector2 center, int count, float radius, GameObject prefab = null)
     {
         count = Mathf.Min(count, AliveCap - EnemyAI.AliveCount);
-        GameObject prefab = RandomUnlockedPrefab();
+        if (prefab == null) prefab = RandomUnlockedPrefab();
         if (prefab == null || count <= 0) return;
         for (int i = 0; i < count; i++)
         {
@@ -521,7 +481,7 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    private int AliveCap => Endless ? endlessMaxAlive
+    private int AliveCap => Endless ? endlessAliveCap
         : maxEnemies + Mathf.RoundToInt(lateMaxEnemiesBonus * (LateBoost - 1f) / Mathf.Max(0.01f, lateSpawnMaxBoost - 1f));
 
     public void Advance(float seconds)
@@ -532,7 +492,7 @@ public class EnemySpawner : MonoBehaviour
     }
 
     public float HealthMultiplier => (1f + runTime / 60f * healthGrowthPerMinute + (runTime / 60f) * (runTime / 60f) * healthGrowthQuadratic) * difficulty
-                                    * (1f + SurgeMinutes * SurgeMinutes * surgeHealthQuadratic) * stepMul * endlessHealthMul;
+                                    * (1f + SurgeMinutes * SurgeMinutes * surgeHealthQuadratic) * stepMul * endlessHealthMul * (1f + EndlessMinutes * endlessHpPerMinute);
 
     private void SpawnEnemy(GameObject prefab)
     {
@@ -542,7 +502,7 @@ public class EnemySpawner : MonoBehaviour
         if (enemy.TryGetComponent(out EnemyHealth health))
         {
             health.ScaleHealth(HealthMultiplier);
-            float eliteChance = Mathf.Min(eliteChanceMax, (runTime - eliteStartTime) / 60f * eliteChancePerMinute);
+            float eliteChance = Mathf.Min(eliteChanceMax, (runTime - eliteStartTime) / 60f * eliteChancePerMinute) + endlessEliteChance;
             if (eliteChance > 0f && Random.value < eliteChance && enemy.TryGetComponent(out EnemyAI ai))
             {
                 health.MakeElite(eliteHealth, eliteXpMultiplier);

@@ -55,7 +55,7 @@ public class HeroPreview : MonoBehaviour
         body = Part("Hero", idle, 110);
 
         bubble = sword = slash = zap = null;
-        if (id == "Mira")
+        if (id == "Lilac")
         {
             bubble = Part("Bubble", Shapes.Bubble, 112);
             slash = Part("Slash", Shapes.Crescent, 113);
@@ -104,12 +104,12 @@ public class HeroPreview : MonoBehaviour
         float k = attackT >= 0f ? attackT : -1f;
         glow.color = new Color(glow.color.r, glow.color.g, glow.color.b, 0.28f + 0.08f * Mathf.Sin(t * 2f));
 
-        if (hero == "Mira") Mira(k);
+        if (hero == "Lilac") Lilac(k);
         else if (hero == "Jin") Jin(k);
         else if (hero == "Nyx") Nyx(k, dt);
     }
 
-    private void Mira(float k)
+    private void Lilac(float k)
     {
         float wob = 0.035f * Mathf.Sin(t * 5f);
         bubble.transform.localScale = new Vector3(1f + wob, 1f - wob, 1f) * 1.25f;

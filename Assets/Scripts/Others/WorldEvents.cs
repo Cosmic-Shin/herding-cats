@@ -150,15 +150,19 @@ public class WorldEvents : MonoBehaviour
         Color c = BoonColors[(int)boon];
         Announce($"<color=#{ColorUtility.ToHtmlStringRGB(c)}>SHRINE OF {BoonNames[(int)boon]}", BoonText[(int)boon], c);
         ExplosionFx.Ring(at, 3f, c, 0.4f);
+        ExplosionFx.Ring(at, 7f, Color.Lerp(c, Color.white, 0.5f), 0.7f);
         Juice.SparksDir(at, Vector2.up, 30f, c, 20, 10f, 0.16f);
-        Lighting.Flash(at, 6f, c, 0.5f);
+        Juice.Sparks(at, Color.Lerp(c, Color.white, 0.5f), 18, 7f, 0.12f);
+        Juice.Flash(new Color(c.r, c.g, c.b, 0.22f), 0.4f);
+        Juice.HitStop(0.06f);
+        Lighting.Flash(at, 9f, c, 0.8f);
         Sfx.Play(Sfx.Id.Fanfare, 0.5f);
+        foreach (Collider2D col in Bomb.OverlapEnemies(at, 5f, hits)) // the blast shoves nearby cats away
+            if (col.TryGetComponent(out IEnemyBrain brain)) brain.Knockback(((Vector2)col.transform.position - at).normalized * 16f);
         Vector2 me = player.position;
         switch (boon)
         {
             case Boon.Fury:
-                foreach (Collider2D col in Bomb.OverlapEnemies(me, 4f, hits))
-                    if (col.TryGetComponent(out IEnemyBrain brain)) brain.Knockback(((Vector2)col.transform.position - me).normalized * 14f);
                 ExplosionFx.Ring(me, 4f, c, 0.35f);
                 ExplosionFx.Ring(me, 2.5f, Color.Lerp(c, Color.white, 0.4f), 0.25f);
                 CameraFollow.Shake(0.15f, 0.2f);
@@ -232,13 +236,15 @@ public class WorldEvents : MonoBehaviour
 
     private class Shrine : MonoBehaviour
     {
-        private const float Radius = 1.3f, ClaimTime = 3f, Lifetime = 45f, StatueY = 1.75f, IconY = 3f, BlinkFrom = 5f, BurstTime = 0.6f;
+        private const float Radius = 1.3f, ClaimTime = 3f, Lifetime = 45f, StatueY = 1.75f, IconY = 3f, BlinkFrom = 5f, BurstTime = 0.9f, BeamH = 12f;
         private const int Stones = 7;
+        private static readonly Vector3 PoolSize = new Vector3(Radius * 3.4f, Radius * 2.2f, 1f);
         private WorldEvents owner;
         private Boon boon;
         private Color color;
-        private SpriteRenderer statue, carving, icon, shadow;
-        private readonly SpriteRenderer[] pavers = new SpriteRenderer[Stones], runes = new SpriteRenderer[Stones];
+        private SpriteRenderer statue, carving, icon, shadow, pool, beam, core;
+        private readonly SpriteRenderer[] pavers = new SpriteRenderer[Stones], runes = new SpriteRenderer[Stones], glows = new SpriteRenderer[Stones];
+        private readonly float[] litAt = new float[Stones];
         private UnityEngine.Rendering.Universal.Light2D glowLight;
         private AudioSource hum;
         private readonly System.Collections.Generic.List<SpriteRenderer> all = new System.Collections.Generic.List<SpriteRenderer>();
@@ -254,10 +260,14 @@ public class WorldEvents : MonoBehaviour
             this.boon = boon;
             this.color = color;
             int biome = MapGenerator.Biome;
+            pool = Layer("GlowPool", Shapes.SoftGlow, Tint(0f), 0, new Vector2(0f, 0.1f), 1f, true);
+            pool.transform.localScale = PoolSize;
             for (int i = 0; i < Stones; i++)
             {
                 float a = Mathf.PI / 2f - (i + 1) * Mathf.PI / 4f;
                 Vector2 at = new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * Radius;
+                glows[i] = Layer("PaverGlow", Shapes.SoftGlow, Tint(0f), 0, at, 1.4f, true);
+                litAt[i] = -1f;
                 pavers[i] = Layer("Paver", Shapes.ShrinePaver(biome), Color.white, 1, at, 1f, false);
                 runes[i] = Layer("PaverRune", Shapes.ShrinePaverRune, Tint(0.25f), 2, at, 1f, true);
             }
@@ -320,19 +330,30 @@ public class WorldEvents : MonoBehaviour
             if (n > lit && n < Stones)
             {
                 Sfx.Play(Sfx.Id.Tick, 0.7f, 1f + 0.08f * n);
-                Juice.SparksDir((Vector2)runes[n - 1].transform.position, Vector2.up, 40f, color, 3, 3f, 0.1f);
+                GamepadUI.Rumble(0.1f + 0.05f * n, 0.1f + 0.08f * n, 0.12f);
+                Vector2 stone = runes[n - 1].transform.position;
+                Juice.SparksDir(stone, Vector2.up, 40f, color, 6, 4f, 0.12f);
+                ExplosionFx.Ring(stone, 0.8f, Color.Lerp(color, Color.white, 0.3f), 0.25f);
+                litAt[n - 1] = age;
             }
             lit = n;
 
+            // The stones are the claim timer: each one lights up, pops and glows in turn.
             for (int i = 0; i < Stones; i++)
             {
-                float idle = 0.65f + 0.35f * Mathf.Max(0f, Mathf.Sin(age * 3f - i * 0.8f));
                 float fill = Mathf.Clamp01(k * Stones - i);
-                runes[i].color = Color.Lerp(Tint(idle), Color.Lerp(color, Color.white, 0.8f), fill);
-                pavers[i].color = Color.Lerp(Color.white, Color.Lerp(color, Color.white, 0.45f), fill);
+                float pulse = 0.85f + 0.15f * Mathf.Sin(age * 6f - i * 0.6f);
+                float pop = i < lit && litAt[i] >= 0f ? Mathf.Exp(-(age - litAt[i]) * 8f) : 0f;
+                runes[i].color = Color.Lerp(Tint(0.3f + 0.15f * Mathf.Max(0f, Mathf.Sin(age * 3f - i * 0.8f))), Color.Lerp(color, Color.white, 0.75f), fill);
+                pavers[i].color = Color.Lerp(Color.white, Color.Lerp(color, Color.white, 0.25f), fill);
+                glows[i].color = Tint(Mathf.Min(1f, (i < lit ? 0.95f * pulse : 0.45f * fill) + pop));
+                Vector3 size = Vector3.one * (1f + 0.35f * pop);
+                pavers[i].transform.localScale = runes[i].transform.localScale = size;
+                glows[i].transform.localScale = size * (1.9f + 0.8f * pop);
             }
             carving.color = Tint(0.8f + 0.2f * Mathf.Sin(age * 2.2f));
-            icon.transform.localPosition = new Vector2(0f, IconY + 0.07f * Mathf.Sin(age * 2.5f)) + Random.insideUnitCircle * 0.04f * k * k;
+            pool.color = Tint(0.2f + 0.3f * k);
+            icon.transform.localPosition = new Vector2(0f, IconY + 0.07f * Mathf.Sin(age * 2.5f));
             glowLight.intensity = (0.45f + 0.1f * Mathf.Sin(age * 3f) + 0.9f * k) * (show ? 1f : 0.3f);
             float near = owner.player != null ? Mathf.Clamp01(1f - Vector2.Distance(owner.player.position, Pos) / 8f) : 0f;
             hum.volume = Sfx.Volume * 0.35f * near * near * (0.6f + 0.6f * k) * Mathf.Clamp01(left);
@@ -345,11 +366,15 @@ public class WorldEvents : MonoBehaviour
             {
                 owner.Claim(boon, Pos);
                 claimedAt = age;
+                beam = Layer("Beam", Shapes.SoftGlow, Tint(0f), 7, new Vector2(0f, BeamH * 0.4f), 1f, true);
+                core = Layer("BeamCore", Shapes.SoftGlow, new Color(1f, 1f, 1f, 0f), 8, new Vector2(0f, BeamH * 0.4f), 1f, true);
                 foreach (SpriteRenderer sr in all) sr.enabled = true;
                 transform.localScale = Vector3.one;
                 foreach (SpriteRenderer rune in runes) Juice.SparksDir((Vector2)rune.transform.position, Vector2.up, 50f, color, 3, 5f, 0.12f);
-                CameraFollow.Shake(0.08f, 0.15f);
-                CameraFollow.ZoomPunch(0.05f);
+                ExplosionFx.Spawn(Pos + Vector2.up * StatueY * 0.5f, 2.5f, Color.Lerp(color, Color.white, 0.3f));
+                CameraFollow.Shake(0.18f, 0.3f);
+                CameraFollow.ZoomPunch(0.25f);
+                GamepadUI.Rumble(0.6f, 0.4f, 0.3f);
             }
         }
 
@@ -363,7 +388,17 @@ public class WorldEvents : MonoBehaviour
                 else sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, sr == shadow ? 0.3f * fade : fade);
             }
             icon.transform.localPosition = new Vector2(0f, IconY + 2.5f * t * t);
-            glowLight.intensity = 3f * fade * fade;
+            glowLight.intensity = 4f * fade * fade;
+            statue.transform.localScale = carving.transform.localScale = Vector3.one * (1f + 0.3f * fade * fade); // pops, then settles
+
+            // Light pillar: snaps open, then thins out and fades. Ground glow flares outward.
+            float open = Mathf.Clamp01(t * 10f), width = 1.6f * open * fade;
+            beam.transform.localScale = new Vector3(width, BeamH, 1f);
+            beam.color = Tint(0.85f * fade);
+            core.transform.localScale = new Vector3(width * 0.35f, BeamH * 0.95f, 1f);
+            core.color = new Color(1f, 1f, 1f, 0.9f * fade);
+            pool.transform.localScale = PoolSize * (1f + 1.2f * t);
+            pool.color = Tint(0.9f * fade);
             hum.volume *= 0.85f;
         }
     }

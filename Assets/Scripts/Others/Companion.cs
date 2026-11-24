@@ -25,7 +25,9 @@ public class Companion : MonoBehaviour
     public static Companion Instance { get; private set; }
     public int Level { get; private set; } = 1;
 
-    private Sprite[] walk, idle;
+    private Sprite[] walk, idle, attackPose;
+    private int shownSize = -1;
+    private float attackUntil;
     private SpriteRenderer sr;
     private Transform player;
     private PlayerStats stats;
@@ -44,10 +46,11 @@ public class Companion : MonoBehaviour
         go.transform.position = at;
         var c = go.AddComponent<Companion>();
         c.sr = go.AddComponent<SpriteRenderer>();
-        c.sr.color = Gold;
+        c.sr.color = Color.white; // a real ginger cat now, so no gold tint
         c.sr.sortingOrder = 9;
-        c.walk = walk;
+        c.walk = walk;   // fallbacks if the buddy sprites are missing
         c.idle = idle;
+        c.ApplySize();
         c.player = player.transform;
         c.stats = player.GetComponent<PlayerStats>();
         c.attack = player.GetComponent<PlayerAutoAttack>();
@@ -60,7 +63,32 @@ public class Companion : MonoBehaviour
         return c;
     }
 
-    public void LevelUp() => Level = Mathf.Min(Level + 1, MaxLevel);
+    public void LevelUp()
+    {
+        Level = Mathf.Min(Level + 1, MaxLevel);
+        ApplySize();
+    }
+
+    // Kitten at Lv 1-2, cat at Lv 3-4, big cat at Lv 5. Sprites: Resources/Companion/Buddy_<size>_<Walk|Idle|Attack>.
+    public static int SizeFor(int level) => level >= 5 ? 2 : level >= 3 ? 1 : 0;
+
+    private void ApplySize()
+    {
+        int size = SizeFor(Level);
+        if (size == shownSize) return;
+        Sprite[] w = BuddySprites.Get(size, "Walk"), i = BuddySprites.Get(size, "Idle");
+        if (w == null || i == null) return;
+        bool grew = shownSize >= 0;
+        shownSize = size;
+        walk = w;
+        idle = i;
+        attackPose = BuddySprites.Get(size, "Attack");
+        if (grew)
+        {
+            ExplosionFx.Spawn(transform.position, 1f, Gold);
+            DamagePopup.SpawnText((Vector2)transform.position + Vector2.up * 0.6f, size == 2 ? "BIG CAT!" : "BUDDY GREW!", Gold, 4f);
+        }
+    }
 
     private SpriteRenderer heart, ring;
 
@@ -101,7 +129,12 @@ public class Companion : MonoBehaviour
         if (Mathf.Abs(velocity.x) > 0.1f) sr.flipX = velocity.x < 0f;
         animTime += dt;
         Sprite[] frames = velocity.sqrMagnitude > 0.25f ? walk : idle;
-        if (frames != null && frames.Length > 0) sr.sprite = frames[(int)(animTime * 8f) % frames.Length];
+        if (Time.time < attackUntil && attackPose != null && attackPose.Length > 0)
+        {
+            float k = 1f - (attackUntil - Time.time) / 0.3f;
+            sr.sprite = attackPose[Mathf.Clamp((int)(k * attackPose.Length), 0, attackPose.Length - 1)];
+        }
+        else if (frames != null && frames.Length > 0) sr.sprite = frames[(int)(animTime * (frames == idle ? 5f : 8f)) % frames.Length];
         UpdateFriendMarkers();
 
         if (stats.currentHealth > 0f) TryThrow(dt);
@@ -116,6 +149,8 @@ public class Companion : MonoBehaviour
         Transform target = NearestEnemy();
         if (target == null) return;
         throwTimer = 0f;
+        attackUntil = Time.time + 0.3f; // pounce pose while it throws
+        if (Mathf.Abs(target.position.x - transform.position.x) > 0.05f) sr.flipX = target.position.x < transform.position.x;
 
         Vector2 from = transform.position;
         Vector2 dir = ((Vector2)target.position - from).normalized;
@@ -145,5 +180,67 @@ public class Companion : MonoBehaviour
             if (d < bestDist) { bestDist = d; best = c.transform; }
         }
         return best;
+    }
+}
+
+// Cuts the buddy's frames from Resources/Companion. Each coat is one sheet (Coats/<id>): 9 rows of 32px frames,
+// row = size * 3 + anim (Walk 4, Idle 4, Attack 3), row 0 at the top. Hats (Hats/<id>) use the same layout and are
+// drawn over the coat when the frames are cut. 48 px per unit like the slime cats.
+public static class BuddySprites
+{
+    private static readonly string[] Anims = { "Walk", "Idle", "Attack" };
+    private static readonly int[] Counts = { 4, 4, 3 };
+    private static readonly Dictionary<string, Sprite[]> cache = new Dictionary<string, Sprite[]>();
+
+    public static Sprite[] Get(int size, string anim) => Get(size, anim, Shop.EquippedCoat, Shop.EquippedHat);
+
+    // Shop preview: a coat on its own, or a hat on the coat that is equipped now.
+    public static Sprite[] Get(int size, string anim, Shop.Look look)
+    {
+        if (look == null) return Get(size, anim);
+        return look.IsHat ? Get(size, anim, Shop.EquippedCoat, look) : Get(size, anim, look, null);
+    }
+
+    public static Sprite[] Get(int size, string anim, Shop.Look coat, Shop.Look hat)
+    {
+        size = Mathf.Clamp(size, 0, 2);
+        int a = System.Array.IndexOf(Anims, anim);
+        if (a < 0) a = 1;
+        string coatId = coat != null ? coat.id : "ginger";
+        string hatId = hat != null && hat.id != "none" ? hat.id : null;
+        string key = $"{coatId}/{hatId}/{size}/{a}";
+        if (cache.TryGetValue(key, out Sprite[] cached) && cached != null) return cached;
+
+        Texture2D sheet = Resources.Load<Texture2D>("Companion/Coats/" + coatId) ?? Resources.Load<Texture2D>("Companion/Coats/ginger");
+        if (sheet == null) return null;
+        int n = Counts[a], row = size * 3 + a, y = sheet.height - (row + 1) * 32;
+        Texture2D tex = sheet;
+        Rect area = new Rect(0, y, 32 * n, 32);
+
+        Texture2D hatSheet = hatId != null ? Resources.Load<Texture2D>("Companion/Hats/" + hatId) : null;
+        if (hatSheet != null && sheet.isReadable && hatSheet.isReadable)
+        {
+            Color[] body = sheet.GetPixels(0, y, 32 * n, 32);
+            Color[] top = hatSheet.GetPixels(0, hatSheet.height - (row + 1) * 32, 32 * n, 32);
+            for (int i = 0; i < body.Length; i++)
+            {
+                Color h = top[i];
+                if (h.a <= 0f) continue;
+                body[i] = Color.Lerp(body[i], new Color(h.r, h.g, h.b, 1f), h.a);
+                body[i].a = Mathf.Max(body[i].a, h.a);
+            }
+            tex = new Texture2D(32 * n, 32, TextureFormat.RGBA32, false) { filterMode = FilterMode.Point, wrapMode = TextureWrapMode.Clamp };
+            tex.SetPixels(body);
+            tex.Apply(false, false);
+            area = new Rect(0, 0, 32 * n, 32);
+        }
+
+        var frames = new Sprite[n];
+        for (int i = 0; i < n; i++)
+        {
+            frames[i] = Sprite.Create(tex, new Rect(area.x + i * 32, area.y, 32, 32), new Vector2(0.5f, 0.5f), 48f);
+            frames[i].name = $"Buddy_{key}_{i}";
+        }
+        return cache[key] = frames;
     }
 }

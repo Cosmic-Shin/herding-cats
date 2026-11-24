@@ -5,7 +5,7 @@ public static class LavaArt
     public const int Variants = 3, Frames = 8;
     private const int SmallSize = 64, BigSize = 128;
     public const float BigFrom = 1.6f;
-    public const int LavaPal = 0, GluePal = 1, TarPal = 2, ToxicPal = 3;
+    public const int LavaPal = 0, GluePal = 1, TarPal = 2, ToxicPal = 3, HoneyPal = 4, IcePal = 5, SlimePal = 6, FurPal = 7;
     private static Sprite[][] small, big;
 
     private static readonly Color[] Lava =
@@ -28,34 +28,61 @@ public static class LavaArt
         new Color(0.2f, 0.06f, 0.24f), new Color(0.36f, 0.12f, 0.4f), new Color(0.2f, 0.36f, 0.12f), new Color(0.42f, 0.72f, 0.1f),
         new Color(0.62f, 0.9f, 0.12f), new Color(0.85f, 1f, 0.3f), new Color(0.97f, 1f, 0.75f),
     };
-    private static readonly Color[][] Palettes = { Lava, Glue, Tar, Toxic };
+    private static readonly Color[] Honey =
+    {
+        new Color(0.35f, 0.18f, 0.02f), new Color(0.55f, 0.3f, 0.03f), new Color(0.78f, 0.47f, 0.05f), new Color(0.93f, 0.62f, 0.1f),
+        new Color(1f, 0.75f, 0.2f), new Color(1f, 0.86f, 0.4f), new Color(1f, 0.97f, 0.75f),
+    };
+    private static readonly Color[] IceSheet =
+    {
+        new Color(0.16f, 0.26f, 0.45f), new Color(0.26f, 0.42f, 0.66f), new Color(0.4f, 0.6f, 0.84f), new Color(0.56f, 0.76f, 0.95f),
+        new Color(0.72f, 0.88f, 1f), new Color(0.86f, 0.95f, 1f), new Color(0.98f, 1f, 1f),
+    };
+    // Hairball slime: olive with fur-brown shadows, so it reads apart from the bright green Glue.
+    private static readonly Color[] Slime =
+    {
+        new Color(0.22f, 0.18f, 0.08f), new Color(0.36f, 0.32f, 0.12f), new Color(0.5f, 0.52f, 0.16f), new Color(0.64f, 0.68f, 0.2f),
+        new Color(0.76f, 0.8f, 0.3f), new Color(0.88f, 0.9f, 0.5f), new Color(0.98f, 1f, 0.82f),
+    };
+    // Furball Glob: warm hairball browns, so it reads apart from lava (orange), glue (green) and tar (near-black).
+    private static readonly Color[] Fur =
+    {
+        new Color(0.2f, 0.11f, 0.05f), new Color(0.33f, 0.19f, 0.09f), new Color(0.47f, 0.29f, 0.14f), new Color(0.6f, 0.39f, 0.2f),
+        new Color(0.73f, 0.5f, 0.28f), new Color(0.86f, 0.66f, 0.42f), new Color(0.97f, 0.87f, 0.7f),
+    };
+    private static readonly Color[][] Palettes = { Lava, Glue, Tar, Toxic, Honey, IceSheet, Slime, Fur };
 
+    // Each sprite is drawn the first time it's needed (a few ms at most), then cached.
+    // Building all 8 palettes x 2 sizes x 24 frames up front took ~1.6 s in one frame (a freeze on load, worse on phones).
     public static Sprite Get(int variant, int frame, float radius, int palette = LavaPal)
     {
-        Prewarm();
-        Sprite[] set = (radius >= BigFrom ? big : small)[palette];
-        return set[(variant % Variants) * Frames + (frame % Frames)];
+        bool large = radius >= BigFrom;
+        return Cached(palette, large, (variant % Variants) * Frames + (frame % Frames));
     }
 
-    public static void Prewarm()
+    private static Sprite Cached(int palette, bool large, int index)
     {
-        if (small != null) return;
-        small = new Sprite[Palettes.Length][];
-        big = new Sprite[Palettes.Length][];
+        if (small == null) { small = new Sprite[Palettes.Length][]; big = new Sprite[Palettes.Length][]; }
+        Sprite[][] sets = large ? big : small;
+        Sprite[] set = sets[palette] ??= new Sprite[Variants * Frames];
+        return set[index] != null ? set[index]
+             : set[index] = Draw(index / Frames, index % Frames, large ? BigSize : SmallSize, Palettes[palette]);
+    }
+
+    // Draws the rest in the background, a few ms per frame (works while the menu has time paused), so nothing hitches later.
+    public static System.Collections.IEnumerator WarmUp()
+    {
+        const double BudgetMs = 3.0;
+        var sw = System.Diagnostics.Stopwatch.StartNew();
         for (int p = 0; p < Palettes.Length; p++)
-        {
-            small[p] = Build(SmallSize, Palettes[p]);
-            big[p] = Build(BigSize, Palettes[p]);
-        }
-    }
-
-    private static Sprite[] Build(int size, Color[] pal)
-    {
-        var set = new Sprite[Variants * Frames];
-        for (int v = 0; v < Variants; v++)
-            for (int f = 0; f < Frames; f++)
-                set[v * Frames + f] = Draw(v, f, size, pal);
-        return set;
+            foreach (bool large in new[] { false, true })
+                for (int i = 0; i < Variants * Frames; i++)
+                {
+                    Cached(p, large, i);
+                    if (sw.Elapsed.TotalMilliseconds < BudgetMs) continue;
+                    yield return null;
+                    sw.Restart();
+                }
     }
 
     private static Sprite Draw(int v, int f, int Size, Color[] pal)

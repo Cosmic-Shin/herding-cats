@@ -12,7 +12,7 @@ public class Juice : MonoBehaviour
     private ParticleSystem puffs;
     private PlayerStats player;
     private bool wasLow;
-    private float stopUntil;
+    private float stopUntil, nextStopAllowed, nextSlowAllowed;
     private float slowUntil, slowScale = 1f;
     private float nextBeat;
     private bool stopping;
@@ -31,7 +31,11 @@ public class Juice : MonoBehaviour
     {
         if (Time.timeScale == 0f) return;
         Juice j = I;
-        j.stopUntil = Mathf.Max(j.stopUntil, Time.unscaledTime + seconds);
+        float now = Time.unscaledTime;
+        // Small stops need a gap after the last one, so hordes of hits can't freeze the clock. Big moments (>= 0.1s) always land.
+        if (seconds < 0.1f && now < j.nextStopAllowed) return;
+        j.nextStopAllowed = now + seconds + 0.3f;
+        j.stopUntil = Mathf.Max(j.stopUntil, now + seconds);
         j.ApplyTimeScale();
     }
 
@@ -39,7 +43,10 @@ public class Juice : MonoBehaviour
     {
         if (Time.timeScale == 0f) return;
         Juice j = I;
-        j.slowUntil = Mathf.Max(j.slowUntil, Time.unscaledTime + seconds);
+        float now = Time.unscaledTime;
+        if (now < j.nextSlowAllowed) return;
+        j.nextSlowAllowed = now + seconds + 4f;
+        j.slowUntil = Mathf.Max(j.slowUntil, now + seconds);
         j.slowScale = scale;
         j.ApplyTimeScale();
     }
@@ -199,7 +206,10 @@ public class Juice : MonoBehaviour
         }
         float a = low ? 0.16f + 0.12f * LowHpLevel + 0.22f * beat * beat : 0f;
         a = Mathf.Max(a, 0.4f * hurt);
-        vignette.color = a > 0f ? new Color(0.9f, 0.05f, 0.05f, a * Settings.FlashScale) : Color.clear;
+        // a boss on the field: slow purple pulse at the screen edges (red stays for low HP / hits)
+        float boss = BossAI.Alive > 0 && Time.timeScale > 0f ? 0.24f + 0.1f * Mathf.Sin(Time.unscaledTime * 2.5f) : 0f;
+        if (boss > a) vignette.color = new Color(0.55f, 0.1f, 0.75f, boss * Settings.FlashScale);
+        else vignette.color = a > 0f ? new Color(0.9f, 0.05f, 0.05f, a * Settings.FlashScale) : Color.clear;
     }
 
     public static float LowHpLevel { get; private set; }

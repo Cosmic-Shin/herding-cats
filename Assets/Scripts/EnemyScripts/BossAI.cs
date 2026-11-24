@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class BossAI : MonoBehaviour, IEnemyBrain
+public partial class BossAI : MonoBehaviour, IEnemyBrain
 {
     [System.Serializable]
     public class Dir4
@@ -14,7 +14,19 @@ public class BossAI : MonoBehaviour, IEnemyBrain
 
     private enum State { Walk, Zap, Charge, Recover, Dead, Special }
 
-    [System.Flags] public enum Special { None = 0, Spiral = 1, Summon = 2, Laser = 4 }
+    [System.Flags]
+    public enum Special
+    {
+        None = 0, Spiral = 1, Summon = 2, Laser = 4,
+        // Meadow bosses (BossMoves.cs)
+        ShadowStep = 8, ClawSwipe = 16, NightProwl = 32,
+        HopSlam = 64, TripleHop = 128, Carrots = 256, Burrow = 512,
+        BeeSwarm = 1024, Honey = 2048, RoyalGuard = 4096, Pollen = 8192,
+        // Winter + Volcano bosses (BossMovesWinterVolcano.cs)
+        IcicleRain = 16384, PenguinParade = 32768, IceSlide = 65536,
+        Snowballs = 131072, IceSpikes = 262144, Avalanche = 524288,
+        LavaTrail = 1048576, Eruption = 2097152, FireBreath = 4194304,
+    }
 
     public string bossName = "Beholder";
     public Dir4 idle, walk, run, attack, hurt, death;
@@ -56,6 +68,8 @@ public class BossAI : MonoBehaviour, IEnemyBrain
     public Special specials;
     public float specialCooldown = 8f;
     public int summonCount = 10;
+    [Tooltip("What Summon calls in (empty = random unlocked enemies)")]
+    public GameObject summonPrefab;
 
     [Header("Enrage (below this HP fraction: faster attacks, extra ring wave; 0 = off)")]
     [Range(0f, 1f)] public float enrageBelow = 0f;
@@ -103,6 +117,7 @@ public class BossAI : MonoBehaviour, IEnemyBrain
         rb.freezeRotation = true;
         sr = GetComponent<SpriteRenderer>();
         health = GetComponent<EnemyHealth>();
+        authoredScale = transform.localScale.x;
     }
 
     private void Start()
@@ -114,10 +129,14 @@ public class BossAI : MonoBehaviour, IEnemyBrain
             player = p.transform;
             lastPlayerPos = player.position;
             playerHealth = p.GetComponent<PlayerHealth>();
+            playerStats = p.GetComponent<PlayerStats>();
+            playerMover = p.GetComponent<PlayerController>();
             foreach (Collider2D mine in GetComponents<Collider2D>())
                 foreach (Collider2D theirs in p.GetComponents<Collider2D>())
                     Physics2D.IgnoreCollision(mine, theirs);
         }
+        InitMoves();
+        InitPresence();
         SetState(State.Walk);
     }
 
@@ -147,11 +166,13 @@ public class BossAI : MonoBehaviour, IEnemyBrain
     private void StartSpecial()
     {
         var options = new System.Collections.Generic.List<Special>();
-        foreach (Special s in new[] { Special.Spiral, Special.Summon, Special.Laser })
-            if ((specials & s) != 0) options.Add(s);
+        foreach (Special s in (Special[])System.Enum.GetValues(typeof(Special)))
+            if (s != Special.None && (specials & s) != 0 && MoveAllowed(s)) options.Add(s);
+        if (options.Count == 0) { specialTimer = specialCooldown; return; }
         current = options[Random.Range(0, options.Count)];
         SetState(State.Special);
         Play(attack, zapFps, true);
+        if (current > Special.Laser) { StartMove(); return; }
 
         if (current == Special.Spiral)
         {
@@ -183,6 +204,7 @@ public class BossAI : MonoBehaviour, IEnemyBrain
 
     private bool UpdateSpecial()
     {
+        if (current > Special.Laser) return UpdateMove();
         if (current == Special.Spiral)
         {
             if (stateTime < SpiralWindup) return true;
@@ -206,7 +228,7 @@ public class BossAI : MonoBehaviour, IEnemyBrain
             {
                 summoned = true;
                 EnemySpawner spawner = FindFirstObjectByType<EnemySpawner>();
-                if (spawner != null) spawner.SpawnAround(rb.position, summonCount, 2.5f);
+                if (spawner != null) spawner.SpawnAround(rb.position, summonCount, 2.5f, summonPrefab);
                 ExplosionFx.Spawn(rb.position, 3f, new Color(0.5f, 0.75f, 1f));
                 CameraFollow.Shake(0.15f, 0.2f);
             }
@@ -290,6 +312,7 @@ public class BossAI : MonoBehaviour, IEnemyBrain
 
     public void Die()
     {
+        EndMove();
         SetState(State.Dead);
         HideBeams();
         rb.simulated = false;
@@ -298,32 +321,52 @@ public class BossAI : MonoBehaviour, IEnemyBrain
         Destroy(gameObject, death.down.Length / 10f + 0.4f);
     }
 
-    private static Sprite[] strikeFrames;
+    [Header("Strike effect (the main zap attack)")]
+    [Tooltip("Resources path of an effect strip (square frames side by side). Empty = the Beholder's fire burst.")]
+    public string strikeFx = "";
+    public Color strikeLight = new Color(1f, 0.6f, 0.3f);
 
-    private static Sprite[] StrikeFrames
+    private static Sprite[] beholderStrike;
+    private static readonly System.Collections.Generic.Dictionary<string, Sprite[]> strikeSets = new System.Collections.Generic.Dictionary<string, Sprite[]>();
+
+    private static Sprite[] BeholderStrike
     {
         get
         {
-            if (strikeFrames != null) return strikeFrames;
+            if (beholderStrike != null) return beholderStrike;
             var tex = Resources.Load<Texture2D>("Fx/beholder_strike");
-            if (tex == null) return strikeFrames = new Sprite[0];
+            if (tex == null) return beholderStrike = new Sprite[0];
             tex.filterMode = FilterMode.Point;
-            strikeFrames = new Sprite[9];
-            for (int i = 0; i < strikeFrames.Length; i++)
-                strikeFrames[i] = Sprite.Create(tex, new Rect((i + 3) * 64, tex.height - 64, 64, 64), new Vector2(0.5f, 0.5f), 64f);
-            return strikeFrames;
+            beholderStrike = new Sprite[9];
+            for (int i = 0; i < beholderStrike.Length; i++)
+                beholderStrike[i] = Sprite.Create(tex, new Rect((i + 3) * 64, tex.height - 64, 64, 64), new Vector2(0.5f, 0.5f), 64f);
+            return beholderStrike;
         }
     }
 
-    private static void Strike(Vector2 at, float radius)
+    private static Sprite[] StrikeSet(string path)
     {
-        Sprite[] frames = StrikeFrames;
-        Lighting.Flash(at, radius * 3f, new Color(1f, 0.6f, 0.3f), 0.25f);
+        if (strikeSets.TryGetValue(path, out Sprite[] set)) return set;
+        var tex = Resources.Load<Texture2D>(path);
+        if (tex == null) return strikeSets[path] = null;
+        tex.filterMode = FilterMode.Point;
+        int size = tex.height, n = Mathf.Max(1, tex.width / size);
+        set = new Sprite[n];
+        for (int i = 0; i < n; i++) set[i] = Sprite.Create(tex, new Rect(i * size, 0, size, size), new Vector2(0.5f, 0.5f), size);
+        return strikeSets[path] = set;
+    }
+
+    private void Strike(Vector2 at, float radius)
+    {
+        Sprite[] custom = string.IsNullOrEmpty(strikeFx) ? null : StrikeSet(strikeFx);
+        Sprite[] frames = custom ?? BeholderStrike;
+        Lighting.Flash(at, radius * 3f, custom != null ? strikeLight : new Color(1f, 0.6f, 0.3f), 0.25f);
         if (frames.Length == 0) { ExplosionFx.Spawn(at, radius); return; }
-        const float Fps = 18f;
-        Shot s = Shot.Spawn(frames[0], Color.white, radius * 3.8f, at, 50);
-        s.life = frames.Length / Fps;
-        s.onUpdate = shot => shot.Renderer.sprite = frames[Mathf.Min(frames.Length - 1, (int)(shot.age * Fps))];
+        float fps = custom != null ? 16f : 18f;
+        // custom strips fill most of their frame; the Beholder sheet has lots of empty space around the burst
+        Shot s = Shot.Spawn(frames[0], Color.white, radius * (custom != null ? 2.6f : 3.8f), at, 50);
+        s.life = frames.Length / fps;
+        s.onUpdate = shot => shot.Renderer.sprite = frames[Mathf.Min(frames.Length - 1, (int)(shot.age * fps))];
     }
 
     private void SetState(State next)
@@ -387,7 +430,8 @@ public class BossAI : MonoBehaviour, IEnemyBrain
     {
         if (damageTimer > 0f) damageTimer -= Time.deltaTime;
         if (hurtTimer > 0f) hurtTimer -= Time.deltaTime;
-        animTime += Time.deltaTime;
+        animTime += Time.deltaTime * (enraged ? enrageSpeedup : 1f);
+        UpdatePresence();
 
         bool showHurt = hurtTimer > 0f && state == State.Walk;
         Sprite[] frames = (showHurt ? hurt : clip).Get(facing);
@@ -440,7 +484,7 @@ public class BossAI : MonoBehaviour, IEnemyBrain
                 velocity = dir * moveSpeed * (enraged ? 1.25f : 1f);
                 if (specials != Special.None && specialTimer <= 0f && dist < 10f) StartSpecial();
                 else if (zapTimer <= 0f && dist < zapRange) SetState(State.Zap);
-                else if (chargeTimer <= 0f && dist > 3f) { chargesLeft = chargeRepeats; SetState(State.Charge); }
+                else if (chargeSpeed > 0f && chargeTimer <= 0f && dist > 3f) { chargesLeft = chargeRepeats + (enraged ? enrageExtraCharges : 0); SetState(State.Charge); }
                 break;
 
             case State.Zap:
@@ -479,9 +523,13 @@ public class BossAI : MonoBehaviour, IEnemyBrain
 
             case State.Special:
                 facing = dir;
-                if (!UpdateSpecial())
+                moveVelocity = Vector2.zero;
+                bool going = UpdateSpecial();
+                velocity = moveVelocity;
+                if (!going)
                 {
                     HideBeams();
+                    EndMove();
                     specialTimer = specialCooldown;
                     SetState(State.Recover);
                 }
@@ -503,10 +551,55 @@ public class BossAI : MonoBehaviour, IEnemyBrain
         rb.linearVelocity = velocity + knockback;
         knockback = Vector2.MoveTowards(knockback, Vector2.zero, knockbackDecay * dt);
 
-        if (damageTimer <= 0f && playerHealth != null && dist <= contactRange)
+        CheckBabies();
+        if (!hidden && damageTimer <= 0f && playerHealth != null && dist <= contactRange)
         {
             playerHealth.TakeDamage(contactDamage * AuraWeapon.ContactScale);
+            TryCurse();
             damageTimer = damageCooldown;
         }
+    }
+
+    // Boss presence: a pulsing glow and slow rays behind the boss plus a light, in its strike colour.
+    // Alive feeds the purple screen-edge pulse in Juice.
+    public static int Alive { get; private set; }
+    private SpriteRenderer aura, rays;
+    private UnityEngine.Rendering.Universal.Light2D presenceLight;
+    private Color presenceColor;
+
+    private void OnEnable() => Alive++;
+    private void OnDisable() => Alive--;
+
+    private void InitPresence()
+    {
+        presenceColor = string.IsNullOrEmpty(strikeFx) ? new Color(1f, 0.3f, 0.3f) : strikeLight;
+        float width = idle.down.Length > 0 && idle.down[0] != null ? idle.down[0].bounds.size.x * transform.lossyScale.x : 3f;
+        aura = PresenceLayer("BossAura", Shapes.SoftGlow, width * 2.2f);
+        rays = PresenceLayer("BossRays", Shapes.SoftRays, width * 2.8f);
+        presenceLight = Lighting.MakeLight("BossLight", transform, width * 1.6f, 0.9f, presenceColor);
+    }
+
+    private SpriteRenderer PresenceLayer(string name, Sprite sprite, float worldSize)
+    {
+        var r = new GameObject(name).AddComponent<SpriteRenderer>();
+        r.transform.SetParent(transform, false);
+        r.sprite = sprite;
+        r.transform.localScale = Vector3.one * (worldSize / sprite.bounds.size.x / transform.lossyScale.x);
+        return r;
+    }
+
+    private void UpdatePresence()
+    {
+        if (aura == null) return;
+        // follows the boss's own fade (Night Prowl, Shadow Step, Burrow, death)
+        float a = sr.enabled ? sr.color.a : 0f;
+        float pulse = 0.5f + 0.5f * Mathf.Sin(Time.time * 3f);
+        aura.color = new Color(presenceColor.r, presenceColor.g, presenceColor.b, a * (0.6f + 0.3f * pulse));
+        rays.color = new Color(presenceColor.r, presenceColor.g, presenceColor.b, a * 0.55f);
+        rays.transform.Rotate(0f, 0f, 20f * Time.deltaTime);
+        aura.sortingLayerID = rays.sortingLayerID = sr.sortingLayerID;
+        aura.sortingOrder = sr.sortingOrder - 1;
+        rays.sortingOrder = sr.sortingOrder - 2;
+        if (presenceLight != null) presenceLight.intensity = a * (1.2f + 0.6f * pulse);
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MainMenu : MonoBehaviour
+public partial class MainMenu : MonoBehaviour
 {
     public static bool Started;
     public static string PlayerName = "";
@@ -18,6 +18,7 @@ public class MainMenu : MonoBehaviour
 
     public static void BackToMenu()
     {
+        Shop.PayOut(); // quitting a run still pays its fish (no-op if the run already paid or never started)
         Started = false;
         Time.timeScale = 1f;
         SceneFade.Reload();
@@ -87,8 +88,9 @@ public class MainMenu : MonoBehaviour
         Keyboard kb = Keyboard.current;
         bool back = (kb != null && kb.escapeKey.wasPressedThisFrame) || GamepadUI.Back;
         if (Settings.IsOpen) { if (back && !Settings.Busy) Settings.Back(); return; }
-        if ((achPage != null && achPage.activeSelf) || (creditsPage != null && creditsPage.activeSelf)) { if (back) ShowMain(); return; }
+        if ((achPage != null && achPage.activeSelf) || (creditsPage != null && creditsPage.activeSelf) || (shopPage != null && shopPage.activeSelf)) { if (back) ShowMain(); return; }
         if (selectPage != null && selectPage.activeSelf && back) { ShowMain(); return; }
+        if (wikiPage != null && wikiPage.activeSelf) { UpdateWiki(back); return; }
         if (!boardPage.activeSelf) return;
         if (back) { boardBack(); return; }
         if (GamepadUI.Pressed(g => g.leftShoulder)) SetPage(page - 1);
@@ -152,6 +154,8 @@ public class MainMenu : MonoBehaviour
         BuildBoard(canvas.transform);
         BuildAchievements(canvas.transform);
         BuildCredits(canvas.transform);
+        BuildWiki(canvas.transform);
+        BuildShop(canvas.transform);
         BuildSelect(canvas.transform);
         ShowMain();
     }
@@ -170,16 +174,18 @@ public class MainMenu : MonoBehaviour
         nameHint = RuntimeUI.Outline(RuntimeUI.Text(list, "", 16, new Color(1f, 0.45f, 0.4f), new Vector2(0, -35), new Vector2(480, 22)));
 
         startButton = TextButton(list, "Start", -80, ShowSelect);
-        Button board = TextButton(list, "Leaderboard", -126, ShowBoard);
-        TextButton(list, "Achievements", -172, ShowAchievements);
+        Button shop = TextButton(list, "Shop", -118, ShowShop);
+        TextButton(list, "Leaderboard", -156, ShowBoard);
+        TextButton(list, "Achievements", -194, ShowAchievements);
+        TextButton(list, "Wiki", -232, ShowWiki);
         Button settings = null;
-        settings = TextButton(list, "Settings", -218, () => Settings.Open(settings.gameObject));
-        TextButton(list, "Credits", -264, ShowCredits);
+        settings = TextButton(list, "Settings", -270, () => Settings.Open(settings.gameObject));
+        TextButton(list, "Credits", -308, ShowCredits);
 #if !UNITY_WEBGL || UNITY_EDITOR
-        if (!TouchControls.On) TextButton(list, "Quit", -310, Quit);
+        if (!TouchControls.On) TextButton(list, "Quit", -346, Quit);
 #endif
         Navigation startNav = startButton.navigation; startNav.mode = Navigation.Mode.Explicit;
-        startNav.selectOnUp = nameField; startNav.selectOnDown = board;
+        startNav.selectOnUp = nameField; startNav.selectOnDown = shop;
         startButton.navigation = startNav;
         RuntimeUI.Nav(nameField, down: startButton);
 
@@ -445,6 +451,9 @@ public class MainMenu : MonoBehaviour
     {
         foreach (Canvas c in FindObjectsByType<Canvas>(FindObjectsSortMode.None))
         {
+            // canvases kept across reloads (touch controls, achievement toasts) are skipped: this list dies with the scene,
+            // so after a map-change reload nothing would turn them back on. Touch controls hide themselves off-run anyway.
+            if (c.gameObject.scene != gameObject.scene) continue;
             if (!c.isRootCanvas || !c.enabled || c.gameObject == root || c.GetComponentInParent<Settings>() != null || c.GetComponentInParent<ClickFx>() != null || c.GetComponentInParent<GamepadUI>() != null || c.GetComponent<SceneFade>() != null) continue;
             c.enabled = false;
             hiddenUi.Add(c);
@@ -471,6 +480,7 @@ public class MainMenu : MonoBehaviour
                 nameHint.text = nameField.isFocused ? "<color=#C9D2F0>Press Enter to confirm</color>" : "";
         }
 
+        if (shopPage != null && shopPage.activeSelf) AnimateShopBuddy();
         if (boardPage == null || !boardPage.activeSelf) return;
         foreach (Row row in rows)
         {
@@ -487,6 +497,8 @@ public class MainMenu : MonoBehaviour
         achPage.SetActive(false);
         creditsPage.SetActive(false);
         if (selectPage != null) selectPage.SetActive(false);
+        if (wikiPage != null) wikiPage.SetActive(false);
+        if (shopPage != null) shopPage.SetActive(false);
         Select(nameField.gameObject);
         if (TypedName == "") nameField.ActivateInputField();
     }
@@ -552,7 +564,7 @@ public class MainMenu : MonoBehaviour
             row.level = Column(panel, "", 35, 60, y, Color.white, 24);
             row.build = new HUD.Slot[BuildIcons];
             for (int k = 0; k < BuildIcons; k++)
-                row.build[k] = HUD.MakeSlot(row.bg.rectTransform, new Vector2(675 + k * 35f, -5), 32);
+                row.build[k] = HUD.MakeSlot(row.bg.rectTransform, new Vector2(675 + k * 34f, -5), 32);
             rows[i] = row;
         }
 
@@ -738,9 +750,11 @@ public class MainMenu : MonoBehaviour
         "Cats  -  Slime Cat Mega Pack by ToffeeCraft  <color=#9AA3C0>(toffeecraft.itch.io)</color>\n" +
         "Beholder bosses  -  CraftPix.net\n" +
         "Map tiles, trees and rocks  -  Topdown RPG 32x32 Nature by Mixel\n\n" +
+        "<color=#FFE08A><b>Sound effects</b></color>  <color=#9AA3C0>(CC0, opengameart.org)</color>\n" +
+        "Juhani Junkala (SubspaceAudio)  -  rubberduck  -  IgnasD\n\n" +
         "<color=#FFE08A><b>Font</b></color>\n" +
         "Perfect DOS VGA 437 by Zeh Fernando\n\n" +
-        "<color=#9AA3C0>Mira, Jin, Nyx, special cat outfits, icons and effects made for Herding Cats.</color>";
+        "<color=#9AA3C0>Lilac, Jin, Nyx, special cat outfits, icons and effects made for Herding Cats.</color>";
 
     private void BuildCredits(Transform parent)
     {

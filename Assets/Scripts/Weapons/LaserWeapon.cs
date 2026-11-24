@@ -92,6 +92,7 @@ public class LaserWeapon : Weapon
         float flicker = 0.85f + 0.15f * Mathf.Sin(Time.time * 60f + index);
         beam.transform.localScale = new Vector3(length, width * flicker * env, 1f);
         beam.color = BeamColor;
+        SinkIfCombo(beam);
         if (Random.value < 0.5f) Juice.Sparks(Pos + dir * Random.Range(0.5f, length), new Color(1f, 0.55f, 0.55f), 1, 2f, 0.12f);
     }
 

@@ -9,6 +9,7 @@ public static class Hero
         public string kit;
         public string weapon = "bomb";
         public string iconPrefix;
+        public string ultSkin; // Resources/Heroes/<ultSkin>: sprites worn while the ultimate is active
         public string maxPiece = "Max Bombs", upgradeKind = "Bomb upgrade";
         public string[] stats = { "Bomb damage", "Throws/sec", "Bombs/throw", "Blast radius" };
         public float portraitDrop;
@@ -21,10 +22,11 @@ public static class Hero
     {
         new Def
         {
-            id = "Mira", name = "Mira", blurb = "Blade dancer: slashes close cats, and a bubble shield blocks a hit.",
+            id = "Lilac", name = "Lilac", blurb = "Bomber: sticky bombs blow up crowds, and she slashes any cat that gets too close.",
             kit = Kit("Bombs: lobs bombs that stick to cats and blow up the crowd around them.",
                       "Blade Dancer: slashes any cat that gets too close", "Weak Spot: extra-strong crits on slowed or stunned cats", "Bubble Shield: blocks a whole hit, then recharges",
-                      "SPECIAL: a burst of bombs all around her, then bigger, stronger bombs"),
+                      "FULL BLOOM: a ring of bombs bursts out around her, then bigger, stronger bombs"),
+            iconPrefix = "lilac_", ultSkin = "LilacBloom",
         },
         new Def
         {
@@ -79,7 +81,7 @@ public static class Hero
             kit = Kit("Drones: a swarm of zapper drones darts out at cats. She attacks from range.",
                       "Hack: zapped cats sometimes freeze and zap their friends", "Mark Target: the toughest cat nearby takes +50% damage", "Backdoor: every 12th zap is a big guaranteed crit",
                       "SYSTEM OVERRIDE: an EMP that hacks every cat on screen, then faster drones"),
-            weapon = "drone", iconPrefix = "nyx_", maxPiece = "Max Drones", upgradeKind = "Drone upgrade",
+            weapon = "drone", iconPrefix = "nyx_", ultSkin = "NyxGoggles", maxPiece = "Max Drones", upgradeKind = "Drone upgrade",
             stats = new[] { "Damage", "Fire rate", "Drones", "Zap radius" },
             upgrades = new Dictionary<string, (string, string)>
             {
@@ -131,7 +133,7 @@ public static class Hero
 
     public static int Index => Mathf.Clamp(PlayerPrefs.GetInt("hero", 0), 0, All.Length - 1);
     public static Def Current => All[Index];
-    public static bool UsesBombs => Current.id == "Mira";
+    public static bool UsesBombs => Current.id == "Lilac";
 
     public static (string title, string text)? Upgrade(string type) =>
         Current.upgrades != null && Current.upgrades.TryGetValue(type, out var u) ? u : ((string, string)?)null;
@@ -142,16 +144,33 @@ public static class Hero
     private static Dictionary<string, (string, string[])> bombSkills;
     private static Dictionary<string, (string, string)> bombCombos;
 
+    // Snapshot the default (Lilac/bomb) texts once, before any hero overwrites them.
+    private static void EnsureBaseTexts()
+    {
+        if (bombSkills != null) return;
+        bombSkills = new Dictionary<string, (string, string[])>();
+        bombCombos = new Dictionary<string, (string, string)>();
+        foreach (PlayerSkills.Skill s in PlayerSkills.All) bombSkills[s.id] = (s.name, s.levels);
+        foreach (PlayerCollabs.Def[] defs in new[] { PlayerCollabs.All, PlayerCollabs.Supers })
+            foreach (PlayerCollabs.Def d in defs) bombCombos[d.id] = (d.name, d.text);
+    }
+
+    // Any hero's version of a combo / skill, whoever is equipped (the wiki shows them all).
+    public static (string name, string text) ComboText(Def h, string id)
+    {
+        EnsureBaseTexts();
+        return h.combos != null && h.combos.TryGetValue(id, out var mine) ? mine : bombCombos.TryGetValue(id, out var b) ? b : (id, "");
+    }
+
+    public static string SkillName(Def h, string id)
+    {
+        EnsureBaseTexts();
+        return h.skills != null && h.skills.TryGetValue(id, out var mine) ? mine.name : bombSkills.TryGetValue(id, out var b) ? b.Item1 : id;
+    }
+
     private static void ApplyTexts()
     {
-        if (bombSkills == null)
-        {
-            bombSkills = new Dictionary<string, (string, string[])>();
-            bombCombos = new Dictionary<string, (string, string)>();
-            foreach (PlayerSkills.Skill s in PlayerSkills.All) bombSkills[s.id] = (s.name, s.levels);
-            foreach (PlayerCollabs.Def[] defs in new[] { PlayerCollabs.All, PlayerCollabs.Supers })
-                foreach (PlayerCollabs.Def d in defs) bombCombos[d.id] = (d.name, d.text);
-        }
+        EnsureBaseTexts();
         Def h = Current;
         foreach (PlayerSkills.Skill s in PlayerSkills.All)
             (s.name, s.levels) = h.skills != null && h.skills.TryGetValue(s.id, out var mine) ? mine : bombSkills[s.id];
@@ -180,10 +199,10 @@ public static class Hero
     public static void Apply(PlayerStats player)
     {
         string id = Current.id;
-        if (player.TryGetComponent(out MiraPassives mira)) mira.enabled = id == "Mira";
+        if (player.TryGetComponent(out LilacPassives lilac)) lilac.enabled = id == "Lilac";
         Toggle<JinPassives>(player, id == "Jin");
         Toggle<NyxPassives>(player, id == "Nyx");
-        if (player.TryGetComponent(out PlayerAutoAttack bombs)) bombs.enabled = id == "Mira";
+        if (player.TryGetComponent(out PlayerAutoAttack bombs)) bombs.enabled = id == "Lilac";
         Toggle<JinSword>(player, id == "Jin");
         Toggle<NyxDrones>(player, id == "Nyx");
         ApplyTexts();
@@ -201,7 +220,8 @@ public static class Hero
         anim.altFrames = null;
         anim.useAlt = null;
         var alt = new Dictionary<string, Sprite>();
-        foreach (Sprite s in Resources.LoadAll<Sprite>("Heroes/" + id + "Goggles")) alt[Suffix(s.name)] = s;
+        if (Current.ultSkin != null)
+            foreach (Sprite s in Resources.LoadAll<Sprite>("Heroes/" + Current.ultSkin)) alt[Suffix(s.name)] = s;
         if (alt.Count == 0 || !player.TryGetComponent(out PlayerUltimate ult)) return;
         anim.altFrames = new Dictionary<Sprite, Sprite>();
         foreach (PlayerAnimator.Clip[] clips in new[] { anim.walk, anim.roll, anim.throwClips })

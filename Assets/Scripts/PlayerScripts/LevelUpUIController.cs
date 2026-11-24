@@ -548,17 +548,17 @@ public class LevelUpUIController : MonoBehaviour
             }
         }
 
-        HeroPassives mira = HeroPassives.Instance;
-        if (mira != null)
+        HeroPassives passives = HeroPassives.Instance;
+        if (passives != null)
         {
-            foreach (HeroPassives.Passive p in mira.Offerable())
+            foreach (HeroPassives.Passive p in passives.Offerable())
             {
-                int next = mira.LevelOf(p.id) + 1;
+                int next = passives.LevelOf(p.id) + 1;
                 HeroPassives.Passive captured = p;
                 offers.Add(new Offer
                 {
                     text = $"<size=115%><b><color=#7FE3FF>{p.name}</color></b></size>  <size=80%><color=#9FD8FF>Lv {next}</color></size>\n<color=#C9D2F0>{p.levels[next - 2]}</color>",
-                    apply = () => mira.LevelUp(captured.id),
+                    apply = () => passives.LevelUp(captured.id),
                     icon = "passive:" + p.id,
                     weight = 0.9f,
                     kind = OfferKind.Passive,

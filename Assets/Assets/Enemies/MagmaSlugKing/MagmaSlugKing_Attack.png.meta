@@ -1,0 +1,1378 @@
+fileFormatVersion: 2
+guid: b2ac153fc4b3c0311e3bb5a7b4c3ceda
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1392854618730920269
+    second: MagmaSlugKing_Attack_r0_c0
+  - first:
+      213: -606636594122443492
+    second: MagmaSlugKing_Attack_r0_c1
+  - first:
+      213: 2190128269242212517
+    second: MagmaSlugKing_Attack_r0_c2
+  - first:
+      213: -2338734189416054746
+    second: MagmaSlugKing_Attack_r0_c3
+  - first:
+      213: -4590602114546633095
+    second: MagmaSlugKing_Attack_r0_c4
+  - first:
+      213: 2427429125037683776
+    second: MagmaSlugKing_Attack_r0_c5
+  - first:
+      213: -2366154199090004936
+    second: MagmaSlugKing_Attack_r0_c6
+  - first:
+      213: -2714410422659531692
+    second: MagmaSlugKing_Attack_r0_c7
+  - first:
+      213: -1189726185986310564
+    second: MagmaSlugKing_Attack_r0_c8
+  - first:
+      213: 3471898253767873846
+    second: MagmaSlugKing_Attack_r0_c9
+  - first:
+      213: -3405777112871258030
+    second: MagmaSlugKing_Attack_r0_c10
+  - first:
+      213: -4045199198426292444
+    second: MagmaSlugKing_Attack_r0_c11
+  - first:
+      213: -2055016576277095070
+    second: MagmaSlugKing_Attack_r1_c0
+  - first:
+      213: 1999529129772631068
+    second: MagmaSlugKing_Attack_r1_c1
+  - first:
+      213: 2679949158863996597
+    second: MagmaSlugKing_Attack_r1_c2
+  - first:
+      213: 2875794138421472980
+    second: MagmaSlugKing_Attack_r1_c3
+  - first:
+      213: -1473477159220005318
+    second: MagmaSlugKing_Attack_r1_c4
+  - first:
+      213: -1811356212350600330
+    second: MagmaSlugKing_Attack_r1_c5
+  - first:
+      213: 4446304017420298504
+    second: MagmaSlugKing_Attack_r1_c6
+  - first:
+      213: -3937796683494770084
+    second: MagmaSlugKing_Attack_r1_c7
+  - first:
+      213: 1406456075395550134
+    second: MagmaSlugKing_Attack_r1_c8
+  - first:
+      213: 478588844564786998
+    second: MagmaSlugKing_Attack_r1_c9
+  - first:
+      213: -1299245057549781004
+    second: MagmaSlugKing_Attack_r1_c10
+  - first:
+      213: -3510607044112989121
+    second: MagmaSlugKing_Attack_r1_c11
+  - first:
+      213: 134109288575139427
+    second: MagmaSlugKing_Attack_r2_c0
+  - first:
+      213: 1109277755720385498
+    second: MagmaSlugKing_Attack_r2_c1
+  - first:
+      213: 399221887199529369
+    second: MagmaSlugKing_Attack_r2_c2
+  - first:
+      213: 2861765318208378493
+    second: MagmaSlugKing_Attack_r2_c3
+  - first:
+      213: -1973435846677229906
+    second: MagmaSlugKing_Attack_r2_c4
+  - first:
+      213: 341004624801172310
+    second: MagmaSlugKing_Attack_r2_c5
+  - first:
+      213: 4179160749826854382
+    second: MagmaSlugKing_Attack_r2_c6
+  - first:
+      213: 389147959935433129
+    second: MagmaSlugKing_Attack_r2_c7
+  - first:
+      213: 3049166405686167895
+    second: MagmaSlugKing_Attack_r2_c8
+  - first:
+      213: 3636355553812417084
+    second: MagmaSlugKing_Attack_r2_c9
+  - first:
+      213: -3666475253253053390
+    second: MagmaSlugKing_Attack_r2_c10
+  - first:
+      213: -4146522361425572108
+    second: MagmaSlugKing_Attack_r2_c11
+  - first:
+      213: -3877640014836897758
+    second: MagmaSlugKing_Attack_r3_c0
+  - first:
+      213: -351700137826565238
+    second: MagmaSlugKing_Attack_r3_c1
+  - first:
+      213: -4353196064936906844
+    second: MagmaSlugKing_Attack_r3_c2
+  - first:
+      213: -22575046709837017
+    second: MagmaSlugKing_Attack_r3_c3
+  - first:
+      213: -3376201984758473697
+    second: MagmaSlugKing_Attack_r3_c4
+  - first:
+      213: -248542046831939323
+    second: MagmaSlugKing_Attack_r3_c5
+  - first:
+      213: 1916287676604685815
+    second: MagmaSlugKing_Attack_r3_c6
+  - first:
+      213: 566017186880104553
+    second: MagmaSlugKing_Attack_r3_c7
+  - first:
+      213: 1721783262440613860
+    second: MagmaSlugKing_Attack_r3_c8
+  - first:
+      213: 3335407743873350505
+    second: MagmaSlugKing_Attack_r3_c9
+  - first:
+      213: -1900449835956057614
+    second: MagmaSlugKing_Attack_r3_c10
+  - first:
+      213: 3974431812028492987
+    second: MagmaSlugKing_Attack_r3_c11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 20
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r0_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c41d83494d66590c6cb224da147a925
+      internalID: 1392854618730920269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r0_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ccab18343d2e83cb12f7881bda4a36a8
+      internalID: -606636594122443492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r0_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f0146579c0af60534d956f5bd5ab7b2
+      internalID: 2190128269242212517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r0_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37845b70d699bf79d9dc6c84fc6cea8c
+      internalID: -2338734189416054746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r0_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6900a06e43dcb93cbc94ecdd149a9e21
+      internalID: -4590602114546633095
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r0_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: add0b2d9cfc7e5cc9e0359b7b04ddd94
+      internalID: 2427429125037683776
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r0_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5bf7f8a9cb8fc393edfb593ffe5e6ad1
+      internalID: -2366154199090004936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r0_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02c4d92f271eba686e01bc16179f70e5
+      internalID: -2714410422659531692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r0_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41c0496cfaf589c8370a105ad851cc8e
+      internalID: -1189726185986310564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r0_c9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e960ffbee06d8a29801eb0a1ca1d5f1d
+      internalID: 3471898253767873846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r0_c10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1fd7a69fd30d3871fb8bc117aaec9f16
+      internalID: -3405777112871258030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r0_c11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d8a9f7e0ae114b9a32866c4d126a0f2
+      internalID: -4045199198426292444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r1_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 738d50f25b84fa37509cc75622ee4720
+      internalID: -2055016576277095070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r1_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ea8fee90e17252456ed80300c06da8a
+      internalID: 1999529129772631068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r1_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12f1034954d33f4c9a2fbe5a47925151
+      internalID: 2679949158863996597
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r1_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04df29e4a006ee80950709bebb07d139
+      internalID: 2875794138421472980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r1_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b30cbd4cf7c5d2d937b17261384aca3
+      internalID: -1473477159220005318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r1_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b5905c5201beea61e33dc8e048add7e
+      internalID: -1811356212350600330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r1_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8c88c90f01f3ccee34e78d209295c65
+      internalID: 4446304017420298504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r1_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8a087a871205f4ca45ea2e6ca64aaea
+      internalID: -3937796683494770084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r1_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a8fc02beecde6206a2ccdbb0fc21114
+      internalID: 1406456075395550134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r1_c9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73f7d34473806b6c9d93c7c5a8cf7ccf
+      internalID: 478588844564786998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r1_c10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b64eb19ff9b5d8cbdfda69b69f40a9b8
+      internalID: -1299245057549781004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r1_c11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49c8235faed6c9eaebcfbaa4eaba32d3
+      internalID: -3510607044112989121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r2_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41971a4e8cc5a3c6a67b1254c84a58b7
+      internalID: 134109288575139427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r2_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 084799113c5c5b89356347111237dcdf
+      internalID: 1109277755720385498
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r2_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc0a1e38e7c0b9935af6b3a85cfd6fc0
+      internalID: 399221887199529369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r2_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0e6b30c98b0ec6ed63dee0a05577e57
+      internalID: 2861765318208378493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r2_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fa62832b63fc841c89962f397d5684c
+      internalID: -1973435846677229906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r2_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3800e8ca87aa6a470ac704f6043d2ed
+      internalID: 341004624801172310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r2_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51e65fb18aab4f3cfed3d7e216544146
+      internalID: 4179160749826854382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r2_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eef3010148b4afc61d21e29aa7af746c
+      internalID: 389147959935433129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r2_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 486f379c66031fdd9bda9624533bcb73
+      internalID: 3049166405686167895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r2_c9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de79fa164bcb452be928cb12fbdafa27
+      internalID: 3636355553812417084
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r2_c10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad816b92e432b437fdfbdd173ea8c0dc
+      internalID: -3666475253253053390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r2_c11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 511679594740c8581b1ccf27f7f05228
+      internalID: -4146522361425572108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r3_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e051ce36e33582f49441a74eaefebcdc
+      internalID: -3877640014836897758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r3_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ea769f10b097e40b5faa8d026221016
+      internalID: -351700137826565238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r3_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f519d25f6babdefad8b4b4bee22f8434
+      internalID: -4353196064936906844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r3_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d19fb76c42805fc844a4ddb9276b3abe
+      internalID: -22575046709837017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r3_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3bc3cb10c95763cfac7cda265645a103
+      internalID: -3376201984758473697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r3_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d3c6b690c09e165b4885c0c24e50df2
+      internalID: -248542046831939323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r3_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee599dfa4710764dd9c864faae94e88c
+      internalID: 1916287676604685815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r3_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 895e116f87bda7ac404eb9b67145fd51
+      internalID: 566017186880104553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r3_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0f29f94ce7b80fc924dd0301101d256
+      internalID: 1721783262440613860
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r3_c9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b215327ab41da8402e357489617f43c1
+      internalID: 3335407743873350505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r3_c10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a291f90cd639f041952d661a2e2a2af
+      internalID: -1900449835956057614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Attack_r3_c11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b935042ba2a15bc4af8c884d5c005a09
+      internalID: 3974431812028492987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      MagmaSlugKing_Attack_r0_c0: 1392854618730920269
+      MagmaSlugKing_Attack_r0_c1: -606636594122443492
+      MagmaSlugKing_Attack_r0_c2: 2190128269242212517
+      MagmaSlugKing_Attack_r0_c3: -2338734189416054746
+      MagmaSlugKing_Attack_r0_c4: -4590602114546633095
+      MagmaSlugKing_Attack_r0_c5: 2427429125037683776
+      MagmaSlugKing_Attack_r0_c6: -2366154199090004936
+      MagmaSlugKing_Attack_r0_c7: -2714410422659531692
+      MagmaSlugKing_Attack_r0_c8: -1189726185986310564
+      MagmaSlugKing_Attack_r0_c9: 3471898253767873846
+      MagmaSlugKing_Attack_r0_c10: -3405777112871258030
+      MagmaSlugKing_Attack_r0_c11: -4045199198426292444
+      MagmaSlugKing_Attack_r1_c0: -2055016576277095070
+      MagmaSlugKing_Attack_r1_c1: 1999529129772631068
+      MagmaSlugKing_Attack_r1_c2: 2679949158863996597
+      MagmaSlugKing_Attack_r1_c3: 2875794138421472980
+      MagmaSlugKing_Attack_r1_c4: -1473477159220005318
+      MagmaSlugKing_Attack_r1_c5: -1811356212350600330
+      MagmaSlugKing_Attack_r1_c6: 4446304017420298504
+      MagmaSlugKing_Attack_r1_c7: -3937796683494770084
+      MagmaSlugKing_Attack_r1_c8: 1406456075395550134
+      MagmaSlugKing_Attack_r1_c9: 478588844564786998
+      MagmaSlugKing_Attack_r1_c10: -1299245057549781004
+      MagmaSlugKing_Attack_r1_c11: -3510607044112989121
+      MagmaSlugKing_Attack_r2_c0: 134109288575139427
+      MagmaSlugKing_Attack_r2_c1: 1109277755720385498
+      MagmaSlugKing_Attack_r2_c2: 399221887199529369
+      MagmaSlugKing_Attack_r2_c3: 2861765318208378493
+      MagmaSlugKing_Attack_r2_c4: -1973435846677229906
+      MagmaSlugKing_Attack_r2_c5: 341004624801172310
+      MagmaSlugKing_Attack_r2_c6: 4179160749826854382
+      MagmaSlugKing_Attack_r2_c7: 389147959935433129
+      MagmaSlugKing_Attack_r2_c8: 3049166405686167895
+      MagmaSlugKing_Attack_r2_c9: 3636355553812417084
+      MagmaSlugKing_Attack_r2_c10: -3666475253253053390
+      MagmaSlugKing_Attack_r2_c11: -4146522361425572108
+      MagmaSlugKing_Attack_r3_c0: -3877640014836897758
+      MagmaSlugKing_Attack_r3_c1: -351700137826565238
+      MagmaSlugKing_Attack_r3_c2: -4353196064936906844
+      MagmaSlugKing_Attack_r3_c3: -22575046709837017
+      MagmaSlugKing_Attack_r3_c4: -3376201984758473697
+      MagmaSlugKing_Attack_r3_c5: -248542046831939323
+      MagmaSlugKing_Attack_r3_c6: 1916287676604685815
+      MagmaSlugKing_Attack_r3_c7: 566017186880104553
+      MagmaSlugKing_Attack_r3_c8: 1721783262440613860
+      MagmaSlugKing_Attack_r3_c9: 3335407743873350505
+      MagmaSlugKing_Attack_r3_c10: -1900449835956057614
+      MagmaSlugKing_Attack_r3_c11: 3974431812028492987
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

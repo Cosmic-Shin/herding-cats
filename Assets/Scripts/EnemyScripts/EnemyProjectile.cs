@@ -27,6 +27,14 @@ public class EnemyProjectile : MonoBehaviour
         p.transform.localScale = Vector3.one * 0.6f;
         p.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg);
     }
+    public static void SpawnCarrot(Vector2 pos, Vector2 velocity, float damage, PlayerHealth target)
+    {
+        EnemyProjectile p = Spawn(pos, velocity, damage, target, 0.3f, Color.white);
+        p.needle = true;
+        p.sr.sprite = Shapes.Art("Fx/Boss/carrot");
+        p.transform.localScale = Vector3.one * 0.9f;
+        p.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg);
+    }
     private float age;
     private const float ToxicRange = 1.4f;
 

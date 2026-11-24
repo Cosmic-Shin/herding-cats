@@ -1,0 +1,1378 @@
+fileFormatVersion: 2
+guid: 1a002a5ba736f1b60d6878b3dbeb831e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4013129294503434628
+    second: EmperorPenguin_Attack_r0_c0
+  - first:
+      213: 2630180861237356234
+    second: EmperorPenguin_Attack_r0_c1
+  - first:
+      213: 3001327598465088948
+    second: EmperorPenguin_Attack_r0_c2
+  - first:
+      213: -2406813703809224202
+    second: EmperorPenguin_Attack_r0_c3
+  - first:
+      213: 857826691770290697
+    second: EmperorPenguin_Attack_r0_c4
+  - first:
+      213: 500074680575936558
+    second: EmperorPenguin_Attack_r0_c5
+  - first:
+      213: -3360441983401565166
+    second: EmperorPenguin_Attack_r0_c6
+  - first:
+      213: -238783323850947761
+    second: EmperorPenguin_Attack_r0_c7
+  - first:
+      213: -256253865852400696
+    second: EmperorPenguin_Attack_r0_c8
+  - first:
+      213: 1281409639788154720
+    second: EmperorPenguin_Attack_r0_c9
+  - first:
+      213: -3207613833445959898
+    second: EmperorPenguin_Attack_r0_c10
+  - first:
+      213: 581945648510368188
+    second: EmperorPenguin_Attack_r0_c11
+  - first:
+      213: -147787814619604972
+    second: EmperorPenguin_Attack_r1_c0
+  - first:
+      213: 1694187894209204201
+    second: EmperorPenguin_Attack_r1_c1
+  - first:
+      213: -467838449691443464
+    second: EmperorPenguin_Attack_r1_c2
+  - first:
+      213: -1792297325074076311
+    second: EmperorPenguin_Attack_r1_c3
+  - first:
+      213: 1060453195184198059
+    second: EmperorPenguin_Attack_r1_c4
+  - first:
+      213: -4312113918002486366
+    second: EmperorPenguin_Attack_r1_c5
+  - first:
+      213: -3719074236321443266
+    second: EmperorPenguin_Attack_r1_c6
+  - first:
+      213: -2212258470780195716
+    second: EmperorPenguin_Attack_r1_c7
+  - first:
+      213: 675138468342400873
+    second: EmperorPenguin_Attack_r1_c8
+  - first:
+      213: -2762870240103101000
+    second: EmperorPenguin_Attack_r1_c9
+  - first:
+      213: -3270871709355502509
+    second: EmperorPenguin_Attack_r1_c10
+  - first:
+      213: 1488229637848118905
+    second: EmperorPenguin_Attack_r1_c11
+  - first:
+      213: 1574845980851262325
+    second: EmperorPenguin_Attack_r2_c0
+  - first:
+      213: 2627175228909163696
+    second: EmperorPenguin_Attack_r2_c1
+  - first:
+      213: 3828684796071918599
+    second: EmperorPenguin_Attack_r2_c2
+  - first:
+      213: -3020654357669230658
+    second: EmperorPenguin_Attack_r2_c3
+  - first:
+      213: -4285676094655063376
+    second: EmperorPenguin_Attack_r2_c4
+  - first:
+      213: 3116503463044530497
+    second: EmperorPenguin_Attack_r2_c5
+  - first:
+      213: -575956460752131670
+    second: EmperorPenguin_Attack_r2_c6
+  - first:
+      213: 4602833157078141189
+    second: EmperorPenguin_Attack_r2_c7
+  - first:
+      213: -4523537149070384668
+    second: EmperorPenguin_Attack_r2_c8
+  - first:
+      213: -3546301329741920229
+    second: EmperorPenguin_Attack_r2_c9
+  - first:
+      213: 3527438598714675698
+    second: EmperorPenguin_Attack_r2_c10
+  - first:
+      213: 304332504316555973
+    second: EmperorPenguin_Attack_r2_c11
+  - first:
+      213: 4390823279348185268
+    second: EmperorPenguin_Attack_r3_c0
+  - first:
+      213: -2917985554486961476
+    second: EmperorPenguin_Attack_r3_c1
+  - first:
+      213: -2349621403023161736
+    second: EmperorPenguin_Attack_r3_c2
+  - first:
+      213: 2429787017866042388
+    second: EmperorPenguin_Attack_r3_c3
+  - first:
+      213: -4400614094364942046
+    second: EmperorPenguin_Attack_r3_c4
+  - first:
+      213: -3034766804572347784
+    second: EmperorPenguin_Attack_r3_c5
+  - first:
+      213: 743221170882871401
+    second: EmperorPenguin_Attack_r3_c6
+  - first:
+      213: -797994816794760419
+    second: EmperorPenguin_Attack_r3_c7
+  - first:
+      213: -2633098018492607907
+    second: EmperorPenguin_Attack_r3_c8
+  - first:
+      213: 2754874774898279934
+    second: EmperorPenguin_Attack_r3_c9
+  - first:
+      213: 4385754012426481558
+    second: EmperorPenguin_Attack_r3_c10
+  - first:
+      213: 3839419577033122190
+    second: EmperorPenguin_Attack_r3_c11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 20
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r0_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3af3ecef485eef181ab5dd88aa77efe9
+      internalID: 4013129294503434628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r0_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2eaae17ee67c0a4c75eb01df4777ea41
+      internalID: 2630180861237356234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r0_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be6de2d01bb29264c70ffbba92dde186
+      internalID: 3001327598465088948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r0_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e98a87afcaa16c9c8d65f34dcd9cd15
+      internalID: -2406813703809224202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r0_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50ac8cef5830c635c3016e45be550e5f
+      internalID: 857826691770290697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r0_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6fb279ad17f230a6bc7a45dc1df1cca2
+      internalID: 500074680575936558
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r0_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54bbfe49cc67fe2c671107670977bc19
+      internalID: -3360441983401565166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r0_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e99eace58828ec5549288dfc696f9f8
+      internalID: -238783323850947761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r0_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9385d2c323803eebb1d06492978f3772
+      internalID: -256253865852400696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r0_c9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4aaeb420f36da6318f8216ba3b2b79eb
+      internalID: 1281409639788154720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r0_c10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b20c30300081943d673ff4a2b2495ee
+      internalID: -3207613833445959898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r0_c11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 924277f9da88fb96c24d069cab20f804
+      internalID: 581945648510368188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r1_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2df194a146b111cd8e7b4f9e6424306b
+      internalID: -147787814619604972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r1_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a576a5e71a6b95ae934c4db8688f06bf
+      internalID: 1694187894209204201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r1_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 161143e0ba7c8c6e18c3f8a194ce7dbb
+      internalID: -467838449691443464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r1_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9bdab86d15ed4a725f1278bdc8e9e64f
+      internalID: -1792297325074076311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r1_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8eee13924ef725a1f4adef63505b067
+      internalID: 1060453195184198059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r1_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6c8f8a8ffd7b7e140ebb68733c20a84
+      internalID: -4312113918002486366
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r1_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c85e5285f8dfd2e21efb4052c351c0d
+      internalID: -3719074236321443266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r1_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bd7bec17c97ece43281f803dbc15078
+      internalID: -2212258470780195716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r1_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e96b3ab60a28b33245cf0b1d5019795
+      internalID: 675138468342400873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r1_c9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e40bf215797b13804ec447d3e0ce522a
+      internalID: -2762870240103101000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r1_c10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14966561ea9fd1f7c439b29fd63e726d
+      internalID: -3270871709355502509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r1_c11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 953a93afa5f259d8852bb3286c45a4fc
+      internalID: 1488229637848118905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r2_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a150b89deda50649920106d6f16a1e3
+      internalID: 1574845980851262325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r2_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce2e882fc7c887e49b4d42fe72bc5ee4
+      internalID: 2627175228909163696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r2_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50a114142bb9be45c2dfdaad4ef23299
+      internalID: 3828684796071918599
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r2_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 128ac8b9896d7f20ae9e525e17af907d
+      internalID: -3020654357669230658
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r2_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0262d96495243afc361873e0fd91560b
+      internalID: -4285676094655063376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r2_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce1957d0a5577b978a96913f0b18be90
+      internalID: 3116503463044530497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r2_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 251e91f135c04a97eb3ee206c0a0997f
+      internalID: -575956460752131670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r2_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a635dddc7bcb9a0e45141c01bfdcc3e
+      internalID: 4602833157078141189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r2_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e2f2bbd32be93be3f9306d50778ff5a
+      internalID: -4523537149070384668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r2_c9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a000c678059afbd099e34a2c14a88aa5
+      internalID: -3546301329741920229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r2_c10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec9d8a007c266e36d8a97d3b01afa53c
+      internalID: 3527438598714675698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r2_c11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb281812a01a8487b9b49c268480e232
+      internalID: 304332504316555973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r3_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12fd41b52a370bcde5181ca08f9995fd
+      internalID: 4390823279348185268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r3_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd3c2e62ac114b1e6208b5fe3c607175
+      internalID: -2917985554486961476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r3_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 156710adaf3a9ce5aeb4335689b79ac6
+      internalID: -2349621403023161736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r3_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87c560ef063c85aae3013bd1ab74320b
+      internalID: 2429787017866042388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r3_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7991be959ba1716860324eb32eaface0
+      internalID: -4400614094364942046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r3_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d26db641278104b26eb74aab6dcc71da
+      internalID: -3034766804572347784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r3_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c959d8c58f998a81948dd3dbc793b4c3
+      internalID: 743221170882871401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r3_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c73cdd116440a6b2064254d937c8183
+      internalID: -797994816794760419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r3_c8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fa621beab72d78dc3b55e7f8af53d16
+      internalID: -2633098018492607907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r3_c9
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76e4c99a026959b398710fc6221fd9e0
+      internalID: 2754874774898279934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r3_c10
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9787f1d73cc13d344cbce5226c84236
+      internalID: 4385754012426481558
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: EmperorPenguin_Attack_r3_c11
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72dbe47da67dcf6771c873990dd7f293
+      internalID: 3839419577033122190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      EmperorPenguin_Attack_r0_c0: 4013129294503434628
+      EmperorPenguin_Attack_r0_c1: 2630180861237356234
+      EmperorPenguin_Attack_r0_c2: 3001327598465088948
+      EmperorPenguin_Attack_r0_c3: -2406813703809224202
+      EmperorPenguin_Attack_r0_c4: 857826691770290697
+      EmperorPenguin_Attack_r0_c5: 500074680575936558
+      EmperorPenguin_Attack_r0_c6: -3360441983401565166
+      EmperorPenguin_Attack_r0_c7: -238783323850947761
+      EmperorPenguin_Attack_r0_c8: -256253865852400696
+      EmperorPenguin_Attack_r0_c9: 1281409639788154720
+      EmperorPenguin_Attack_r0_c10: -3207613833445959898
+      EmperorPenguin_Attack_r0_c11: 581945648510368188
+      EmperorPenguin_Attack_r1_c0: -147787814619604972
+      EmperorPenguin_Attack_r1_c1: 1694187894209204201
+      EmperorPenguin_Attack_r1_c2: -467838449691443464
+      EmperorPenguin_Attack_r1_c3: -1792297325074076311
+      EmperorPenguin_Attack_r1_c4: 1060453195184198059
+      EmperorPenguin_Attack_r1_c5: -4312113918002486366
+      EmperorPenguin_Attack_r1_c6: -3719074236321443266
+      EmperorPenguin_Attack_r1_c7: -2212258470780195716
+      EmperorPenguin_Attack_r1_c8: 675138468342400873
+      EmperorPenguin_Attack_r1_c9: -2762870240103101000
+      EmperorPenguin_Attack_r1_c10: -3270871709355502509
+      EmperorPenguin_Attack_r1_c11: 1488229637848118905
+      EmperorPenguin_Attack_r2_c0: 1574845980851262325
+      EmperorPenguin_Attack_r2_c1: 2627175228909163696
+      EmperorPenguin_Attack_r2_c2: 3828684796071918599
+      EmperorPenguin_Attack_r2_c3: -3020654357669230658
+      EmperorPenguin_Attack_r2_c4: -4285676094655063376
+      EmperorPenguin_Attack_r2_c5: 3116503463044530497
+      EmperorPenguin_Attack_r2_c6: -575956460752131670
+      EmperorPenguin_Attack_r2_c7: 4602833157078141189
+      EmperorPenguin_Attack_r2_c8: -4523537149070384668
+      EmperorPenguin_Attack_r2_c9: -3546301329741920229
+      EmperorPenguin_Attack_r2_c10: 3527438598714675698
+      EmperorPenguin_Attack_r2_c11: 304332504316555973
+      EmperorPenguin_Attack_r3_c0: 4390823279348185268
+      EmperorPenguin_Attack_r3_c1: -2917985554486961476
+      EmperorPenguin_Attack_r3_c2: -2349621403023161736
+      EmperorPenguin_Attack_r3_c3: 2429787017866042388
+      EmperorPenguin_Attack_r3_c4: -4400614094364942046
+      EmperorPenguin_Attack_r3_c5: -3034766804572347784
+      EmperorPenguin_Attack_r3_c6: 743221170882871401
+      EmperorPenguin_Attack_r3_c7: -797994816794760419
+      EmperorPenguin_Attack_r3_c8: -2633098018492607907
+      EmperorPenguin_Attack_r3_c9: 2754874774898279934
+      EmperorPenguin_Attack_r3_c10: 4385754012426481558
+      EmperorPenguin_Attack_r3_c11: 3839419577033122190
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

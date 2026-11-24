@@ -67,7 +67,15 @@ public static class Shapes
     });
 
     private static readonly Color Ink = new Color(0.06f, 0.05f, 0.1f);
-    private static Sprite glob, fishBone, hairball, fish;
+    private static Sprite glob, fishBone, hairball, fish, carrot;
+
+    // Points right (+x) so it can be rotated to its flight direction.
+    public static Sprite Carrot => carrot != null ? carrot : carrot = MakeOutlined(14, 7, 14f, (x, y) =>
+    {
+        if (x <= 3) return (x + y) % 2 == 0 && y >= 1 && y <= 5 ? new Color(0.35f, 0.75f, 0.25f) : y >= 2 && y <= 4 ? new Color(0.25f, 0.6f, 0.2f) : Color.clear;
+        if (Mathf.Abs(y - 3) > (13 - x) * 0.3f + 0.2f) return Color.clear;
+        return (x == 7 || x == 10) && y == 3 ? new Color(0.85f, 0.4f, 0.08f) : y >= 4 ? new Color(1f, 0.7f, 0.3f) : new Color(1f, 0.55f, 0.15f);
+    });
 
     public static Sprite Glob => glob != null ? glob : glob = MakeOutlined(12, 12, 12f, (x, y) =>
     {

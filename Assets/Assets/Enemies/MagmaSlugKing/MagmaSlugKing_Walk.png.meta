@@ -1,0 +1,962 @@
+fileFormatVersion: 2
+guid: 337f905d7642db20a61a8e305d1ac9e9
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3178629624340134479
+    second: MagmaSlugKing_Walk_r0_c0
+  - first:
+      213: 4183861639398329451
+    second: MagmaSlugKing_Walk_r0_c1
+  - first:
+      213: 4558546256792307933
+    second: MagmaSlugKing_Walk_r0_c2
+  - first:
+      213: 369389606222925561
+    second: MagmaSlugKing_Walk_r0_c3
+  - first:
+      213: 4460382410960982331
+    second: MagmaSlugKing_Walk_r0_c4
+  - first:
+      213: 2116907995099001572
+    second: MagmaSlugKing_Walk_r0_c5
+  - first:
+      213: 4413523917000810524
+    second: MagmaSlugKing_Walk_r0_c6
+  - first:
+      213: 4400579931938134322
+    second: MagmaSlugKing_Walk_r0_c7
+  - first:
+      213: -2718093533345102200
+    second: MagmaSlugKing_Walk_r1_c0
+  - first:
+      213: 3303987890358610343
+    second: MagmaSlugKing_Walk_r1_c1
+  - first:
+      213: -3662415574452204822
+    second: MagmaSlugKing_Walk_r1_c2
+  - first:
+      213: 2137937549288599960
+    second: MagmaSlugKing_Walk_r1_c3
+  - first:
+      213: -3834351268456311686
+    second: MagmaSlugKing_Walk_r1_c4
+  - first:
+      213: -3101995615911294946
+    second: MagmaSlugKing_Walk_r1_c5
+  - first:
+      213: 2769806103858353904
+    second: MagmaSlugKing_Walk_r1_c6
+  - first:
+      213: 3949325259245570137
+    second: MagmaSlugKing_Walk_r1_c7
+  - first:
+      213: -322612163670290869
+    second: MagmaSlugKing_Walk_r2_c0
+  - first:
+      213: -1659620839184912064
+    second: MagmaSlugKing_Walk_r2_c1
+  - first:
+      213: -19438331248606296
+    second: MagmaSlugKing_Walk_r2_c2
+  - first:
+      213: -939000967886706453
+    second: MagmaSlugKing_Walk_r2_c3
+  - first:
+      213: 2507978234614871661
+    second: MagmaSlugKing_Walk_r2_c4
+  - first:
+      213: -264225218184725272
+    second: MagmaSlugKing_Walk_r2_c5
+  - first:
+      213: 1999276963968122593
+    second: MagmaSlugKing_Walk_r2_c6
+  - first:
+      213: 326502902655670046
+    second: MagmaSlugKing_Walk_r2_c7
+  - first:
+      213: -3345069641259560920
+    second: MagmaSlugKing_Walk_r3_c0
+  - first:
+      213: -4404753045701462571
+    second: MagmaSlugKing_Walk_r3_c1
+  - first:
+      213: -571503013307733283
+    second: MagmaSlugKing_Walk_r3_c2
+  - first:
+      213: -3282855188770702039
+    second: MagmaSlugKing_Walk_r3_c3
+  - first:
+      213: -1447608595003856431
+    second: MagmaSlugKing_Walk_r3_c4
+  - first:
+      213: -3400215501033524655
+    second: MagmaSlugKing_Walk_r3_c5
+  - first:
+      213: -4373609618197497040
+    second: MagmaSlugKing_Walk_r3_c6
+  - first:
+      213: 2110884901324396799
+    second: MagmaSlugKing_Walk_r3_c7
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 20
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r0_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05717cebb3fc4f8e472fe544c00510ba
+      internalID: -3178629624340134479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r0_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 079bf6109d86bc396e4a273eb9d8ee7c
+      internalID: 4183861639398329451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r0_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88b66059b952849b4978fc7c893ccaed
+      internalID: 4558546256792307933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r0_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 792510901cf00303672f343afc5aa7b8
+      internalID: 369389606222925561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r0_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d94bc99f97a3cf6b5f64155026a1d207
+      internalID: 4460382410960982331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r0_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ff9e5251352cc7188a97d7b0233fc13
+      internalID: 2116907995099001572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r0_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9db1a358aea3ff58ba603e90c2e5ba8b
+      internalID: 4413523917000810524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r0_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 192
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1029fdce6be025c2c5600109b2d50409
+      internalID: 4400579931938134322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r1_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 871bc8ce16b4f961da9d2feb9ceb8b82
+      internalID: -2718093533345102200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r1_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3afcbdbc0abf55e0866be0c9c992d02
+      internalID: 3303987890358610343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r1_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d47d1f493aef533a1778e747324a50fa
+      internalID: -3662415574452204822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r1_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1562de198c6ac41517de66591f5e727
+      internalID: 2137937549288599960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r1_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b55302226ea91eee1bb513fbba28425
+      internalID: -3834351268456311686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r1_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92b973e0d5f9b54c385f2eba062869e1
+      internalID: -3101995615911294946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r1_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f921111abdd8093b28600c617d511576
+      internalID: 2769806103858353904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r1_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 128
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b07d035a11e21f2cfcbe9f213e6f666b
+      internalID: 3949325259245570137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r2_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37f9b8c8b7b939f7e65b029344e3b472
+      internalID: -322612163670290869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r2_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df9618cee96ae9a2b0417d2f0cb7d0e7
+      internalID: -1659620839184912064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r2_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dc789bd6625d42efa6d178c0cfab009
+      internalID: -19438331248606296
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r2_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad1347d1c0028df54ea4c45e4d764a43
+      internalID: -939000967886706453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r2_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a3eae7d6fc9fe393b4829216f49566d
+      internalID: 2507978234614871661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r2_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df606124d65961219914508271b76e69
+      internalID: -264225218184725272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r2_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2eee79f13a41eb643daf9f4b66934b3
+      internalID: 1999276963968122593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r2_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 64
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7350201eaa7220f854e3713acf95447
+      internalID: 326502902655670046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r3_c0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a596840d1e3b111b779aaa64a3a8c37
+      internalID: -3345069641259560920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r3_c1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd3271ad25eb2cfc8537d27831863976
+      internalID: -4404753045701462571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r3_c2
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e05b0f888c3f76260c3a699a8efbe04a
+      internalID: -571503013307733283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r3_c3
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d5417b02684e42857b69054f4193fa5
+      internalID: -3282855188770702039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r3_c4
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae40f44d0c30ae961b7ef92dfdbb308d
+      internalID: -1447608595003856431
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r3_c5
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0bd8e9983abf34a365180e8bd4824f3
+      internalID: -3400215501033524655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r3_c6
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 567f736b305bae59024ba04ddc812317
+      internalID: -4373609618197497040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: MagmaSlugKing_Walk_r3_c7
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 754a8baaa2f8b48e488f787107703b23
+      internalID: 2110884901324396799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      MagmaSlugKing_Walk_r0_c0: -3178629624340134479
+      MagmaSlugKing_Walk_r0_c1: 4183861639398329451
+      MagmaSlugKing_Walk_r0_c2: 4558546256792307933
+      MagmaSlugKing_Walk_r0_c3: 369389606222925561
+      MagmaSlugKing_Walk_r0_c4: 4460382410960982331
+      MagmaSlugKing_Walk_r0_c5: 2116907995099001572
+      MagmaSlugKing_Walk_r0_c6: 4413523917000810524
+      MagmaSlugKing_Walk_r0_c7: 4400579931938134322
+      MagmaSlugKing_Walk_r1_c0: -2718093533345102200
+      MagmaSlugKing_Walk_r1_c1: 3303987890358610343
+      MagmaSlugKing_Walk_r1_c2: -3662415574452204822
+      MagmaSlugKing_Walk_r1_c3: 2137937549288599960
+      MagmaSlugKing_Walk_r1_c4: -3834351268456311686
+      MagmaSlugKing_Walk_r1_c5: -3101995615911294946
+      MagmaSlugKing_Walk_r1_c6: 2769806103858353904
+      MagmaSlugKing_Walk_r1_c7: 3949325259245570137
+      MagmaSlugKing_Walk_r2_c0: -322612163670290869
+      MagmaSlugKing_Walk_r2_c1: -1659620839184912064
+      MagmaSlugKing_Walk_r2_c2: -19438331248606296
+      MagmaSlugKing_Walk_r2_c3: -939000967886706453
+      MagmaSlugKing_Walk_r2_c4: 2507978234614871661
+      MagmaSlugKing_Walk_r2_c5: -264225218184725272
+      MagmaSlugKing_Walk_r2_c6: 1999276963968122593
+      MagmaSlugKing_Walk_r2_c7: 326502902655670046
+      MagmaSlugKing_Walk_r3_c0: -3345069641259560920
+      MagmaSlugKing_Walk_r3_c1: -4404753045701462571
+      MagmaSlugKing_Walk_r3_c2: -571503013307733283
+      MagmaSlugKing_Walk_r3_c3: -3282855188770702039
+      MagmaSlugKing_Walk_r3_c4: -1447608595003856431
+      MagmaSlugKing_Walk_r3_c5: -3400215501033524655
+      MagmaSlugKing_Walk_r3_c6: -4373609618197497040
+      MagmaSlugKing_Walk_r3_c7: 2110884901324396799
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

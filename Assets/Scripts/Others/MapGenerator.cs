@@ -67,7 +67,7 @@ public class MapGenerator : MonoBehaviour
     public static bool OnIce(Vector2 p) => Winter && OnPond(p);
     public static bool OnLava(Vector2 p) => Volcano && OnPond(p);
 
-    private static bool OnPond(Vector2 p)
+    public static bool OnPond(Vector2 p)
     {
         if (ice == null) return false;
         int x = Mathf.FloorToInt(p.x) - iceMin, y = Mathf.FloorToInt(p.y) - iceMin;

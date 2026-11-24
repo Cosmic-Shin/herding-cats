@@ -40,3 +40,8 @@ sysinfo.txt
 # OS
 .DS_Store
 Thumbs.db
+
+# Local build intermediates and Unity crash-recovery scene copies
+.utmp/
+/[Aa]ssets/_Recovery/
+/[Aa]ssets/_Recovery.meta

@@ -23,7 +23,9 @@ public class Lighting : MonoBehaviour
 
     public static void Flash(Vector2 pos, float radius, Color color, float duration = 0.25f)
     {
-        if (instance != null) instance.StartFlash(pos, radius, color, duration);
+        if (instance == null) return;
+        if (PlayerCollabs.IsComboName(DamageStats.Source)) { radius *= 0.6f; color *= 0.5f; } // combos fire constantly; keep their light small
+        instance.StartFlash(pos, radius, color, duration);
     }
 
     public static Color? Mood;
@@ -48,11 +50,29 @@ public class Lighting : MonoBehaviour
         if (!on && instance.flashes != null) foreach (Light2D l in instance.flashes) l.enabled = false;
     }
 
-    [Tooltip("Ambient light multiplier reached at 15:00")]
+    [Tooltip("Ambient light multiplier reached at dusk (20:00, the final boss)")]
     [Range(0.5f, 1f)] public float duskDim = 0.8f;
-    [Tooltip("Daylight is multiplied toward this warm sunset color by 15:00")]
+    [Tooltip("Unused since the day arc below; kept so the scene value still loads")]
     public Color duskTint = new Color(1f, 0.8f, 0.76f);
-    private Color DuskColor => spawner != null ? Color.Lerp(ambientColor, ambientColor * duskTint, spawner.RunTime / 900f) : ambientColor;
+
+    // A full day over the 20-minute run: soft morning, neutral noon, golden hour, then a blue-purple dusk for the final boss.
+    // Endless then takes over with its red sky.
+    private const float DayLength = 1200f;
+    private static readonly float[] ArcTimes = { 0f, 0.3f, 0.7f, 1f };
+    private static readonly Color[] ArcTints =
+    {
+        new Color(1f, 0.94f, 0.86f), Color.white, new Color(1f, 0.8f, 0.58f), new Color(0.74f, 0.7f, 0.96f),
+    };
+    private float DayT => spawner != null ? Mathf.Clamp01(spawner.RunTime / DayLength) : 0f;
+
+    private static Color DayTint(float t)
+    {
+        for (int i = 1; i < ArcTimes.Length; i++)
+            if (t <= ArcTimes[i]) return Color.Lerp(ArcTints[i - 1], ArcTints[i], Mathf.InverseLerp(ArcTimes[i - 1], ArcTimes[i], t));
+        return ArcTints[ArcTints.Length - 1];
+    }
+
+    private Color DuskColor => ambientColor * DayTint(DayT);
     private EnemySpawner spawner;
 
     private void Start()
@@ -150,11 +170,13 @@ public class Lighting : MonoBehaviour
             else flashes[i].intensity = flashPeak[i] * flashTime[i] / flashLength[i];
         }
 
-        if (global != null && spawner != null) global.intensity = Mathf.Lerp(ambient, ambient * duskDim, spawner.RunTime / 900f);
+        // Light holds through the day and only dims in the last stretch toward dusk.
+        if (global != null && spawner != null) global.intensity = Mathf.Lerp(ambient, ambient * duskDim, Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.55f, 1f, DayT)));
 
         if (!EnemySpawner.Endless)
         {
             if (global != null) global.color = Color.Lerp(global.color, (Mood ?? DuskColor) * WeatherTint, Time.deltaTime * 2f);
+            if (cam != null) cam.backgroundColor = Color.Lerp(cam.backgroundColor, daySky * DayTint(DayT), Time.deltaTime * 2f);
             return;
         }
         float k = Time.deltaTime * 0.6f;

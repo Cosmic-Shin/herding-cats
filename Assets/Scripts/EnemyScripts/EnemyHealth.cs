@@ -51,7 +51,7 @@ public class EnemyHealth : MonoBehaviour, IPoolable
     [Header("Splitter")]
     public GameObject splitInto;
     public int splitCount = 2;
-    private float nextBlockPopup;
+    private static float nextBlockPopup; // shared: one BLOCK label at a time, not one per cat
 
     [Header("Feedback")]
     public float knockbackForce = 4f;
@@ -137,7 +137,7 @@ public class EnemyHealth : MonoBehaviour, IPoolable
             shielded.ShieldHit();
             Vector2 face = Vector2.MoveTowards(transform.position, sourcePos, 0.5f);
             Juice.SparksDir(face, sourcePos - (Vector2)transform.position, 50f, new Color(1f, 0.92f, 0.6f), 4, 6f, 0.1f);
-            if (Time.time >= nextBlockPopup)
+            if (Time.time >= nextBlockPopup || nextBlockPopup - Time.time > 1f) // 2nd check: stale value from a previous run
             {
                 nextBlockPopup = Time.time + 0.5f;
                 Sfx.Play(Sfx.Id.Clang, 0.25f, 1.4f);
@@ -268,6 +268,7 @@ public class EnemyHealth : MonoBehaviour, IPoolable
     {
         isDead = true;
         if (TryGetComponent(out Crate crate)) { crate.Break(); return; }
+        Bestiary.Record(gameObject);
         KillScore += xpValue * 10;
 
         if (ai is BossAI)

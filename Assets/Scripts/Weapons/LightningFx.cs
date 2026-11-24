@@ -9,7 +9,7 @@ public class LightningFx : MonoBehaviour
     private static readonly Stack<LightningFx> free = new Stack<LightningFx>();
     private readonly SpriteRenderer[] parts = new SpriteRenderer[Segments];
     private readonly SpriteRenderer[] glows = new SpriteRenderer[Segments];
-    private float t;
+    private float t, alpha = 1f;
     private Color core = new Color(1f, 1f, 0.85f), halo = new Color(1f, 0.9f, 0.3f);
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -24,6 +24,9 @@ public class LightningFx : MonoBehaviour
         while (free.Count > 0 && fx == null) fx = free.Pop();
         if (fx != null) fx.gameObject.SetActive(true);
         else fx = Create();
+        bool combo = PlayerCollabs.IsComboName(DamageStats.Source);
+        fx.alpha = combo ? 0.55f : 1f;
+        if (combo) width *= 0.6f;
 
         Vector2 prev = from;
         Vector2 side = Vector2.Perpendicular((target - from).normalized);
@@ -70,7 +73,7 @@ public class LightningFx : MonoBehaviour
     private void Update()
     {
         t += Time.deltaTime / Duration;
-        float a = (1f - t) * (Random.value < 0.25f ? 0.5f : 1f);
+        float a = alpha * (1f - t) * (Random.value < 0.25f ? 0.5f : 1f);
         for (int i = 0; i < Segments; i++)
         {
             parts[i].color = new Color(core.r, core.g, core.b, a);

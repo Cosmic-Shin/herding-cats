@@ -33,7 +33,7 @@ public class BurningGround : MonoBehaviour
     private static void ResetStatics() => free.Clear();
 
     public static void Spawn(Vector2 pos, float radius, float duration, float tickDamage, Color? color = null, float slow = 0f,
-                             bool burns = false, float pull = 0f, bool magnetGems = false, float healPlayer = 0f)
+                             bool burns = false, float pull = 0f, bool magnetGems = false, float healPlayer = 0f, int palette = -1)
     {
         BurningGround fire = null;
         while (free.Count > 0 && fire == null) fire = free.Pop();
@@ -55,7 +55,7 @@ public class BurningGround : MonoBehaviour
         fire.transform.position = pos;
         fire.glue = color != null && slow > 0f && !burns;
         bool tar = color != null && slow > 0f && burns;
-        fire.palette = fire.glue ? LavaArt.GluePal : tar ? LavaArt.TarPal : LavaArt.LavaPal;
+        fire.palette = palette >= 0 ? palette : fire.glue ? LavaArt.GluePal : tar ? LavaArt.TarPal : LavaArt.LavaPal;
         fire.lava = color == null || fire.glue || tar;
         fire.sr.sharedMaterial = fire.glue ? fire.litMat : fire.glowMat;
         fire.age = 0f;
@@ -95,8 +95,10 @@ public class BurningGround : MonoBehaviour
         sr.sprite = LavaArt.Get(lavaVariant, (int)(lavaTime * (palette == LavaArt.LavaPal ? 9f : 5f)), radius, palette);
         float grow = Mathf.Clamp01(age / 0.15f);
         transform.localScale = Vector3.one * scale * Mathf.Lerp(0.55f, 1f, 1f - (1f - grow) * (1f - grow)) * Mathf.Lerp(0.7f, 1f, fade);
-        sr.color = glue ? new Color(1f, 1f, 1f, 0.9f * fade * Settings.EffectAlpha)
-                        : new Color(1f, Mathf.Lerp(0.55f, 1f, fade), Mathf.Lerp(0.5f, 1f, fade), 0.92f * fade * Settings.EffectAlpha);
+        // Weapon fire is see-through (0.62) so the ground and cats stay readable; tar keeps its heavy look.
+        float alpha = glue ? 0.9f : palette == LavaArt.LavaPal ? 0.62f : 0.92f;
+        sr.color = glue ? new Color(1f, 1f, 1f, alpha * fade * Settings.EffectAlpha)
+                        : new Color(1f, Mathf.Lerp(0.55f, 1f, fade), Mathf.Lerp(0.5f, 1f, fade), alpha * fade * Settings.EffectAlpha);
         if (glue || Settings.LowParticles || Random.value > Time.deltaTime * (2f + radius * 2f)) return;
         Vector2 at = (Vector2)transform.position + Random.insideUnitCircle * radius * 0.8f;
         Juice.SparksDir(at, Vector2.up, 25f, Random.value < 0.5f ? new Color(1f, 0.6f, 0.15f) : new Color(1f, 0.85f, 0.35f), 1, 1.2f, 0.08f);

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class Sfx
 {
-    public enum Id { Boom, Hit, Pop, Xp, LevelUp, Hurt, Pickup, Alert, Crate, Heartbeat, Ready, Swish, Zap, Crackle, Whoosh, Shatter, Step, Meow, Dash, Click, Tick, Clang, Chest, Blink, GameOver, Sparkle, Fanfare, Hum }
+    public enum Id { Boom, Hit, Pop, Xp, LevelUp, Hurt, Pickup, Alert, Crate, Heartbeat, Ready, Swish, Zap, Crackle, Whoosh, Shatter, Step, Meow, Dash, Click, Tick, Clang, Chest, Blink, GameOver, Sparkle, Fanfare, Hum, UltLilac, UltJin, UltNyx }
 
     public static float Volume = 0.5f;
 
@@ -20,6 +20,8 @@ public static class Sfx
     {
         sources = null;
         nextAllowed.Clear();
+        samples.Clear();
+        gains.Clear();
     }
 
     public static void Play(Id id, float volume = 1f, float pitch = 1f)
@@ -31,7 +33,41 @@ public static class Sfx
         if (sources == null || sources[0] == null) CreateSources();
         AudioSource s = sources[nextSource = (nextSource + 1) % Voices];
         s.pitch = pitch * Random.Range(0.95f, 1.05f);
-        s.PlayOneShot(Clip(id), volume * Volume);
+        AudioClip[] set = Samples(id);
+        if (set.Length == 0) { s.PlayOneShot(Clip(id), volume * Volume); return; }
+        AudioClip pick = set[Random.Range(0, set.Length)];
+        s.PlayOneShot(pick, volume * Volume * gains[pick]);
+    }
+
+    // Recorded sounds live in Resources/Sfx/<Id>/ (credits in CREDITS.md). Each play picks one at random;
+    // ids without a folder fall back to the synthesized clip below.
+    private static readonly Dictionary<Id, AudioClip[]> samples = new Dictionary<Id, AudioClip[]>();
+    private static readonly Dictionary<AudioClip, float> gains = new Dictionary<AudioClip, float>();
+
+    private static AudioClip[] Samples(Id id)
+    {
+        if (samples.TryGetValue(id, out AudioClip[] set)) return set;
+        set = Resources.LoadAll<AudioClip>("Sfx/" + id);
+        float target = Loudness(Clip(id));
+        foreach (AudioClip c in set) gains[c] = Mathf.Clamp(target / Mathf.Max(0.001f, Loudness(c)), 0.2f, 3f);
+        return samples[id] = set;
+    }
+
+    // Loudest 20ms stretch of a clip, so every sample plays about as loud as the synth sound it replaces
+    // and the existing volume balance holds.
+    private static float Loudness(AudioClip clip)
+    {
+        var data = new float[clip.samples * clip.channels];
+        if (!clip.GetData(data, 0)) return 0.3f;
+        int window = Mathf.Max(1, clip.frequency * clip.channels / 50);
+        float best = 0f, sum = 0f;
+        for (int i = 0; i < data.Length; i++)
+        {
+            sum += data[i] * data[i];
+            if (i >= window) sum -= data[i - window] * data[i - window];
+            if (i >= window - 1) best = Mathf.Max(best, sum / window);
+        }
+        return Mathf.Sqrt(best);
     }
 
     private static float MinGap(Id id) => id switch

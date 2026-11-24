@@ -28,7 +28,7 @@ public class MenuCats : MonoBehaviour
         if (spawner == null || spawner.enemyWaves.Count == 0) return;
         var looks = new System.Collections.Generic.List<EnemyAnimator>();
         foreach (EnemySpawner.EnemyWave w in spawner.enemyWaves)
-            if (w.enemyPrefab != null && w.enemyPrefab.TryGetComponent(out EnemyAnimator a) && a.walk != null && a.walk.Length > 0) looks.Add(a);
+            if (w.enemyPrefab != null && w.OnThisMap && w.enemyPrefab.TryGetComponent(out EnemyAnimator a) && a.walk != null && a.walk.Length > 0) looks.Add(a);
         if (looks.Count == 0) return;
 
         cats = new Cat[count];

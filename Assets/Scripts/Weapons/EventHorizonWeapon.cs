@@ -75,6 +75,7 @@ public class EventHorizonWeapon : BlackHoleWeapon
         beam.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
         beam.transform.localScale = new Vector3(length, width * (0.8f + 0.2f * Mathf.Sin(Time.time * 60f)), 1f);
         beam.color = new Color(0.7f, 0.35f, 1f, 0.55f);
+        SinkIfCombo(beam);
         if (Random.value < 0.3f) Juice.Sparks(from + dir * length, new Color(0.85f, 0.6f, 1f), 1, 2f, 0.12f);
     }
 

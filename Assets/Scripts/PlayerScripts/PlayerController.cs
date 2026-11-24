@@ -103,9 +103,20 @@ public class PlayerController : MonoBehaviour
 
     private const float StickDeadzone = 0.3f;
 
+    private float slowUntil, slowAmount;
+
+    // Short slow that ends on its own; zones call this every frame the player stands in them.
+    public void Slow(float amount, float seconds)
+    {
+        if (Time.time >= slowUntil) slowAmount = 0f;
+        slowAmount = Mathf.Max(slowAmount, Mathf.Clamp01(amount));
+        slowUntil = Mathf.Max(slowUntil, Time.time + seconds);
+    }
+
     private void FixedUpdate()
     {
         Vector2 velocity = isDashing ? dashDirection * dashSpeed : moveInput * stats.MoveSpeed;
+        if (!isDashing && Time.time < slowUntil) velocity *= 1f - slowAmount;
         if (!isDashing && MapGenerator.OnIce(rb.position)) velocity = Vector2.MoveTowards(iceVelocity, velocity, MapGenerator.IceGrip * Time.fixedDeltaTime);
         iceVelocity = velocity;
         if (isDashing) MapGenerator.Nudge(rb.position, 0.9f, 1f);

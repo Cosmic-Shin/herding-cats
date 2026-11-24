@@ -14,6 +14,7 @@ public class GameOverScreen : MonoBehaviour
     private PlayerStats stats;
     private HUD hud;
     private GameObject screen;
+    private TextMeshProUGUI runText, fishText;
 
     public static bool IsShowing { get; private set; }
 
@@ -51,6 +52,7 @@ public class GameOverScreen : MonoBehaviour
         Time.timeScale = 0f;
 
         if (Debug.isDebugBuild) Debug.Log(DamageStats.Report(Hero.Current.name, hud != null ? hud.RunTime : 0f));
+        Shop.PayOut();
         Leaderboard.Entry entry = Leaderboard.FromRun(stats, hud != null ? hud.RunTime : 0f);
         int rank = Leaderboard.Submit(entry);
         MainMenu.LastRank = rank;
@@ -73,11 +75,14 @@ public class GameOverScreen : MonoBehaviour
 
         int best = rank > 0 ? 0 : Leaderboard.RankOf(entry.name);
         string place = rank > 0 ? $"<color=#7CFF9A>Rank #{rank} on the leaderboard!</color>"
-                     : best > 0 ? $"<color=#968AB9>Not a new best. You're still #{best}</color>"
-                     : "<color=#968AB9>Not in the top 50 this time</color>";
+                     : best > 0 ? $"<color=#BEA27C>Not a new best. You're still #{best}</color>"
+                     : "<color=#BEA27C>Not in the top 50 this time</color>";
         CatTheme.Panel(panel, "ScorePlate", CatTheme.Style.PanelGold, new Vector2(0, 119), new Vector2(400, 64));
         TextMeshProUGUI score = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 34, Color.white, new Vector2(0, 119), new Vector2(400, 56)));
         TextMeshProUGUI placeText = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 18, Color.white, new Vector2(0, 65), new Vector2(700, 28)));
+        // Fish coins earned this run: their own badge next to the score, counted up in Reveal.
+        CatTheme.Img(panel, "FishCoin", MainMenu.FishCoin, new Vector2(282, 119), new Vector2(36, 36));
+        fishText = RuntimeUI.Outline(RuntimeUI.Text(panel, "", 28, Color.white, new Vector2(368, 119), new Vector2(140, 44), TextAlignmentOptions.MidlineLeft));
 
         RectTransform left = CatTheme.Panel(panel, "RunInset", CatTheme.Style.Slot, new Vector2(-250, -90), new Vector2(420, 258)).rectTransform;
         Image face = CatTheme.Panel(left, "Portrait", CatTheme.Style.Slime, new Vector2(-160, 82), new Vector2(64, 64));
@@ -86,7 +91,7 @@ public class GameOverScreen : MonoBehaviour
         hero.enabled = hero.sprite != null;
         RuntimeUI.Outline(RuntimeUI.Text(left, Hero.Current.name.ToUpper(), 30, CatTheme.Cream, new Vector2(-50, 94), new Vector2(140, 36), TextAlignmentOptions.Left));
         RuntimeUI.Outline(RuntimeUI.Text(left, MapGenerator.Names[Mathf.Clamp(MapGenerator.Biome, 0, MapGenerator.Names.Length - 1)], 18, CatTheme.Mint, new Vector2(-50, 64), new Vector2(140, 24), TextAlignmentOptions.Left));
-        SummaryText(left, RunStats(), new Vector2(110, 76), new Vector2(180, 84), 14);
+        runText = SummaryText(left, RunStats(0f), new Vector2(110, 76), new Vector2(180, 84), 14);
         SummaryText(left, Gear(), new Vector2(-98, -48), new Vector2(190, 150), 14);
         SummaryText(left, SkillList(), new Vector2(98, -48), new Vector2(190, 150), 14);
 
@@ -149,6 +154,27 @@ public class GameOverScreen : MonoBehaviour
             yield return null;
         }
         foreach (CanvasGroup g in detailGroups) g.alpha = 1f;
+
+        // Run stats and fish coins tick up together, then the coins land with a clink.
+        const float countTime = 0.9f;
+        for (float t = 0f; t < countTime; t += Time.unscaledDeltaTime)
+        {
+            float k = 1f - Mathf.Pow(1f - t / countTime, 3f);
+            runText.text = RunStats(k);
+            fishText.text = FishLine(k);
+            if (Time.frameCount % 4 == 0) Sfx.Play(Sfx.Id.Tick, 0.18f, 1.2f + k);
+            yield return null;
+        }
+        runText.text = RunStats(1f);
+        fishText.text = FishLine(1f);
+        if (Shop.LastPayout > 0) Sfx.Play(Sfx.Id.Pickup, 0.7f, 1.3f);
+        for (float t = 0f; t < 0.25f; t += Time.unscaledDeltaTime)
+        {
+            fishText.transform.localScale = Vector3.one * (1f + 0.3f * Mathf.Sin(t / 0.25f * Mathf.PI));
+            yield return null;
+        }
+        fishText.transform.localScale = Vector3.one;
+
         foreach (CanvasGroup g in buttonGroups) { g.alpha = 1f; g.interactable = true; }
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(buttons[0].gameObject);
     }
@@ -219,26 +245,31 @@ public class GameOverScreen : MonoBehaviour
         return Color.HSVToRGB(Mathf.Abs(hash % 360) / 360f, 0.5f, 1f);
     }
 
-    private static void SummaryText(RectTransform parent, string text, Vector2 pos, Vector2 size, float maxSize)
+    private static TextMeshProUGUI SummaryText(RectTransform parent, string text, Vector2 pos, Vector2 size, float maxSize)
     {
         TextMeshProUGUI t = RuntimeUI.Text(parent, text, maxSize, Color.white, pos, size, TextAlignmentOptions.TopLeft);
         t.enableAutoSizing = true;
         t.fontSizeMin = 9;
         t.fontSizeMax = maxSize;
+        return t;
     }
 
-    private string RunStats()
+    // k = 0..1: how far the count-up has got (Reveal animates it; 1 = final numbers).
+    private string RunStats(float k)
     {
         string Row(string label, string value) => $"<color=#9AA3C0>{label}</color><pos=62%>{value}\n";
-        int seconds = hud != null ? (int)hud.RunTime : 0;
+        int Count(float v) => Mathf.RoundToInt(v * k);
+        int seconds = Count(hud != null ? (int)hud.RunTime : 0);
         var sb = new StringBuilder();
-        sb.Append(Row("Time", $"<color=#FFE08A>{seconds / 60:00}:{seconds % 60:00}</color>" + (EnemySpawner.Endless ? " <color=#FF7AD9>END</color>" : "")));
-        sb.Append(Row("Level", stats.level.ToString()));
-        sb.Append(Row("Cats", EnemyHealth.Kills.ToString("N0")));
-        sb.Append(Row("Bosses", EnemyHealth.BossKills.ToString()));
+        sb.Append(Row("Time", $"<color=#FFE08A>{seconds / 60:00}:{seconds % 60:00}</color>" + (EnemySpawner.Endless && k >= 1f ? " <color=#FF7AD9>END</color>" : "")));
+        sb.Append(Row("Level", Mathf.Max(1, Count(stats.level)).ToString()));
+        sb.Append(Row("Cats", Count(EnemyHealth.Kills).ToString("N0")));
+        sb.Append(Row("Bosses", Count(EnemyHealth.BossKills).ToString()));
         if (Companion.Instance != null) sb.Append(Row("Buddy", $"Lv {Companion.Instance.Level}"));
         return sb.ToString();
     }
+
+    private string FishLine(float k) => $"<color=#7FE3FF>+{Mathf.RoundToInt(Shop.LastPayout * k):N0}</color>";
 
     private string Gear()
     {

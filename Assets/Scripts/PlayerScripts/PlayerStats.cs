@@ -70,7 +70,19 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
-    private void Start() => Hero.Apply(this);
+    private System.Collections.IEnumerator Start()
+    {
+        Hero.Apply(this);
+        // Shop upgrades land when the run really starts (Start button, Restart or a map-change reload), never on the menu.
+        yield return new WaitUntil(() => MainMenu.Started && !MainMenu.IsOpen);
+        yield return null; // let LevelUpUIController finish its Start so head-start levels open its picker
+        Shop.ApplyToRun(this);
+    }
+
+    public void GrantLevels(int count)
+    {
+        for (int i = 0; i < count; i++) LevelUp();
+    }
 
     public void Heal(float amount)
     {
@@ -85,6 +97,32 @@ public class PlayerStats : MonoBehaviour
 
         if (currentHealth <= 0)
             OnDeath?.Invoke();
+    }
+
+    // Black cat curse: less crit and dodge for a while. Re-cursing refreshes the timer instead of stacking.
+    public const float CurseCrit = 0.15f, CurseDodge = 0.15f;
+    public bool Cursed => Time.time < curseUntil;
+    private float curseUntil;
+
+    public void Curse(float seconds)
+    {
+        bool fresh = !Cursed;
+        curseUntil = Mathf.Max(curseUntil, Time.time + seconds);
+        if (fresh) StartCoroutine(CurseRoutine());
+    }
+
+    private System.Collections.IEnumerator CurseRoutine()
+    {
+        critChance -= CurseCrit;
+        dodgeChance -= CurseDodge;
+        DamagePopup.SpawnText((Vector2)transform.position + Vector2.up, "CURSED!", new Color(0.7f, 0.4f, 1f), 4f);
+        while (Cursed)
+        {
+            if (UnityEngine.Random.value < 0.3f) Juice.Sparks((Vector2)transform.position + UnityEngine.Random.insideUnitCircle * 0.4f, new Color(0.45f, 0.2f, 0.7f, 0.8f), 1, 0.8f, 0.1f);
+            yield return null;
+        }
+        critChance += CurseCrit;
+        dodgeChance += CurseDodge;
     }
 
     public void AddTimedSpeed(float amount, float seconds) => StartCoroutine(TimedSpeed(amount, seconds));

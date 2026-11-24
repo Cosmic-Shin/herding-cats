@@ -27,13 +27,16 @@ public class PlayerUltimate : MonoBehaviour
     public float RadiusMultiplier => IsActive ? radiusMultiplier : 1f;
     public int ExtraBombs => IsActive ? extraBombs : 0;
 
-    private class Style { public string name, shout; public Color main, light; public float speedBonus; public Color? mood; }
-    private static readonly Style Mira = new Style { name = "SPECIAL", shout = "ULTIMATE!", main = new Color(1f, 0.6f, 0.15f), light = new Color(1f, 0.85f, 0.4f) };
-    private static readonly Style Jin = new Style { name = "RAGE", shout = "RAGE!", main = new Color(0.95f, 0.12f, 0.1f), light = new Color(1f, 0.45f, 0.35f), speedBonus = 0.4f, mood = new Color(1f, 0.6f, 0.55f) };
-    private static readonly Style Nyx = new Style { name = "OVERRIDE", shout = "SYSTEM OVERRIDE!", main = new Color(0.3f, 0.9f, 1f), light = new Color(0.75f, 1f, 1f), speedBonus = 0.5f, mood = new Color(0.7f, 0.88f, 1f) };
-    private static Style Current => Hero.Current.id == "Jin" ? Jin : Hero.Current.id == "Nyx" ? Nyx : Mira;
+    private class Style { public string name, shout; public Color main, light; public float speedBonus; public Color? mood; public Sfx.Id sound; }
+    private static readonly Style Lilac = new Style { name = "BLOOM", shout = "FULL BLOOM!", main = new Color(0.68f, 0.5f, 0.95f), light = new Color(0.9f, 0.8f, 1f), mood = new Color(0.9f, 0.82f, 1f), sound = Sfx.Id.UltLilac };
+    private static readonly Color Petal = new Color(1f, 0.62f, 0.86f);
+    private static readonly Style Jin = new Style { name = "RAGE", shout = "RAGE!", sound = Sfx.Id.UltJin, main = new Color(0.95f, 0.12f, 0.1f), light = new Color(1f, 0.45f, 0.35f), speedBonus = 0.4f, mood = new Color(1f, 0.6f, 0.55f) };
+    private static readonly Style Nyx = new Style { name = "OVERRIDE", shout = "SYSTEM OVERRIDE!", sound = Sfx.Id.UltNyx, main = new Color(0.3f, 0.9f, 1f), light = new Color(0.75f, 1f, 1f), speedBonus = 0.5f, mood = new Color(0.7f, 0.88f, 1f) };
+    private static Style Current => Hero.Current.id == "Jin" ? Jin : Hero.Current.id == "Nyx" ? Nyx : Lilac;
 
     public string Name => Current.name;
+    public Color MainColor => (active ?? Current).main;
+    public Color LightColor => (active ?? Current).light;
     public static readonly Color RageRed = Jin.main;
 
     private PlayerAutoAttack attack;
@@ -113,7 +116,7 @@ public class PlayerUltimate : MonoBehaviour
         DamagePopup.SpawnText(at + Vector2.up * 0.5f, s.shout, s.light, 6f);
         if (s == Jin) JinOpener(at);
         else if (s == Nyx) StartCoroutine(NyxOpener(at));
-        else Juice.Flash(new Color(s.main.r, s.main.g, s.main.b, 0.45f), 0.35f);
+        else LilacOpener(at);
         Juice.HitStop(0.1f);
         ExplosionFx.Ring(at, 9f, s.light, 0.6f);
         ExplosionFx.Ring(at, 5f, Color.white, 0.4f);
@@ -121,7 +124,8 @@ public class PlayerUltimate : MonoBehaviour
         if (s == Nyx) HeroFx.Bits(at, s.main, NyxPassives.Magenta, 24, 9f, 0.12f);
         CameraFollow.ZoomPunch(0.8f);
         GamepadUI.Rumble(0.6f, 0.3f, 0.35f);
-        Sfx.Play(Sfx.Id.Whoosh, 0.8f, 0.7f);
+        Sfx.Play(Sfx.Id.Whoosh, 0.5f, 0.7f);
+        Sfx.Play(s.sound, 0.8f);
     }
 
     private void End(bool fx = true)
@@ -130,6 +134,7 @@ public class PlayerUltimate : MonoBehaviour
         CooldownRemaining = cooldown;
         if (fx && active == Jin) { Juice.Smoke(transform.position, 0.6f, 5); Juice.SparksDir(transform.position, Vector2.up, 50f, new Color(1f, 0.45f, 0.2f), 6, 3f, 0.1f); }
         else if (fx && active == Nyx) { HeroFx.Bits(transform.position, Nyx.main, NyxPassives.Magenta, 12, 4f); HeroFx.Glitch(body, 0.15f); }
+        else if (fx && active == Lilac) Petals(transform.position, 8, 3f);
         HideField();
         stats.attackSpeedMultiplier -= appliedSpeed;
         appliedSpeed = 0f;
@@ -151,12 +156,10 @@ public class PlayerUltimate : MonoBehaviour
 
     private void ShowField(Style s)
     {
-        bool fancy = s != Mira;
-        aura.sprite = fancy ? Shapes.SoftGlow : ExplosionFx.GetCircle();
-        aura.transform.localPosition = new Vector3(0f, fancy ? -0.3f : -0.1f, 0f);
-        aura.enabled = true;
-        ring.enabled = ripple.enabled = fancy;
-        foreach (SpriteRenderer b in dataBits) b.enabled = s == Nyx;
+        aura.sprite = Shapes.SoftGlow;
+        aura.transform.localPosition = new Vector3(0f, -0.3f, 0f);
+        aura.enabled = ring.enabled = ripple.enabled = true;
+        foreach (SpriteRenderer b in dataBits) b.enabled = s != Jin;
     }
 
     private void HideField()
@@ -168,12 +171,6 @@ public class PlayerUltimate : MonoBehaviour
     private void UpdateField(Style s)
     {
         float t = Time.time, pulse = 0.5f + 0.5f * Mathf.Sin(t * 10f);
-        if (s == Mira)
-        {
-            aura.transform.localScale = Vector3.one * (1.6f + 0.15f * pulse);
-            aura.color = new Color(s.main.r, s.main.g, s.main.b, 0.25f + 0.15f * pulse);
-            return;
-        }
         float a = Settings.EffectAlpha;
         int under = body != null ? body.sortingOrder - 2 : 9;
         aura.sortingOrder = ring.sortingOrder = ripple.sortingOrder = under;
@@ -193,6 +190,27 @@ public class PlayerUltimate : MonoBehaviour
             return;
         }
 
+        if (s == Lilac)
+        {
+            float breathe = 0.5f + 0.5f * Mathf.Sin(t * 3f);
+            ring.transform.localScale = flat * (1f + 0.05f * breathe);
+            ring.color = new Color(s.light.r, s.light.g, s.light.b, (0.45f + 0.3f * breathe) * a);
+            ripple.transform.localScale = flat * (0.3f + 0.9f * sweep);
+            ripple.color = new Color(Petal.r, Petal.g, Petal.b, 0.6f * (1f - sweep) * a);
+            for (int i = 0; i < dataBits.Length; i++)
+            {
+                float ang = t * 1.6f + i * Mathf.PI * 2f / dataBits.Length, sin = Mathf.Sin(ang);
+                SpriteRenderer b = dataBits[i];
+                b.transform.localPosition = new Vector3(Mathf.Cos(ang) * 0.95f - 0.06f, 0.25f + sin * 0.3f, 0f);
+                b.transform.localRotation = Quaternion.Euler(0f, 0f, ang * Mathf.Rad2Deg * 2f);
+                b.transform.localScale = new Vector3(0.24f, 0.13f, 1f);
+                b.sortingOrder = body != null ? body.sortingOrder + (sin < 0f ? 1 : -1) : 11;
+                Color c = i % 2 == 0 ? s.light : Petal;
+                b.color = new Color(c.r, c.g, c.b, 0.95f * a);
+            }
+            return;
+        }
+
         ring.transform.localScale = flat * 1.05f;
         ring.color = new Color(s.main.r, s.main.g, s.main.b, (Random.value < 0.07f ? 0.15f : 0.7f) * a);
         ripple.transform.localScale = flat * (0.3f + 0.9f * sweep);
@@ -203,6 +221,7 @@ public class PlayerUltimate : MonoBehaviour
             SpriteRenderer b = dataBits[i];
             b.transform.localPosition = new Vector3(Mathf.Cos(ang) * 0.9f - 0.06f, 0.3f + sin * 0.3f, 0f);
             b.transform.localScale = Vector3.one * (0.17f + 0.03f * Mathf.Sin(t * 9f + i));
+            b.transform.localRotation = Quaternion.identity;
             b.sortingOrder = body != null ? body.sortingOrder + (sin < 0f ? 1 : -1) : 11;
             Color c = i % 2 == 0 ? s.main : NyxPassives.Magenta;
             b.color = new Color(c.r, c.g, c.b, Random.value < 0.06f ? 0.2f : 1f);
@@ -284,6 +303,38 @@ public class PlayerUltimate : MonoBehaviour
         Juice.SparksDir(at, Vector2.up, 70f, new Color(1f, 0.6f, 0.2f), 16, 7f, 0.13f);
         Lighting.Flash(at, 7f, Jin.main, 0.6f);
         Juice.Flash(new Color(0.55f, 0.03f, 0.03f, 0.35f), 0.3f);
+    }
+
+    private void LilacOpener(Vector2 at)
+    {
+        Juice.Flash(new Color(Lilac.main.r, Lilac.main.g, Lilac.main.b, 0.35f), 0.3f);
+        Lighting.Flash(at, 7f, Lilac.main, 0.6f);
+        Petals(at, Settings.LowParticles ? 12 : 24, 8f);
+    }
+
+    // Petals: small spinning lozenges that burst out and fade.
+    private static void Petals(Vector2 at, int count, float speed)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            float ang = (i * 360f / count + Random.Range(-8f, 8f)) * Mathf.Deg2Rad;
+            Vector2 dir = new Vector2(Mathf.Cos(ang), Mathf.Sin(ang));
+            float life = Random.Range(0.5f, 0.8f);
+            Color c = i % 2 == 0 ? Lilac.light : Petal;
+            Shot p = Shot.Spawn(Shapes.Square, c, 1f, at + dir * 0.3f, 60);
+            p.transform.localScale = new Vector3(0.24f, 0.13f, 1f);
+            p.transform.rotation = Quaternion.Euler(0f, 0f, Random.Range(0f, 360f));
+            p.life = life;
+            p.spin = Random.Range(-540f, 540f);
+            p.velocity = dir * speed * Random.Range(0.75f, 1.1f);
+            p.onUpdate = shot =>
+            {
+                float k = shot.age / life;
+                shot.velocity *= 1f - 3f * Time.deltaTime;
+                shot.velocity.y -= 2f * Time.deltaTime;
+                shot.Renderer.color = new Color(c.r, c.g, c.b, (1f - k) * Settings.EffectAlpha);
+            };
+        }
     }
 
     private IEnumerator NyxOpener(Vector2 at)

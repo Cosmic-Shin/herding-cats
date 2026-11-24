@@ -21,7 +21,8 @@ public class ArmageddonWeapon : SuperWeapon
         for (int i = 0; i < spots.Length; i++)
         {
             spots[i] = center + (i == 0 ? Vector2.zero : Random.insideUnitCircle * Area(3.2f));
-            AoeWarning.Spawn(spots[i], radius, warn + i * 0.07f);
+            // friendly landing marker; the red AoeWarning is reserved for enemy attacks
+            ExplosionFx.Ring(spots[i], radius, new Color(1f, 0.6f, 0.25f, 0.9f), warn + i * 0.07f); // super fx are auto-halved
         }
         Sfx.Play(Sfx.Id.Alert, 0.35f, 1.4f);
 

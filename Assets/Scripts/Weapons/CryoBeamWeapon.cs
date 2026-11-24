@@ -98,6 +98,8 @@ public class CryoBeamWeapon : Weapon
         float age = FireTime - firing;
         float env = age < 0.08f ? Mathf.Lerp(1.8f, 1f, age / 0.08f) : Mathf.Clamp01(firing / 0.15f);
         beam.transform.localScale = new Vector3(length, width * env * (0.9f + 0.1f * Mathf.Sin(Time.time * 50f + index)), 1f);
+        beam.color = Ice;
+        SinkIfCombo(beam);
         if (Random.value < 0.4f)
             Juice.Sparks(Pos + dir * Random.Range(0.5f, length), new Color(0.85f, 0.97f, 1f), 1, 1f, 0.12f);
         if (Random.value < 0.35f)
